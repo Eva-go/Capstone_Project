@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -50,6 +51,12 @@ public class PlayerController : MonoBehaviour
     private Camera theCamera;
     private Rigidbody myRigid;
 
+    //오브젝트 변수
+    [SerializeField]
+    private GameObject objectSpawn;
+    [SerializeField]
+    private GameObject Ground;
+
     void Start()
     {
         capsuleCollider = GetComponent<CapsuleCollider>();
@@ -78,13 +85,12 @@ public class PlayerController : MonoBehaviour
     //건물 클릭시 옥상도착
     private void RayCast()
     {
-        //마우스 버튼
-        if(Input.GetMouseButton(0))
+       
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            Ray ray= Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if(Physics.Raycast(ray, out hit))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 //건물이 맞으면
                 if (hit.transform.gameObject.name == "APT(Clone)")
@@ -93,10 +99,27 @@ public class PlayerController : MonoBehaviour
                     Vector3 pos = new Vector3(hit.transform.gameObject.transform.position.x, hit.transform.localScale.y, hit.transform.gameObject.transform.position.z);
                     transform.position = pos;
                 }
-                
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                //건물이 맞고 지면위에 있으면서 땅이 아닌경우
+                if (hit.transform.gameObject.name == "APT(Clone)"&& isGround &&transform.position.y>1.1)
+                {
+    
+                    Vector3 mousePosition = hit.point;
+                    SpawnObject(mousePosition);
+                }
             }
         }
     }
+
+    //플레이어가 스폰
+    private void SpawnObject(Vector3 spawnPosition)
+    {
+        Instantiate(objectSpawn,spawnPosition,Quaternion.identity);
+    }
+
 
     //앉기 시도
     private void TryCrouch()
