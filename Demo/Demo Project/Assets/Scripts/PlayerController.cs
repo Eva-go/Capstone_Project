@@ -49,14 +49,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Camera theCamera;
     private Rigidbody myRigid;
-    
 
     void Start()
     {
         capsuleCollider = GetComponent<CapsuleCollider>();
         myRigid = GetComponent<Rigidbody>();
         applySpeed = walkSpeed;
-
         //초기화
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
@@ -71,6 +69,33 @@ public class PlayerController : MonoBehaviour
         Move();
         CameraRotation();
         CharacterRotation();
+    }
+    private void FixedUpdate()
+    {
+        RayCast();
+    }
+    
+    //건물 클릭시 옥상도착
+    private void RayCast()
+    {
+        //마우스 버튼
+        if(Input.GetMouseButton(0))
+        {
+            Ray ray= Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if(Physics.Raycast(ray, out hit))
+            {
+                //건물이 맞으면
+                if (hit.transform.gameObject.name == "APT(Clone)")
+                {
+                    //건물 위치 좌표를 저장후 플레이어를 건물의 옥상으로 이동
+                    Vector3 pos = new Vector3(hit.transform.gameObject.transform.position.x, hit.transform.localScale.y, hit.transform.gameObject.transform.position.z);
+                    transform.position = pos;
+                }
+                
+            }
+        }
     }
 
     //앉기 시도
