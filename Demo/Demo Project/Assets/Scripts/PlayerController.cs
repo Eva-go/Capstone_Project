@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -96,8 +97,9 @@ public class PlayerController : MonoBehaviour
                 if (hit.transform.gameObject.name == "APT(Clone)")
                 {
                     //건물 위치 좌표를 저장후 플레이어를 건물의 옥상으로 이동
-                    Vector3 pos = new Vector3(hit.transform.gameObject.transform.position.x, hit.transform.localScale.y, hit.transform.gameObject.transform.position.z);
-                    transform.position = pos;
+                    /* Vector3 pos = new Vector3(hit.transform.gameObject.transform.position.x, hit.transform.localScale.y, hit.transform.gameObject.transform.position.z);
+                     transform.position = pos;*/
+                    SceneManager.LoadScene("Apt1Scene");
                 }
             }
 
