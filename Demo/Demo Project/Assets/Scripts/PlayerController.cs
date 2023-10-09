@@ -5,10 +5,22 @@ using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 
+//cube 설치
+[System.Serializable]
+public class Craft
+{
+    public string craftName;
+    public GameObject prefab;
+    public GameObject previewPrefab;
+
+}
 public class PlayerController : MonoBehaviour
 {
    
     static bool Scenes=false;
+    bool Q_Cancle = false;
+    int Q_count = 0;
+    
     //플레이어 속도 변수
     [SerializeField]
     private float walkSpeed;
@@ -54,13 +66,23 @@ public class PlayerController : MonoBehaviour
     private Camera theCamera;
     private Rigidbody myRigid;
 
+
     //오브젝트 변수
     [SerializeField]
     private GameObject objectSpawn;
     [SerializeField]
-    private GameObject Ground;
+    private Craft[] craftCube;
     [SerializeField]
-    private GameObject Player;
+    private Transform tfPlayer;
+    private GameObject preview; //미리보기 프리팹
+
+    //물건설치 raycast 변수 선언
+    [SerializeField]
+    private LayerMask layerMask;
+    [SerializeField]
+    private float range;
+    private RaycastHit hitInfo;
+
 
     void Start()
     {
@@ -70,6 +92,7 @@ public class PlayerController : MonoBehaviour
         //초기화
         originPosY = theCamera.transform.localPosition.y;
         applyCrouchPosY = originPosY;
+        
     }
 
     void Update()
@@ -86,7 +109,30 @@ public class PlayerController : MonoBehaviour
     {
         RayCast();
     }
-    
+    private void prefabCancel()
+    {
+        Destroy(preview); 
+        preview = null;
+    }
+
+    public void SlotClick(int slot)
+    {
+        preview = Instantiate(craftCube[Q_count].previewPrefab, tfPlayer.position + tfPlayer.forward, Quaternion.identity);
+    }
+
+    private void Ray()
+    {
+        if (Physics.Raycast(tfPlayer.position, tfPlayer.forward, out hitInfo, range, layerMask))
+        {
+            if (hitInfo.transform != null)
+            {
+                Vector3 _location = hitInfo.point;
+                preview.transform.position = _location;
+            }
+
+        }
+    }
+
     //건물 클릭시 옥상도착
     private void RayCast()
     {
@@ -101,10 +147,6 @@ public class PlayerController : MonoBehaviour
                 //Raycast가 건물에 맞으면
                 if (hit.transform.gameObject.name == "APT(Clone)")
                 {
-                    //건물 위치 좌표를 저장후 플레이어를 건물의 옥상으로 이동
-                    /* Vector3 pos = new Vector3(hit.transform.gameObject.transform.position.x, hit.transform.localScale.y, hit.transform.gameObject.transform.position.z);
-                     transform.position = pos;*/
-                   
                     SceneManager.LoadScene("Apt1Scene");
 
                 }
@@ -115,14 +157,19 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(0))
             {
-               /* //건물이 맞고 지면위에 있으면서 땅이 아닌경우
-                if (hit.transform.gameObject.name == "APT(Clone)"&& isGround &&transform.position.y>1.1)
+                Ray();
+                Q_Cancle = false;
+                preview = Instantiate(craftCube[Q_count].previewPrefab, tfPlayer.position + tfPlayer.forward, Quaternion.identity);
+                if (Q_Cancle != true)
                 {
-    
-                    Vector3 mousePosition = hit.point;
-                    SpawnObject(mousePosition);
-                }*/
+                    Q_count += 1;
+                }
             }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            { 
+                prefabCancel();
+            }
+            
         }
     }
 
