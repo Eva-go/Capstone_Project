@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+   
+    static bool Scenes=false;
     //플레이어 속도 변수
     [SerializeField]
     private float walkSpeed;
@@ -57,6 +59,8 @@ public class PlayerController : MonoBehaviour
     private GameObject objectSpawn;
     [SerializeField]
     private GameObject Ground;
+    [SerializeField]
+    private GameObject Player;
 
     void Start()
     {
@@ -93,25 +97,31 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                //건물이 맞으면
+                Debug.Log("E");
+                //Raycast가 건물에 맞으면
                 if (hit.transform.gameObject.name == "APT(Clone)")
                 {
                     //건물 위치 좌표를 저장후 플레이어를 건물의 옥상으로 이동
                     /* Vector3 pos = new Vector3(hit.transform.gameObject.transform.position.x, hit.transform.localScale.y, hit.transform.gameObject.transform.position.z);
                      transform.position = pos;*/
+                   
                     SceneManager.LoadScene("Apt1Scene");
+
+                }
+                else if (hit.transform.gameObject.name == "Plane")
+                {
+                    SceneManager.LoadScene("SampleScene");
                 }
             }
-
             if (Input.GetMouseButtonDown(0))
             {
-                //건물이 맞고 지면위에 있으면서 땅이 아닌경우
+               /* //건물이 맞고 지면위에 있으면서 땅이 아닌경우
                 if (hit.transform.gameObject.name == "APT(Clone)"&& isGround &&transform.position.y>1.1)
                 {
     
                     Vector3 mousePosition = hit.point;
                     SpawnObject(mousePosition);
-                }
+                }*/
             }
         }
     }
