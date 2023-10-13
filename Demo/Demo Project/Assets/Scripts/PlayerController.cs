@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 //cube 설치
 [System.Serializable]
@@ -16,9 +17,7 @@ public class Craft
 }
 public class PlayerController : MonoBehaviour
 {
-   
     static bool Scenes=false;
-    bool Q_Cancle = false;
     int Q_count = 0;
     
     //플레이어 속도 변수
@@ -80,9 +79,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask layerMask;
     [SerializeField]
-    private float range;
+    private float range=10;
     private RaycastHit hitInfo;
 
+    //물건설치 상태변수
+    private bool isPreviewActivated = false;
 
     void Start()
     {
@@ -104,15 +105,22 @@ public class PlayerController : MonoBehaviour
         Move();
         CameraRotation();
         CharacterRotation();
+        if (isPreviewActivated)
+            PreviewPositionUpdate();
     }
     private void FixedUpdate()
     {
         RayCast();
+        
     }
     private void prefabCancel()
     {
-        Destroy(preview); 
-        preview = null;
+        if(isPreviewActivated == true)
+        {
+            Destroy(preview);
+            preview = null;
+        }
+        isPreviewActivated = false;
     }
 
     public void SlotClick(int slot)
@@ -120,20 +128,21 @@ public class PlayerController : MonoBehaviour
         preview = Instantiate(craftCube[Q_count].previewPrefab, tfPlayer.position + tfPlayer.forward, Quaternion.identity);
     }
 
-    private void Ray()
+    private void PreviewPositionUpdate()
     {
-        if (Physics.Raycast(tfPlayer.position, tfPlayer.forward, out hitInfo, range, layerMask))
+        if(Physics.Raycast(tfPlayer.position, tfPlayer.forward, out hitInfo, range, layerMask))
         {
-            if (hitInfo.transform != null)
+            if(hitInfo.transform != null && hitInfo.transform.gameObject.tag != "Cube_Preview")
             {
                 Vector3 _location = hitInfo.point;
+                Debug.Log(preview.transform.position);
                 preview.transform.position = _location;
+               
             }
-
         }
     }
 
-    //건물 클릭시 옥상도착
+
     private void RayCast()
     {
        
@@ -155,15 +164,12 @@ public class PlayerController : MonoBehaviour
                     SceneManager.LoadScene("SampleScene");
                 }
             }
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(1)&& !isPreviewActivated)
             {
-                Ray();
-                Q_Cancle = false;
+                isPreviewActivated = true;
+                Debug.Log(isPreviewActivated);
                 preview = Instantiate(craftCube[Q_count].previewPrefab, tfPlayer.position + tfPlayer.forward, Quaternion.identity);
-                if (Q_Cancle != true)
-                {
-                    Q_count += 1;
-                }
+                Q_count += 1;
             }
             if (Input.GetKeyDown(KeyCode.Escape))
             { 
