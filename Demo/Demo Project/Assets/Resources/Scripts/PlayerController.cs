@@ -7,18 +7,9 @@ using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
 //cube 설치
-[System.Serializable]
-public class Craft
-{
-    public string craftName;
-    public GameObject prefab;
-    public GameObject previewPrefab;
 
-}
 public class PlayerController : MonoBehaviour
 {
-    static bool Scenes=false;
-    int Q_count = 0;
     
     //플레이어 속도 변수
     [SerializeField]
@@ -66,25 +57,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody myRigid;
 
 
-    //오브젝트 변수
-    [SerializeField]
-    private GameObject objectSpawn;
-    [SerializeField]
-    private Craft[] craftCube;
-    [SerializeField]
-    private Transform tfPlayer;
-    private GameObject preview; //미리보기 프리팹
-
-    //물건설치 raycast 변수 선언
-    [SerializeField]
-    private LayerMask layerMask;
-    [SerializeField]
-    private float range=10;
-    private RaycastHit hitInfo;
-
-    //물건설치 상태변수
-    private bool isPreviewActivated = false;
-
     void Start()
     {
         capsuleCollider = GetComponent<CapsuleCollider>();
@@ -105,42 +77,14 @@ public class PlayerController : MonoBehaviour
         Move();
         CameraRotation();
         CharacterRotation();
-        if (isPreviewActivated)
-            PreviewPositionUpdate();
+       
     }
     private void FixedUpdate()
     {
         RayCast();
-        
     }
-    private void prefabCancel()
-    {
-        if(isPreviewActivated == true)
-        {
-            Destroy(preview);
-            preview = null;
-        }
-        isPreviewActivated = false;
-    }
+   
 
-    public void SlotClick(int slot)
-    {
-        preview = Instantiate(craftCube[Q_count].previewPrefab, tfPlayer.position + tfPlayer.forward, Quaternion.identity);
-    }
-
-    private void PreviewPositionUpdate()
-    {
-        if(Physics.Raycast(tfPlayer.position, tfPlayer.forward, out hitInfo, range, layerMask))
-        {
-            if(hitInfo.transform != null && hitInfo.transform.gameObject.tag != "Cube_Preview")
-            {
-                Vector3 _location = hitInfo.point;
-                Debug.Log(preview.transform.position);
-                preview.transform.position = _location;
-               
-            }
-        }
-    }
 
 
     private void RayCast()
@@ -148,11 +92,10 @@ public class PlayerController : MonoBehaviour
        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log("E");
                 //Raycast가 건물에 맞으면
                 if (hit.transform.gameObject.name == "APT(Clone)")
                 {
@@ -164,28 +107,23 @@ public class PlayerController : MonoBehaviour
                     SceneManager.LoadScene("SampleScene");
                 }
             }
-            if (Input.GetMouseButtonDown(1)&& !isPreviewActivated)
+           
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity) == true)
             {
-                isPreviewActivated = true;
-                Debug.Log(isPreviewActivated);
-                preview = Instantiate(craftCube[Q_count].previewPrefab, tfPlayer.position + tfPlayer.forward, Quaternion.identity);
-                Q_count += 1;
+                if (hit.collider.gameObject.tag == "Block")
+                {
+                    Vector3 SurfaceVec = hit.normal;
+                    Vector3 hitCubePos = hit.transform.position;
+                    Vector3 InstantiatedCubePos = SurfaceVec + hitCubePos;
+                    GameObject Obj = Instantiate(Resources.Load("Prefab/Cube_Preview"),InstantiatedCubePos, Quaternion.identity) as GameObject;
+                    Obj.gameObject.tag = "Block";
+                }
             }
-            if (Input.GetKeyDown(KeyCode.Escape))
-            { 
-                prefabCancel();
-            }
-            
         }
     }
-
-    //플레이어가 스폰
-    private void SpawnObject(Vector3 spawnPosition)
-    {
-        Instantiate(objectSpawn,spawnPosition,Quaternion.identity);
-    }
-
-
     //앉기 시도
     private void TryCrouch()
     {
