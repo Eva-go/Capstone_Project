@@ -2,56 +2,57 @@ Shader "Custom/water"
 {
     Properties
     {
-        _MainTex ("tex", 2D) = "white" {}
-        _CUBE("Cubemap", CUBE) = " "{}
+        _Color ("Wave Color", Color) = (1,1,1,1)
+        _MainTex ("Base (RGB)", 2D) = "white" { }
+        _WaveSpeed ("Wave Speed", Range(0.1, 2)) = 0.5
+        _WaveFrequency ("Wave Frequency", Range(1, 10)) = 2
+        _WaveAmplitude ("Wave Amplitude", Range(0.1, 2)) = 0.5
     }
     SubShader
     {
-        Tags {"RenderType" = "Transparent" "Queue" = "Transparent"}
-        LOD 200
+        Tags {"RenderType" = "Opaque"}
+        LOD 100
 
         CGPROGRAM
-        #pragma surface surf water alpha:blend
-        #pragma target 3.0
+        #pragma surface surf Lambert vertex:vert noshadow
 
         sampler2D _MainTex;
-        sampler2D _BumpTex;
-        samplerCUBE _CUBE;
+        fixed4 _Color;
+        float _WaveSpeed;
+        float _WaveFrequency;
+        float _WaveAmplitude;
 
         struct Input
         {
             float2 uv_MainTex;
-            float2 uv_BumpTex;
             float3 worldRefl;
             INTERNAL_DATA
         };
 
-        void surf (Input IN, inout SurfaceOutput o)
-        {
-            fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+        void surf (Input IN, inout SurfaceOutput o) {
+            // Calculate wave displacement
+            float waveDisplacement = sin(_Time.y * _WaveSpeed + IN.uv_MainTex.x * _WaveFrequency) * _WaveAmplitude;
 
-            float3 normal1 = UnpackNormal(tex2D(_BumpTex, IN.uv_BumpTex + _Time.y*0.05));
-            float3 normal2 = UnpackNormal(tex2D(_BumpTex, IN.uv_BumpTex - _Time.y*0.02));
+            // Apply wave to Y coordinate
+            IN.uv_MainTex.y += waveDisplacement;
 
-            o.Normal = (normal1 + normal2)*0.5;
-            o.Normal *= float3(0.5, 0.5, 1);
+            // Sample texture
+            float3 fWorldReflectionVector = WorldReflectionVector(IN, o.Normal).xyz;        
+            o.Emission = UNITY_SAMPLE_TEXCUBE(unity_SpecCube0, fWorldReflectionVector).rgb * unity_SpecCube0_HDR.r;        
+        
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 
-            float4 reflection = texCUBE(_CUBE, WorldReflectionVector(IN, o.Normal));
-            
-            o.Emission = reflection * 1.05;
-            o.Alpha = 1;
+            // Output final color
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
         }
 
-        float4 Lightingwater(SurfaceOutput s, float3 lightDir, float3 viewDir, float atten)
+        void vert(inout appdata_full v)
         {
-            float rim = saturate(dot(s.Normal, viewDir));
-            float rim1 = pow(1-rim, 20);
-            float rim2 = pow(1-rim, 2);
-
-            float4 final = rim * _LightColor0;
-
-            return float4(final.rgb,rim2);
+            v.vertex.y += sin((abs(v.texcoord.x * 2.0f - 1.0f)*10.0f) + _Time.y*0.8f)*0.12f +
+            sin((abs(v.texcoord.y * 2.0f -1.0f)*10.0f)+ _Time.y*0.8f)*0.12f;
         }
         ENDCG
     }
+    FallBack "Diffuse"
 }
