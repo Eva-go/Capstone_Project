@@ -62,8 +62,8 @@ Shader "Custom/water"
         float _FlowDirX, _FlowDirY, _FlowSpeed;
         float4 _Tint, _SpColor;
         float _SpPower, _SpIntensity, _DiffIntensity;
-        // float _WaveHeight, _WaveDirX, _WaveDirY, _WaveSpeed;
-        // int _WaveCount;
+        float _WaveHeight, _WaveDirX, _WaveDirY, _WaveSpeed;
+        int _WaveCount;
 
         float4 LightingWaterSpecular(SurfaceOutput s, float3 lightDir, float3 viewDir, float atten)
         {
@@ -104,16 +104,16 @@ Shader "Custom/water"
 
         void vert(inout appdata_full v)
         {
-            // float t = _Time.y * _WaveSpeed;
-            // float2 waveDir = normalize(float2(_WaveDirX, _WaveDirY));
+            float t = _Time.y * _WaveSpeed;
+            float2 waveDir = normalize(float2(_WaveDirX, _WaveDirY));
 
-            // float wave;
-            // wave  = sin(abs(v.texcoord.x * waveDir.x) * _WaveCount + t) * _WaveHeight;
-            // wave += sin(abs(v.texcoord.y * waveDir.y) * _WaveCount + t) * _WaveHeight;
+            float wave;
+            wave  = sin(abs(v.texcoord.x * waveDir.x) * _WaveCount + t) * _WaveHeight;
+            wave += sin(abs(v.texcoord.y * waveDir.y) * _WaveCount + t) * _WaveHeight;
 
-            // v.vertex.y = wave / 2.;
+            v.vertex.y = wave / 2.;
 
-            v.vertex.z += cos(abs(v.texcoord.x * 2 - 1)*3);
+            // v.vertex.z += cos(abs(v.texcoord.x * 2 - 1)*3);
         }
         ENDCG
     }
