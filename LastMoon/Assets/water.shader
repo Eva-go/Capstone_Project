@@ -2,6 +2,7 @@ Shader "Custom/water"
 {
     Properties
     {
+        _MainTex ("Texture", 2D) = "white" {}
         _BumpMap("Normal Map", 2D) = "bump" {}
         _Cube("Cube", Cube) = ""{}
 
@@ -43,11 +44,13 @@ Shader "Custom/water"
         CGPROGRAM
         #pragma surface surf WaterSpecular alpha:fade vertex:vert
  
+        sampler2D _MainTex;
         sampler2D _BumpMap;
         samplerCUBE _Cube;
 
         struct Input
         {
+            float2 uv_MainTex;
             float2 uv_BumpMap;
             float3 worldRefl;
             float3 viewDir;
@@ -80,6 +83,9 @@ Shader "Custom/water"
 
         void surf (Input IN, inout SurfaceOutput o)
         {
+            float4 MainTex = tex2D(_MainTex, IN.uv_MainTex);
+            o.Emission = MainTex.rgb;
+
             float3 originNormal = o.Normal;
             float3 reflColor = texCUBE(_Cube, WorldReflectionVector(IN, originNormal));
 
@@ -97,7 +103,7 @@ Shader "Custom/water"
             
             float penet = pow(saturate(dot(originNormal, IN.viewDir)), _PenetrationThreshold) * _Penetration;
 
-            o.Emission = (_Tint * 0.5) + (reflColor * _CubeIntensity * fresnel) + _CubeBrightness;
+            // o.Emission = (_Tint * 0.5) + (reflColor * _CubeIntensity * fresnel) + _CubeBrightness;
             o.Alpha = _Alpha - penet;
         }
 
