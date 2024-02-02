@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
         Move();
         CameraRotation();
         CharacterRotation();
+        BuildBlock();
     }
 
     private void Move()
@@ -62,5 +63,35 @@ public class PlayerController : MonoBehaviour
         float _yRotation = Input.GetAxisRaw("Mouse X");
         Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
         playerRigidBody.MoveRotation(playerRigidBody.rotation * Quaternion.Euler(_characterRotationY));
+    }
+
+    private void BuildBlock()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            RaycastHit hit;
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            //	스크린 화면 중앙에서 직선으로 래이 캐스트로 쏴서 충돌한 물체가 있다면
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity) == true)
+            {
+                //	그 물체의 tag가 BLOCK (타일)라면
+                if (hit.collider.gameObject.tag == "BLOCK")
+                {
+                    Vector3 SurfaceVec = hit.normal;        //	충돌한 큐브의 표면(평면)의 법선 벡터를 얻고
+
+                    Vector3 hitCubePos = hit.transform.position;    //	충돌한 큐브의 위치를 얻고
+
+                    Vector3 InstantiatedCubePos = SurfaceVec + hitCubePos;  //	생성할 큐브의 위치는 법선 벡터와 충돌한 큐브의 위치로 구한다.
+
+                    //	그리고 큐브를 생성한다.
+                    GameObject Obj = Instantiate(Resources.Load("Cube"),
+                        InstantiatedCubePos, Quaternion.identity) as GameObject;
+
+                    Obj.gameObject.tag = "BLOCK";
+                }
+            }
+        }
     }
 }
