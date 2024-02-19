@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 21682216}
   - component: {fileID: 21682215}
   - component: {fileID: 21682220}
+  - component: {fileID: 21682221}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -232,7 +233,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21682214}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1298545000}
@@ -255,6 +256,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &21682221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21682214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178fe2b9b22838b4892c05c3ab4d3e8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubePreviewPrefab: {fileID: 2749321295367068699, guid: 34158b1b19465f54ba0b9a72ebef6b7f, type: 3}
+  cubePrefab: {fileID: 4428063035622945043, guid: 28252dc4357cbc74ca0f2864bee2060e, type: 3}
+  gridMaterial: {fileID: 0}
 --- !u!1 &115701429
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +285,7 @@ GameObject:
   - component: {fileID: 115701430}
   m_Layer: 0
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: PLANE
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -346,7 +362,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 115701429}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19836211, y: -0.059577942, z: 0.23088214}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -528,60 +544,3 @@ Transform:
   m_Father: {fileID: 21682219}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &7965306835867540450
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1837866949645339324, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_Name
-      value: Cube
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 2.31
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2799822222710644274, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 0b1d800795781c844af0fbadffb33a4f, type: 3}

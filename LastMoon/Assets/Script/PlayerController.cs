@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour
         Vector3 _moveVertical = transform.forward * _moveDirZ;
 
         Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
-        playerRigidBody.MovePosition(transform.position+_velocity * Time.deltaTime);
+        playerRigidBody.MovePosition(transform.position + _velocity * Time.deltaTime);
     }
     private void CameraRotation()
     {
@@ -54,7 +55,7 @@ public class PlayerController : MonoBehaviour
         float _cameraRotationX = _xRotation * lookSensitivity;
         //마우스 카메라 상하 반전시 (+=,-=)
         currentCameraRotationX -= _cameraRotationX;
-        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit,cameraRotationLimit);
+        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
         playerCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
     private void CharacterRotation()
@@ -65,33 +66,38 @@ public class PlayerController : MonoBehaviour
         playerRigidBody.MoveRotation(playerRigidBody.rotation * Quaternion.Euler(_characterRotationY));
     }
 
+
     private void BuildBlock()
     {
-        if (Input.GetMouseButtonDown(1))
+        if(Input.GetKeyUp(KeyCode.E))
         {
-            RaycastHit hit;
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            //	스크린 화면 중앙에서 직선으로 래이 캐스트로 쏴서 충돌한 물체가 있다면
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity) == true)
+            if (Input.GetMouseButtonDown(1))
             {
-                //	그 물체의 tag가 BLOCK (타일)라면
-                if (hit.collider.gameObject.tag == "BLOCK")
+                RaycastHit hit;
+
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                //	스크린 화면 중앙에서 직선으로 래이 캐스트로 쏴서 충돌한 물체가 있다면
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity) == true)
                 {
-                    Vector3 SurfaceVec = hit.normal;        //	충돌한 큐브의 표면(평면)의 법선 벡터를 얻고
+                    //	그 물체의 tag가 BLOCK (타일)라면
+                    if (hit.collider.gameObject.tag == "BLOCK")
+                    {
+                        Vector3 SurfaceVec = hit.normal;        //	충돌한 큐브의 표면(평면)의 법선 벡터를 얻고
 
-                    Vector3 hitCubePos = hit.transform.position;    //	충돌한 큐브의 위치를 얻고
+                        Vector3 hitCubePos = hit.transform.position;    //	충돌한 큐브의 위치를 얻고
 
-                    Vector3 InstantiatedCubePos = SurfaceVec + hitCubePos;  //	생성할 큐브의 위치는 법선 벡터와 충돌한 큐브의 위치로 구한다.
+                        Vector3 InstantiatedCubePos = SurfaceVec + hitCubePos;  //	생성할 큐브의 위치는 법선 벡터와 충돌한 큐브의 위치로 구한다.
 
-                    //	그리고 큐브를 생성한다.
-                    GameObject Obj = Instantiate(Resources.Load("Cube"),
-                        InstantiatedCubePos, Quaternion.identity) as GameObject;
+                        //	그리고 큐브를 생성한다.
+                        GameObject Obj = Instantiate(Resources.Load("Cube"),
+                            InstantiatedCubePos, Quaternion.identity) as GameObject;
 
-                    Obj.gameObject.tag = "BLOCK";
+                        Obj.gameObject.tag = "BLOCK";
+                    }
                 }
             }
         }
+        
     }
 }
