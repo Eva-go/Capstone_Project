@@ -10,7 +10,7 @@ Shader "Custom/water"
         _CubeIntensity("CubeMap Intensity", Range(0, 2)) = 1
         _CubeBrightness("CubeMap Brightness", Range(-2, 2)) = 0
 
-        _Penetration("Penetration", Range(0, 1)) = 0.2 // Åõ°úÀ²
+        _Penetration("Penetration", Range(0, 1)) = 0.2 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         _PenetrationThreshold("Penetration Threshold", Range(0, 50)) = 5
 
         _Tiling("Normal Tiling", Range(1, 10)) = 2
@@ -84,11 +84,11 @@ Shader "Custom/water"
             float3 reflColor = texCUBE(_Cube, WorldReflectionVector(IN, originNormal));
 
             // Flow
-            float2 flowDir = normalize(float2(_FlowDirX, _FlowDirY));
+            float2 flowDir = normalize(float2(_FlowDirX, 0));
             float2 flow = flowDir * _Time.x * _FlowSpeed;
             
             float3 normal1 = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap * _Tiling + flow));
-            float3 normal2 = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap * _Tiling * 0.5 - flow * 0.3)) * 0.5;
+            float3 normal2 = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap * _Tiling - flow));
             
             o.Normal = (normal1 + normal2) * 0.5;
 
