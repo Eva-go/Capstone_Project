@@ -20,19 +20,9 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-<<<<<<< HEAD:LastMoon/Assets/water.mat
-        m_Texture: {fileID: 2800000, guid: ecba40d6f82a4bc4888d71c759f204e0, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CUBE:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-=======
         m_Texture: {fileID: 2800000, guid: d29dda1c9827e9a40b94630c640288e5, type: 3}
-        m_Scale: {x: 2, y: 2}
-        m_Offset: {x: 1, y: 1}
->>>>>>> kim:LastMoon/Assets/VectorWave/wave.mat
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Cube:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -55,7 +45,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: a587dd61588c9a1499cfa1106d628bba, type: 3}
-        m_Scale: {x: 6, y: 6}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -78,9 +68,9 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _FlowDirX: 1
-    - _FlowDirY: 0
-    - _FlowSpeed: 3.62
+    - _FlowDirX: -1
+    - _FlowDirY: 1
+    - _FlowSpeed: 1
     - _FresnelIntensity: 1
     - _FresnelPower: 3
     - _GlossMapScale: 1
@@ -97,14 +87,14 @@ Material:
     - _SpPower: 300
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Strength: 2
+    - _Strength: 1
     - _Tiling: 2
     - _UVSec: 0
-    - _WaveCount: 16.63
-    - _WaveDirX: -0.42
-    - _WaveDirY: 0
-    - _WaveHeight: 6.58
-    - _WaveSpeed: 5
+    - _WaveCount: 8
+    - _WaveDirX: -1
+    - _WaveDirY: 1
+    - _WaveHeight: 0.1
+    - _WaveSpeed: 2
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

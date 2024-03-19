@@ -12,14 +12,13 @@ Shader "Custom/Water"
         _Alpha("Alpha", Range(0, 1)) = 1
         _CubeIntensity("CubeMap Intensity", Range(0, 2)) = 1
         _CubeBrightness("CubeMap Brightness", Range(-2, 2)) = 0
-<<<<<<< HEAD:LastMoon/Assets/water.shader
 
-        _Penetration("Penetration", Range(0, 1)) = 0.2 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-=======
+
+        _Penetration("Penetration", Range(0, 1)) = 0.2 
         
         [Space, Header(Penetration Options)]
         _Penetration("Penetration", Range(0, 1)) = 0.2 // Åõ°úÀ²
->>>>>>> kim:LastMoon/Assets/VectorWave/water.shader
+
         _PenetrationThreshold("Penetration Threshold", Range(0, 50)) = 5
 
         [Space, Header(Normal Map Options)]
