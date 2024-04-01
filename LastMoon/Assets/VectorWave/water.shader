@@ -13,8 +13,6 @@ Shader "Custom/Water"
         _CubeIntensity("CubeMap Intensity", Range(0, 2)) = 1
         _CubeBrightness("CubeMap Brightness", Range(-2, 2)) = 0
 
-
-        _Penetration("Penetration", Range(0, 1)) = 0.2 
         
         [Space, Header(Penetration Options)]
         _Penetration("Penetration", Range(0, 1)) = 0.2 // Åõ°úÀ²
