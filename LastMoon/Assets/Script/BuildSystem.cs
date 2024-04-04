@@ -10,8 +10,10 @@ public class BuildSystem : MonoBehaviour
     public GameObject cubePrefab; // cube 프리팹을 연결할 변수
     private GameObject cubePreview; // cube 미리보기 객체를 저장할 변수
     private bool isBuildingMode = false; // 건물 설치 모드인지 여부를 나타내는 변수
+    private bool checkToClick = false;
     private enum BuildMode { FREE, GRID, EXIT };
     private BuildMode build;
+
     int gridnum = 0;
     int freenum = 0;
 
@@ -25,38 +27,51 @@ public class BuildSystem : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            switch (build)
-            {
-                case BuildMode.FREE:
-                   ToggleBuildingMode();
-                   build = BuildMode.GRID;
-                    break;
-                case BuildMode.GRID:
-                    
-                    HideCubePreview();
-                    build = BuildMode.EXIT;
-                    break;
-                case BuildMode.EXIT:
-                    
-                    ToggleBuildingMode();
-                    build = BuildMode.FREE;
-
-                    break;
-                default:
-                    break;
-            }
-        }
-        if(build ==BuildMode.FREE)
+        if (build == BuildMode.FREE)
         {
             UpdateBuildingMode();
         }
-        if(build == BuildMode.GRID)
+        if (build == BuildMode.GRID)
         {
             GridBuild();
         }
-      
+    }
+    public void test()
+    {
+        print("클릭");
+    }
+    public void ButtonClick() //버튼 클릭 이벤트에 대한 함수를 만들어 준다.
+    {
+        Debug.Log("클릭");
+        checkToClick = true;
+        if(checkToClick)
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                switch (build)
+                {
+                    case BuildMode.FREE:
+                        ToggleBuildingMode();
+                        build = BuildMode.GRID;
+                        break;
+                    case BuildMode.GRID:
+
+                        HideCubePreview();
+                        build = BuildMode.EXIT;
+                        break;
+                    case BuildMode.EXIT:
+
+                        //ToggleBuildingMode();
+                        build = BuildMode.FREE;
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        
+
     }
 
     // Grid mode build
@@ -72,6 +87,7 @@ public class BuildSystem : MonoBehaviour
                 Vector3 clickPoint = grid.GetNearestPointOnGrid(hitInfo.point);
                 PlaceCubeNear(clickPoint);
             }
+            checkToClick = false;
         }
         else if (build == BuildMode.GRID)
         {
@@ -84,6 +100,7 @@ public class BuildSystem : MonoBehaviour
                 ShowCubePreview(previewPosition);
             }
         }
+
     }
 
     private void ShowCubePreview(Vector3 position)
@@ -145,6 +162,7 @@ public class BuildSystem : MonoBehaviour
                 cubePreview = null;
 
                 GameObject cube = Instantiate(cubePrefab, mousePosition, Quaternion.identity);
+                checkToClick = false;
             }
         }
     }
