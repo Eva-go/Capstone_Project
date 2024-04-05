@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class BuildSystem : MonoBehaviour
 {
     private Grid grid; // 그리드
@@ -17,33 +17,24 @@ public class BuildSystem : MonoBehaviour
     int gridnum = 0;
     int freenum = 0;
 
+    public Button bt;
 
 
     private void Awake()
     {
         grid = FindObjectOfType<Grid>();
+       
         build = BuildMode.EXIT;
+
+    }
+    void Start()
+    {
+        bt = GetComponent<Button>();
+        bt.onClick.AddListener(ButtonClick);
     }
 
     void Update()
     {
-        if (build == BuildMode.FREE)
-        {
-            UpdateBuildingMode();
-        }
-        if (build == BuildMode.GRID)
-        {
-            GridBuild();
-        }
-    }
-    public void test()
-    {
-        print("클릭");
-    }
-    public void ButtonClick() //버튼 클릭 이벤트에 대한 함수를 만들어 준다.
-    {
-        Debug.Log("클릭");
-        checkToClick = true;
         if(checkToClick)
         {
             if (Input.GetKeyDown(KeyCode.E))
@@ -52,12 +43,9 @@ public class BuildSystem : MonoBehaviour
                 {
                     case BuildMode.FREE:
                         ToggleBuildingMode();
-                        build = BuildMode.GRID;
                         break;
                     case BuildMode.GRID:
-
                         HideCubePreview();
-                        build = BuildMode.EXIT;
                         break;
                     case BuildMode.EXIT:
 
@@ -69,8 +57,23 @@ public class BuildSystem : MonoBehaviour
                         break;
                 }
             }
+            
         }
-        
+        if (build == BuildMode.FREE)
+        {
+            UpdateBuildingMode();
+        }
+        if (build == BuildMode.GRID)
+        {
+            GridBuild();
+        }
+
+    }
+    public void ButtonClick() //버튼 클릭 이벤트에 대한 함수를 만들어 준다.
+    {
+        checkToClick=true;
+        build = BuildMode.FREE;
+        ToggleBuildingMode();
 
     }
 
@@ -88,6 +91,7 @@ public class BuildSystem : MonoBehaviour
                 PlaceCubeNear(clickPoint);
             }
             checkToClick = false;
+            build = BuildMode.EXIT;
         }
         else if (build == BuildMode.GRID)
         {
@@ -163,6 +167,7 @@ public class BuildSystem : MonoBehaviour
 
                 GameObject cube = Instantiate(cubePrefab, mousePosition, Quaternion.identity);
                 checkToClick = false;
+                build = BuildMode.GRID;
             }
         }
     }
