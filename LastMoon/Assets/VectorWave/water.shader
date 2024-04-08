@@ -1,9 +1,10 @@
-Shader "Custom/Water"
+ï»¿Shader "Custom/Water"
 {
     Properties
     {
         [Header(Textures)]
         _MainTex ("Texture", 2D) = "white" {}
+        _RampTex("RampTex", 2D) = "white" {}
         _BumpMap("Normal Map", 2D) = "bump" {}
         _Cube("Cube", Cube) = ""{}
 
@@ -15,7 +16,7 @@ Shader "Custom/Water"
 
         
         [Space, Header(Penetration Options)]
-        _Penetration("Penetration", Range(0, 1)) = 0.2 // Åõ°úÀ²
+        _Penetration("Penetration", Range(0, 1)) = 0.2 // íˆ¬ê³¼ìœ¨
 
         _PenetrationThreshold("Penetration Threshold", Range(0, 50)) = 5
 
@@ -48,12 +49,14 @@ Shader "Custom/Water"
     {
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
 
+
         CGPROGRAM
         #pragma surface surf WaterSpecular alpha:fade vertex:vert
         #pragma target 3.0
 
         sampler2D _MainTex;
         sampler2D _BumpMap;
+        sampler2D _RampTex;
         samplerCUBE _Cube;
 
         struct Input
@@ -129,6 +132,18 @@ Shader "Custom/Water"
             col.a = s.Alpha + spec;
 
             return col;
+        }
+        float4 Lightingwarp(SurfaceOutput s, float3 lightDir, float3 viewDir, float atten)
+        {
+            float ndotl = dot(s.Normal, lightDir) * 0.5 + 0.5;
+            float fdotv = saturate(dot(s.Normal,viewDir));
+
+            float4 ramp = tex2D(_RampTex, float2(ndotl, fdotv));
+
+            float4 final;
+            final.rgb = s.Albedo.rgb * ramp.rgb;
+            final.a = s.Alpha;
+            return final;
         }
         ENDCG
     }
