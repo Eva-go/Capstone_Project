@@ -4,12 +4,30 @@ using UnityEngine;
 
 public class wavescale : MonoBehaviour
 {
-    public float maxScaleY = 80;
-    public float scaleSpeed = 1f;
-    public float timerInterval = 3f;
+    private float _maxScaleY = 80;
+    private float _scaleSpeed = 1f;
+    private float _timerInterval = 3f;
 
     private Vector3 initScale;
     private bool scalingUP = false;
+
+    public float maxScaleY
+    {
+        get { return _maxScaleY; }
+        set { _maxScaleY = value; }
+    }
+
+    public float scaleSpeed
+    {
+        get { return _scaleSpeed; }
+        set { _scaleSpeed = value; }
+    }
+
+    public float timerInterval
+    {
+        get { return _timerInterval; }
+        set { _timerInterval = value; }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -46,19 +64,5 @@ public class wavescale : MonoBehaviour
             }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            if (scalingUP)
-            {
-                float newYScale = Mathf.MoveTowards(transform.localScale.y, maxScaleY, scaleSpeed * Time.deltaTime);
-                transform.localScale = new Vector3(initScale.x, newYScale, initScale.z);
-            }
-            else
-            {
-                float newYScale = Mathf.MoveTowards(transform.localScale.y, initScale.y, scaleSpeed * Time.deltaTime);
-                transform.localScale = new Vector3(initScale.x, newYScale, initScale.z);
-            }
-        }
     }
 }
