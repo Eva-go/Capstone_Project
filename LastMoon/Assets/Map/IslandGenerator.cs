@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class IslandGenerator : MonoBehaviour
 {
-    public int mapWidth = 256;
-    public int mapHeight = 256;
-    public float scale = 20.0f;
-    public float islandThreshold = 0.5f;
+    public int mapWidth = 1000;
+    public int mapHeight = 1000;
+    public float scale = 50.0f;
+    public float islandThreshold = 100f;
 
     void Start()
     {
@@ -45,5 +45,10 @@ public class IslandGenerator : MonoBehaviour
 
             }
         }
+        islandMap.Apply();
+        islandMap.wrapMode = TextureWrapMode.Clamp;
+
+        // Assign the texture to the material
+        GetComponent<Renderer>().material.mainTexture = islandMap;
     }
 }

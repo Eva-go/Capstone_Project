@@ -312,6 +312,7 @@ GameObject:
   - component: {fileID: 1443026971}
   - component: {fileID: 1443026970}
   - component: {fileID: 1443026969}
+  - component: {fileID: 1443026974}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -333,8 +334,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapWidth: 1000
   mapHeight: 1000
-  scale: 17.9
-  islandThreshold: 0.7
+  scale: 10
+  islandThreshold: 10.28
 --- !u!64 &1443026970
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -369,7 +370,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 39684c642de1df841bea07432797c377, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -413,3 +414,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1443026974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443026968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4805400f68ed7444487a9c7644990583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapWidth: 100
+  mapHeight: 100
+  scale: 20
+  islandThreshold: 0.5

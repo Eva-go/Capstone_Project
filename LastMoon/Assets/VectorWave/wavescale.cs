@@ -6,7 +6,7 @@ public class wavescale : MonoBehaviour
 {
     private float _maxScaleY = 80;
     private float _scaleSpeed = 1f;
-    private float _timerInterval = 3f;
+    private float _timerInterval = 12f;
 
     private Vector3 initScale;
     private bool scalingUP = false;
@@ -34,6 +34,9 @@ public class wavescale : MonoBehaviour
     {
         initScale = transform.localScale;
         StartCoroutine(ScaleOverTime());
+        Debug.Log(maxScaleY);
+        Debug.Log(scaleSpeed);
+        Debug.Log(timerInterval);
     }
 
     IEnumerator ScaleOverTime()
