@@ -4,51 +4,43 @@ using UnityEngine;
 
 public class IslandGenerator : MonoBehaviour
 {
-    public int mapWidth = 1000;
-    public int mapHeight = 1000;
-    public float scale = 50.0f;
-    public float islandThreshold = 100f;
+    public int width = 256;
+    public int height = 256;
+    public float scale = 1.0f;
+    public int octaves = 3;
+    public float persistance = 0.5f;
+    public float lacunarity = 2;
 
-    void Start()
+    private float xOrg = 0;
+    private float yOrg = 0;
+
+    public string seed;
+    public bool useRandomSeed;
+
+    public bool useColorMap;
+    public bool useGradientMap;
+
+    [SerializeField] private PerlinNoise perlinNoise;
+    [SerializeField] private Gradient gradient;
+    [SerializeField] private MapDisplay mapDisplay;
+
+    private void Update()
     {
-        GenerateIslandMap();
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (useRandomSeed) seed = Time.time.ToString(); //시드
+            System.Random pseudoRandom = new System.Random(seed.GetHashCode()); //의사 난수
+            xOrg = pseudoRandom.Next(0, 99999); //의사 난수로 부터 랜덤 값 추출
+            yOrg = pseudoRandom.Next(0, 99999);
+            GenerateMap();
+        }
     }
 
-    void GenerateIslandMap()
+    private void GenerateMap()
     {
-        // 새로운 텍스처 생성
-        Texture2D islandMap = new Texture2D(mapWidth, mapHeight);
-
-        // 각 픽셀에 대해 펄린 노이즈 값을 계산하여 지형 생성
-        for (int x = 0; x < mapWidth; x++)
-        {
-            for (int y = 0; y < mapHeight; y++)
-            {
-                // Normalize coordinates to fit into Perlin noise space
-                float xCoord = (float)x / mapWidth * scale;
-                float yCoord = (float)y / mapHeight * scale;
-
-                // Calculate Perlin noise value
-                float perlinValue = Mathf.PerlinNoise(xCoord, yCoord);
-
-                // Calculate distance from center
-                float distanceFromCenter = Vector2.Distance(new Vector2(x, y), new Vector2(mapWidth / 2, mapHeight / 2)) / (mapWidth / 2);
-
-                // Apply circular gradient
-                perlinValue *= Mathf.SmoothStep(0.0f, 1.0f, 1.0f - distanceFromCenter);
-
-                // Determine if the pixel represents land or water based on threshold
-                Color pixelColor = (perlinValue > islandThreshold) ? Color.white : Color.blue;
-
-                // Set pixel color
-                islandMap.SetPixel(x, y, pixelColor);
-
-            }
-        }
-        islandMap.Apply();
-        islandMap.wrapMode = TextureWrapMode.Clamp;
-
-        // Assign the texture to the material
-        GetComponent<Renderer>().material.mainTexture = islandMap;
+        //float[,] noiseMap = perlinNoise.GenerateNoiseMap(width, height, scale, octaves, persistance, lacunarity, xOrg, yOrg); //노이즈 맵 생성
+        //float[,] gradientMap = gradient.GenerateMap(width, height); //그라디언트 맵 생성
+        //if (useGradientMap) Map2Display.DrawNoiseMap(noiseMap, gradientMap, useColorMap); //노이즈 맵과 그라디언트 맵 결합
+        //else mapDisplay.DrawNoiseMap(noiseMap, noiseMap, useColorMap);
     }
 }
