@@ -6,10 +6,13 @@ using Photon.Realtime;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
+    
     //버전 입력
     private readonly string version = "1.0f";
     //User ID
     private string userId = "서버관리자";
+
+    private int userNumber = 0;
 
     void Awake()
     {
@@ -78,7 +81,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //int idx = Random.Range(1, points.Length);
         //캐릭터를 생성
         //PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0);
-
+    
     }
 
 
@@ -91,6 +94,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-
+        
+    
     }
 }

@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
             Move();
             CameraRotation();
             CharacterRotation();
-            BuildBlock();
+            //BuildBlock();
         }
        
     }
