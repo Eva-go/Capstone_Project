@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private Camera playerCamera;
     private Rigidbody playerRigidBody;
 
+    private PhotonView pv;
 
     // Start is called before the first frame update
     void Start()
@@ -31,10 +34,14 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-        CameraRotation();
-        CharacterRotation();
-        BuildBlock();
+        if (pv.IsMine)
+        {
+            Move();
+            CameraRotation();
+            CharacterRotation();
+            BuildBlock();
+        }
+       
     }
 
     private void Move()
