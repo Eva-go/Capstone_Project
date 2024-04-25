@@ -18,8 +18,8 @@ public class Movement : MonoBehaviour
     void Start()
     {
        cam = GameObject.Find("Main Camera");
-        cam.SetActive(false);
-        pv = GetComponent<PhotonView>();
+       cam.SetActive(false);
+       pv = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
