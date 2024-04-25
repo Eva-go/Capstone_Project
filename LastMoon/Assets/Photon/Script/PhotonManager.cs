@@ -37,7 +37,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
-        PhotonNetwork.JoinRandomRoom(); //랜덤 매치메이킹 기능 제공
+        PhotonNetwork.JoinRoom("My Room");
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.Log($"JoinRoom Filed {returnCode}:{message}");
+
+        ////룸의 속성 정의
+        //RoomOptions ro = new RoomOptions();
+        //ro.MaxPlayers = 20; //최대 접속자 수 : 20 명
+        //ro.IsOpen = true; //룸의 오픈 여부
+        //ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
+        //
+        ////룸 생성
+        //PhotonNetwork.CreateRoom("My Room", ro);
     }
 
     //랜덤한 룸 입장이 실패했을 경우 호출되는 콜백 함수
@@ -45,14 +59,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"JoinRandom Filed {returnCode}:{message}");
 
-        //룸의 속성 정의
-        RoomOptions ro = new RoomOptions();
-        ro.MaxPlayers = 20; //최대 접속자 수 : 20 명
-        ro.IsOpen = true; //룸의 오픈 여부
-        ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
-
-        //룸 생성
-        PhotonNetwork.CreateRoom("My Room", ro);
+        ////룸의 속성 정의
+        //RoomOptions ro = new RoomOptions();
+        //ro.MaxPlayers = 20; //최대 접속자 수 : 20 명
+        //ro.IsOpen = true; //룸의 오픈 여부
+        //ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
+        //
+        ////룸 생성
+        //PhotonNetwork.CreateRoom("My Room", ro);
     }
 
     //룸 생성이 완료된후 호출되는 콜백 함수

@@ -6,95 +6,59 @@ using Photon.Realtime;
 using Cinemachine;
 public class Movement : MonoBehaviour
 {
-    private CharacterController controller;
-    private new Transform transform;
-    private Animator animator;
-    private new Camera camera;
-
-    //가상의 Plane에 레이캐스팅 하기위한 변수
-    private Plane plane;
-    private Ray ray;
-    private Vector3 hitPoint;
-
-    //이동속도
-    public float moveSpeed = 10.0f;
-
     private PhotonView pv;
-    private CinemachineVirtualCamera virtualCamera;
+
+    public float turnSpeed = 4.0f; // 마우스 회전 속도    
+    private float xRotate = 0.0f; // 내부 사용할 X축 회전량은 별도 정의 ( 카메라 위 아래 방향 )
+    public float moveSpeed = 4.0f; // 이동 속도
+
+    GameObject cam;
+
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<CharacterController>();
-        transform = GetComponent<Transform>();
-        animator = GetComponent<Animator>();
-        camera = Camera.main;
-
+       cam = GameObject.Find("Main Camera");
+        cam.SetActive(false);
         pv = GetComponent<PhotonView>();
-        virtualCamera = GameObject.FindObjectOfType<CinemachineVirtualCamera>();
-
-        // 자신의 캐릭터일 경우 시네머신 카메라를 연결
-        if (pv.IsMine)
-        {
-            virtualCamera.Follow = transform;
-            virtualCamera.LookAt = transform;
-        }
-
-        //가상의 바닥을 기준으로 주인공의 위치를 생성
-        plane = new Plane(transform.up, transform.position);
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (pv.IsMine)
+        if(pv.IsMine)
         {
-            Move();
-            Turn();
+            cam.SetActive(true);
+            Mouse();
+            Keybord();
         }
-
+       
     }
 
-    float h => Input.GetAxis("Horizontal");
-    float v => Input.GetAxis("Vertical");
-
-    void Move()
+    private void Mouse()
     {
-        Vector3 cameraForward = camera.transform.forward;
-        Vector3 cameraRight = camera.transform.right;
-        cameraForward.y = 0.0f;
-        cameraRight.y = 0.0f;
+        // 좌우로 움직인 마우스의 이동량 * 속도에 따라 카메라가 좌우로 회전할 양 계산
+        float yRotateSize = Input.GetAxis("Mouse X") * turnSpeed;
+        // 현재 y축 회전값에 더한 새로운 회전각도 계산
+        float yRotate = transform.eulerAngles.y + yRotateSize;
 
-        //이동할 방향 백터 계산
-        Vector3 moveDir = (cameraForward * v) + (cameraRight * h);
-        moveDir.Set(moveDir.x, 0.0f, moveDir.z);
-        //캐릭터 이동처리
-        controller.SimpleMove(moveDir * moveSpeed);
+        // 위아래로 움직인 마우스의 이동량 * 속도에 따라 카메라가 회전할 양 계산(하늘, 바닥을 바라보는 동작)
+        float xRotateSize = -Input.GetAxis("Mouse Y") * turnSpeed;
+        // 위아래 회전량을 더해주지만 -45도 ~ 80도로 제한 (-45:하늘방향, 80:바닥방향)
+        // Clamp 는 값의 범위를 제한하는 함수
+        xRotate = Mathf.Clamp(xRotate + xRotateSize, -45, 80);
 
-        //캐릭터 애니메이션 처리
-        //float forward = Vector3.Dot(moveDir, transform.forward);
-        //float strafe = Vector3.Dot(moveDir, transform.right);
-        //animator.SetFloat("Forward", forward);
-        //animator.SetFloat("Strafe", strafe);
-
+        // 카메라 회전량을 카메라에 반영(X, Y축만 회전)
+        transform.eulerAngles = new Vector3(xRotate, yRotate, 0);
     }
 
-    void Turn()
+    private void Keybord()
     {
-        //마우스의 2차원 자푯값을 이용해 3차원 레이를 생성
-        ray = camera.ScreenPointToRay(Input.mousePosition);
-        float enter = 0.0f;
+        //  키보드에 따른 이동량 측정
+        Vector3 move =
+            transform.forward * Input.GetAxis("Vertical") +
+            transform.right * Input.GetAxis("Horizontal");
 
-        //가상의 바닥에 ray를 발사해 충돌 지점의 거리를 enter 변수로 변환
-        plane.Raycast(ray, out enter);
-        //가상의 바닥에 레이가 충돌한 좌푯값을 추출
-        hitPoint = ray.GetPoint(enter);
-
-        //회전해야 할 방향의 백터 계산
-        Vector3 lookDir = hitPoint - transform.position;
-        lookDir.y = 0;
-        //캐릭터의 회전값 지정
-        transform.localRotation = Quaternion.LookRotation(lookDir);
+        // 이동량을 좌표에 반영
+        transform.position += move * moveSpeed * Time.deltaTime;
     }
-
 }
