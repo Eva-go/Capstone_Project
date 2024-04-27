@@ -74,8 +74,7 @@ public class PlayerController : MonoBehaviour
         float _yRotation = Input.GetAxisRaw("Mouse X");
         Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
         myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
-        Debug.Log(myRigid.rotation);
-        Debug.Log(myRigid.rotation.eulerAngles);
+        
     }
 
     private void CameraRotation()
