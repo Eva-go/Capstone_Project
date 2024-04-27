@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Pun.Demo.PunBasics;
 
 public class PlayerController : MonoBehaviour
 {
@@ -25,7 +27,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Camera theCamera;
     private Rigidbody myRigid;
-
 
     // Use this for initialization
     void Start()
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
             Move();
             CameraRotation();
             CharacterRotation();
+            InputKey.Player_UI();
         }
 
     }
