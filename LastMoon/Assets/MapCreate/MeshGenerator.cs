@@ -46,6 +46,8 @@ public class MeshData
 
     public MeshData(int meshWidth, int meshHeight)
     {
+        meshWidth = 1000;
+        meshHeight = 1000;
         vertices = new Vector3[meshWidth * meshHeight];
         uvs = new Vector2[meshWidth * meshHeight];
         triangles = new int[(meshWidth-1) * (meshHeight-1) * 6];
@@ -53,10 +55,29 @@ public class MeshData
 
     public void AddTriangle(int a, int b, int c)
     {
+        // triangles 배열의 길이가 충분한지 확인하고, 부족하다면 배열을 확장
+        if (triangleIndex + 2 >= triangles.Length)
+        {
+            ExpandTrianglesArray();
+        }
+
+        // 삼각형을 배열에 추가
         triangles[triangleIndex] = a;
-        triangles[triangleIndex+1] = b;
-        triangles[triangleIndex+2] = c;
+        triangles[triangleIndex + 1] = b;
+        triangles[triangleIndex + 2] = c;
         triangleIndex += 3;
+    }
+
+    // triangles 배열을 확장하는 메서드
+    private void ExpandTrianglesArray()
+    {
+        int newLength = triangles.Length * 2;
+        int[] newTriangles = new int[newLength];
+        for (int i = 0; i < triangles.Length; i++)
+        {
+            newTriangles[i] = triangles[i];
+        }
+        triangles = newTriangles;
     }
 
     public Mesh CreateMesh()
