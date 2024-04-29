@@ -30,26 +30,45 @@ public class InputKey : MonoBehaviour
                     GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(true);
                     GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
+                    if (Inventory)
+                    {
+                        GameObject.Find("Construction_Tab").transform.GetChild(0).gameObject.SetActive(false);
+                    }
                     break;
                 case 1:
                     GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(true);
                     GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
+                    if(Inventory)
+                    {
+                        GameObject.Find("Construction_Tab").transform.GetChild(0).gameObject.SetActive(true);
+                    }
                     break;
                 case 2:
                     GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(true);
-                    break;
-
+                    if (Inventory)
+                    {
+                        GameObject.Find("Construction_Tab").transform.GetChild(0).gameObject.SetActive(false);
+                    }
+                    
+                    break;  
             }
         }
         if(Input.GetKeyDown(KeyCode.I))
         {
-            if(Inventory)
+            Inventory = !Inventory;
+            if (Inventory)
+            {
                 GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(true);
+                GameObject.Find("Tap").transform.GetChild(KeyTabCode).gameObject.SetActive(true);       
+            }
             else
+            {
                 GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(false);
+                GameObject.Find("Tap").transform.GetChild(KeyTabCode).gameObject.SetActive(false);
+            }
         }
     }
 }
