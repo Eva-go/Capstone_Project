@@ -72,7 +72,7 @@ public class InputKey : MonoBehaviour
             else
             {
                 GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(false);
-                GameObject.Find("Item_Tab").transform.GetChild(0).gameObject.SetActive(false);
+                //GameObject.Find("Item_Tab").transform.GetChild(0).gameObject.SetActive(false);
             }
         }
     }
