@@ -7,9 +7,11 @@ public class InputKey : MonoBehaviour
     // Start is called before the first frame update
     static private int KeyTabCode = 0;
     static private bool Inventory = false;
+    
+    private UI_manager uI_Manager;
     void Start()
     {
-        
+        uI_Manager = GameObject.FindObjectOfType<UI_manager>();
     }
 
     // Update is called once per frame
@@ -74,6 +76,11 @@ public class InputKey : MonoBehaviour
                 GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(false);
                 //GameObject.Find("Item_Tab").transform.GetChild(0).gameObject.SetActive(false);
             }
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(false);
+            UI_manager.Cancel();
         }
     }
 }

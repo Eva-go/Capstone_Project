@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private Camera theCamera;
     private Rigidbody myRigid;
 
+    public static Transform Point;
     // Use this for initialization
     void Start()
     {

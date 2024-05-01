@@ -960,14 +960,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1787565260}
         m_TargetAssemblyTypeName: UI_manager, Assembly-CSharp
-        m_MethodName: button
-        m_Mode: 2
+        m_MethodName: SlotClick
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
-          m_IntArgument: 0
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3383,6 +3383,14 @@ MonoBehaviour:
   - {fileID: 419289293}
   - {fileID: 1099110485}
   - {fileID: 253585996}
+  carfts:
+  - Name: Construction_Tab_1
+    Object_prefab: {fileID: 6570034192484688486, guid: 8d2357d7248ac824da6f339e8f314808, type: 3}
+    Object_prview: {fileID: 6564625547473919731, guid: ca87d30ec6134324cb508257641ec293, type: 3}
+  - Name: Sphere
+    Object_prefab: {fileID: 4428063035622945043, guid: 28252dc4357cbc74ca0f2864bee2060e, type: 3}
+    Object_prview: {fileID: 2749321295367068699, guid: 34158b1b19465f54ba0b9a72ebef6b7f, type: 3}
+  tf_Player: {fileID: 2055617823079347758, guid: 4d4a689961669784aa8c33b2dc121e57, type: 3}
 --- !u!1 &1800593780
 GameObject:
   m_ObjectHideFlags: 0
@@ -3764,13 +3772,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1787565260}
         m_TargetAssemblyTypeName: UI_manager, Assembly-CSharp
-        m_MethodName: button
-        m_Mode: 2
+        m_MethodName: SlotClick
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
