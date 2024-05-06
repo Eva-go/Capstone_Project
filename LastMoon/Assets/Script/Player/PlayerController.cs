@@ -27,16 +27,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Camera theCamera;
     private Rigidbody myRigid;
-
-    public static Transform Point;
     // Use this for initialization
     void Start()
     {
-        
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Main Camera");
         cam.SetActive(false);
+       
     }
 
 
@@ -51,9 +49,7 @@ public class PlayerController : MonoBehaviour
             Move();
             CameraRotation();
             CharacterRotation();
-            InputKey.Player_UI();
         }
-
     }
 
     private void Move()
@@ -77,7 +73,6 @@ public class PlayerController : MonoBehaviour
         float _yRotation = Input.GetAxisRaw("Mouse X");
         Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
         myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
-        
     }
 
     private void CameraRotation()

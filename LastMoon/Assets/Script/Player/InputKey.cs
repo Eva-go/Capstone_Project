@@ -5,23 +5,23 @@ using UnityEngine;
 public class InputKey : MonoBehaviour
 {
     // Start is called before the first frame update
-    static private int KeyTabCode = 0;
-    static private bool Inventory = false;
-    
-    private UI_manager uI_Manager;
+    private int KeyTabCode = 0;
+    private bool Inventory = false;
+
+
     void Start()
     {
-        uI_Manager = GameObject.FindObjectOfType<UI_manager>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        Player_UI();
     }
 
 
-    static public void Player_UI()
+    public void Player_UI()
     {
         if(Input.GetKeyDown(KeyCode.Tab)) 
         {
@@ -62,25 +62,6 @@ public class InputKey : MonoBehaviour
                     }
                     break;  
             }
-        }
-        if(Input.GetKeyDown(KeyCode.I))
-        {
-            Inventory = !Inventory;
-            if (Inventory)
-            {
-                GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(true);
-                GameObject.Find("Item_Tab").transform.GetChild(0).gameObject.SetActive(true);
-            }
-            else
-            {
-                GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(false);
-                //GameObject.Find("Item_Tab").transform.GetChild(0).gameObject.SetActive(false);
-            }
-        }
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            GameObject.Find("Resources").transform.GetChild(0).gameObject.SetActive(false);
-            UI_manager.Cancel();
         }
     }
 }
