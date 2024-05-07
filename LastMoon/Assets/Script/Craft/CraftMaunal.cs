@@ -24,6 +24,7 @@ public class CraftMaunal : MonoBehaviour
     private Craft[] craft_Tab; //건축물 탭
 
     private GameObject Object_Preview; //미리보기 프리팹을 담을 변수
+    private GameObject Object_Prefab;
 
     private Transform tf_player;
     private PlayerController playerController;
@@ -36,14 +37,15 @@ public class CraftMaunal : MonoBehaviour
    
     private void Start()
     {
-       
+
     }
 
     public void SlotClick(int _slotNumber)
     {
         playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        tf_player = playerController.transform;
-        Object_Preview = Instantiate(craft_Tab[_slotNumber].Object_prview_Prefab, tf_player.transform.position + tf_player.transform.forward, Quaternion.identity);
+        tf_player = playerController.theCamera.transform;
+        Object_Prefab = craft_Tab[_slotNumber].Object_prefab;
+        Object_Preview = Instantiate(craft_Tab[_slotNumber].Object_prview_Prefab, tf_player.position + tf_player.forward, Quaternion.identity);
         isPreViewActivated = true;
         Inventory_UI.SetActive(false);
     }
@@ -56,27 +58,48 @@ public class CraftMaunal : MonoBehaviour
     {
         
 
-        if(Input.GetKeyDown(KeyCode.I))
+        if(Input.GetKeyDown(KeyCode.I)&& !isPreViewActivated)
             Inventory();//Winodws
-
+        
         if (isPreViewActivated)
             previewPositionUpdate();
+
+        if (Input.GetButtonDown("Fire1"))
+            Build();
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Cancel();
     }
 
+    private void Build()
+    {
+        if(isPreViewActivated)
+        {
+            Instantiate(Object_Prefab, hitInfo.point, Quaternion.identity);
+            Destroy(Object_Preview);
+            isActivated = false;
+            isPreViewActivated = false;
+            Object_Prefab = null;
+            Object_Preview = null;
+
+        }
+    }
 
     private void previewPositionUpdate()
     {
-        if (Physics.Raycast(tf_player.transform.position, tf_player.transform.forward,out hitInfo,range,layerMask))
+        Debug.DrawRay(tf_player.position, tf_player.forward * range, Color.red);
+        if (Physics.Raycast(tf_player.position, tf_player.forward, out hitInfo, range, layerMask))
         {
-            if(hitInfo.transform != null)
+            Debug.Log("test");
+            if (hitInfo.transform != null)
             {
                 Vector3 _location = hitInfo.point;
                 Object_Preview.transform.position = _location;
+                Debug.Log(_location);
             }
         }
+        else
+            Debug.Log("Raycast False");
     }
     public void Cancel()
     {
@@ -85,6 +108,7 @@ public class CraftMaunal : MonoBehaviour
         isActivated = false;
         isPreViewActivated = false;
         Object_Preview = null;
+        Object_Prefab = null;
         Inventory_UI.SetActive(false);
     }
 

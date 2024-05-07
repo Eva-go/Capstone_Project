@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 
 
     [SerializeField]
-    private Camera theCamera;
+    public Camera theCamera;
     private Rigidbody myRigid;
     // Use this for initialization
     void Start()
