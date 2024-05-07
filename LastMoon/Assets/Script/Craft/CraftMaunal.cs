@@ -14,7 +14,7 @@ public class Craft
 public class CraftMaunal : MonoBehaviour
 {
     //상태변수
-    private bool isActivated = false;
+    public static bool isActivated = false;
     private bool isPreViewActivated = false;
 
     [SerializeField]
@@ -90,16 +90,12 @@ public class CraftMaunal : MonoBehaviour
         Debug.DrawRay(tf_player.position, tf_player.forward * range, Color.red);
         if (Physics.Raycast(tf_player.position, tf_player.forward, out hitInfo, range, layerMask))
         {
-            Debug.Log("test");
             if (hitInfo.transform != null)
             {
                 Vector3 _location = hitInfo.point;
                 Object_Preview.transform.position = _location;
-                Debug.Log(_location);
             }
         }
-        else
-            Debug.Log("Raycast False");
     }
     public void Cancel()
     {

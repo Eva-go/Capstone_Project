@@ -6,7 +6,6 @@ public class InputKey : MonoBehaviour
 {
     // Start is called before the first frame update
     private int KeyTabCode = 0;
-    private bool Inventory = false;
 
 
     void Start()
@@ -32,7 +31,7 @@ public class InputKey : MonoBehaviour
                     GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(true);
                     GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
-                    if(Inventory)
+                    if(CraftMaunal.isActivated)
                     {
                         GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(true);
                         GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
@@ -43,7 +42,7 @@ public class InputKey : MonoBehaviour
                     GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(true);
                     GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
-                    if (Inventory)
+                    if (CraftMaunal.isActivated)
                     {
                         GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
                         GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(true);
@@ -54,7 +53,7 @@ public class InputKey : MonoBehaviour
                     GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
                     GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(true);
-                    if (Inventory)
+                    if (CraftMaunal.isActivated)
                     {
                         GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
                         GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
