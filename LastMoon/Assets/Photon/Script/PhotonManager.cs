@@ -39,12 +39,15 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
         PhotonNetwork.JoinRoom("Last Moon");
         //PhotonNetwork.JoinRandomRoom();
+<<<<<<< HEAD
 
         PhotonNetwork.JoinRoom("Last Moon");
         //PhotonNetwork.JoinRandomRoom();
 
         PhotonNetwork.JoinRoom("My Room");
 
+=======
+>>>>>>> Jo
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -105,6 +108,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         Debug.Log("Out Room");
+<<<<<<< HEAD
     }
     // Start is called before the first frame update
     void Start()
@@ -116,5 +120,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     void Update()
     {
 
+=======
+>>>>>>> Jo
     }
 }
