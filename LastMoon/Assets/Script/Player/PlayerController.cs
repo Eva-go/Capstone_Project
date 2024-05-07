@@ -10,7 +10,7 @@ using Photon.Pun.Demo.PunBasics;
 
 public class PlayerController : MonoBehaviour
 {
-    private PhotonView pv;
+    public  PhotonView pv;
     GameObject cam;
     [SerializeField]
     private float walkSpeed;
@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     public Camera theCamera;
     private Rigidbody myRigid;
+    
     // Use this for initialization
     void Start()
     {
@@ -34,7 +35,6 @@ public class PlayerController : MonoBehaviour
         myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Main Camera");
         cam.SetActive(false);
-       
     }
 
 

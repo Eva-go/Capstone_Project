@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon.Pun;
 [System.Serializable]
 public class Craft
 {
@@ -16,6 +16,8 @@ public class CraftMaunal : MonoBehaviour
     //상태변수
     public static bool isActivated = false;
     private bool isPreViewActivated = false;
+
+    private int slotNumber;
 
     [SerializeField]
     private GameObject Inventory_UI; //go_BaseUI; 기본 베이스 UI
@@ -34,7 +36,8 @@ public class CraftMaunal : MonoBehaviour
     private LayerMask layerMask;
     [SerializeField]
     private float range;
-   
+
+
     private void Start()
     {
 
@@ -48,6 +51,7 @@ public class CraftMaunal : MonoBehaviour
         Object_Preview = Instantiate(craft_Tab[_slotNumber].Object_prview_Prefab, tf_player.position + tf_player.forward, Quaternion.identity);
         isPreViewActivated = true;
         Inventory_UI.SetActive(false);
+        slotNumber = _slotNumber;
     }
 
 
@@ -56,26 +60,27 @@ public class CraftMaunal : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+            if (Input.GetKeyDown(KeyCode.I) && !isPreViewActivated)
+                Inventory();//Winodws
 
-        if(Input.GetKeyDown(KeyCode.I)&& !isPreViewActivated)
-            Inventory();//Winodws
-        
-        if (isPreViewActivated)
-            previewPositionUpdate();
+            if (isPreViewActivated)
+                previewPositionUpdate();
+  
+            if (Input.GetButtonDown("Fire1"))
+                Build(slotNumber);
 
-        if (Input.GetButtonDown("Fire1"))
-            Build();
+            
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-            Cancel();
+            if (Input.GetKeyDown(KeyCode.Escape))
+                Cancel();
     }
 
-    private void Build()
+    public void Build(int _slotNumber)
     {
         if(isPreViewActivated)
         {
-            Instantiate(Object_Prefab, hitInfo.point, Quaternion.identity);
+            //Instantiate(Object_Prefab, hitInfo.point, Quaternion.identity);
+            PhotonNetwork.Instantiate(craft_Tab[_slotNumber].Name, hitInfo.point, Quaternion.identity);
             Destroy(Object_Preview);
             isActivated = false;
             isPreViewActivated = false;
