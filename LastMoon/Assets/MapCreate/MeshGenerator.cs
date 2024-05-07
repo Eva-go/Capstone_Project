@@ -14,19 +14,17 @@ public static class MeshGenerator
         int meshSimplificationIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
         int verticesPerLine = (width - 1) / meshSimplificationIncrement + 1;
 
-        MeshData meshData = new MeshData(verticesPerLine, verticesPerLine);
+        MeshData meshData = new MeshData (verticesPerLine, verticesPerLine);
         int vertexIndex = 0;
 
         for (int y = 0; y < height; y += meshSimplificationIncrement)
         {
             for (int x = 0; x < width; x += meshSimplificationIncrement)
             {
-                float heightValue = heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier;
-                Vector3 vertexPosition = new Vector3(topLeftX + x, heightValue, topLeftZ - y);
-                meshData.vertices[vertexIndex] = vertexPosition;
-                meshData.uvs[vertexIndex] = new Vector2(x / (float)width, y / (float)height);
+                meshData.vertices[vertexIndex] = new Vector3(topLeftX + x, heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier, topLeftZ - y);
+                meshData.uvs[vertexIndex] = new Vector2(x/(float)width, y/(float)height);
 
-                if (x < width - 1 && y < height - 1)
+                if (x < width - 1 && y <height - 1)
                 {
                     meshData.AddTriangle(vertexIndex, vertexIndex + verticesPerLine + 1, vertexIndex + verticesPerLine);
                     meshData.AddTriangle(vertexIndex + verticesPerLine + 1, vertexIndex, vertexIndex + 1);
@@ -37,7 +35,8 @@ public static class MeshGenerator
         return meshData;
     }
 }
-    public class MeshData
+
+public class MeshData
 {
     public Vector3[] vertices;
     public int[] triangles;
@@ -47,8 +46,6 @@ public static class MeshGenerator
 
     public MeshData(int meshWidth, int meshHeight)
     {
-        meshWidth = 1000;
-        meshHeight = 1000;
         vertices = new Vector3[meshWidth * meshHeight];
         uvs = new Vector2[meshWidth * meshHeight];
         triangles = new int[(meshWidth-1) * (meshHeight-1) * 6];
@@ -56,29 +53,10 @@ public static class MeshGenerator
 
     public void AddTriangle(int a, int b, int c)
     {
-        // triangles 배열의 길이가 충분한지 확인하고, 부족하다면 배열을 확장
-        if (triangleIndex + 2 >= triangles.Length)
-        {
-            ExpandTrianglesArray();
-        }
-
-        // 삼각형을 배열에 추가
         triangles[triangleIndex] = a;
-        triangles[triangleIndex + 1] = b;
-        triangles[triangleIndex + 2] = c;
+        triangles[triangleIndex+1] = b;
+        triangles[triangleIndex+2] = c;
         triangleIndex += 3;
-    }
-
-    // triangles 배열을 확장하는 메서드
-    private void ExpandTrianglesArray()
-    {
-        int newLength = triangles.Length * 2;
-        int[] newTriangles = new int[newLength];
-        for (int i = 0; i < triangles.Length; i++)
-        {
-            newTriangles[i] = triangles[i];
-        }
-        triangles = newTriangles;
     }
 
     public Mesh CreateMesh()
