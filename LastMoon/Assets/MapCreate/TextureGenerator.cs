@@ -24,40 +24,39 @@ public class TextureGenerator : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                colourMap[y * width + x] = Color.Lerp(Color.black, Color.white, heightMap[x, y]);
+                // 원형 그라디언트를 적용하여 노이즈 값을 색상으로 변환
+                float normalizedHeight = heightMap[x, y];
+                colourMap[y * width + x] = EvaluateGradient(normalizedHeight);
             }
         }
         return TextureFromColourMap(colourMap, width, height);
 
     }
-    public static Texture2D CreateIslandGradientTexture(int width, int height, Color innerColor, Color outerColor)
+
+    private static Color EvaluateGradient(float normalizedHeight)
     {
-        Texture2D texture = new Texture2D(width, height);
+        // 원형 그라디언트 중심점
+        Vector2 center = new Vector2(0.5f, 0.5f);
+        // 현재 점의 위치
+        Vector2 point = new Vector2(normalizedHeight, normalizedHeight);
+        // 중심에서의 거리
+        float distanceFromCenter = Vector2.Distance(point, center);
 
-        float centerX = width / 2f;
-        float centerY = height / 2f;
-        float maxRadius = Mathf.Min(width, height) / 2f;
-
-        Color[] pixels = new Color[width * height];
-        for (int y = 0; y < height; y++)
+        // 그라디언트 색상
+        Color color = Color.white;
+        if (distanceFromCenter > 0.5f)
         {
-            for (int x = 0; x < width; x++)
-            {
-                float distanceToCenter = Vector2.Distance(new Vector2(x, y), new Vector2(centerX, centerY));
-                float normalizedDistance = distanceToCenter / maxRadius;
-
-                // 중앙에 가까울수록 높은 값을 갖도록 조절
-                float heightValue = 1f - Mathf.Clamp01(normalizedDistance * normalizedDistance);
-
-                Color color = Color.Lerp(innerColor, outerColor, heightValue);
-                pixels[y * width + x] = color;
-            }
+            // 그라디언트의 외부 영역은 검은색
+            color = Color.black;
+        }
+        else
+        {
+            // 그라디언트의 내부 영역은 노이즈 값을 적용하여 색상 결정
+            float noiseValue = Mathf.PerlinNoise(point.x * 10, point.y * 10);
+            color = new Color(noiseValue, noiseValue, noiseValue);
         }
 
-        texture.SetPixels(pixels);
-        texture.Apply();
-
-        return texture;
+        return color;
     }
 
 }

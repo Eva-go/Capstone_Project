@@ -14,17 +14,19 @@ public static class MeshGenerator
         int meshSimplificationIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
         int verticesPerLine = (width - 1) / meshSimplificationIncrement + 1;
 
-        MeshData meshData = new MeshData (verticesPerLine, verticesPerLine);
+        MeshData meshData = new MeshData(verticesPerLine, verticesPerLine);
         int vertexIndex = 0;
 
         for (int y = 0; y < height; y += meshSimplificationIncrement)
         {
             for (int x = 0; x < width; x += meshSimplificationIncrement)
             {
-                meshData.vertices[vertexIndex] = new Vector3(topLeftX + x, heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier, topLeftZ - y);
-                meshData.uvs[vertexIndex] = new Vector2(x/(float)width, y/(float)height);
+                float heightValue = heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier;
+                Vector3 vertexPosition = new Vector3(topLeftX + x, heightValue, topLeftZ - y);
+                meshData.vertices[vertexIndex] = vertexPosition;
+                meshData.uvs[vertexIndex] = new Vector2(x / (float)width, y / (float)height);
 
-                if (x < width - 1 && y <height - 1)
+                if (x < width - 1 && y < height - 1)
                 {
                     meshData.AddTriangle(vertexIndex, vertexIndex + verticesPerLine + 1, vertexIndex + verticesPerLine);
                     meshData.AddTriangle(vertexIndex + verticesPerLine + 1, vertexIndex, vertexIndex + 1);
@@ -35,8 +37,7 @@ public static class MeshGenerator
         return meshData;
     }
 }
-
-public class MeshData
+    public class MeshData
 {
     public Vector3[] vertices;
     public int[] triangles;
