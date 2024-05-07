@@ -30,6 +30,10 @@ public class MapGenerator : MonoBehaviour
     public Texture2D gradientTexture; // 그라디언트 텍스처
     public Gradient gradient; // 그라디언트
 
+    //public GameObject cubePrefab; // 큐브 프리팹
+    //public int maxCubeCount = 1000; // 생성할 최대 큐브 개수
+    //private int cubeCount = 0; // 생성된 큐브 개수
+
     public void GenerateMap()
     {
         float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed, noiseScale,
@@ -51,6 +55,16 @@ public class MapGenerator : MonoBehaviour
                     if (currentHeight <= regions[i].height) 
                     {
                         colourMap[y * mapChunkSize + x] = regions[i].colour;
+                        //if (regions[i].height >= 0.8f && regions[i].height <= 1.0f)
+                        //{
+                        //    if (cubeCount < maxCubeCount)
+                        //    {
+                        //        // 랜덤한 위치에 큐브 오브젝트 생성
+                        //        Vector3 cubePosition = new Vector3(x, currentHeight, y);
+                        //        Instantiate(cubePrefab, cubePosition, Quaternion.identity);
+                        //        cubeCount++; // 생성된 큐브 개수 증가
+                        //    }
+                        //}
                         break;
                     }
                 }
@@ -74,10 +88,6 @@ public class MapGenerator : MonoBehaviour
         }
     }
      
-    private void ApplyMaterial(Material material)
-    {
-        GetComponent<Renderer>().material = material;
-    }
 
     void OnValidate()
     {
