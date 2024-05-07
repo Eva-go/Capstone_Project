@@ -1,6 +1,10 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+<<<<<<< HEAD
 --- !u!114 &-7584514630760589640
+=======
+--- !u!114 &-6323286995109914814
+>>>>>>> young
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -28,6 +32,10 @@ Material:
   - _NORMALMAP
   - _OCCLUSIONMAP
   - _PARALLAXMAP
+<<<<<<< HEAD
+=======
+  - _SPECULAR_SETUP
+>>>>>>> young
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -41,11 +49,19 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
+<<<<<<< HEAD
         m_Texture: {fileID: 2800000, guid: 66aa229c23197934a9afaeb2aabdc28b, type: 3}
         m_Scale: {x: 32, y: 32}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: a9ffbbc0a7104574fbdd2778d30e8372, type: 3}
+=======
+        m_Texture: {fileID: 2800000, guid: e86699e9f83c0db4085758e2795d5f22, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 919abf3710dfbf443b139787cb02b825, type: 3}
+>>>>>>> young
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -65,19 +81,32 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
+<<<<<<< HEAD
         m_Texture: {fileID: 2800000, guid: 66aa229c23197934a9afaeb2aabdc28b, type: 3}
         m_Scale: {x: 32, y: 32}
+=======
+        m_Texture: {fileID: 2800000, guid: e86699e9f83c0db4085758e2795d5f22, type: 3}
+        m_Scale: {x: 2, y: 2}
+>>>>>>> young
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
+<<<<<<< HEAD
         m_Texture: {fileID: 2800000, guid: 85f3a255d9891a449ba4e7f190cc273d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 2800000, guid: 85f3a255d9891a449ba4e7f190cc273d, type: 3}
+=======
+        m_Texture: {fileID: 2800000, guid: f035aa74b2b3f9143886191d35b1930f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 2800000, guid: f035aa74b2b3f9143886191d35b1930f, type: 3}
+>>>>>>> young
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -102,7 +131,11 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+<<<<<<< HEAD
     - _BumpScale: 0.75
+=======
+    - _BumpScale: 1
+>>>>>>> young
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -117,20 +150,35 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
+<<<<<<< HEAD
     - _Parallax: 0.02
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0
+=======
+    - _Parallax: 0.03
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _Smoothness: 0.5
+>>>>>>> young
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+<<<<<<< HEAD
     - _WorkflowMode: 1
+=======
+    - _WorkflowMode: 0
+>>>>>>> young
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+<<<<<<< HEAD
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+=======
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+>>>>>>> young
   m_BuildTextureStacks: []
