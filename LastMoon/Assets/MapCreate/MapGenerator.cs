@@ -26,8 +26,6 @@ public class MapGenerator : MonoBehaviour
     public bool autoUpdate;
 
     public TerrainType[] regions;
-<<<<<<< HEAD
-
     public Texture2D gradientTexture; // 그라디언트 텍스처
     public Gradient gradient; // 그라디언트
 
@@ -35,8 +33,6 @@ public class MapGenerator : MonoBehaviour
     //public int maxCubeCount = 1000; // 생성할 최대 큐브 개수
     //private int cubeCount = 0; // 생성된 큐브 개수
 
-=======
->>>>>>> Jo
     public void GenerateMap()
     {
         float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed, noiseScale,
@@ -83,10 +79,6 @@ public class MapGenerator : MonoBehaviour
             display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve, levelOfDetail), TextureGenerator.TextureFromColourMap(colourMap, mapChunkSize, mapChunkSize));
         }
     }
-<<<<<<< HEAD
-     
-=======
->>>>>>> Jo
 
     void OnValidate()
     {
