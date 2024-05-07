@@ -17,11 +17,20 @@ GameObject:
   - component: {fileID: 2055617823079347760}
   - component: {fileID: 2055617823079347761}
   - component: {fileID: 2055617823079347766}
+<<<<<<< HEAD:LastMoon/Assets/Scenes/Resources/Player.prefab
   - component: {fileID: 1457160749501577691}
   - component: {fileID: 5756651012111276200}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
+=======
+  - component: {fileID: 2055617823079347767}
+  - component: {fileID: 1863983695508138469}
+  - component: {fileID: 1457160749501577691}
+  m_Layer: 0
+  m_Name: Player
+  m_TagString: Untagged
+>>>>>>> young:LastMoon/Assets/Resources/Player.prefab
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -198,6 +207,39 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+<<<<<<< HEAD:LastMoon/Assets/Scenes/Resources/Player.prefab
+=======
+--- !u!114 &2055617823079347767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055617823079347764}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e4faebd04426324895d7b70059bc289, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnSpeed: 4
+  moveSpeed: 10
+--- !u!114 &1863983695508138469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055617823079347764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5b9052fa619f140b889fdc459a67f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  lookSensitivity: 1
+  cameraRotationLimit: 45
+  theCamera: {fileID: 6128208653777092782}
+>>>>>>> young:LastMoon/Assets/Resources/Player.prefab
 --- !u!54 &1457160749501577691
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -214,6 +256,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+<<<<<<< HEAD:LastMoon/Assets/Scenes/Resources/Player.prefab
 --- !u!114 &5756651012111276200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,6 +273,8 @@ MonoBehaviour:
   lookSensitivity: 1
   cameraRotationLimit: 90
   theCamera: {fileID: 6128208653777092782}
+=======
+>>>>>>> young:LastMoon/Assets/Resources/Player.prefab
 --- !u!1 &6128208653777092776
 GameObject:
   m_ObjectHideFlags: 0
