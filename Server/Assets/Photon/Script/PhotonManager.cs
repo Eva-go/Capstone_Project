@@ -55,15 +55,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
 
         //룸 생성
-<<<<<<< HEAD
         PhotonNetwork.CreateRoom("Last Moon", ro);
-=======
-<<<<<<< HEAD
         PhotonNetwork.CreateRoom("Last Moon", ro);
-=======
         PhotonNetwork.CreateRoom("My Room", ro);
->>>>>>> young
->>>>>>> kim
     }
 
     //룸 생성이 완료된후 호출되는 콜백 함수
