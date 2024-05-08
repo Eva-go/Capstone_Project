@@ -37,10 +37,19 @@ public class CraftMaunal : MonoBehaviour
     [SerializeField]
     private float range;
 
+    //Grid 시스템
+    private Grid grid;
+    private bool mode_build = false;
+
+    public GameObject target;
+    public GameObject structure;
+    Vector3 truePos;
+    public float gridSize;
+
 
     private void Start()
     {
-
+        grid = FindObjectOfType<Grid>();
     }
 
     public void SlotClick(int _slotNumber)
@@ -60,19 +69,25 @@ public class CraftMaunal : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            if (Input.GetKeyDown(KeyCode.I) && !isPreViewActivated)
-                Inventory();//Winodws
+        if (Input.GetKeyDown(KeyCode.I) && !isPreViewActivated)
+            Inventory();//Winodws
 
-            if (isPreViewActivated)
-                previewPositionUpdate();
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Cancel();
+
+        if (Input.GetKeyDown(KeyCode.E))
+            mode_build = !mode_build;
+
+        if (isPreViewActivated)
+            previewPositionUpdate();
   
-            if (Input.GetButtonDown("Fire1"))
-                Build(slotNumber);
-
+        if (Input.GetButtonDown("Fire1"))
+            Build(slotNumber);
+ 
+       
             
 
-            if (Input.GetKeyDown(KeyCode.Escape))
-                Cancel();
+           
     }
 
     public void Build(int _slotNumber)
@@ -92,16 +107,35 @@ public class CraftMaunal : MonoBehaviour
 
     private void previewPositionUpdate()
     {
-        Debug.DrawRay(tf_player.position, tf_player.forward * range, Color.red);
-        if (Physics.Raycast(tf_player.position, tf_player.forward, out hitInfo, range, layerMask))
+       if(!mode_build)
         {
-            if (hitInfo.transform != null)
+            if (Physics.Raycast(tf_player.position, tf_player.forward, out hitInfo, range, layerMask))
             {
-                Vector3 _location = hitInfo.point;
-                Object_Preview.transform.position = _location;
+                if (hitInfo.transform != null)
+                {
+                    Vector3 _location = hitInfo.point;
+                    Object_Preview.transform.position = _location;
+                }
+            }
+        }
+        else
+        {
+            //Todo 설치방법은 이게 더 깔끔한거같음..? 뭐지
+            Ray ray = playerController.theCamera.ScreenPointToRay(Input.mousePosition);
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hitInfo))
+            {
+                if (hitInfo.transform != null)
+                {
+                    Vector3 _location = hitInfo.point;
+                    Object_Preview.transform.position = _location;
+                }
+                   
             }
         }
     }
+
+   
     public void Cancel()
     {
         if(isPreViewActivated)
