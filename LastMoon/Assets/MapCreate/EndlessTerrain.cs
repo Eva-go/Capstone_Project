@@ -181,6 +181,10 @@ public class EndlessTerrain : MonoBehaviour
                         {
                             collisionLODMesh.RequestMesh(mapData);
                         }
+                        else
+                        {
+                            collisionLODMesh.RequestMesh(mapData);
+                        }
                     }
                     terrainChunksVisibleLastUpdate.Add(this);
                 }

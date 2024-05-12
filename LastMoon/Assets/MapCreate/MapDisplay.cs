@@ -18,5 +18,18 @@ public class MapDisplay : MonoBehaviour
     {
         meshFilter.sharedMesh = meshData.CreateMesh();
         meshRenderer.sharedMaterial.mainTexture = texture;
+
+        // Mesh °´Ã¼¿¡ MeshCollider Ãß°¡
+        AddMeshColliderToObject(meshFilter.gameObject, meshFilter.sharedMesh);
+    }
+    private void AddMeshColliderToObject(GameObject obj, Mesh mesh)
+    {
+        MeshCollider meshCollider = obj.GetComponent<MeshCollider>();
+        if (meshCollider == null)
+        {
+            meshCollider = obj.AddComponent<MeshCollider>();
+        }
+
+        meshCollider.sharedMesh = mesh;
     }
 }
