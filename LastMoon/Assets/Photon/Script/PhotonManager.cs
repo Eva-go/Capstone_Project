@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-
+using UnityEngine.UI;
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
     //버전 입력
     private readonly string version = "1.0f";
     //User ID
     private string userId = "사용자";
-
     void Awake()
     {
         // 같은 룸의 유저들에게 자동으로 씬을 로딩
@@ -39,12 +38,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log($"PhotonNetwork.InLobby = {PhotonNetwork.InLobby}");
         PhotonNetwork.JoinRoom("Last Moon");
         //PhotonNetwork.JoinRandomRoom();
-
-        PhotonNetwork.JoinRoom("Last Moon");
-        //PhotonNetwork.JoinRandomRoom();
-
-        PhotonNetwork.JoinRoom("My Room");
-
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
@@ -99,7 +92,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         int idx = Random.Range(1, points.Length);
         //캐릭터를 생성
         PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0);
-
+        GameObject.Find("Loding").SetActive(false);
+        GameObject.Find("LodingCam").SetActive(false);
     }
 
     public override void OnLeftRoom()
