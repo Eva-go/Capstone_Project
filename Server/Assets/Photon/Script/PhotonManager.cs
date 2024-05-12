@@ -56,8 +56,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
         //룸 생성
         PhotonNetwork.CreateRoom("Last Moon", ro);
-        PhotonNetwork.CreateRoom("Last Moon", ro);
-        PhotonNetwork.CreateRoom("My Room", ro);
     }
 
     //룸 생성이 완료된후 호출되는 콜백 함수

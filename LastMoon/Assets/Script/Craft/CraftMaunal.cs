@@ -120,17 +120,12 @@ public class CraftMaunal : MonoBehaviour
         }
         else
         {
-            //Todo 설치방법은 이게 더 깔끔한거같음..? 뭐지
             Ray ray = playerController.theCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hitInfo))
             {
                 if (hitInfo.transform != null)
                 {
                      Object_Preview.transform.position = grid.GetNearestPointOnGrid(hitInfo.point);
-
-
-                    //Vector3 _location = hitInfo.point;
-                    //Object_Preview.transform.position = _location;
                 }
 
             }
