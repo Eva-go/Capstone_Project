@@ -25,42 +25,46 @@ public class InputKey : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Tab)) 
         {
             KeyTabCode++;
-            switch (KeyTabCode%3)
+            if(!CraftMaunal.isPreViewActivated)
             {
-                case 0:
-                    GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(true);
-                    GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
-                    GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
-                    if(CraftMaunal.isActivated)
-                    {
-                        GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(true);
-                        GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
-                        GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(false);
-                    }
-                    break;
-                case 1:
-                    GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
-                    GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(true);
-                    GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
-                    if (CraftMaunal.isActivated)
-                    {
-                        GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
-                        GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(true);
-                        GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(false);
-                    }
-                    break;
-                case 2:
-                    GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
-                    GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
-                    GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(true);
-                    if (CraftMaunal.isActivated)
-                    {
-                        GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
-                        GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
-                        GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(true);
-                    }
-                    break;  
+                switch (KeyTabCode % 3)
+                {
+                    case 0:
+                        GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(true);
+                        GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
+                        GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
+                        if (CraftMaunal.isActivated)
+                        {
+                            GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(true);
+                            GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
+                            GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(false);
+                        }
+                        break;
+                    case 1:
+                        GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
+                        GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(true);
+                        GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
+                        if (CraftMaunal.isActivated)
+                        {
+                            GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
+                            GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(true);
+                            GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(false);
+                        }
+                        break;
+                    case 2:
+                        GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
+                        GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
+                        GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(true);
+                        if (CraftMaunal.isActivated)
+                        {
+                            GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
+                            GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
+                            GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(true);
+                        }
+                        break;
+                }
             }
+           
         }
     }
 }

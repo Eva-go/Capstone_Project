@@ -15,7 +15,7 @@ public class CraftMaunal : MonoBehaviour
 {
     //상태변수
     public static bool isActivated = false;
-    private bool isPreViewActivated = false;
+    public static bool isPreViewActivated = false;
 
     private int slotNumber;
 
