@@ -70,7 +70,7 @@ public static class Noise
         }
         for (int y = 0; y < mapHeight; y++)
         {
-            for (int x = 0; x < mapHeight; x++) 
+            for (int x = 0; x < mapWidth; x++)  
             {
                 if (normalizedMode == NormalizedMode.Local)
                 {
@@ -79,7 +79,7 @@ public static class Noise
                 else
                 {
                     float normalizedHeight = (noiseMap[x, y] + 1) / (maxPossibleHeight);
-                    noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);  
+                    noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, 1);  
                 }
             }
         }

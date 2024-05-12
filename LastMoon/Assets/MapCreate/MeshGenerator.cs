@@ -68,20 +68,6 @@ public static class MeshGenerator
         meshData.BakedNormals();
         return meshData;
     }
-    public static MeshData GenerateTerrainMeshWithCollider(float[,] heightMap, float heightMultiplier, AnimationCurve _heightCurve, int levelOfDetail)
-    {
-        MeshData meshData = GenerateTerrainMesh(heightMap, heightMultiplier, _heightCurve, levelOfDetail);
-
-        GameObject meshObject = new GameObject("Terrain");
-        MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();    
-        MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
-        MeshCollider meshCollider = meshObject.AddComponent<MeshCollider>();
-
-        meshFilter.mesh = meshData.CreateMesh();
-        meshCollider.sharedMesh = meshFilter.mesh;
-
-        return meshData;
-    }
 }
 
 public class MeshData
