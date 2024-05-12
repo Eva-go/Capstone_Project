@@ -65,6 +65,21 @@ public static class MeshGenerator
                 vertexIndex++;
             }
         }
+        meshData.BakedNormals();
+        return meshData;
+    }
+    public static MeshData GenerateTerrainMeshWithCollider(float[,] heightMap, float heightMultiplier, AnimationCurve _heightCurve, int levelOfDetail)
+    {
+        MeshData meshData = GenerateTerrainMesh(heightMap, heightMultiplier, _heightCurve, levelOfDetail);
+
+        GameObject meshObject = new GameObject("Terrain");
+        MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();    
+        MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
+        MeshCollider meshCollider = meshObject.AddComponent<MeshCollider>();
+
+        meshFilter.mesh = meshData.CreateMesh();
+        meshCollider.sharedMesh = meshFilter.mesh;
+
         return meshData;
     }
 }
@@ -74,6 +89,7 @@ public class MeshData
     Vector3[] vertices;
     int[] triangles;
     Vector2[] uvs;
+    Vector3[] bakedNormals;
 
     Vector3[] borderVertices;
     int[] borderTriangles;
@@ -182,13 +198,18 @@ public class MeshData
         return Vector3.Cross(sideAB, sideAC).normalized;
     }
 
+    public void BakedNormals()
+    {
+        bakedNormals = CalculateNormals();
+    }
+
     public Mesh CreateMesh()
     {
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
-        mesh.normals = CalculateNormals();
+        mesh.normals = bakedNormals;
         return mesh;
     }
 }
