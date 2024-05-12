@@ -6,7 +6,9 @@ public class InputKey : MonoBehaviour
 {
     // Start is called before the first frame update
     private int KeyTabCode = 0;
-
+    private PlayerController playerController;
+    private RaycastHit hitInfo;
+    private bool PC = true;
 
     void Start()
     {
@@ -18,6 +20,7 @@ public class InputKey : MonoBehaviour
     {
         Player_UI();
     }
+
 
 
     public void Player_UI()

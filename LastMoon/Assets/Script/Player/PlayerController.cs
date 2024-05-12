@@ -27,8 +27,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     public Camera theCamera;
     private Rigidbody myRigid;
-    
-    // Use this for initialization
+
+    //ray
+    private RaycastHit hitInfo;
+
+    private Vector3 previousPosition;
+    private bool ins = true;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -49,9 +53,38 @@ public class PlayerController : MonoBehaviour
             Move();
             CameraRotation();
             CharacterRotation();
+            Inside();
         }
     }
+    private void Inside()
+    {
+        Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hitInfo,5) && hitInfo.collider.tag==("APT"))
+        {
+            // Get the collider bounds
+            Collider collider = hitInfo.collider;
+            Bounds bounds = collider.bounds;
 
+            // Calculate the top position of the collider
+            Vector3 topPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
+
+            // 이전에 이동한 위치와 비교하여 같으면 이전 위치로 이동
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (ins)
+                {
+                    previousPosition = transform.position;
+                    transform.position = topPosition;
+                    ins = false;
+                }
+                else
+                {
+                    transform.position = previousPosition;
+                    ins = true;
+                }
+            }
+        }
+    }
     private void Move()
     {
 
@@ -65,6 +98,8 @@ public class PlayerController : MonoBehaviour
 
         myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
     }
+
+
 
 
     private void CharacterRotation()
@@ -84,5 +119,6 @@ public class PlayerController : MonoBehaviour
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+       
     }
 }

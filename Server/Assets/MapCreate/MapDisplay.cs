@@ -13,10 +13,23 @@ public class MapDisplay : MonoBehaviour
         textureRender.sharedMaterial.mainTexture = texture;
         textureRender.transform.localScale = new Vector3(texture.width, 1, texture.height);
     }
-    
+
     public void DrawMesh(MeshData meshData, Texture2D texture)
     {
         meshFilter.sharedMesh = meshData.CreateMesh();
         meshRenderer.sharedMaterial.mainTexture = texture;
+
+        // Mesh °´Ã¼¿¡ MeshCollider Ãß°¡
+        AddMeshColliderToObject(meshFilter.gameObject, meshFilter.sharedMesh);
+    }
+    private void AddMeshColliderToObject(GameObject obj, Mesh mesh)
+    {
+        MeshCollider meshCollider = obj.GetComponent<MeshCollider>();
+        if (meshCollider == null)
+        {
+            meshCollider = obj.AddComponent<MeshCollider>();
+        }
+
+        meshCollider.sharedMesh = mesh;
     }
 }

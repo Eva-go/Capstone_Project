@@ -10,17 +10,17 @@ public class MapGeneratorEditor : Editor
     {
         MapGenerator mapGen = (MapGenerator)target;
 
-        if (DrawDefaultInspector()) 
+        if (DrawDefaultInspector())
         {
-            if(mapGen.autoUpdate) 
+            if (mapGen.autoUpdate)
             {
-                mapGen.GenerateMap();
+                mapGen.DrawMapInEditor();
             }
         }
 
-        if (GUILayout.Button("Generate"))
+        if (GUILayout.Button("Generate") || (EditorApplication.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode))
         {
-            mapGen.GenerateMap();
+            mapGen.DrawMapInEditor();
         }
     }
 

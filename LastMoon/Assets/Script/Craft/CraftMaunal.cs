@@ -90,17 +90,18 @@ public class CraftMaunal : MonoBehaviour
 
     public void Build(int _slotNumber)
     {
-        if(isPreViewActivated)
-        {
-            //Instantiate(Object_Prefab, hitInfo.point, Quaternion.identity);
-            PhotonNetwork.Instantiate(craft_Tab[_slotNumber].Name, hitInfo.point, Quaternion.identity);
-            Destroy(Object_Preview);
-            isActivated = false;
-            isPreViewActivated = false;
-            Object_Prefab = null;
-            Object_Preview = null;
+            if (isPreViewActivated)
+            {
+                //Instantiate(Object_Prefab, hitInfo.point, Quaternion.identity);
+                PhotonNetwork.Instantiate(craft_Tab[_slotNumber].Name, hitInfo.point, Quaternion.identity);
+                Destroy(Object_Preview);
+                isActivated = false;
+                isPreViewActivated = false;
+                Object_Prefab = null;
+                Object_Preview = null;
 
-        }
+            }
+            
     }
 
     private void previewPositionUpdate()
@@ -115,7 +116,6 @@ public class CraftMaunal : MonoBehaviour
                     Vector3 _location = hitInfo.point;
                     Object_Preview.transform.position = _location;
                 }
-
             }
         }
         else
@@ -125,9 +125,8 @@ public class CraftMaunal : MonoBehaviour
             {
                 if (hitInfo.transform != null)
                 {
-                     Object_Preview.transform.position = grid.GetNearestPointOnGrid(hitInfo.point);
+                    Object_Preview.transform.position = grid.GetNearestPointOnGrid(hitInfo.point);
                 }
-
             }
         }
     }

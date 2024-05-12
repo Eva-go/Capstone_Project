@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class wavescale : MonoBehaviour
 {
-    private float _maxScaleY = 80;
+    private float _maxScaleY = 2500;
     private float _scaleSpeed = 1f;
     private float _timerInterval = 12f;
 

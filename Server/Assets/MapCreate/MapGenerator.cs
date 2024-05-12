@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Threading;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public enum DrawMode { NoiseMap, colourMap, Mesh};
+    public enum DrawMode { NoiseMap, ColourMap, Mesh, FalloffMap};
     public DrawMode drawMode;
-
-    const int mapChunkSize = 1000;
+    
+    public Noise.NormalizedMode normalizedMode;
+    public const int mapChunkSize = 239;
     [Range(0,6)]
-    public int levelOfDetail;
+    public int editorPreviewLOD;
     public float noiseScale;
 
+    [Range (0,10)]
     public int octaves;
     [Range(0,1)]
     public float persistance;
@@ -20,64 +24,134 @@ public class MapGenerator : MonoBehaviour
     public int seed;
     public Vector2 offset;
 
+    public bool useFalloff;
+
     public float meshHeightMultiplier;
     public AnimationCurve meshHeightCurve;
 
     public bool autoUpdate;
 
     public TerrainType[] regions;
-    public Texture2D gradientTexture; // 그라디언트 텍스처
-    public Gradient gradient; // 그라디언트
 
-    //public GameObject cubePrefab; // 큐브 프리팹
-    //public int maxCubeCount = 1000; // 생성할 최대 큐브 개수
-    //private int cubeCount = 0; // 생성된 큐브 개수
+    float[,] falloffMap;
 
-    public void GenerateMap()
+    Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
+    Queue<MapThreadInfo<MeshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<MeshData>>();
+
+    public void DrawMapInEditor()
     {
-        float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed, noiseScale,
-            octaves, persistance, lacunarity, offset);
+        MapData mapData = GenerateMapData(Vector2.zero);
 
-        Color[] colourMap = new Color[mapChunkSize *  mapChunkSize];
-        for(int y = 0; y < mapChunkSize; y++)
+        MapDisplay display = FindObjectOfType<MapDisplay>();
+        if (drawMode == DrawMode.NoiseMap)
+        {
+            display.DrawTexture(TextureGenerator.TextureFromHeightMap(mapData.heightMap));
+        }
+        else if (drawMode == DrawMode.ColourMap)
+        {
+            display.DrawTexture(TextureGenerator.TextureFromColourMap(mapData.colourMap, mapChunkSize, mapChunkSize));
+        }
+        else if (drawMode == DrawMode.Mesh)
+        {
+            display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLOD), TextureGenerator.TextureFromColourMap(mapData.colourMap, mapChunkSize, mapChunkSize));
+        }
+    }
+
+    void Awake()
+    {
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);
+    }
+
+    public void RequestMapData(Vector2 center, Action<MapData> callback)
+    {
+        ThreadStart threadStart = delegate
+        {
+            MapDataThread(center, callback);
+        };
+
+        new Thread(threadStart).Start();
+    }
+
+    void MapDataThread(Vector2 center, Action<MapData> callback)
+    {
+        MapData mapData = GenerateMapData(center);
+        lock (mapDataThreadInfoQueue)
+        {
+            mapDataThreadInfoQueue.Enqueue(new MapThreadInfo<MapData>(callback, mapData));
+        }
+    }
+
+    public void RequestMeshData(MapData mapData, int lod, Action<MeshData> callback)
+    {
+        ThreadStart threadStart = delegate
+        {
+            MeshDataThread(mapData,lod, callback);
+        };
+        
+        new Thread(threadStart).Start();
+    }
+
+    void MeshDataThread (MapData mapData, int lod, Action<MeshData> callback) 
+    {
+        MeshData meshData = MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, lod);
+        lock(meshDataThreadInfoQueue)
+        {
+            meshDataThreadInfoQueue.Enqueue(new MapThreadInfo<MeshData> (callback, meshData));
+        }
+    }
+
+    void Update()
+    {
+        if(mapDataThreadInfoQueue.Count > 0)
+        {
+            for(int i = 0; i < mapDataThreadInfoQueue.Count; i++)
+            {
+                MapThreadInfo<MapData> threadInfo = mapDataThreadInfoQueue.Dequeue();
+                threadInfo.callback(threadInfo.parameter);
+            }
+        }
+        
+        if(meshDataThreadInfoQueue.Count > 0)
+        {
+            for (int i = 0;i < meshDataThreadInfoQueue.Count; i++)
+            {
+                MapThreadInfo<MeshData> threadInfo = meshDataThreadInfoQueue.Dequeue();
+                threadInfo.callback(threadInfo.parameter);
+            }
+        }
+    }
+
+    MapData GenerateMapData(Vector2 center)
+    {
+        // 노이즈 맵 생성
+        float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed, noiseScale,
+            octaves, persistance, lacunarity, center + offset, normalizedMode);
+
+        // 컬러 맵 생성
+        Color[] colourMap = new Color[mapChunkSize * mapChunkSize];
+        for (int y = 0; y < mapChunkSize; y++)
         {
             for (int x = 0; x < mapChunkSize; x++)
             {
+                if (useFalloff)
+                {
+                    noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x, y]);
+                }
                 float currentHeight = noiseMap[x, y];
                 for (int i = 0; i < regions.Length; i++)
                 {
-                    if (currentHeight <= regions[i].height) 
+                    if (currentHeight >= regions[i].height)
                     {
                         colourMap[y * mapChunkSize + x] = regions[i].colour;
-                        //if (regions[i].height >= 0.8f && regions[i].height <= 1.0f)
-                        //{
-                        //    if (cubeCount < maxCubeCount)
-                        //    {
-                        //        // 랜덤한 위치에 큐브 오브젝트 생성
-                        //        Vector3 cubePosition = new Vector3(x, currentHeight, y);
-                        //        Instantiate(cubePrefab, cubePosition, Quaternion.identity);
-                        //        cubeCount++; // 생성된 큐브 개수 증가
-                        //    }
-                        //}
+                    }
+                    else
+                    {
                         break;
                     }
                 }
             }
         }
-
-        MapDisplay display = FindObjectOfType <MapDisplay>();
-        if (drawMode == DrawMode.NoiseMap)
-        {
-            display.DrawTexture(TextureGenerator.TextureFromHeightMap(noiseMap));
-        }
-        else if (drawMode == DrawMode.colourMap) 
-        {
-            display.DrawTexture(TextureGenerator.TextureFromColourMap(colourMap, mapChunkSize, mapChunkSize));
-        }
-        else if(drawMode == DrawMode.Mesh)
-        {
-            display.DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve, levelOfDetail), TextureGenerator.TextureFromColourMap(colourMap, mapChunkSize, mapChunkSize));
-        }
+        return new MapData(noiseMap, colourMap);
     }
 
     void OnValidate()
@@ -90,13 +164,52 @@ public class MapGenerator : MonoBehaviour
         {
             octaves = 0;
         }
+        falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);
     }
-}
+    struct MapThreadInfo<T>
+    {
+        public readonly Action<T> callback;
+        public readonly T parameter;
 
+        public MapThreadInfo (Action<T> callback, T parameter)
+        {
+            this.callback = callback;
+            this.parameter = parameter;
+        }
+    }
+    void Start()
+    {
+        // seed가 0이면 랜덤한 시드값을 사용하고, 그렇지 않으면 지정된 시드값을 사용합니다.
+        if (seed == 0)
+        {
+            seed = UnityEngine.Random.Range(0, 100000); // 랜덤한 시드값 생성
+        }
+
+        DrawMapInEditor(); // 맵 생성 메서드 호출
+    }
+
+    void OnEnable()
+    {
+        DrawMapInEditor(); // 에디터 모드에서는 활성화되는 시점에 자동으로 GenerateMap 메서드를 호출하여 색상을 적용합니다.
+    }
+
+
+}
 [System.Serializable]
 public struct TerrainType
 {
     public string name;
     public float height;
     public Color colour;
+}
+public struct MapData
+{
+    public readonly float[,] heightMap; 
+    public readonly Color[] colourMap;
+
+    public MapData(float[,] heightMap, Color[] colourMap)
+    {
+        this.heightMap = heightMap;
+        this.colourMap = colourMap;
+    }
 }
