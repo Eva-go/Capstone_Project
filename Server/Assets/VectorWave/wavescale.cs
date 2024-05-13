@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+
 
 public class wavescale : MonoBehaviour
 {
-    private float _maxScaleY = 2500;
+    private float _maxScaleY = 2;
     private float _scaleSpeed = 1f;
     private float _timerInterval = 12f;
 
     private Vector3 initScale;
     private bool scalingUP = false;
 
+    public PhotonView pv;
+    public Vector3 localScale;
     public float maxScaleY
     {
         get { return _maxScaleY; }
@@ -29,6 +34,16 @@ public class wavescale : MonoBehaviour
         set { _timerInterval = value; }
     }
 
+    public void Update()
+    {
+        _maxScaleY = _maxScaleY / 2;
+        Debug.Log(transform.localScale);
+    }
+    
+    private void Awake()
+    {
+        pv = GetComponent<PhotonView>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +53,9 @@ public class wavescale : MonoBehaviour
         Debug.Log(scaleSpeed);
         Debug.Log(timerInterval);
     }
+
+   
+
 
     IEnumerator ScaleOverTime()
     {

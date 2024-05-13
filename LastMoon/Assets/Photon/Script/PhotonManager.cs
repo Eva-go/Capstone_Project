@@ -13,7 +13,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     void Awake()
     {
         // 같은 룸의 유저들에게 자동으로 씬을 로딩
-        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.AutomaticallySyncScene = false;
         //같은 버전의 유저끼리 접속 허용
         PhotonNetwork.GameVersion = version;
         //유저 아이디 할당
@@ -51,7 +51,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
         //
         ////룸 생성
-        //PhotonNetwork.CreateRoom("My Room", ro);
+        //PhotonNetwork.CreateRoom("Last Moon", ro);
     }
 
     //랜덤한 룸 입장이 실패했을 경우 호출되는 콜백 함수
