@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2177214249026630815}
   - component: {fileID: 2997391051257920314}
   - component: {fileID: 1043753255667585008}
-  - component: {fileID: 6781040567351661619}
   - component: {fileID: 9088903058086110979}
+  - component: {fileID: 7524272539683596755}
+  - component: {fileID: 5573322675747607019}
   m_Layer: 0
   m_Name: House
   m_TagString: APT
@@ -86,7 +87,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &6781040567351661619
+--- !u!65 &9088903058086110979
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548346011210411557}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9999999, y: 0.9999999, z: 1.6}
+  m_Center: {x: 6.731078e-10, y: -0.00000002975637, z: 0.8}
+--- !u!114 &7524272539683596755
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,16 +122,25 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!65 &9088903058086110979
-BoxCollider:
+--- !u!114 &5573322675747607019
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1548346011210411557}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.9999999, y: 0.9999999, z: 1.6}
-  m_Center: {x: 6.731078e-10, y: -0.00000002975637, z: 0.8}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

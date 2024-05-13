@@ -14,6 +14,7 @@ public class wavescale : MonoBehaviour
     private Vector3 initScale;
     private bool scalingUP = false;
 
+
     public PhotonView pv;
     public Vector3 localScale;
     public float maxScaleY
@@ -34,11 +35,7 @@ public class wavescale : MonoBehaviour
         set { _timerInterval = value; }
     }
 
-    public void Update()
-    {
-        _maxScaleY = _maxScaleY / 2;
-        Debug.Log(transform.localScale);
-    }
+ 
     
     private void Awake()
     {
@@ -54,7 +51,12 @@ public class wavescale : MonoBehaviour
         Debug.Log(timerInterval);
     }
 
-   
+    public void Update()
+    {
+        _maxScaleY = _maxScaleY / 2;
+        Debug.Log("");
+        localScale = transform.localScale;
+    }
 
 
     IEnumerator ScaleOverTime()
@@ -76,7 +78,6 @@ public class wavescale : MonoBehaviour
                         newYScale = Mathf.Lerp(maxScaleY, initScale.y, Mathf.SmoothStep(0f, 1f, progress));
 
                     transform.localScale = new Vector3(initScale.x, newYScale, initScale.z);
-
                     timer += Time.deltaTime;
                     yield return null;
                 }

@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8098325950329902314}
   - component: {fileID: 8098325950329902229}
   - component: {fileID: 9088948813530181163}
-  - component: {fileID: 3789442355259512326}
   - component: {fileID: 2455237511689737023}
+  - component: {fileID: 3789442355259512326}
   m_Layer: 0
   m_Name: wave
   m_TagString: wave
@@ -123,6 +123,20 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2455237511689737023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8098325950329902228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756872a88abb9a84fb0e5e84c38979d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: {fileID: 0}
+  localScale: {x: 0, y: 0, z: 0}
 --- !u!114 &3789442355259512326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,18 +152,4 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
-  m_UseLocal: 1
---- !u!114 &2455237511689737023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8098325950329902228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 756872a88abb9a84fb0e5e84c38979d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pv: {fileID: 0}
-  localScale: {x: 0, y: 0, z: 0}
+  m_UseLocal: 0

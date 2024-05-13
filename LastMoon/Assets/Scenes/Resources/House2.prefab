@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7089122134399770999}
   - component: {fileID: 6182954724636946130}
   - component: {fileID: 8226585417464289816}
-  - component: {fileID: 1348286299099413588}
   - component: {fileID: 4844040455086593784}
+  - component: {fileID: 7617999430543508824}
   m_Layer: 0
   m_Name: House2
   m_TagString: APT
@@ -86,7 +86,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1348286299099413588
+--- !u!65 &4844040455086593784
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7577956914113395661}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9999999, y: 0.9999999, z: 1.6}
+  m_Center: {x: 6.731078e-10, y: 4.595222e-11, z: 0.8}
+--- !u!114 &7617999430543508824
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,16 +121,3 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!65 &4844040455086593784
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7577956914113395661}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.9999999, y: 0.9999999, z: 1.6}
-  m_Center: {x: 6.731078e-10, y: 4.595222e-11, z: 0.8}

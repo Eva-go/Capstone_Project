@@ -10,6 +10,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     private readonly string version = "1.0f";
     //User ID
     private string userId = "사용자";
+    [SerializeField]
+    private GameObject wave;
+
+    private bool master = false;
     void Awake()
     {
         // 같은 룸의 유저들에게 자동으로 씬을 로딩
@@ -45,13 +49,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log($"JoinRoom Filed {returnCode}:{message}");
 
         ////룸의 속성 정의
-        //RoomOptions ro = new RoomOptions();
-        //ro.MaxPlayers = 20; //최대 접속자 수 : 20 명
-        //ro.IsOpen = true; //룸의 오픈 여부
-        //ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
+        RoomOptions ro = new RoomOptions();
+        ro.MaxPlayers = 20; //최대 접속자 수 : 20 명
+        ro.IsOpen = true; //룸의 오픈 여부
+        ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
         //
         ////룸 생성
-        //PhotonNetwork.CreateRoom("Last Moon", ro);
+        PhotonNetwork.CreateRoom("Last Moon", ro);
+        master = true;
     }
 
     //랜덤한 룸 입장이 실패했을 경우 호출되는 콜백 함수

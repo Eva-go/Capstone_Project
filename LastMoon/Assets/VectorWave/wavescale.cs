@@ -46,10 +46,9 @@ public class wavescale : MonoBehaviour
     public void Update()
     {
         _maxScaleY = _maxScaleY / 2;
-        Debug.Log(transform.localScale);
-
+        localScale = transform.localScale;
     }
-   
+
     IEnumerator ScaleOverTime()
     {
         while (true)
