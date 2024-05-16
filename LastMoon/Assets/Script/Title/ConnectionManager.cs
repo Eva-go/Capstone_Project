@@ -25,6 +25,24 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
     private const int maximumPlayer = 8;
     private int playerCount = 1;
 
+    [Header("Room")]
+    [SerializeField] Text roomName;
+    [SerializeField] Text roomCurrentPlayer;
+    [SerializeField] Text roomMaxPlayer;
+    public GameObject RoomMenu;
+
+    [SerializeField] Transform playerListContent;
+    [SerializeField] GameObject playerListItemPrefab;
+
+
+    // 메뉴
+    [SerializeField] GameObject FindRoomMenu;
+    // 룸 리스트
+    [Header("RoomList")]
+    [SerializeField] Transform roomListContent;
+    [SerializeField] GameObject roomListItemPrefab;
+    private List<RoomListItem> lstRoom = new List<RoomListItem>();
+
     //Unity Events
     private void Start()
     {
@@ -51,7 +69,53 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
         myNickName.text = PhotonNetwork.NickName;
     }
 
+    public override void OnJoinedRoom()
+    {
+        RoomMenu.SetActive(true);
+        roomName.text = PhotonNetwork.CurrentRoom.Name;
+        roomCurrentPlayer.text =
+                        PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+        roomMaxPlayer.text =
+                        PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            Instantiate(playerListItemPrefab, playerListContent).
+                           GetComponent<PlayerNameItem>().SetUp(players[i]);
+        }
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach (RoomInfo roomInfo in roomList)
+        {
+            RoomListItem item = Instantiate(roomListItemPrefab,
+                         roomListContent).GetComponent<RoomListItem>();
+            if (item != null)
+            {
+                item.SetUp(roomInfo);
+                lstRoom.Add(item);
+            }
+        }
+    }
+
+    // FindRoom 버튼을 누르면 TitleMenu --> FindRoomMenu
+    public void Button_FindRoom()
+    {
+        TitleMenu.SetActive(false);
+        FindRoomMenu.SetActive(true);
+    }
+    // Back 버튼을 누르면 FindRoomMenu --> TitleMenu
+    public void Button_FindRoomBack()
+    {
+        FindRoomMenu.SetActive(false);
+        TitleMenu.SetActive(true);
+    }
+
+
     //Functions
+
+    //Login & titeMeun
     public void CreateNickName()
     {
         if (string.IsNullOrEmpty(nickNameInputField.text)) return;
@@ -61,6 +125,13 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
     }
 
+    public void Button_CreateRoom()
+    {
+        TitleMenu.SetActive(false);
+        CreateRoomMenu.SetActive(true);
+    }
+
+    //CreateRoomMenu
     public void IncreaseCount()
     {
         if (playerCount == maximumPlayer) return;
@@ -73,11 +144,24 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
         playerCount--;
         txtPlayerCount.text = playerCount.ToString();
     }
+
+    //RoomMenu
+
     public void CreateRoom()
     {
-        TitleMenu.SetActive(false);
-        CreateRoomMenu.SetActive(true);
+        if (string.IsNullOrEmpty(createRoomInputField.text)) return;
+        RoomOptions roomOptions = new RoomOptions()
+        {
+            MaxPlayers = (byte)playerCount,
+            IsVisible = true,
+            IsOpen = true,
+            CleanupCacheOnLeave = true
+        };
+        PhotonNetwork.CreateRoom(createRoomInputField.text, roomOptions);
+        CreateRoomMenu.SetActive(false);
     }
+
+
 
 }
 
