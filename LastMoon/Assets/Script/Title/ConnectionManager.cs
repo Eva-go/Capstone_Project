@@ -161,6 +161,23 @@ public class ConnectionManager : MonoBehaviourPunCallbacks
         CreateRoomMenu.SetActive(false);
     }
 
+    public void FindRoom()
+    {
+        FindRoomMenu.SetActive(false);
+        RoomMenu.SetActive(true);
+        roomName.text = PhotonNetwork.CurrentRoom.Name;
+        roomCurrentPlayer.text =
+                        PhotonNetwork.CurrentRoom.PlayerCount.ToString();
+        roomMaxPlayer.text =
+                        PhotonNetwork.CurrentRoom.MaxPlayers.ToString();
+        Player[] players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            Instantiate(playerListItemPrefab, playerListContent).
+                           GetComponent<PlayerNameItem>().SetUp(players[i]);
+        }
+    }
+
 
 
 }
