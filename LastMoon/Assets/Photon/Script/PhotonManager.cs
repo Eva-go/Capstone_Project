@@ -17,7 +17,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     void Awake()
     {
         // 같은 룸의 유저들에게 자동으로 씬을 로딩
-        PhotonNetwork.AutomaticallySyncScene = false;
+        PhotonNetwork.AutomaticallySyncScene = true;
         //같은 버전의 유저끼리 접속 허용
         PhotonNetwork.GameVersion = version;
         //유저 아이디 할당
@@ -114,5 +114,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
+
     }
 }
