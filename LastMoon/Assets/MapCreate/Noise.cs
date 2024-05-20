@@ -85,4 +85,21 @@ public static class Noise
         }
         return noiseMap;
     }
+    public static float[,] AddNoise(float[,] baseNoiseMap, float[,] additionalNoiseMap, float blendStrength)
+    {
+        int width = baseNoiseMap.GetLength(0);
+        int height = baseNoiseMap.GetLength(1);
+
+        float[,] newNoiseMap = new float[width, height];
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                newNoiseMap[x, y] = Mathf.Lerp(baseNoiseMap[x, y], additionalNoiseMap[x, y], blendStrength);
+            }
+        }
+
+        return newNoiseMap;
+    }
 }
