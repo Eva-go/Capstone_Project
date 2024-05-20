@@ -13,16 +13,23 @@ public class MapGenerator : MonoBehaviour
     public const int mapChunkSize = 239;
     [Range(0,6)]
     public int editorPreviewLOD;
-    public float noiseScale;
+    public float noiseScale1;
+    public float noiseScale2;
 
     [Range (0,10)]
-    public int octaves;
+    public int octaves1;
+    [Range(0, 10)]
+    public int octaves2;
+
+
     [Range(0,1)]
     public float persistance;
     public float lacunarity;
 
-    public int seed;
-    public Vector2 offset;
+    public int seed1;
+    public int seed2;
+    public Vector2 offset1;
+    public Vector2 offset2;
 
     public bool useFalloff;
 
@@ -124,8 +131,14 @@ public class MapGenerator : MonoBehaviour
     MapData GenerateMapData(Vector2 center)
     {
         // 노이즈 맵 생성
-        float[,] noiseMap = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed, noiseScale,
-            octaves, persistance, lacunarity, center + offset, normalizedMode);
+        float[,] noiseMap1 = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseScale1,
+            octaves1, persistance, lacunarity, center + offset1, normalizedMode);
+
+        // 추가적인 노이즈 맵 생성
+        float[,] noiseMap2 = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed2, noiseScale2,
+            octaves2, persistance, lacunarity, center + offset2, normalizedMode);
+
+        float[,] noiseMap = Noise.AddNoise(noiseMap1, noiseMap2, 0.5f);
 
         // 컬러 맵 생성
         Color[] colourMap = new Color[mapChunkSize * mapChunkSize];
@@ -160,9 +173,13 @@ public class MapGenerator : MonoBehaviour
         {
             lacunarity = 1;
         }
-        if (octaves < 0)
+        if (octaves1 < 0)
         {
-            octaves = 0;
+            octaves1 = 0;
+        }
+        if (octaves2 < 0)
+        {
+            octaves2 = 0;
         }
         falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);
     }
@@ -177,12 +194,17 @@ public class MapGenerator : MonoBehaviour
             this.parameter = parameter;
         }
     }
-    void Start()
+    void Start() 
     {
+        //시드 부분
         // seed가 0이면 랜덤한 시드값을 사용하고, 그렇지 않으면 지정된 시드값을 사용합니다.
-        if (seed == 0)
+        if (seed1 == 0)
         {
-            seed = UnityEngine.Random.Range(0, 100000); // 랜덤한 시드값 생성
+            seed1 = UnityEngine.Random.Range(0, 100000); // 랜덤한 시드값 생성
+        }
+        if (seed2 == 0)
+        {
+            seed2 = UnityEngine.Random.Range(0, 100000);
         }
 
         DrawMapInEditor(); // 맵 생성 메서드 호출
