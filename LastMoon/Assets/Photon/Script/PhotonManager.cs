@@ -14,6 +14,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     private GameObject wave;
 
     private bool master = false;
+
+
+
     void Awake()
     {
         // 같은 룸의 유저들에게 자동으로 씬을 로딩
@@ -26,6 +29,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log(PhotonNetwork.SendRate);
         //서버 접속
         PhotonNetwork.ConnectUsingSettings();
+    }
+    
+    void Start()
+    {
+
     }
 
     //포톤 서버에 접속후 호출 되는 콜백 함수
@@ -97,8 +105,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         int idx = Random.Range(1, points.Length);
         //캐릭터를 생성
         PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0);
-        GameObject.Find("Loding").SetActive(false);
-        GameObject.Find("LodingCam").SetActive(false);
+        //GameObject.Find("Loding").SetActive(false);
+        //GameObject.Find("LodingCam").SetActive(false);
     }
 
     public override void OnLeftRoom()
@@ -106,10 +114,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("Out Room");
     }
     // Start is called before the first frame update
-    void Start()
-    {
 
-    }
 
     // Update is called once per frame
     void Update()

@@ -11,7 +11,8 @@ using Photon.Pun.Demo.PunBasics;
 public class PlayerController : MonoBehaviour
 {
     public  PhotonView pv;
-    GameObject cam;
+   
+    private GameObject cam;
     [SerializeField]
     private float walkSpeed;
 
@@ -33,11 +34,14 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 previousPosition;
     private bool ins = true;
+
+    [SerializeField]
+    private Animator ainmator;
     void Start()
     {
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
-        cam = GameObject.Find("Main Camera");
+        cam = GameObject.Find("Camera");
         cam.SetActive(false);
     }
 
@@ -97,6 +101,10 @@ public class PlayerController : MonoBehaviour
         Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
 
         myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
+        if(pv.IsMine)
+        {
+            ainmator.SetBool("isMove", true);
+        }
     }
 
 
