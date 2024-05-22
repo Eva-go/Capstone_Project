@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
             CameraRotation();
             CharacterRotation();
             Inside();
+            //ainmator.SetBool("isMove", false);
         }
     }
     private void Inside()
@@ -101,10 +102,8 @@ public class PlayerController : MonoBehaviour
         Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
 
         myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
-        if(pv.IsMine)
-        {
-            ainmator.SetBool("isMove", true);
-        }
+
+        ainmator.SetBool("isMove", true);
     }
 
 
