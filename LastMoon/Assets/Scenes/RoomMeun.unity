@@ -1216,7 +1216,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 631488088}
   m_OnClick:
     m_PersistentCalls:
@@ -1396,8 +1396,11 @@ MonoBehaviour:
   m_inputField_Nickname: {fileID: 2137886211}
   m_dropdown_RoomMaxPlayers: {fileID: 1546876677}
   m_dropdown_MaxTime: {fileID: 1502168485}
+  m_button_RadomMatching: {fileID: 631488087}
   m_panel_Loading: {fileID: 1148324589}
   m_text_CurrentPlayerCount: {fileID: 921264803}
+  terrainInstance: {fileID: 7412686136495916764, guid: d366243d2f87c1e4d9f2864c6aa44261, type: 3}
+  timerController: {fileID: 7220269807619007526, guid: 4049c4eb20d0c2249aea49d1c0bb4f6e, type: 3}
 --- !u!1 &772628903
 GameObject:
   m_ObjectHideFlags: 0

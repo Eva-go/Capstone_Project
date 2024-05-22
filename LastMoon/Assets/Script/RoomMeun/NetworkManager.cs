@@ -10,9 +10,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public InputField m_inputField_Nickname; // 닉네임 입력받는 곳.
     public Dropdown m_dropdown_RoomMaxPlayers; // 최대 인원 몇 명까지 할지.
     public Dropdown m_dropdown_MaxTime; // 게임 시간은 몇 초로 정할 건지.
+    public Button m_button_RadomMatching;
 
     public GameObject m_panel_Loading; // 로딩 UI.
     public Text m_text_CurrentPlayerCount; // 로딩 UI 중에서 현재 인원 수를 나타냄.
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -49,6 +51,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             expectedCustomRoomProperties: new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }, expectedMaxPlayers: maxPlayers, // 참가할 때의 기준.
             roomOptions: roomOptions // 생성할 때의 기준.
           );
+
     }
 
     public void CancelMatching()
@@ -62,7 +65,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     private void UpdatePlayerCounts()
     {
-        m_text_CurrentPlayerCount.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
+        if (m_text_CurrentPlayerCount != null)
+        {
+            m_text_CurrentPlayerCount.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
+        }
     }
 
     #region 포톤 콜백 함수
@@ -70,7 +76,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         print("서버 접속 완료.");
-
+        m_button_RadomMatching.interactable = true;
     }
     public override void OnJoinedRoom()
     {
@@ -102,6 +108,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"플레이어 {otherPlayer.NickName} 방 나감.");
         UpdatePlayerCounts();
+        // 플레이어의 인스턴스화된 객체 삭제
+        PhotonNetwork.DestroyPlayerObjects(otherPlayer);
     }
 
     #endregion

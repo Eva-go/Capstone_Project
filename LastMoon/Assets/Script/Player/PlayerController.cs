@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     private bool ins = true;
 
     [SerializeField]
-    private Animator ainmator;
+    private Animator animator;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -58,7 +58,6 @@ public class PlayerController : MonoBehaviour
             CameraRotation();
             CharacterRotation();
             Inside();
-            //ainmator.SetBool("isMove", false);
         }
     }
     private void Inside()
@@ -102,8 +101,16 @@ public class PlayerController : MonoBehaviour
         Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
 
         myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
-
-        ainmator.SetBool("isMove", true);
+        
+        if (_velocity != Vector3.zero)
+        {
+            animator.SetBool("isMove", true);
+            Debug.Log(_velocity);
+        }
+        else
+        {
+            animator.SetBool("isMove", false);
+        }
     }
 
 
