@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using ExitGames.Client.Photon;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -15,6 +16,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject m_panel_Loading; // 로딩 UI.
     public Text m_text_CurrentPlayerCount; // 로딩 UI 중에서 현재 인원 수를 나타냄.
 
+    //게임 시간
+    private const byte StartTimeEventCode = 1;
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -96,9 +99,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             // 목표 인원 수 채웠으면, 맵 이동을 한다. 권한은 마스터 클라이언트만.
-            // PhotonNetwork.AutomaticallySyncScene = true; 를 해줬어야 방에 접속한 인원이 모두 이동함.
             if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
             {
+                int maxTime = (int)PhotonNetwork.CurrentRoom.CustomProperties["maxTime"];
+                double startTime = PhotonNetwork.Time;
+
+                // Raise event to sync start time with all clients
+                object[] content = new object[] { startTime };
+                PhotonNetwork.RaiseEvent(StartTimeEventCode, content, RaiseEventOptions.Default, SendOptions.SendReliable);
+
+                // Set the start time in room properties
+                PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "startTime", startTime } });
+
                 PhotonNetwork.LoadLevel("ObjectPooling");
             }
         }
@@ -110,6 +122,30 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         UpdatePlayerCounts();
         // 플레이어의 인스턴스화된 객체 삭제
         PhotonNetwork.DestroyPlayerObjects(otherPlayer);
+    }
+
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        if (eventCode == StartTimeEventCode)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            double startTime = (double)data[0];
+            PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "startTime", startTime } });
+        }
     }
 
     #endregion
