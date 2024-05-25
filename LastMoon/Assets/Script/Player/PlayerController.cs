@@ -37,12 +37,19 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private Animator animator;
+
+
+    public GameObject[] weapons; // 무기 오브젝트 배열
+    public Transform weaponHoldPoint; // 무기를 장착할 손 위치
+    private int selectedWeaponIndex = 0;
     void Start()
     {
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
+        // 초기 무기 장착
+        EquipWeapon(selectedWeaponIndex);
     }
 
 
@@ -58,7 +65,58 @@ public class PlayerController : MonoBehaviour
             CameraRotation();
             CharacterRotation();
             Inside();
+            attack();
+            Switching();
         }
+    }
+
+
+    private void Switching()
+    {
+        int previousSelectedWeaponIndex = selectedWeaponIndex;
+
+        // 마우스 휠로 무기 교체
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex + 1) % weapons.Length;
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex - 1 + weapons.Length) % weapons.Length;
+        }
+
+        // 무기 번호 키로 무기 교체
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    selectedWeaponIndex = 0;
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha2) && weapons.Length >= 2)
+        //{
+        //    selectedWeaponIndex = 1;
+        //}
+        //if (Input.GetKeyDown(KeyCode.Alpha3) && weapons.Length >= 3)
+        //{
+        //    selectedWeaponIndex = 2;
+        //}
+
+        // 무기 교체가 필요하면 새로운 무기를 장착
+        if (previousSelectedWeaponIndex != selectedWeaponIndex)
+        {
+            EquipWeapon(selectedWeaponIndex);
+        }
+
+    }
+    void EquipWeapon(int index)
+    {
+        // 기존에 장착된 무기 비활성화
+        foreach (Transform child in weaponHoldPoint)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 새로운 무기 인스턴스 생성 및 장착
+        GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
+        weaponInstance.transform.parent = weaponHoldPoint;
     }
     private void Inside()
     {
@@ -111,6 +169,20 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("isMove", false);
         }
+    }
+
+    private void attack()
+    {
+
+        if (Input.GetButton("Fire1"))
+        {
+            animator.SetTrigger("Swing");
+        }
+    }
+
+    private void hit()
+    {
+
     }
 
 
