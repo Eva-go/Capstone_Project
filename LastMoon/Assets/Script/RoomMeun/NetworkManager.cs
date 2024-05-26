@@ -16,8 +16,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject m_panel_Loading; // 로딩 UI.
     public Text m_text_CurrentPlayerCount; // 로딩 UI 중에서 현재 인원 수를 나타냄.
 
-    //게임 시간
+    // 게임 시간
     private const byte StartTimeEventCode = 1;
+
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -53,8 +54,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomOrCreateRoom(
             expectedCustomRoomProperties: new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }, expectedMaxPlayers: maxPlayers, // 참가할 때의 기준.
             roomOptions: roomOptions // 생성할 때의 기준.
-          );
-
+        );
     }
 
     public void CancelMatching()
@@ -81,6 +81,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         print("서버 접속 완료.");
         m_button_RadomMatching.interactable = true;
     }
+
     public override void OnJoinedRoom()
     {
         print("방 참가 완료.");
@@ -120,10 +121,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"플레이어 {otherPlayer.NickName} 방 나감.");
         UpdatePlayerCounts();
-        // 플레이어의 인스턴스화된 객체 삭제
         PhotonNetwork.DestroyPlayerObjects(otherPlayer);
     }
-
 
     public override void OnEnable()
     {

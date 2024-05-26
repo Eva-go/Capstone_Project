@@ -86,27 +86,33 @@ public class PlayerController : MonoBehaviour
         }
 
         // 무기 번호 키로 무기 교체
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    selectedWeaponIndex = 0;
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha2) && weapons.Length >= 2)
-        //{
-        //    selectedWeaponIndex = 1;
-        //}
-        //if (Input.GetKeyDown(KeyCode.Alpha3) && weapons.Length >= 3)
-        //{
-        //    selectedWeaponIndex = 2;
-        //}
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            selectedWeaponIndex = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2) && weapons.Length >= 2)
+        {
+            selectedWeaponIndex = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3) && weapons.Length >= 3)
+        {
+            selectedWeaponIndex = 2;
+        }
 
         // 무기 교체가 필요하면 새로운 무기를 장착
         if (previousSelectedWeaponIndex != selectedWeaponIndex)
         {
-            EquipWeapon(selectedWeaponIndex);
+            pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
         }
-
     }
-    void EquipWeapon(int index)
+
+    [PunRPC]
+    private void RPC_EquipWeapon(int index)
+    {
+        EquipWeapon(index);
+    }
+
+    private void EquipWeapon(int index)
     {
         // 기존에 장착된 무기 비활성화
         foreach (Transform child in weaponHoldPoint)
@@ -116,8 +122,18 @@ public class PlayerController : MonoBehaviour
 
         // 새로운 무기 인스턴스 생성 및 장착
         GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
-        weaponInstance.transform.parent = weaponHoldPoint;
+        weaponInstance.transform.SetParent(weaponHoldPoint);
+
+        // PhotonView가 필요하면 설정
+        PhotonView weaponPhotonView = weaponInstance.GetComponent<PhotonView>();
+        if (weaponPhotonView != null)
+        {
+            // weaponPhotonView.ViewID = PhotonNetwork.AllocateViewID();
+            Debug.Log("포톤 뷰");
+        }
+
     }
+
     private void Inside()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
@@ -163,7 +179,6 @@ public class PlayerController : MonoBehaviour
         if (_velocity != Vector3.zero)
         {
             animator.SetBool("isMove", true);
-            Debug.Log(_velocity);
         }
         else
         {
