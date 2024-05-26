@@ -75,7 +75,19 @@ public class MapGenerator : MonoBehaviour
     {
         float randomX = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
         float randomZ = UnityEngine.Random.Range(bounds.min.z, bounds.max.z);
-        return new Vector3(randomX, 0, randomZ); // y 값을 0으로 설정
+
+        Vector3 randomPosition = new Vector3(randomX, 0, randomZ);
+
+        // 랜덤한 위치가 콜라이더 안에 있는지 확인
+        if (placementArea.bounds.Contains(randomPosition))
+        {
+            return randomPosition;
+        }
+        else
+        {
+            // 콜라이더 안에 위치가 없으면 다시 시도
+            return GetRandomPositionInBounds(bounds);
+        }
     }
 
 
@@ -96,7 +108,7 @@ public class MapGenerator : MonoBehaviour
         {
             display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLOD), TextureGenerator.TextureFromColourMap(mapData.colourMap, mapChunkSize, mapChunkSize));
         }
-        PlaceBuildings(100);
+
     }
 
     void Awake()
