@@ -49,6 +49,7 @@ public class MapGenerator : MonoBehaviour
     public GameObject[] buildingPrefabs; // 건물 프리팹 배열
     public MeshCollider placementArea;
     public int maxBuildings = 40;
+    public LayerMask groundLayer; // 지면 레이어 마스크
 
     public void PlaceBuildingsOnTop()
     {
@@ -71,7 +72,10 @@ public class MapGenerator : MonoBehaviour
             GameObject selectedPrefab = buildingPrefabs[UnityEngine.Random.Range(0, buildingPrefabs.Length)];
 
             // 건물 생성
-            Instantiate(selectedPrefab, topPositions[index], Quaternion.identity);
+            GameObject newBuilding = Instantiate(selectedPrefab, topPositions[index], Quaternion.identity);
+
+            // 건물을 지면에 붙이기
+            PositionBuildingOnGround(newBuilding);
         }
     }
     // 주어진 메쉬 콜라이더 표면에서 가장 높은 위치들을 반환하는 메서드
@@ -112,6 +116,31 @@ public class MapGenerator : MonoBehaviour
 
         // 최종적으로 리스트를 배열로 변환하여 반환합니다.
         return topPositions.ToArray();
+    }
+
+    // 건물을 지면에 붙이는 메서드
+    private void PositionBuildingOnGround(GameObject building)
+    {
+        Collider buildingCollider = building.GetComponent<Collider>();
+        if (buildingCollider != null)
+        {
+            Vector3 colliderBottomCenter = buildingCollider.bounds.center - new Vector3(0, buildingCollider.bounds.extents.y, 0);
+            Ray ray = new Ray(colliderBottomCenter + Vector3.up * 10, Vector3.down);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 20, groundLayer))
+            {
+                building.transform.position = hit.point;
+            }
+            else
+            {
+                Debug.LogWarning("No ground detected below the building.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Building does not have a collider.");
+        }
     }
 
     public void DrawMapInEditor()
@@ -292,6 +321,7 @@ public class MapGenerator : MonoBehaviour
         {
             Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
         }
+
 
         DrawMapInEditor(); // 맵 생성 메서드 호출
     }
