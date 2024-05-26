@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Threading;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -46,50 +47,72 @@ public class MapGenerator : MonoBehaviour
     Queue<MapThreadInfo<MeshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<MeshData>>();
 
     public GameObject[] buildingPrefabs; // 건물 프리팹 배열
-    public Collider placementArea; // 건물이 배치될 수 있는 영역의 콜라이더
+    public MeshCollider placementArea;
+    public int maxBuildings = 40;
 
-    // 건물을 랜덤하게 배치하는 메서드
-    public void PlaceBuildings(int numberOfBuildings)
+    public void PlaceBuildingsOnTop()
     {
-        for (int i = 0; i < numberOfBuildings; i++)
+        Vector3[] topPositions = GetTopPositionsOnMesh(placementArea);
+
+        // 무작위로 선택할 위치의 인덱스를 저장할 리스트
+        List<int> selectedIndices = new List<int>();
+        while (selectedIndices.Count < maxBuildings && selectedIndices.Count < topPositions.Length)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, topPositions.Length);
+            if (!selectedIndices.Contains(randomIndex))
+            {
+                selectedIndices.Add(randomIndex);
+            }
+        }
+
+        foreach (int index in selectedIndices)
         {
             // 랜덤한 프리팹 선택
             GameObject selectedPrefab = buildingPrefabs[UnityEngine.Random.Range(0, buildingPrefabs.Length)];
 
-            // 랜덤한 위치 생성
-            Vector3 randomPosition = GetRandomPositionInBounds(placementArea.bounds);
-
-            // 땅의 표면 높이를 계산하여 건물을 배치
-            if (Physics.Raycast(new Vector3(randomPosition.x, 1000, randomPosition.z), Vector3.down, out RaycastHit hit, Mathf.Infinity))
-            {
-                randomPosition.y = hit.point.y;
-
-                // 건물 생성
-                GameObject newBuilding = Instantiate(selectedPrefab, randomPosition, Quaternion.identity);
-            }
+            // 건물 생성
+            Instantiate(selectedPrefab, topPositions[index], Quaternion.identity);
         }
     }
-
-    // 주어진 영역 내에서 랜덤한 위치를 반환하는 메서드
-    private Vector3 GetRandomPositionInBounds(Bounds bounds)
+    // 주어진 메쉬 콜라이더 표면에서 가장 높은 위치들을 반환하는 메서드
+    private Vector3[] GetTopPositionsOnMesh(MeshCollider meshCollider)
     {
-        float randomX = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
-        float randomZ = UnityEngine.Random.Range(bounds.min.z, bounds.max.z);
+        Mesh mesh = meshCollider.sharedMesh;
+        int[] triangles = mesh.triangles;
+        Vector3[] vertices = mesh.vertices;
 
-        Vector3 randomPosition = new Vector3(randomX, 0, randomZ);
+        float highestY = float.NegativeInfinity;
 
-        // 랜덤한 위치가 콜라이더 안에 있는지 확인
-        if (placementArea.bounds.Contains(randomPosition))
+        // 먼저 가장 높은 y 값을 찾습니다.
+        for (int i = 0; i < triangles.Length; i += 3)
         {
-            return randomPosition;
+            Vector3 vertex1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
+            Vector3 vertex2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
+            Vector3 vertex3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
+
+            if (vertex1.y > highestY) highestY = vertex1.y;
+            if (vertex2.y > highestY) highestY = vertex2.y;
+            if (vertex3.y > highestY) highestY = vertex3.y;
         }
-        else
+
+        // 가장 높은 위치들(혹은 그 근처 위치들)을 저장할 리스트를 만듭니다.
+        List<Vector3> topPositions = new List<Vector3>();
+
+        // 가장 높은 y 값 이상인 모든 정점을 찾아 리스트에 추가합니다.
+        for (int i = 0; i < triangles.Length; i += 3)
         {
-            // 콜라이더 안에 위치가 없으면 다시 시도
-            return GetRandomPositionInBounds(bounds);
+            Vector3 vertex1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
+            Vector3 vertex2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
+            Vector3 vertex3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
+
+            if (vertex1.y >= highestY) topPositions.Add(vertex1);
+            if (vertex2.y >= highestY) topPositions.Add(vertex2);
+            if (vertex3.y >= highestY) topPositions.Add(vertex3);
         }
+
+        // 최종적으로 리스트를 배열로 변환하여 반환합니다.
+        return topPositions.ToArray();
     }
-
 
     public void DrawMapInEditor()
     {
@@ -108,7 +131,14 @@ public class MapGenerator : MonoBehaviour
         {
             display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLOD), TextureGenerator.TextureFromColourMap(mapData.colourMap, mapChunkSize, mapChunkSize));
         }
-
+        if (placementArea != null && buildingPrefabs.Length > 0)
+        {
+            PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
+        }
+        else
+        {
+            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+        }
     }
 
     void Awake()
@@ -256,7 +286,7 @@ public class MapGenerator : MonoBehaviour
 
         if (placementArea != null && buildingPrefabs.Length > 0)
         {
-            PlaceBuildings(100); // 예: 10개의 건물을 배치
+            PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
         }
         else
         {
