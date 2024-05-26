@@ -45,7 +45,6 @@ public class GameTimer : MonoBehaviourPunCallbacks
             remainingTime = 0;
             // 게임 종료 로직 추가 가능
         }
-        Debug.Log(remainingTime.ToString());
 
         // 남은 시간 비율 계산
         float remainingTimeRatio = (float)(remainingTime / maxTime);

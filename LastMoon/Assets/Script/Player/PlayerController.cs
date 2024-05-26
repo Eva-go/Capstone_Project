@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float lookSensitivity;
 
-
     [SerializeField]
     private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
@@ -62,7 +61,10 @@ public class PlayerController : MonoBehaviour
             Inside();
             Attack();
             Switching();
+            if (Input.GetKey("escape"))
+                Application.Quit();
         }
+
     }
 
     private void Switching()
@@ -183,27 +185,21 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButton("Fire1"))
         {
-            Debug.Log("공격");
-            animator.SetTrigger("Swing");
-            Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+                animator.SetTrigger("Swing");
+                Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, 5f))
             {
-                if (hit.collider.CompareTag("Node"))
+                Node node = hit.collider.GetComponent<Node>();
+                Debug.DrawRay(ray.origin, ray.direction, Color.red,5f);
+                if (node != null)
                 {
-                    Debug.Log("Node");
-                    NodeController node = hit.collider.GetComponent<NodeController>();
-                    if (node != null)
-                    {
-                        node.TakeDamage(10); // 공격 시 10의 데미지를 줌
-                    }
-                    
+                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
+                    node.TakeDamage(10); // 공격할 때 받는 데미지
                 }
-
-                Debug.DrawRay(ray.origin, ray.direction * 20, Color.red, 5f);
-                Debug.Log(hit.point);
             }
+
         }
     }
 

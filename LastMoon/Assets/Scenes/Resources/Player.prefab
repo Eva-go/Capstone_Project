@@ -395,8 +395,8 @@ GameObject:
   - component: {fileID: 4093038744633329121}
   - component: {fileID: 4093038744633329122}
   - component: {fileID: 4093038744633329123}
-  - component: {fileID: 4093038744633329124}
   - component: {fileID: 4093038744633329134}
+  - component: {fileID: 4093038744633329124}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -533,6 +533,29 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &4093038744633329134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750386731104008374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5b9052fa619f140b889fdc459a67f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: {fileID: 0}
+  walkSpeed: 10
+  lookSensitivity: 1
+  cameraRotationLimit: 45
+  theCamera: {fileID: 4093038743613757119}
+  animator: {fileID: 7613318284708378742}
+  weapons:
+  - {fileID: 616738091857841484, guid: ad64ce656b47f97499f707f0f541a4ee, type: 3}
+  - {fileID: 6438757288700106276, guid: 9534d3036c0189a43ac32a68e4154320, type: 3}
+  - {fileID: 884030554955172031, guid: 7b3593c7e66142847a2c73595ae73033, type: 3}
+  weaponHoldPoint: {fileID: 1873656409261321833}
 --- !u!114 &4093038744633329124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,29 +588,6 @@ MonoBehaviour:
     LayerIndex: 0
   - SynchronizeType: 0
     LayerIndex: 1
---- !u!114 &4093038744633329134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3750386731104008374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b5b9052fa619f140b889fdc459a67f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pv: {fileID: 0}
-  walkSpeed: 10
-  lookSensitivity: 1
-  cameraRotationLimit: 45
-  theCamera: {fileID: 4093038743613757119}
-  animator: {fileID: 7613318284708378742}
-  weapons:
-  - {fileID: 616738091857841484, guid: ad64ce656b47f97499f707f0f541a4ee, type: 3}
-  - {fileID: 6438757288700106276, guid: 9534d3036c0189a43ac32a68e4154320, type: 3}
-  - {fileID: 884030554955172031, guid: 7b3593c7e66142847a2c73595ae73033, type: 3}
-  weaponHoldPoint: {fileID: 1873656409261321833}
 --- !u!1 &4002921790120025852
 GameObject:
   m_ObjectHideFlags: 0

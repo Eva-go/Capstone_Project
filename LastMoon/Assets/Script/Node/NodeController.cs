@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.UI;
 
 public class NodeController : MonoBehaviourPun
 {
@@ -12,6 +13,8 @@ public class NodeController : MonoBehaviourPun
 
     public Animator animator;
 
+    public Image image;
+
     // 초기 설정
     void Start()
     {
@@ -23,7 +26,6 @@ public class NodeController : MonoBehaviourPun
     {
         if (!photonView.IsMine)
             return;
-
         Debug.Log(amount);
         photonView.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, amount);
     }
@@ -38,6 +40,7 @@ public class NodeController : MonoBehaviourPun
         if (animator != null)
         {
             animator.SetTrigger("Hit");
+            Debug.Log(currentHealth);
         }
 
         if (currentHealth <= 0)
