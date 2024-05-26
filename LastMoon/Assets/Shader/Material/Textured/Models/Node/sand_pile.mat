@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: sand_pile
-  m_Shader: {fileID: -6465566751694194690, guid: 1883330b2f794a1479b482b53bfd1aa1, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 004c8ef96f3730045a3f9112d0e7482c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -43,7 +43,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Base_Texture:
-        m_Texture: {fileID: 2800000, guid: 5059f7cb5fac5334991688955a483a80, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -71,15 +71,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map:
-        m_Texture: {fileID: 2800000, guid: 6d067f6e55170cf49a9207527d6af969, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LU_Mask_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Look_up_Mask_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: de6e246303019074b86d74016f33aca6, type: 3}
+        m_Texture: {fileID: 2800000, guid: fd21328bd68815649b67a8d4823a2640, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -91,7 +95,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: 7083319dccbd8f34e86eeb68d38d90c5, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -99,10 +103,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Occlusion_Map:
-        m_Texture: {fileID: 2800000, guid: 6d067f6e55170cf49a9207527d6af969, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Smoothness_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -170,6 +178,7 @@ Material:
     - _Shadow_Strength: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
+    - _Smoothness_Map_Strength: 0
     - _SpecularHighlights: 1
     - _Specular_Map_Strength: 1
     - _Specular_Power: 1
@@ -180,6 +189,7 @@ Material:
     - _Surface: 0
     - _Texture_Specular: 0
     - _Use_LU_Specular: 1
+    - _Use_Look_up_Specular: 0
     - _Use_Look_up_Texture: 0
     - _WorkflowMode: 1
     - _ZTest: 4

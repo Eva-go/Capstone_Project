@@ -51,6 +51,55 @@ public class MapGenerator : MonoBehaviour
     public int maxBuildings = 40;
     public LayerMask groundLayer; // 지면 레이어 마스크
 
+    public GameObject[] NodePrefabs; // 건물 프리팹 배열
+
+    public void PlaceNodes(int numberOfNodes)
+    {
+        int nodesPerGroup = 5; // 한 그룹당 생성할 노드 수
+        int groups = numberOfNodes / nodesPerGroup; // 그룹 수
+        int remainder = numberOfNodes % nodesPerGroup; // 그룹별 남은 노드 수
+
+        for (int i = 0; i < groups; i++)
+        {
+            PlaceNodeGroup(nodesPerGroup); // 노드 그룹 생성
+        }
+
+        // 남은 노드를 따로 생성
+        if (remainder > 0)
+        {
+            PlaceNodeGroup(remainder);
+        }
+    }
+
+    private void PlaceNodeGroup(int numberOfNodes)
+    {
+        for (int i = 0; i < numberOfNodes; i++)
+        {
+            // 랜덤한 프리팹 선택
+            GameObject selectedPrefab = NodePrefabs[UnityEngine.Random.Range(0, NodePrefabs.Length)];
+
+            // 랜덤한 위치 생성
+            Vector3 randomPosition = GetRandomPositionInBounds(placementArea.bounds);
+
+            // 땅의 표면 높이를 계산하여 노드를 배치
+            if (Physics.Raycast(new Vector3(randomPosition.x, 1000, randomPosition.z), Vector3.down, out RaycastHit hit, Mathf.Infinity))
+            {
+                randomPosition.y = hit.point.y;
+
+                // 건물 생성
+                GameObject newBuilding = Instantiate(selectedPrefab, randomPosition, Quaternion.identity);
+            }
+        }
+    }
+    // 주어진 영역 내에서 랜덤한 위치를 반환하는 메서드
+    private Vector3 GetRandomPositionInBounds(Bounds bounds)
+    {
+        float randomX = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
+        float randomZ = UnityEngine.Random.Range(bounds.min.z, bounds.max.z);
+        return new Vector3(randomX, 0, randomZ); // y 값을 0으로 설정
+    }
+
+
     public void PlaceBuildingsOnTop()
     {
         Vector3[] topPositions = GetTopPositionsOnMesh(placementArea);
@@ -160,14 +209,7 @@ public class MapGenerator : MonoBehaviour
         {
             display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, meshHeightMultiplier, meshHeightCurve, editorPreviewLOD), TextureGenerator.TextureFromColourMap(mapData.colourMap, mapChunkSize, mapChunkSize));
         }
-        if (placementArea != null && buildingPrefabs.Length > 0)
-        {
-            PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
-        }
-        else
-        {
-            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
-        }
+
     }
 
     void Awake()
@@ -312,6 +354,16 @@ public class MapGenerator : MonoBehaviour
         {
             seed2 = UnityEngine.Random.Range(0, 100000);
         }
+
+        if (placementArea != null && NodePrefabs.Length > 0)
+        {
+            PlaceNodes(100); // 예: 10개의 노드을 배치
+        }
+        else
+        {
+            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+        }
+
 
         if (placementArea != null && buildingPrefabs.Length > 0)
         {
