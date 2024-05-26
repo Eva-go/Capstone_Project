@@ -124,14 +124,6 @@ public class PlayerController : MonoBehaviour
         GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
         weaponInstance.transform.SetParent(weaponHoldPoint);
 
-        // PhotonView°¡ ÇÊ¿äÇÏ¸é ¼³Á¤
-        PhotonView weaponPhotonView = weaponInstance.GetComponent<PhotonView>();
-        if (weaponPhotonView != null)
-        {
-            // weaponPhotonView.ViewID = PhotonNetwork.AllocateViewID();
-            Debug.Log("Æ÷Åæ ºä");
-        }
-
     }
 
     private void Inside()

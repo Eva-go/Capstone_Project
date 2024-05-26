@@ -30,6 +30,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        Screen.SetResolution(Screen.width, Screen.width * 9 / 16, false);
+
+
         print("서버 연결 시도.");
         PhotonNetwork.ConnectUsingSettings();
     }
