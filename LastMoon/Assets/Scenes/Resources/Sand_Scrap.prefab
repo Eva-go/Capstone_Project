@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 435054887334448076}
   - component: {fileID: -6910188069378782510}
   - component: {fileID: -8497821844177340042}
-  - component: {fileID: -2966774652598609026}
+  - component: {fileID: -5020213289498113354}
   m_Layer: 0
   m_Name: Sand_Scrap
   m_TagString: Node
@@ -269,13 +269,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 0}
-  - {fileID: -2966774652598609026}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-2966774652598609026
+--- !u!114 &-5020213289498113354
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,11 +282,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1769109117780716491}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e0bd3a9eaaf69e4caa0b8462715a4a7, type: 3}
+  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
+  PV: {fileID: -8497821844177340042}
   animator: {fileID: -6910188069378782510}
 --- !u!1 &1773873089285367692
 GameObject:

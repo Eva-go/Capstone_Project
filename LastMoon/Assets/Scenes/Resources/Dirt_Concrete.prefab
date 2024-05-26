@@ -542,7 +542,7 @@ GameObject:
   - component: {fileID: 6924275277081125465}
   - component: {fileID: -2300431837413620973}
   - component: {fileID: -2861583991924795229}
-  - component: {fileID: -1454324876384450391}
+  - component: {fileID: -1306539899665081272}
   m_Layer: 0
   m_Name: Dirt_Concrete
   m_TagString: Node
@@ -632,13 +632,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: -1454324876384450391}
-  - {fileID: 0}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-1454324876384450391
+--- !u!114 &-1306539899665081272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -647,11 +645,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6152830330397131859}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e0bd3a9eaaf69e4caa0b8462715a4a7, type: 3}
+  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
+  PV: {fileID: -2861583991924795229}
   animator: {fileID: -2300431837413620973}
 --- !u!1 &6156435970696792084
 GameObject:

@@ -625,7 +625,7 @@ GameObject:
   - component: {fileID: -6885239156431841462}
   - component: {fileID: 6300206466970504404}
   - component: {fileID: -3757749175428721541}
-  - component: {fileID: 1983775587889012636}
+  - component: {fileID: -1713730967218251931}
   m_Layer: 0
   m_Name: Dirt
   m_TagString: Node
@@ -715,13 +715,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 1983775587889012636}
-  - {fileID: 0}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1983775587889012636
+--- !u!114 &-1713730967218251931
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -730,9 +728,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 6321752687732770034}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e0bd3a9eaaf69e4caa0b8462715a4a7, type: 3}
+  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
+  PV: {fileID: -3757749175428721541}
   animator: {fileID: 6300206466970504404}

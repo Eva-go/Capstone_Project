@@ -1,7 +1,7 @@
 using UnityEngine;
 using Photon.Pun;
 
-public class Node : MonoBehaviourPunCallbacks, IPunObservable
+public class NodeHp : MonoBehaviourPunCallbacks, IPunObservable
 {
     public int maxHealth = 100;
     [HideInInspector]
@@ -13,6 +13,7 @@ public class Node : MonoBehaviourPunCallbacks, IPunObservable
     {
         currentHealth = maxHealth;
     }
+
 
     public void TakeDamage(int damage)
     {
