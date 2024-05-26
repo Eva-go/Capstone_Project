@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,8 +9,8 @@ using Photon.Pun.Demo.PunBasics;
 
 public class PlayerController : MonoBehaviour
 {
-    public  PhotonView pv;
-   
+    public PhotonView pv;
+
     private GameObject cam;
     [SerializeField]
     private float walkSpeed;
@@ -23,7 +22,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
-
 
     [SerializeField]
     public Camera theCamera;
@@ -38,10 +36,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Animator animator;
 
-
     public GameObject[] weapons; // 무기 오브젝트 배열
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     private int selectedWeaponIndex = 0;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -50,26 +48,22 @@ public class PlayerController : MonoBehaviour
         cam.SetActive(false);
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
-
-
-
-    // Update is called once per frame
     void Update()
     {
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             cam.SetActive(true);
             Move();
             CameraRotation();
             CharacterRotation();
             Inside();
-            attack();
+            Attack();
             Switching();
         }
     }
-
 
     private void Switching()
     {
@@ -104,6 +98,14 @@ public class PlayerController : MonoBehaviour
         {
             pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     [PunRPC]
@@ -123,13 +125,12 @@ public class PlayerController : MonoBehaviour
         // 새로운 무기 인스턴스 생성 및 장착
         GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
         weaponInstance.transform.SetParent(weaponHoldPoint);
-
     }
 
     private void Inside()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hitInfo,5) && hitInfo.collider.tag==("APT"))
+        if (Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.CompareTag("APT"))
         {
             // Get the collider bounds
             Collider collider = hitInfo.collider;
@@ -155,20 +156,20 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     private void Move()
     {
+        float moveDirX = Input.GetAxisRaw("Horizontal");
+        float moveDirZ = Input.GetAxisRaw("Vertical");
 
-        float _moveDirX = Input.GetAxisRaw("Horizontal");
-        float _moveDirZ = Input.GetAxisRaw("Vertical");
+        Vector3 moveHorizontal = transform.right * moveDirX;
+        Vector3 moveVertical = transform.forward * moveDirZ;
 
-        Vector3 _moveHorizontal = transform.right * _moveDirX;
-        Vector3 _moveVertical = transform.forward * _moveDirZ;
+        Vector3 velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
 
-        Vector3 _velocity = (_moveHorizontal + _moveVertical).normalized * walkSpeed;
+        myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
 
-        myRigid.MovePosition(transform.position + _velocity * Time.deltaTime);
-        
-        if (_velocity != Vector3.zero)
+        if (velocity != Vector3.zero)
         {
             animator.SetBool("isMove", true);
         }
@@ -178,40 +179,50 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void attack()
+    private void Attack()
     {
-
         if (Input.GetButton("Fire1"))
         {
+            Debug.Log("공격");
             animator.SetTrigger("Swing");
+            Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 5f))
+            {
+                if (hit.collider.CompareTag("Node"))
+                {
+                    Debug.Log("Node");
+                    NodeController node = hit.collider.GetComponent<NodeController>();
+                    if (node != null)
+                    {
+                        node.TakeDamage(10); // 공격 시 10의 데미지를 줌
+                    }
+                    
+                }
+
+                Debug.DrawRay(ray.origin, ray.direction * 20, Color.red, 5f);
+                Debug.Log(hit.point);
+            }
         }
     }
-
-    private void hit()
-    {
-
-    }
-
-
-
 
     private void CharacterRotation()
     {
         // 좌우 캐릭터 회전
-        float _yRotation = Input.GetAxisRaw("Mouse X");
-        Vector3 _characterRotationY = new Vector3(0f, _yRotation, 0f) * lookSensitivity;
-        myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
+        float yRotation = Input.GetAxisRaw("Mouse X");
+        Vector3 characterRotationY = new Vector3(0f, yRotation, 0f) * lookSensitivity;
+        myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(characterRotationY));
     }
 
     private void CameraRotation()
     {
         // 상하 카메라 회전
-        float _xRotation = Input.GetAxisRaw("Mouse Y");
-        float _cameraRotationX = _xRotation * lookSensitivity;
-        currentCameraRotationX -= _cameraRotationX;
+        float xRotation = Input.GetAxisRaw("Mouse Y");
+        float cameraRotationX = xRotation * lookSensitivity;
+        currentCameraRotationX -= cameraRotationX;
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
-       
     }
 }
