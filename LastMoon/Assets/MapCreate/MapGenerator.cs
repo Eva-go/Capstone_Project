@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 using Unity.Mathematics;
+using Photon.Pun;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -52,6 +53,8 @@ public class MapGenerator : MonoBehaviour
     public LayerMask groundLayer; // 지면 레이어 마스크
 
     public GameObject[] NodePrefabs; // 건물 프리팹 배열
+
+    //public GameObject selectedPrefab;
 
     public void PlaceNodes(int numberOfNodes)
     {
@@ -357,7 +360,7 @@ public class MapGenerator : MonoBehaviour
 
         if (placementArea != null && NodePrefabs.Length > 0)
         {
-            PlaceNodes(100); // 예: 10개의 노드을 배치
+            PlaceNodes(1000); // 예: 10개의 노드을 배치
         }
         else
         {

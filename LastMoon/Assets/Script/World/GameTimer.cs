@@ -56,10 +56,10 @@ public class GameTimer : MonoBehaviourPunCallbacks
         newPosition.x = newX;
         timerImageRectTransform.localPosition = newPosition;
 
-        // F1 키를 누르면 시간을 5분씩 줄임
+        // F1 키를 누르면 시간을 3분씩 줄임
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            photonView.RPC("ReduceTime", RpcTarget.AllBuffered, 5);
+            photonView.RPC("ReduceTime", RpcTarget.All, 3);
             Debug.Log("f1");
         }
     }

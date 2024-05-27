@@ -115,7 +115,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 // Set the start time in room properties
                 PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "startTime", startTime } });
 
-                PhotonNetwork.LoadLevel("ObjectPooling");
+                PhotonNetwork.LoadLevel("Map");
             }
         }
     }

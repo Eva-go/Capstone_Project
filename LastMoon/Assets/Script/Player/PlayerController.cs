@@ -63,6 +63,14 @@ public class PlayerController : MonoBehaviour
             Switching();
             if (Input.GetKey("escape"))
                 Application.Quit();
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                walkSpeed = 100;
+            }
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                walkSpeed = 10;
+            }
         }
 
     }

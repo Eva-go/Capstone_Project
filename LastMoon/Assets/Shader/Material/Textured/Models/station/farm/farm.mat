@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: farm
-  m_Shader: {fileID: -6465566751694194690, guid: 1883330b2f794a1479b482b53bfd1aa1, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 004c8ef96f3730045a3f9112d0e7482c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -31,7 +31,8 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_LockedProperties: :m_LightmapFlags
   m_SavedProperties:
@@ -78,7 +79,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: de6e246303019074b86d74016f33aca6, type: 3}
+        m_Texture: {fileID: 2800000, guid: fd21328bd68815649b67a8d4823a2640, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -137,6 +138,7 @@ Material:
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 0.75
+    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -185,7 +187,10 @@ Material:
     - _Use_Look_up_Specular: 0
     - _Use_Look_up_Texture: 0
     - _WorkflowMode: 0
+    - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteControl: 0
+    - _transparency: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
