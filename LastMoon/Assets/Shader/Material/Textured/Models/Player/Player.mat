@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Player
-  m_Shader: {fileID: -6465566751694194690, guid: 39df874bd1fe9f8479202b34b8cf7eac, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 1883330b2f794a1479b482b53bfd1aa1, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -18,8 +18,7 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Opaque
+  stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
@@ -65,12 +64,8 @@ Material:
         m_Texture: {fileID: 2800000, guid: ae0d7be39fcc61741a0bb352f2a1679f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Look_up_Mask_Map:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: e3b54e4d276529a4d88a148cd9e12c9a, type: 3}
+        m_Texture: {fileID: 2800000, guid: de6e246303019074b86d74016f33aca6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -138,7 +133,6 @@ Material:
     - _BlendModePreserveSpecular: 1
     - _Brghtness_Limit: 1
     - _BumpScale: 1
-    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -147,7 +141,6 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _Emission_Map_Strength: 0
     - _Emission_Strength: 0
     - _EnvironmentReflections: 1
     - _Float: 0
@@ -162,11 +155,9 @@ Material:
     - _Metallic: 0
     - _MonoShadow: 0
     - _NM_Strength: 1
-    - _Normal_Map_Strength: 1
     - _Normal_Strength: 1
     - _OM_Strength: 0
     - _OcclusionStrength: 1
-    - _Occlusion_Map_Strength: 1
     - _Occlusion_Strength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -175,7 +166,6 @@ Material:
     - _RL_Power: 3
     - _RL_Shadow_Power: 1
     - _RL_Strength: 0.75
-    - _RL_Texture_Brightness: 1.5
     - _RL_With_Texture: 1
     - _ReceiveShadows: 1
     - _Rim_Light_Limit: 0.5
@@ -192,12 +182,8 @@ Material:
     - _Shadow_Strength: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
-    - _Smoothness_Map_Strength: 0
     - _Smoothness_Strength: 10
     - _SpecularHighlights: 1
-    - _Specular_Map_Strength: 1
-    - _Specular_Power: 1
-    - _Specular_Step: 4
     - _Specular_Strength: 0
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -206,16 +192,11 @@ Material:
     - _Strength_3: 0
     - _Strength_4: 0
     - _Surface: 0
-    - _Texture_Specular: 0
     - _Use_Base_Texture: 1
-    - _Use_Look_up_Specular: 0
     - _Use_Look_up_Texture: 0
     - _Use_Normal_Ambient: 1
     - _WorkflowMode: 1
-    - _ZTest: 4
     - _ZWrite: 1
-    - _ZWriteControl: 0
-    - _transparency: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Base_Color: {r: 0.8784314, g: 0.8784314, b: 0.8784314, a: 0}
