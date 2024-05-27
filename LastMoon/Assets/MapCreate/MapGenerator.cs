@@ -360,7 +360,7 @@ public class MapGenerator : MonoBehaviour
 
         if (placementArea != null && NodePrefabs.Length > 0)
         {
-            PlaceNodes(1000); // 예: 10개의 노드을 배치
+            //PlaceNodes(1000); // 예: 10개의 노드을 배치
         }
         else
         {
@@ -370,7 +370,7 @@ public class MapGenerator : MonoBehaviour
 
         if (placementArea != null && buildingPrefabs.Length > 0)
         {
-            PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
+            //PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
         }
         else
         {
