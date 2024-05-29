@@ -19,24 +19,35 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     // 게임 시간
     private const byte StartTimeEventCode = 1;
 
+
+    //seed값
+    private int seed1;
+    private int seed2;
+    private Seed seed;
     void Awake()
     {
         //DontDestroyOnLoad(gameObject);
         // 마스터 클라이언트는 PhotonNetwork.LoadLevel()를 호출할 수 있고, 모든 연결된 플레이어는 자동적으로 동일한 레벨을 로드한다.
         PhotonNetwork.AutomaticallySyncScene = true;
-
+        seed = FindObjectOfType<Seed>();
         m_panel_Loading.SetActive(false);
     }
 
     void Start()
     {
         Screen.SetResolution(Screen.width, Screen.width * 9 / 16, false);
-
-
         print("서버 연결 시도.");
         PhotonNetwork.ConnectUsingSettings();
     }
+    public int GetSeed1()
+    {
+        return seed1;
+    }
 
+    public int GetSeed2()
+    {
+        return seed2;
+    }
     public void JoinRandomOrCreateRoom()
     {
         string nick = m_inputField_Nickname.text;
@@ -58,6 +69,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             expectedCustomRoomProperties: new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }, expectedMaxPlayers: maxPlayers, // 참가할 때의 기준.
             roomOptions: roomOptions // 생성할 때의 기준.
         );
+
     }
 
     public void CancelMatching()
@@ -93,15 +105,27 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         UpdatePlayerCounts();
 
         m_panel_Loading.SetActive(true);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 마스터 클라이언트에서만 시드 값을 생성합니다.
+            seed1 = UnityEngine.Random.Range(0, 100000);
+            seed2 = UnityEngine.Random.Range(0, 100000);
+        }
     }
+
+ 
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Debug.Log($"플레이어 {newPlayer.NickName} 방 참가.");
         UpdatePlayerCounts();
-
+        // 다른 클라이언트가 방에 참가할 때 시드 값을 모두에게 전송합니다.
+        photonView.RPC("SendSeedsToClients", RpcTarget.All, seed1, seed2);
+        seed.seed();
         if (PhotonNetwork.IsMasterClient)
         {
+            System.Threading.Thread.Sleep(5);
             // 목표 인원 수 채웠으면, 맵 이동을 한다. 권한은 마스터 클라이언트만.
             if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
             {
@@ -115,11 +139,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 // Set the start time in room properties
                 PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "startTime", startTime } });
 
-                PhotonNetwork.LoadLevel("ObjectPooling");
+                PhotonNetwork.LoadLevel("Map");
             }
         }
+       
     }
-
+    [PunRPC]
+    private void SendSeedsToClients(int seed1, int seed2)
+    {
+        this.seed1 = seed1;
+        this.seed2 = seed2;
+    }
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
         Debug.Log($"플레이어 {otherPlayer.NickName} 방 나감.");

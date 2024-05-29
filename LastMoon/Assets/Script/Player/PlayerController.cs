@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Photon.Pun;
 using Photon.Realtime;
-using Photon.Pun.Demo.PunBasics;
 
 public class PlayerController : MonoBehaviour
 {
@@ -74,6 +73,8 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
+
 
     private void Switching()
     {

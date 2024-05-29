@@ -347,26 +347,20 @@ public class MapGenerator : MonoBehaviour
     }
     void Start() 
     {
-        //시드 부분
-        // seed가 0이면 랜덤한 시드값을 사용하고, 그렇지 않으면 지정된 시드값을 사용합니다.
-        if (seed1 == 0)
-        {
-            seed1 = UnityEngine.Random.Range(0, 100000); // 랜덤한 시드값 생성
-        }
-        if (seed2 == 0)
-        {
-            seed2 = UnityEngine.Random.Range(0, 100000);
-        }
+        seed1 = Seed.seed1;
+        seed2 = Seed.seed2;
+        Debug.Log("Map: "+seed1);
+        Debug.Log("Map: " +seed2);
+
 
         if (placementArea != null && NodePrefabs.Length > 0)
         {
-            //PlaceNodes(1000); // 예: 10개의 노드을 배치
+            PlaceNodes(1000);
         }
         else
         {
             Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
         }
-
 
         if (placementArea != null && buildingPrefabs.Length > 0)
         {
