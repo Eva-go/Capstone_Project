@@ -21,7 +21,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         // 마스터 클라이언트는 PhotonNetwork.LoadLevel()를 호출할 수 있고, 모든 연결된 플레이어는 자동적으로 동일한 레벨을 로드한다.
         PhotonNetwork.AutomaticallySyncScene = true;
 
@@ -115,7 +115,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 // Set the start time in room properties
                 PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "startTime", startTime } });
 
-                PhotonNetwork.LoadLevel("Map");
+                PhotonNetwork.LoadLevel("ObjectPooling");
             }
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class NodeController : MonoBehaviourPun
 {
-    int NodeHp = 100;
+    int NodeHp = 20;
 
     public PhotonView PV;
 
@@ -28,7 +28,7 @@ public class NodeController : MonoBehaviourPun
         }
         else if(NodeHp<=0)
         {
-            animator.SetTrigger("Destroy");
+            animator.SetTrigger("Harvest");
         }
     }
     public void OnDestroyAnimationEnd()
