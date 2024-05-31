@@ -12,6 +12,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     private void Start()
     {
         currentHealth = maxHealth;
+ 
     }
 
     public void TakeDamage()
@@ -25,6 +26,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         else if (currentHealth <= 0)
         {
             currentHealth = 0;
+            gameObject.GetComponent<BoxCollider>().enabled = false;
             photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest");
             // 애니메이션 끝날 때 오브젝트 삭제
         }

@@ -1,81 +1,87 @@
-using UnityEngine;
-using Photon.Pun; // Photon PUN 네임스페이스 추가
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Photon.Pun;
 
-public class NodeSpawner : MonoBehaviourPun // Photon의 MonoBehaviourPun 사용
+public class ItemSpawner : MonoBehaviourPun
 {
-    public GameObject[] itemPrefabs; // 아이템 프리팹 배열
-    public MeshCollider spawnArea; // 스폰 영역의 mesh collider
+    // 스폰할 아이템 프리팹 배열
+    public GameObject[] itemPrefabs;
 
-    private float minSpawnInterval = 3f; // 최소 스폰 간격
-    private float maxSpawnInterval = 10f; // 최대 스폰 간격
-    private int totalItemsToSpawn = 1000; // 총 스폰할 아이템 수
-    private int itemsSpawned = 0; // 현재 스폰된 아이템 수
+    // 메쉬 콜라이더
+    public MeshCollider spawnArea;
 
-    private void Start()
+    // 스폰할 아이템 갯수
+    public int itemCount = 10;
+
+    // 각 아이템 간의 최소 및 최대 거리
+    public float minDistance = 2f;
+    public float maxDistance = 5f;
+
+    // 빈 게임 오브젝트의 Transform
+    public Transform parentTransform;
+
+    void Start()
     {
-        // 마스터 클라이언트만 스폰 코루틴 시작
         if (PhotonNetwork.IsMasterClient)
         {
-            StartCoroutine(SpawnItems());
+            SpawnItems();
         }
     }
 
-    private IEnumerator SpawnItems()
+    void SpawnItems()
     {
-        // 아이템을 모두 스폰할 때까지 반복
-        while (itemsSpawned < totalItemsToSpawn)
+        List<Vector3> spawnedPositions = new List<Vector3>();
+
+        for (int i = 0; i < itemCount; i++)
         {
-            // 랜덤한 시간 간격을 생성
-            float spawnInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
-            yield return new WaitForSeconds(spawnInterval);
+            GameObject itemPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Length)];
 
-            // 랜덤한 위치를 생성
-            Vector3 randomPoint = GetRandomPointOnColliderSurface(spawnArea);
+            Vector3 spawnPosition;
+            bool positionValid;
 
-            // 지면 위에 있는지 확인
-            RaycastHit hit;
-            if (Physics.Raycast(randomPoint, Vector3.down, out hit, Mathf.Infinity))
+            do
             {
-                randomPoint = hit.point; // 스폰 위치를 지면 위로 조정
+                positionValid = true;
+                spawnPosition = GetRandomPositionAboveMeshCollider(spawnArea);
+
+                foreach (Vector3 pos in spawnedPositions)
+                {
+                    if (Vector3.Distance(spawnPosition, pos) < minDistance)
+                    {
+                        positionValid = false;
+                        break;
+                    }
+                }
             }
+            while (!positionValid);
 
-            // 랜덤한 아이템을 선택하여 스폰
-            int randomIndex = Random.Range(0, itemPrefabs.Length);
+            spawnedPositions.Add(spawnPosition);
 
-            // 아이템 스폰을 모든 클라이언트와 동기화
-            photonView.RPC("SpawnItem", RpcTarget.AllBuffered, randomIndex, randomPoint);
-
-            // 스폰된 아이템 수 증가
-            itemsSpawned++;
+            // PhotonNetwork.Instantiate를 통해 생성하고 부모 설정
+            GameObject spawnedItem = PhotonNetwork.Instantiate(itemPrefab.name, spawnPosition, Quaternion.identity);
+            spawnedItem.transform.SetParent(parentTransform);
         }
     }
 
-    // mesh collider 내에서 랜덤한 포인트를 반환하는 메서드
-    private Vector3 GetRandomPointOnColliderSurface(MeshCollider collider)
+    Vector3 GetRandomPositionAboveMeshCollider(MeshCollider meshCollider)
     {
-        Vector3 randomPoint = Vector3.zero;
-        Vector3 min = collider.bounds.min;
-        Vector3 max = collider.bounds.max;
+        Vector3 min = meshCollider.bounds.min;
+        Vector3 max = meshCollider.bounds.max;
 
-        // 랜덤한 점을 생성
-        randomPoint.x = Random.Range(min.x, max.x);
-        randomPoint.y = max.y; // collider의 상단에 위치
-        randomPoint.z = Random.Range(min.z, max.z);
+        Vector3 randomPosition = new Vector3(
+            Random.Range(min.x, max.x),
+            max.y + 1f, // 메쉬 콜라이더 위로 약간의 오프셋 추가
+            Random.Range(min.z, max.z)
+        );
 
-        return randomPoint;
-    }
-
-    // RPC 메서드: 모든 클라이언트에서 아이템을 스폰
-    [PunRPC]
-    private void SpawnItem(int prefabIndex, Vector3 position)
-    {
-        if (prefabIndex < 0 || prefabIndex >= itemPrefabs.Length)
+        // 아래로 레이캐스트하여 메쉬 콜라이더의 최상단 표면을 찾음
+        RaycastHit hit;
+        if (Physics.Raycast(randomPosition, Vector3.down, out hit, Mathf.Infinity))
         {
-            Debug.LogError("Invalid prefab index");
-            return;
+            randomPosition.y = hit.point.y + 0.1f; // 아이템이 메쉬 콜라이더 위에 위치하도록 약간 위로 이동
         }
 
-        Instantiate(itemPrefabs[prefabIndex], position, Quaternion.identity);
+        return randomPosition;
     }
 }
