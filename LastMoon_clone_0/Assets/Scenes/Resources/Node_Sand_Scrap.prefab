@@ -68,10 +68,13 @@ PrefabInstance:
       addedObject: {fileID: 2133652411187969984}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 728460a23a4571f41bb9f5630c4c4f91, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8808475682502726642}
+      addedObject: {fileID: 4274648476233097009}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 728460a23a4571f41bb9f5630c4c4f91, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4274648476233097009}
+      addedObject: {fileID: 70939418032582350}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 728460a23a4571f41bb9f5630c4c4f91, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7885598843709515952}
   m_SourcePrefab: {fileID: 100100000, guid: 728460a23a4571f41bb9f5630c4c4f91, type: 3}
 --- !u!1 &1256879839655810891 stripped
 GameObject:
@@ -120,7 +123,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8808475682502726642
+--- !u!114 &4274648476233097009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256879839655810891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 30
+  currentHealth: 0
+  animator: {fileID: 2133652411187969984}
+--- !u!114 &70939418032582350
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,11 +156,12 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 4274648476233097009}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &4274648476233097009
+--- !u!114 &7885598843709515952
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,8 +170,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1256879839655810891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 8808475682502726642}
-  animator: {fileID: 2133652411187969984}
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers: []

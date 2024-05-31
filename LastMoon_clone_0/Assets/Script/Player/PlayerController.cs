@@ -212,7 +212,7 @@ public class PlayerController : MonoBehaviour
                 if(nodeController != null)
                 {
                     Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                    nodeController.RCPUpdate();
+                    nodeController.TakeDamage();
                 }
             }
 

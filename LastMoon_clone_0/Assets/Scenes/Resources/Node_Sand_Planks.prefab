@@ -68,10 +68,13 @@ PrefabInstance:
       addedObject: {fileID: 414706645339267837}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 95e1ea752fc47c5488fd65366e87bdb0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6201881257121932650}
+      addedObject: {fileID: 8791655414028263091}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 95e1ea752fc47c5488fd65366e87bdb0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8791655414028263091}
+      addedObject: {fileID: 5600285352811385365}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 95e1ea752fc47c5488fd65366e87bdb0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -502851916563916107}
   m_SourcePrefab: {fileID: 100100000, guid: 95e1ea752fc47c5488fd65366e87bdb0, type: 3}
 --- !u!1 &4397636451757101403 stripped
 GameObject:
@@ -120,7 +123,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6201881257121932650
+--- !u!114 &8791655414028263091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4397636451757101403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 30
+  currentHealth: 0
+  animator: {fileID: 414706645339267837}
+--- !u!114 &5600285352811385365
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,11 +156,12 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 8791655414028263091}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &8791655414028263091
+--- !u!114 &-502851916563916107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,8 +170,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4397636451757101403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 6201881257121932650}
-  animator: {fileID: 414706645339267837}
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers: []

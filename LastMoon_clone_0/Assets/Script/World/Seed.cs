@@ -20,8 +20,8 @@ public class Seed : MonoBehaviour
     }
     public void seed(int a, int b)
     {
-        seed1 = a;
-        seed2 = b;
+        seed1 = 1;
+        seed2 = 1;
         Debug.Log("seed: " + seed1);
         Debug.Log("seed: " + seed2);
     }

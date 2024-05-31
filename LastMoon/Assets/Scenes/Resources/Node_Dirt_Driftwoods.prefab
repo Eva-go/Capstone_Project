@@ -68,10 +68,13 @@ PrefabInstance:
       addedObject: {fileID: 6697003303638985365}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bcdee747e7e792042993361b24e3f2e2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5329848251146936515}
+      addedObject: {fileID: 4375710946643124396}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bcdee747e7e792042993361b24e3f2e2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4375710946643124396}
+      addedObject: {fileID: -3118514890833341624}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bcdee747e7e792042993361b24e3f2e2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5102999815542651812}
   m_SourcePrefab: {fileID: 100100000, guid: bcdee747e7e792042993361b24e3f2e2, type: 3}
 --- !u!1 &4760096997482513493 stripped
 GameObject:
@@ -120,7 +123,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5329848251146936515
+--- !u!114 &4375710946643124396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4760096997482513493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 30
+  currentHealth: 0
+  animator: {fileID: 6697003303638985365}
+--- !u!114 &-3118514890833341624
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,7 +160,7 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &4375710946643124396
+--- !u!114 &5102999815542651812
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,8 +169,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4760096997482513493}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 5329848251146936515}
-  animator: {fileID: 6697003303638985365}
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers: []

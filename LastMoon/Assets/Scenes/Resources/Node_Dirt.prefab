@@ -68,10 +68,13 @@ PrefabInstance:
       addedObject: {fileID: 8986131023250289261}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1523291bdef07144cbfb7725b57320a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6477343615576494629}
+      addedObject: {fileID: 8881098671226254640}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1523291bdef07144cbfb7725b57320a7, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8881098671226254640}
+      addedObject: {fileID: 8934774373667311413}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1523291bdef07144cbfb7725b57320a7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6832180484323311383}
   m_SourcePrefab: {fileID: 100100000, guid: 1523291bdef07144cbfb7725b57320a7, type: 3}
 --- !u!1 &1067324668941804349 stripped
 GameObject:
@@ -120,7 +123,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6477343615576494629
+--- !u!114 &8881098671226254640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067324668941804349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 30
+  currentHealth: 0
+  animator: {fileID: 8986131023250289261}
+--- !u!114 &8934774373667311413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,11 +156,12 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 8881098671226254640}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &8881098671226254640
+--- !u!114 &-6832180484323311383
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,8 +170,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067324668941804349}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1f89d9a7a56b1e48a866e3431a0fdc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 6477343615576494629}
-  animator: {fileID: 8986131023250289261}
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters: []
+  m_SynchronizeLayers: []
