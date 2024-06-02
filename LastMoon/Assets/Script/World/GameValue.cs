@@ -24,6 +24,7 @@ public class GameValue : MonoBehaviour
     }
 
 
+
     static public void setMoney()
     {
         money = GameObject.Find("Money_Text").GetComponent<Text>();

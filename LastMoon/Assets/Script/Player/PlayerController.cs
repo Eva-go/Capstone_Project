@@ -41,6 +41,11 @@ public class PlayerController : MonoBehaviour
     public static int getMoney;
 
 
+
+    public GameObject insidegameObject;
+
+    public static bool insideActive;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -51,6 +56,9 @@ public class PlayerController : MonoBehaviour
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
         GameValue.setMoney();
+
+
+
     }
 
     void Update()
@@ -74,6 +82,11 @@ public class PlayerController : MonoBehaviour
             {
                 walkSpeed = 10;
             }
+            if(Input.GetKeyDown(KeyCode.F4))
+            {
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, 50f, gameObject.transform.position.z);
+            }
+        
         }
 
     }
@@ -113,6 +126,9 @@ public class PlayerController : MonoBehaviour
         {
             pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
         }
+
+
+
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             Cursor.lockState = CursorLockMode.None;
@@ -145,31 +161,12 @@ public class PlayerController : MonoBehaviour
     private void Inside()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.CompareTag("APT"))
+        if (Input.GetKey(KeyCode.E)&& Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
         {
-            // Get the collider bounds
-            Collider collider = hitInfo.collider;
-            Bounds bounds = collider.bounds;
-
-            // Calculate the top position of the collider
-            Vector3 topPosition = new Vector3(bounds.center.x, bounds.max.y, bounds.center.z);
-
-            // 이전에 이동한 위치와 비교하여 같으면 이전 위치로 이동
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (ins)
-                {
-                    previousPosition = transform.position;
-                    transform.position = topPosition;
-                    ins = false;
-                }
-                else
-                {
-                    transform.position = previousPosition;
-                    ins = true;
-                }
-            }
+            insideActive = true;
         }
+        else
+            insideActive = false;
     }
 
     private void Move()

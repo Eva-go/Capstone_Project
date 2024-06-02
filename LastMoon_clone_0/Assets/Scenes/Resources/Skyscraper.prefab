@@ -48,12 +48,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 99c981841dd08744092af2b958bccc22, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 99c981841dd08744092af2b958bccc22, type: 3}
       propertyPath: m_Name
       value: Skyscraper
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 99c981841dd08744092af2b958bccc22, type: 3}
+      propertyPath: m_TagString
+      value: APT
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 99c981841dd08744092af2b958bccc22, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1495700048300269726}
   m_SourcePrefab: {fileID: 100100000, guid: 99c981841dd08744092af2b958bccc22, type: 3}
+--- !u!1 &4629241356109616062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 99c981841dd08744092af2b958bccc22, type: 3}
+  m_PrefabInstance: {fileID: 5548214484100394735}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1495700048300269726
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4629241356109616062}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 18, y: 64, z: 18}
+  m_Center: {x: 1.3552527e-20, y: 32, z: 0}
