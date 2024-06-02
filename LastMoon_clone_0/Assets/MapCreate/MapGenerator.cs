@@ -217,8 +217,8 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
-        seed1 = Seed.seed1;
-        seed2 = Seed.seed2;
+        seed1 = GameValue.seed1;
+        seed2 = GameValue.seed2;
         Debug.Log("Map: " + seed1);
         Debug.Log("Map: " + seed2);
         falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);

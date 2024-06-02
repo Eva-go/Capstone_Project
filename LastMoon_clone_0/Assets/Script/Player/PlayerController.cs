@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Scripting.APIUpdating;
 using Photon.Pun;
 using Photon.Realtime;
-
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public PhotonView pv;
@@ -38,6 +38,9 @@ public class PlayerController : MonoBehaviour
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     private int selectedWeaponIndex = 0;
 
+    public static int getMoney;
+
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -47,6 +50,7 @@ public class PlayerController : MonoBehaviour
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
+        GameValue.setMoney();
     }
 
     void Update()
@@ -202,7 +206,7 @@ public class PlayerController : MonoBehaviour
             if (nodeController != null)
             {
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                nodeController.TakeDamage();
+                nodeController.TakeDamage(10);
             }
         }
     }

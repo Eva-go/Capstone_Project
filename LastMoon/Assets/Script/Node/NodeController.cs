@@ -9,15 +9,17 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
 
     public Animator animator;
 
+    private int giveMoney=50;
+
     private void Start()
     {
         currentHealth = maxHealth;
- 
+        PlayerController.getMoney = giveMoney;
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int Damage)
     {
-        currentHealth -= 10;
+        currentHealth -= Damage;
         if (currentHealth > 0)
         {
             photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Hit");
@@ -25,8 +27,11 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         }
         else if (currentHealth <= 0)
         {
+            
+            
             currentHealth = 0;
             gameObject.GetComponent<BoxCollider>().enabled = false;
+            GameValue.GetMomey(PlayerController.getMoney);
             photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest");
             // 애니메이션 끝날 때 오브젝트 삭제
         }

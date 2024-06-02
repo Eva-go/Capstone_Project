@@ -24,7 +24,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     //seed값
     private int seed1;
     private int seed2;
-    private Seed seed;
+    private GameValue gameValue;
     private bool LocalClient =true;
 
     private int maxTime;
@@ -33,7 +33,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         //DontDestroyOnLoad(gameObject);
         // 마스터 클라이언트는 PhotonNetwork.LoadLevel()를 호출할 수 있고, 모든 연결된 플레이어는 자동적으로 동일한 레벨을 로드한다.
         PhotonNetwork.AutomaticallySyncScene = true;
-        seed = FindObjectOfType<Seed>();
+        gameValue = FindObjectOfType<GameValue>();
         m_panel_Loading.SetActive(false);
         mbutton_Start.GetComponent<Button>().interactable = false;
     }
@@ -59,7 +59,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         print($"{nick} 랜덤 매칭 시작.");
         PhotonNetwork.LocalPlayer.NickName = nick; // 현재 플레이어 닉네임 설정하기.
-
+        gameValue.NickName(nick);
         // UI에서 값 얻어오기.
         byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); // 드롭다운에서 값 얻어오기.
         maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
@@ -131,8 +131,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             mbutton_Start.GetComponent<Button>().interactable = true;
-            seed.seed(seed1, seed2);
-            seed.setTimer(maxTime);
+            gameValue.seed(seed1, seed2);
+            gameValue.setTimer(maxTime);
             LocalClient = false;
         }
         
@@ -144,8 +144,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         this.seed2 = seed2;
         if(LocalClient)
         {
-            seed.seed(seed1, seed2);
-            seed.setTimer(maxTime);
+            gameValue.seed(seed1, seed2);
+            gameValue.setTimer(maxTime);
         }
 
     }
