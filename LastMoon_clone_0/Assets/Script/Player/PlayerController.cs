@@ -190,32 +190,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Attack_Time()
+    {
+        Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 5f))
+        {
+
+            NodeController nodeController = hit.collider.GetComponent<NodeController>();
+            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5f);
+            if (nodeController != null)
+            {
+                Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
+                nodeController.TakeDamage();
+            }
+        }
+    }
     private void Attack()
     {
         if (Input.GetMouseButtonDown(0)) //(Input.GetButton("Fire1")) 누르고있을때 반복
         {
                 animator.SetTrigger("Swing");
-                Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 5f))
-            {
-                //NodeHp node = hit.collider.GetComponent<NodeHp>();
-                // Debug.DrawRay(ray.origin, ray.direction, Color.red,5f);
-                // if (node != null)
-                // {
-                //     Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                //     node.TakeDamage(10); // 공격할 때 받는 데미지
-                // }
-                NodeController nodeController = hit.collider.GetComponent<NodeController>();
-                Debug.DrawRay(ray.origin, ray.direction, Color.red, 5f);
-                if(nodeController != null)
-                {
-                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                    nodeController.TakeDamage();
-                }
-            }
-
         }
     }
 

@@ -26,6 +26,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private int seed2;
     private Seed seed;
     private bool LocalClient =true;
+
+    private int maxTime;
     void Awake()
     {
         //DontDestroyOnLoad(gameObject);
@@ -60,8 +62,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         // UI에서 값 얻어오기.
         byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); // 드롭다운에서 값 얻어오기.
-        int maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
-
+        maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
+        
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayers; // 인원 지정.
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }; // 게임 시간 지정.
@@ -130,6 +132,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             mbutton_Start.GetComponent<Button>().interactable = true;
             seed.seed(seed1, seed2);
+            seed.setTimer(maxTime);
             LocalClient = false;
         }
         
@@ -142,6 +145,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if(LocalClient)
         {
             seed.seed(seed1, seed2);
+            seed.setTimer(maxTime);
         }
 
     }

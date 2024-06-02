@@ -1,72 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine.UI;
-
-public class GameTimer : MonoBehaviourPunCallbacks
+using Photon.Pun;
+public class TimerController : MonoBehaviourPunCallbacks
 {
-    public RectTransform timerImageRectTransform; // 타이머를 표시할 RectTransform
-    private double startTime; // 게임 시작 시간
-    private int maxTime; // 최대 시간 (초 단위)
-    private float startX = 234f; // 이미지의 시작 X 좌표
-    private float endX = -234f; // 이미지의 끝 X 좌표
+    public RectTransform timerImage;
+    private float totalTime; // 10분을 초 단위로 표시
+    public float decreaseTime = 180f; // f1 누를 때 감소시킬 시간 (3분)
 
+    private float currentTime;
+    private float initialPosX = 234f;
+    private float finalPosX = -234f;
+    private bool field = true;
     void Start()
     {
-        // 게임 시작 시간이 설정되어 있는지 확인
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("startTime"))
+        if(field)
         {
-            startTime = (double)PhotonNetwork.CurrentRoom.CustomProperties["startTime"];
+            totalTime = Seed.setMaxtime * 60;
         }
-        else
-        {
-            startTime = PhotonNetwork.Time; // 시작 시간이 설정되지 않은 경우 현재 시간으로 설정
-        }
-
-        // 최대 시간이 설정되어 있는지 확인
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("maxTime"))
-        {
-            maxTime = (int)PhotonNetwork.CurrentRoom.CustomProperties["maxTime"] * 60; // 분 단위를 초 단위로 변환
-        }
+       
+        currentTime = totalTime;
+        timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
     }
 
     void Update()
     {
-        // 경과 시간 계산
-        double elapsedTime = PhotonNetwork.Time - startTime;
-        // 남은 시간 계산
-        double remainingTime = maxTime - elapsedTime;
+        // 타이머 감소 및 이미지 위치 조정
+        currentTime -= Time.deltaTime;
+        float ratio = currentTime / totalTime;
+        float posX = Mathf.Lerp(finalPosX, initialPosX, ratio);
+        timerImage.localPosition = new Vector3(posX, timerImage.localPosition.y, timerImage.localPosition.z);
 
-        // 남은 시간이 0 이하일 경우 처리
-        if (remainingTime <= 0)
-        {
-            remainingTime = 0;
-            // 게임 종료 로직 추가 가능
-        }
+        // 타이머 텍스트 업데이트
+        int minutes = Mathf.FloorToInt(currentTime / 60f);
+        int seconds = Mathf.FloorToInt(currentTime % 60f);
 
-        // 남은 시간 비율 계산
-        float remainingTimeRatio = (float)(remainingTime / maxTime);
-        // 이미지의 새로운 X 좌표 계산
-        float newX = Mathf.Lerp(endX, startX, remainingTimeRatio);
-
-        // 이미지의 X 좌표 업데이트
-        Vector3 newPosition = timerImageRectTransform.localPosition;
-        newPosition.x = newX;
-        timerImageRectTransform.localPosition = newPosition;
-
-        // F1 키를 누르면 시간을 3분씩 줄임
+        // f1 키를 누르면 시간 감소
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            photonView.RPC("ReduceTime", RpcTarget.All, 3);
-            Debug.Log("f1");
+            photonView.RPC("RPC_DecreaseTime", RpcTarget.AllBuffered); 
+        }
+        if(currentTime <=0)
+        {
+            totalTime = 500f;
         }
     }
 
+    // 시간을 감소시키는 함수
     [PunRPC]
-    void ReduceTime(int minutes)
+    void RPC_DecreaseTime()
     {
-        maxTime -= minutes * 60;
+        currentTime -= decreaseTime;
+        // 타이머가 음수가 되지 않도록 보정
+        if (currentTime < 0)
+        {
+            currentTime = 0;
+        }
     }
 }

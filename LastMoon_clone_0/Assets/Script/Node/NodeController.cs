@@ -67,8 +67,6 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        Debug.Log("OnPhotonSerializeView called");
-
         if (stream.IsWriting)
         {
             // 포톤 네트워크를 통해 HP 값을 전송
