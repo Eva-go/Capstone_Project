@@ -13,11 +13,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     private string userId = "서버관리자";
 
     private int userNumber = 0;
-
+    private GameObject wave;
     void Awake()
     {
+       
         // 같은 룸의 유저들에게 자동으로 씬을 이동
-        PhotonNetwork.AutomaticallySyncScene = false;
+        PhotonNetwork.AutomaticallySyncScene = true;
         //같은 버전의 유저끼리 접속 허용
         PhotonNetwork.GameVersion = version;
         //유저 아이디 할당
@@ -55,15 +56,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ro.IsVisible = true; // 로비에서 룸 목록에 노출여부
 
         //룸 생성
-<<<<<<< HEAD
         PhotonNetwork.CreateRoom("Last Moon", ro);
-=======
-<<<<<<< HEAD
-        PhotonNetwork.CreateRoom("Last Moon", ro);
-=======
-        PhotonNetwork.CreateRoom("My Room", ro);
->>>>>>> young
->>>>>>> kim
     }
 
     //룸 생성이 완료된후 호출되는 콜백 함수
@@ -76,6 +69,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     //룸에 입장한 후 호출되는 콜백 함수
     public override void OnJoinedRoom()
     {
+        wave = GameObject.FindWithTag("wave");
         Debug.Log($"PhotonNetwork.InRoom = {PhotonNetwork.InRoom}");
         Debug.Log($"Player Count = {PhotonNetwork.CurrentRoom.PlayerCount}");
 
@@ -89,7 +83,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         //int idx = Random.Range(1, points.Length);
         //캐릭터를 생성
         //PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0);
-    
+        PhotonNetwork.Instantiate("wave", new Vector3(-0.3f,-1.9f,-8.1f),new Quaternion(0f,0f,0f,0f), 0);
     }
 
 
@@ -102,7 +96,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        
     
     }
 }
