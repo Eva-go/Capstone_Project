@@ -27,6 +27,12 @@ public class InsideFillHandler : MonoBehaviour
             {
                 fillValue += fillTime / 100*25;
             }
+            else if(fillValue >=100)
+            {
+                fillValue = 100;
+                PlayerController.PreViewCam = true;
+                
+            }
             FillCircleValue(fillValue);
         }
         else if(!PlayerController.insideActive)

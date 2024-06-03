@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     public GameObject[] weapons; // 무기 오브젝트 배열
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     private int selectedWeaponIndex = 0;
-
+    public GameObject[] weaponsSwitching;
     public static int getMoney;
 
 
@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
     public GameObject insidegameObject;
 
     public static bool insideActive;
-
+    public static bool PreViewCam;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -56,9 +56,7 @@ public class PlayerController : MonoBehaviour
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
         GameValue.setMoney();
-
-
-
+        PreViewCam = false;
     }
 
     void Update()
@@ -71,6 +69,7 @@ public class PlayerController : MonoBehaviour
             CharacterRotation();
             Inside();
             Attack();
+            BuyTool();
             Switching();
             if (Input.GetKey("escape"))
                 Application.Quit();
@@ -84,27 +83,84 @@ public class PlayerController : MonoBehaviour
             }
             if(Input.GetKeyDown(KeyCode.F4))
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, 50f, gameObject.transform.position.z);
+                gameObject.transform.position = new Vector3(gameObject.transform.position.x, -5f, gameObject.transform.position.z);
             }
-        
+            if(Input.GetKeyDown(KeyCode.F5))
+            {
+                GameValue.GetMomey(1000);
+            }
         }
 
     }
 
 
+    private void BuyTool()
+    {
+       
+
+    }
 
     private void Switching()
     {
         int previousSelectedWeaponIndex = selectedWeaponIndex;
-
-        // 마우스 휠로 무기 교체
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+        if (GameValue.Axe == 1)
         {
-            selectedWeaponIndex = (selectedWeaponIndex + 1) % weapons.Length;
+            weapons[0] = weaponsSwitching[0];
+            if(GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 1;
+                GameValue.toolSwitching = false;
+            }
+            
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        else if (GameValue.Axe == 2 )
         {
-            selectedWeaponIndex = (selectedWeaponIndex - 1 + weapons.Length) % weapons.Length;
+            weapons[0] = weaponsSwitching[3];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 1;
+                GameValue.toolSwitching = false;
+            }
+            
+        }
+        if (GameValue.Pickaxe == 1 )
+        {
+            weapons[1] = weaponsSwitching[1];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 2;
+                GameValue.toolSwitching = false;
+            }
+            
+        }
+        else if (GameValue.Pickaxe == 2)
+        {
+            weapons[1] = weaponsSwitching[4];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 2;
+                GameValue.toolSwitching = false;
+            }
+           
+        }
+        if (GameValue.Shovel == 1)
+        {
+            weapons[2] = weaponsSwitching[2];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 0;
+                GameValue.toolSwitching = false;
+            }
+           
+        }
+        else if (GameValue.Shovel == 2)
+        {
+            weapons[2] = weaponsSwitching[5];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 0;
+                GameValue.toolSwitching = false;
+            }
         }
 
         // 무기 번호 키로 무기 교체

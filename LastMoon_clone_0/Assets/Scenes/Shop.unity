@@ -340,6 +340,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Money: {fileID: 890625388187032714}
+  plus_Money: 0
+  AxeMoney: {fileID: 8848154386062439633}
+  PickaxeMoney: {fileID: 6029349054821223523}
+  ShovelMoney: {fileID: 7756478430066126127}
+  Axetxt: {fileID: 9208313864246486867}
+  Pickaxetxt: {fileID: 4478658848443851858}
+  Shoveltext: {fileID: 237929224485713423}
+  AxeBT: {fileID: 2506025081189829202}
+  PickaxeBT: {fileID: 6033863283271035915}
+  ShoveltBT: {fileID: 5438902540380594944}
 --- !u!4 &1936598943
 Transform:
   m_ObjectHideFlags: 0
@@ -699,7 +709,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC544\uC774\uD15C \uC774\uB984"
+  m_Text: "\uAC15\uCCA0 \uC0BD"
 --- !u!1 &238199880937057805
 GameObject:
   m_ObjectHideFlags: 0
@@ -986,7 +996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: a44eaa1430ab2ee48ae33b4c68a9af3e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1265,7 +1275,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC544\uC774\uD15C \uC774\uB984"
+  m_Text: "\uACE1\uAD2D\uC774"
 --- !u!1 &1119660080086691945
 GameObject:
   m_ObjectHideFlags: 0
@@ -1317,7 +1327,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC544\uC774\uD15C \uC774\uB984"
+  m_Text: "\uB3C4\uB07C"
 --- !u!1 &1167491925699978470
 GameObject:
   m_ObjectHideFlags: 0
@@ -1888,7 +1898,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 56463f4462bbad24a8ade4de6465cb0f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2032,7 +2042,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6159457130704438909}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1936598942}
+        m_TargetAssemblyTypeName: MoneyController, Assembly-CSharp
+        m_MethodName: AxeButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2517595129063758886
 GameObject:
   m_ObjectHideFlags: 0
@@ -3388,7 +3410,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC544\uC774\uD15C \uC774\uB984"
+  m_Text: "\uAC15\uCCA0 \uACE1\uAD2D\uC774"
 --- !u!1 &4534380063781796530
 GameObject:
   m_ObjectHideFlags: 0
@@ -3898,7 +3920,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: ddbe26026fb6cc44e911ead9f28f3451, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4081,7 +4103,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4408034877607231148}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1936598942}
+        m_TargetAssemblyTypeName: MoneyController, Assembly-CSharp
+        m_MethodName: ShovelButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &5476283863323210745
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4384,7 +4418,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: N/A
+  m_Text: 1100
 --- !u!114 &6033863283271035915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4428,7 +4462,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6308569430544937834}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1936598942}
+        m_TargetAssemblyTypeName: MoneyController, Assembly-CSharp
+        m_MethodName: PickaxeButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6077942690709868198
 GameObject:
   m_ObjectHideFlags: 0
@@ -5441,7 +5487,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: N/A
+  m_Text: 1200
 --- !u!114 &7765754869627838146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5808,7 +5854,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC544\uC774\uD15C \uC774\uB984"
+  m_Text: "\uC0BD"
 --- !u!224 &8446749398340614217
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6042,7 +6088,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: N/A
+  m_Text: 1000
 --- !u!222 &8881127604456426435
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6261,7 +6307,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC544\uC774\uD15C \uC774\uB984"
+  m_Text: "\uAC15\uCCA0 \uB3C4\uB07C"
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

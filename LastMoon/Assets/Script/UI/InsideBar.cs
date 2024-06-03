@@ -19,6 +19,10 @@ public class InsideBar : MonoBehaviour
     public void InsideActive()
     {
         insideObject.SetActive(PlayerController.insideActive);
+        if(PlayerController.PreViewCam)
+        {
+            insideObject.SetActive(false);
+        }
     }
 
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class ItemSpawner : MonoBehaviourPun
+public class NodeSpawner : MonoBehaviourPun
 {
     // 스폰할 아이템 프리팹 배열
     public GameObject[] itemPrefabs;

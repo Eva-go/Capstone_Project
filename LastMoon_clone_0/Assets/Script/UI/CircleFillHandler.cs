@@ -9,13 +9,13 @@ public class CircleFillHandler : MonoBehaviour
     public RectTransform handlerEdgeImage;
     public RectTransform fillHandler;
     public Text HP;
-
+    public GameObject Hp;
     private float time;
     private int HP_count;
     // Start is called before the first frame update
     void Start()
     {
-        
+        Hp.SetActive(true);
     }
 
     // Update is called once per frame
@@ -29,6 +29,11 @@ public class CircleFillHandler : MonoBehaviour
         HP_count = ((int)fillValue);
         FillCircleValue(fillValue);
         HP.text = HP_count.ToString();
+
+        if(PlayerController.PreViewCam)
+        {
+            Hp.SetActive(false);
+        }
     }
 
     void FillCircleValue(float value)
