@@ -25,7 +25,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private int seed1;
     private int seed2;
     private GameValue gameValue;
-    private bool LocalClient =true;
+    private bool LocalClient = true;
 
     private int maxTime;
     void Awake()
@@ -35,7 +35,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
         gameValue = FindObjectOfType<GameValue>();
         m_panel_Loading.SetActive(false);
-        mbutton_Start.GetComponent<Button>().interactable = false;
+        //mbutton_Start.GetComponent<Button>().interactable = false;
     }
 
     void Start()
@@ -63,7 +63,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // UI에서 값 얻어오기.
         byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); // 드롭다운에서 값 얻어오기.
         maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
-        
+
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = maxPlayers; // 인원 지정.
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }; // 게임 시간 지정.
@@ -122,7 +122,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     }
 
- 
+
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
@@ -132,17 +132,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             mbutton_Start.GetComponent<Button>().interactable = true;
             gameValue.seed(seed1, seed2);
-            gameValue.setTimer(maxTime);
             LocalClient = false;
         }
-        
+
     }
     [PunRPC]
     private void SendSeedsToClients(int seed1, int seed2)
     {
         this.seed1 = seed1;
         this.seed2 = seed2;
-        if(LocalClient)
+        if (LocalClient)
         {
             gameValue.seed(seed1, seed2);
             gameValue.setTimer(maxTime);
@@ -166,6 +165,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
                 // Set the start time in room properties
                 PhotonNetwork.CurrentRoom.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { "startTime", startTime } });
+                gameValue.setTimer(maxTime);
+                Debug.Log("게임시간 :" + maxTime);
 
                 PhotonNetwork.LoadLevel("Map");
             }
