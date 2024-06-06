@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
 
     public static bool insideActive;
     public static bool PreViewCam;
+    public static bool Poi;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -65,11 +66,13 @@ public class PlayerController : MonoBehaviour
         {
             cam.SetActive(true);
             Move();
-            CameraRotation();
-            CharacterRotation();
-            Inside();
+            if(!Poi)
+            {
+                CameraRotation();
+                CharacterRotation();
+            }
+            Interaction();
             Attack();
-            BuyTool();
             Switching();
             if (Input.GetKey("escape"))
                 Application.Quit();
@@ -93,20 +96,13 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
-    private void BuyTool()
-    {
-       
-
-    }
-
     private void Switching()
     {
         int previousSelectedWeaponIndex = selectedWeaponIndex;
         if (GameValue.Axe == 1)
         {
             weapons[0] = weaponsSwitching[0];
-            if(GameValue.toolSwitching)
+            if (GameValue.toolSwitching)
             {
                 selectedWeaponIndex = 1;
                 GameValue.toolSwitching = false;
@@ -214,8 +210,9 @@ public class PlayerController : MonoBehaviour
         weaponInstance.transform.SetParent(weaponHoldPoint);
     }
 
-    private void Inside()
+    private void Interaction()
     {
+        //아파트 레이케스트
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         if (Input.GetKey(KeyCode.E)&& Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
         {
@@ -223,8 +220,14 @@ public class PlayerController : MonoBehaviour
         }
         else
             insideActive = false;
-    }
 
+        //포이 레이케스트
+        if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
+        {
+            Poi = true;
+            Debug.Log(Poi);
+        }
+    }
     private void Move()
     {
         float moveDirX = Input.GetAxisRaw("Horizontal");
@@ -265,7 +268,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0)) //(Input.GetButton("Fire1")) 누르고있을때 반복
+        if (Input.GetMouseButtonDown(0)&&!Poi) //(Input.GetButton("Fire1")) 누르고있을때 반복
         {
                 animator.SetTrigger("Swing");
         }
