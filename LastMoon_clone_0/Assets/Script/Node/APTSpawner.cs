@@ -10,13 +10,13 @@ public class APTSpawner : MonoBehaviourPunCallbacks
 
     // 메쉬 콜라이더
     public MeshCollider spawnArea;
+    //public BoxCollider spawnArea;
     // 스폰할 아이템 갯수
-    public int itemCount = 10;
+    public int itemCount = 3;
 
     // 각 아이템 간의 최소 및 최대 거리
-    public float minDistance;
-    public float maxDistance;
-    public float dir;
+    public float minDistance = 3;
+    public float maxDistance = 3;
 
     // 빈 게임 오브젝트의 Transform
     public Transform parentTransform;
@@ -40,7 +40,7 @@ public class APTSpawner : MonoBehaviourPunCallbacks
             do
             {
                 positionValid = true;
-                spawnPosition = GetRandomPositionInCircle(spawnArea);
+                spawnPosition = GetRandomPositionOnMeshColliderTop(spawnArea);
 
                 foreach (Vector3 pos in spawnedPositions)
                 {
@@ -61,23 +61,20 @@ public class APTSpawner : MonoBehaviourPunCallbacks
         }
     }
 
-    Vector3 GetRandomPositionInCircle(MeshCollider meshCollider)
+    Vector3 GetRandomPositionOnMeshColliderTop(MeshCollider meshCollider)
     {
-        Vector3 center = meshCollider.bounds.center;
-        float radius = Mathf.Min(meshCollider.bounds.extents.x, meshCollider.bounds.extents.z); // 메쉬 콜라이더의 가로, 세로 중 작은 값을 반지름으로 설정
-
-        float angle = Random.Range(0f, Mathf.PI * dir); // 0에서 2π 사이의 각도를 무작위로 선택
-        float distance = Random.Range(0f, radius); // 중심에서 반지름까지 무작위 거리 선택
+        Vector3 min = meshCollider.bounds.min;
+        Vector3 max = meshCollider.bounds.max;
 
         Vector3 randomPosition = new Vector3(
-            center.x + Mathf.Cos(angle) * distance,
-            center.y,
-            center.z + Mathf.Sin(angle) * distance
+            Random.Range(min.x, max.x),
+            max.y, // 메쉬 콜라이더의 최상단에 스폰
+            Random.Range(min.z, max.z)
         );
 
-        // 아래로 레이캐스트하여 메쉬 콜라이더의 표면을 찾음
+        // 아래로 레이캐스트하여 메쉬 콜라이더의 최상단 표면을 찾음
         RaycastHit hit;
-        if (Physics.Raycast(randomPosition + Vector3.up * 100f, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
+        if (Physics.Raycast(randomPosition, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
         {
             randomPosition.y = hit.point.y; // 메쉬 콜라이더의 표면에 정확히 위치하도록 y값 설정
         }
