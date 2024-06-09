@@ -43,6 +43,9 @@ public class MapGenerator : MonoBehaviour
 
     float[,] falloffMap;
 
+    [Range(0, 1)]
+    public float blendStrength;
+
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<MeshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<MeshData>>();
 
@@ -286,7 +289,10 @@ public class MapGenerator : MonoBehaviour
         float[,] noiseMap2 = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed2, noiseScale2,
             octaves2, persistance, lacunarity, center + offset2, normalizedMode);
 
-        float[,] noiseMap = Noise.AddNoise(noiseMap1, noiseMap2, 0.5f);
+        float[,] noiseMap = Noise.AddNoise(noiseMap1, noiseMap2, blendStrength);
+
+        //Mathf.Lerp(x, y, a);
+        // (x(1-a)) + (y * a)
 
         // ÄÃ·¯ ¸Ê »ý¼º
         Color[] colourMap = new Color[mapChunkSize * mapChunkSize];
@@ -296,7 +302,8 @@ public class MapGenerator : MonoBehaviour
             {
                 if (useFalloff)
                 {
-                    noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x, y]);
+                    //noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x, y]);
+                    noiseMap[x, y] = Mathf.Lerp(noiseMap[x, y], falloffMap[x, y], 0.5f);
                 }
                 float currentHeight = noiseMap[x, y];
                 for (int i = 0; i < regions.Length; i++)
