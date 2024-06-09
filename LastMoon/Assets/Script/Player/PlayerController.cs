@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     private int selectedWeaponIndex = 0;
     public GameObject[] weaponsSwitching;
+   
     public static int getMoney;
 
 
@@ -225,28 +226,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
             Poi = true;
-            Debug.Log(Poi);
-        }
-    }
-    private void Move()
-    {
-        float moveDirX = Input.GetAxisRaw("Horizontal");
-        float moveDirZ = Input.GetAxisRaw("Vertical");
-
-        Vector3 moveHorizontal = transform.right * moveDirX;
-        Vector3 moveVertical = transform.forward * moveDirZ;
-
-        Vector3 velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
-
-        myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-
-        if (velocity != Vector3.zero)
-        {
-            animator.SetBool("isMove", true);
-        }
-        else
-        {
-            animator.SetBool("isMove", false);
         }
     }
 
@@ -266,11 +245,34 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     private void Attack()
     {
         if (Input.GetMouseButtonDown(0)&&!Poi) //(Input.GetButton("Fire1")) 누르고있을때 반복
         {
-                animator.SetTrigger("Swing");
+            animator.SetTrigger("Swing");
+        }
+    }
+
+    private void Move()
+    {
+        float moveDirX = Input.GetAxisRaw("Horizontal");
+        float moveDirZ = Input.GetAxisRaw("Vertical");
+
+        Vector3 moveHorizontal = transform.right * moveDirX;
+        Vector3 moveVertical = transform.forward * moveDirZ;
+
+        Vector3 velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+
+        myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+
+        if (velocity != Vector3.zero)
+        {
+            animator.SetBool("isMove", true);
+        }
+        else
+        {
+            animator.SetBool("isMove", false);
         }
     }
 

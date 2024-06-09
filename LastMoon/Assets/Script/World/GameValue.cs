@@ -53,6 +53,12 @@ public class GameValue : MonoBehaviour
         money.text = Money_total.ToString();
         
     }
+
+    static public void GetNodeItem(string nodeName)
+    {
+        
+    }
+
     static public void UseMoney(int useMoney)
     {
         Money_total -= useMoney;

@@ -1,34 +1,88 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class InputKey : MonoBehaviour
+using UnityEngine.UI;
+public class CanvasController : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject poi;
+    public GameObject inside;
+    public GameObject inventory;
+    public GameObject money;
+
+
     private int KeyTabCode = 0;
-    private PlayerController playerController;
-    private RaycastHit hitInfo;
-    private bool PC = true;
+    private bool inventory_ck;
+
 
     void Start()
     {
-
+        inside.SetActive(false);
+        poi.SetActive(false);
+        inventory.SetActive(false);
+        money.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Player_UI();
+        InsideActive();
+        poiActive();
+        inventoryActive();
+        inventoryTabActive();
+    }
+
+        public void InsideActive()
+    {
+        inside.SetActive(PlayerController.insideActive);
+        if (PlayerController.PreViewCam)
+        {
+            inside.SetActive(false);
+        }
+    }
+
+    public void poiActive()
+    {
+        poi.SetActive(PlayerController.Poi);
+       
+        if (PlayerController.Poi)
+        {
+            inventory.SetActive(true);
+            money.SetActive(false);
+            Cursor.lockState = CursorLockMode.Confined;
+        }
+        money.SetActive(true);
+    }
+    public void Bt_poiExt()
+    {
+        poi.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        PlayerController.Poi = false;
+        inventory.SetActive(false);
     }
 
 
-
-    public void Player_UI()
+    public void inventoryActive()
     {
-        if(Input.GetKeyDown(KeyCode.Tab)) 
+        if(Input.GetKeyDown(KeyCode.I)&&!inventory_ck)
+        {
+            inventory.SetActive(true);
+            inventory_ck = true;
+            money.SetActive(false);
+        }
+        else if(Input.GetKeyDown(KeyCode.I) && inventory_ck)
+        {
+            inventory.SetActive(false);
+            inventory_ck = false;
+            money.SetActive(true);
+        }
+            
+    }
+    public void inventoryTabActive()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             KeyTabCode++;
-            if(!CraftMaunal.isPreViewActivated)
+            if (!CraftMaunal.isPreViewActivated)
             {
                 switch (KeyTabCode % 3)
                 {
@@ -67,7 +121,7 @@ public class InputKey : MonoBehaviour
                         break;
                 }
             }
-           
+
         }
     }
 }
