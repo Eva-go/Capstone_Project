@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public static class FalloffGenerator
 {
     public static float[,] GenerateFalloffMap(int size)
@@ -18,7 +17,7 @@ public static class FalloffGenerator
                 float y = (j - center.y) / center.y;
 
                 float distance = Mathf.Sqrt(x * x + y * y);
-                float scaledDistance = distance / (maxDistance/239f);
+                float scaledDistance = distance / (maxDistance / 239f);
 
                 map[i, j] = 1 - Evaluate(scaledDistance);  // Invert the evaluation result
             }

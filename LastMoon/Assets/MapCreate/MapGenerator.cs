@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 using Unity.Mathematics;
+using Photon.Pun;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -55,6 +56,8 @@ public class MapGenerator : MonoBehaviour
     public LayerMask groundLayer; // 지면 레이어 마스크
 
     public GameObject[] NodePrefabs; // 건물 프리팹 배열
+
+    //public GameObject selectedPrefab;
 
     public void PlaceNodes(int numberOfNodes)
     {
@@ -217,6 +220,10 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
+        seed1 = GameValue.seed1;
+        seed2 = GameValue.seed2;
+        Debug.Log("Map: " + seed1);
+        Debug.Log("Map: " + seed2);
         falloffMap = FalloffGenerator.GenerateFalloffMap(mapChunkSize);
     }
 
@@ -291,9 +298,6 @@ public class MapGenerator : MonoBehaviour
 
         float[,] noiseMap = Noise.AddNoise(noiseMap1, noiseMap2, blendStrength);
 
-        //Mathf.Lerp(x, y, a);
-        // (x(1-a)) + (y * a)
-
         // 컬러 맵 생성
         Color[] colourMap = new Color[mapChunkSize * mapChunkSize];
         for (int y = 0; y < mapChunkSize; y++)
@@ -302,7 +306,6 @@ public class MapGenerator : MonoBehaviour
             {
                 if (useFalloff)
                 {
-                    //noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x, y]);
                     noiseMap[x, y] = Mathf.Lerp(noiseMap[x, y], falloffMap[x, y], 0.5f);
                 }
                 float currentHeight = noiseMap[x, y];
@@ -351,30 +354,21 @@ public class MapGenerator : MonoBehaviour
     }
     void Start() 
     {
-        //시드 부분
-        // seed가 0이면 랜덤한 시드값을 사용하고, 그렇지 않으면 지정된 시드값을 사용합니다.
-        if (seed1 == 0)
-        {
-            seed1 = UnityEngine.Random.Range(0, 100000); // 랜덤한 시드값 생성
-        }
-        if (seed2 == 0)
-        {
-            seed2 = UnityEngine.Random.Range(0, 100000);
-        }
+
+
 
         if (placementArea != null && NodePrefabs.Length > 0)
         {
-            PlaceNodes(100); // 예: 10개의 노드을 배치
+            //PlaceNodes(1000);
         }
         else
         {
             Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
         }
 
-
         if (placementArea != null && buildingPrefabs.Length > 0)
         {
-            PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
+            //PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
         }
         else
         {
