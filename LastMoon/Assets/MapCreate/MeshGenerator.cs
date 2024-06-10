@@ -18,7 +18,7 @@ public static class MeshGenerator
 
         int verticesPerLine = (meshSize - 1) / meshSimplificationIncrement + 1;
 
-        MeshData meshData = new MeshData (verticesPerLine);
+        MeshData meshData = new MeshData(verticesPerLine);
 
         int[,] vertexIndicesMap = new int[borderedSize, borderedSize];
         int meshVertexIndex = 0;
@@ -27,7 +27,7 @@ public static class MeshGenerator
         {
             for (int x = 0; x < borderedSize; x += meshSimplificationIncrement)
             {
-                bool isBorderVertex = y == 0 || y == borderedSize - 1 || x == 0 || x== borderedSize - 1;
+                bool isBorderVertex = y == 0 || y == borderedSize - 1 || x == 0 || x == borderedSize - 1;
 
                 if (isBorderVertex)
                 {
@@ -36,7 +36,7 @@ public static class MeshGenerator
                 }
                 else
                 {
-                    vertexIndicesMap[x,y] = meshVertexIndex;
+                    vertexIndicesMap[x, y] = meshVertexIndex;
                     meshVertexIndex++;  
                 }
             }
@@ -46,7 +46,7 @@ public static class MeshGenerator
             for (int x = 0; x < borderedSize; x += meshSimplificationIncrement)
             {
                 int vertexIndex = vertexIndicesMap[x, y];
-                Vector2 percent = new Vector2((x-meshSimplificationIncrement)/(float)meshSize, (y-meshSimplificationIncrement)/(float)meshSize);
+                Vector2 percent = new Vector2((x - meshSimplificationIncrement) / (float)meshSize, (y - meshSimplificationIncrement) / (float)meshSize);
                 float height = heightCurve.Evaluate(heightMap[x, y]) * heightMultiplier;
                 Vector3 vertexPosition = new Vector3(topLeftX + percent.x * meshSizeUnsimplified, height, topLeftZ - percent.y * meshSizeUnsimplified);
 
@@ -55,17 +55,16 @@ public static class MeshGenerator
                 if (x < borderedSize - 1 && y <borderedSize - 1)
                 {
                     int a = vertexIndicesMap[x, y];
-                    int b = vertexIndicesMap[x + meshSimplificationIncrement, y];
-                    int c = vertexIndicesMap[x, y+meshSimplificationIncrement];
-                    int d = vertexIndicesMap[x + meshSimplificationIncrement, y + meshSimplificationIncrement];
+                    int b = vertexIndicesMap[Mathf.Min(x + meshSimplificationIncrement, borderedSize - 1), y];
+                    int c = vertexIndicesMap[x, Mathf.Min(y + meshSimplificationIncrement, borderedSize - 1)];
+                    int d = vertexIndicesMap[Mathf.Min(x + meshSimplificationIncrement, borderedSize - 1), Mathf.Min(y + meshSimplificationIncrement, borderedSize - 1)];
 
                     meshData.AddTriangle(a, d, c);
                     meshData.AddTriangle(d, a, b);
                 }
-                vertexIndex++;
             }
         }
-        meshData.BakedNormals();
+        meshData.BakeNormals();
         return meshData;
     }
 }
@@ -175,7 +174,7 @@ public class MeshData
 
     Vector3 SurfaceNormalFromIndices(int indexA, int indexB, int indexC)
     {
-        Vector3 PointA = (indexA < 0)?borderVertices[-indexA-1] : vertices [indexA];
+        Vector3 PointA = (indexA < 0) ? borderVertices[-indexA - 1] : vertices[indexA];
         Vector3 PointB = (indexB < 0) ? borderVertices[-indexB - 1] : vertices[indexB];
         Vector3 PointC = (indexC < 0) ? borderVertices[-indexC - 1] : vertices[indexC];
 
@@ -184,7 +183,7 @@ public class MeshData
         return Vector3.Cross(sideAB, sideAC).normalized;
     }
 
-    public void BakedNormals()
+    public void BakeNormals()
     {
         bakedNormals = CalculateNormals();
     }
