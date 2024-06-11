@@ -3843,7 +3843,6 @@ GameObject:
   m_Component:
   - component: {fileID: 94728000747872910}
   - component: {fileID: 717207983811090965}
-  - component: {fileID: 298131263735768726}
   m_Layer: 5
   m_Name: Resources
   m_TagString: Untagged
@@ -3920,18 +3919,6 @@ MonoBehaviour:
     m_Bits: 1
   range: 10
   gridSize: 1
---- !u!114 &298131263735768726
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3127755902735736314}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f60af83b643b304f9c0975ca806bbb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3159473691240924922
 GameObject:
   m_ObjectHideFlags: 0
@@ -4392,6 +4379,7 @@ MonoBehaviour:
   handlerEdgeImage: {fileID: 7889015934901960038}
   fillHandler: {fileID: 3205545097479848348}
   HP: {fileID: 6527537212998367649}
+  Hp: {fileID: 0}
 --- !u!1 &3510696565065937481
 GameObject:
   m_ObjectHideFlags: 0
@@ -9789,7 +9777,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: f15269eedae2dbd47b7eb02e92ab04af, type: 3}
     m_FontSize: 88
     m_FontStyle: 0
     m_BestFit: 0
@@ -9801,7 +9789,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: N/A
+  m_Text: X
 --- !u!1 &7174829969455826364
 GameObject:
   m_ObjectHideFlags: 0
