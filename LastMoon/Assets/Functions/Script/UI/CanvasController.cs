@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class CanvasController : MonoBehaviour
 {
     public GameObject poi;
@@ -9,10 +10,10 @@ public class CanvasController : MonoBehaviour
     public GameObject inventory;
     public GameObject money;
 
-
-    private int KeyTabCode = 0;
+    private int keyTabCode = 0;
     private bool inventory_ck;
 
+    private Transform inventoryTransform;
 
     void Start()
     {
@@ -20,38 +21,40 @@ public class CanvasController : MonoBehaviour
         poi.SetActive(false);
         inventory.SetActive(false);
         money.SetActive(true);
+
+        inventoryTransform = inventory.transform;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        InsideActive();
-        poiActive();
-        inventoryActive();
-        inventoryTabActive();
+        UpdateInsideActive();
+        UpdatePoiActive();
+        UpdateInventoryActive();
+        UpdateInventoryTabActive();
     }
 
-        public void InsideActive()
+    void UpdateInsideActive()
     {
-        inside.SetActive(PlayerController.insideActive);
-        if (PlayerController.PreViewCam)
-        {
-            inside.SetActive(false);
-        }
+        inside.SetActive(PlayerController.insideActive && !PlayerController.PreViewCam);
     }
 
-    public void poiActive()
+    void UpdatePoiActive()
     {
-        poi.SetActive(PlayerController.Poi);
-       
-        if (PlayerController.Poi)
+        bool isPoiActive = PlayerController.Poi;
+        poi.SetActive(isPoiActive);
+
+        if (isPoiActive)
         {
             inventory.SetActive(true);
             money.SetActive(false);
             Cursor.lockState = CursorLockMode.Confined;
         }
-        money.SetActive(true);
+        else
+        {
+            money.SetActive(true);
+        }
     }
+
     public void Bt_poiExt()
     {
         poi.SetActive(false);
@@ -60,68 +63,43 @@ public class CanvasController : MonoBehaviour
         inventory.SetActive(false);
     }
 
-
-    public void inventoryActive()
+    void UpdateInventoryActive()
     {
-        if(Input.GetKeyDown(KeyCode.I)&&!inventory_ck)
+        if (Input.GetKeyDown(KeyCode.I))
         {
-            inventory.SetActive(true);
-            inventory_ck = true;
-            money.SetActive(false);
+            inventory_ck = !inventory_ck;
+            inventory.SetActive(inventory_ck);
+            money.SetActive(!inventory_ck);
         }
-        else if(Input.GetKeyDown(KeyCode.I) && inventory_ck)
-        {
-            inventory.SetActive(false);
-            inventory_ck = false;
-            money.SetActive(true);
-        }
-            
     }
-    public void inventoryTabActive()
+
+    void UpdateInventoryTabActive()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            KeyTabCode++;
-            if (!CraftMaunal.isPreViewActivated)
-            {
-                switch (KeyTabCode % 3)
-                {
-                    case 0:
-                        GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(true);
-                        GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
-                        GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
-                        if (CraftMaunal.isActivated)
-                        {
-                            GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(true);
-                            GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
-                            GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(false);
-                        }
-                        break;
-                    case 1:
-                        GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
-                        GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(true);
-                        GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(false);
-                        if (CraftMaunal.isActivated)
-                        {
-                            GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
-                            GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(true);
-                            GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(false);
-                        }
-                        break;
-                    case 2:
-                        GameObject.Find("Resources").transform.GetChild(1).gameObject.SetActive(false);
-                        GameObject.Find("Resources").transform.GetChild(2).gameObject.SetActive(false);
-                        GameObject.Find("Resources").transform.GetChild(3).gameObject.SetActive(true);
-                        if (CraftMaunal.isActivated)
-                        {
-                            GameObject.Find("Tab").transform.GetChild(0).gameObject.SetActive(false);
-                            GameObject.Find("Tab").transform.GetChild(1).gameObject.SetActive(false);
-                            GameObject.Find("Tab").transform.GetChild(2).gameObject.SetActive(true);
-                        }
-                        break;
-                }
-            }
+            keyTabCode = (keyTabCode + 1) % 3;
+            bool isCraftManualActive = CraftMaunal.isActivated && !CraftMaunal.isPreViewActivated;
 
+            SetInventoryTabActive(keyTabCode);
+
+            SetTabActive(keyTabCode);
+        }
+    }
+
+    void SetInventoryTabActive(int index)
+    {
+        for (int i = 1; i <= 3; i++)
+        {
+            inventoryTransform.GetChild(i).gameObject.SetActive(i == index + 1);
+        }
+    }
+
+    void SetTabActive(int index)
+    {
+        Transform tabTransform = GameObject.Find("Tab").transform;
+        for (int i = 0; i <= 2; i++)
+        {
+            tabTransform.GetChild(i).gameObject.SetActive(i == index);
         }
     }
 }

@@ -22,7 +22,8 @@ public class GameValue : MonoBehaviour
     public static int Shovel = 0;
 
     public static bool toolSwitching;
-
+    public static string NodeName;
+    public static int[] NodeCount;
 
     private void Awake()
     {
@@ -54,8 +55,9 @@ public class GameValue : MonoBehaviour
         
     }
 
-    static public void GetNodeItem(string nodeName)
+    static public void GetNode(string nodeName)
     {
+        NodeName = nodeName;
         
     }
 
@@ -77,6 +79,5 @@ public class GameValue : MonoBehaviour
     public void setTimer (int maxtime)
     {
         setMaxtime = maxtime;
-        Debug.Log("½Ã°£: " + setMaxtime);
     }
 }
