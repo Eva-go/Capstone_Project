@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class GameValue : MonoBehaviour
 {
+    public static bool LocalPlayer;
     static public int seed1;
     static public int seed2;
     static public int setMaxtime;
@@ -25,6 +26,7 @@ public class GameValue : MonoBehaviour
     public static string NodeName;
     public static int[] NodeCount;
 
+    
     private void Awake()
     {
         networkManager = FindObjectOfType<NetworkManager>();

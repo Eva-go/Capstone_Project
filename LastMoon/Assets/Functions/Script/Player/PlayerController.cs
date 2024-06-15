@@ -40,9 +40,6 @@ public class PlayerController : MonoBehaviour
     public GameObject[] weaponsSwitching;
    
     public static int getMoney;
-
-
-
     public GameObject insidegameObject;
 
     public static bool insideActive;

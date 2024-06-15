@@ -8,6 +8,9 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
 {
     public static Transform[] points;
     public static int idx;
+    private GameObject player;
+    public GameObject LocalPlayer;
+    
     void Start()
     {
 
@@ -15,15 +18,25 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
         if (points.Length > 1)
         {
             idx = Random.Range(1, points.Length); // 랜덤 스폰 포인트 선택
-            GameObject player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0); // 플레이어 인스턴스화
+
+
+            player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0); // 플레이어 인스턴스화
+            player.name = GameValue.nickNumae;
+            Transform OtherPlayer = player.transform.Find("OtherPlayer");
+            Transform LocalPlayer = player.transform.Find("LocalPlayer");
+            Transform LocalTool = player.transform.Find("Player001");
+            OtherPlayer.gameObject.SetActive(false);
+            LocalPlayer.gameObject.SetActive(true);
+            LocalTool.gameObject.SetActive(false);
+
             PhotonView photonView = player.GetComponent<PhotonView>();
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer); // 플레이어 소유권 설정
-            player.name = GameValue.nickNumae;
+           
         }
         else
         {
             Debug.LogError("스폰 포인트가 없거나 충분하지 않습니다.");
         }
-    }
 
+    } 
 }
