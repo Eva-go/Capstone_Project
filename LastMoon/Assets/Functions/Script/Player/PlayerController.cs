@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private Animator animator;
+    [SerializeField]
+    private Animator Localanimator; //로컬플레이어 무기 애니메이션
 
     public GameObject[] weapons; // 무기 오브젝트 배열
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
@@ -50,7 +52,7 @@ public class PlayerController : MonoBehaviour
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
-        cam.SetActive(false);
+        cam.SetActive(false); 
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
@@ -248,6 +250,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0)&&!Poi) //(Input.GetButton("Fire1")) 누르고있을때 반복
         {
             animator.SetTrigger("Swing");
+            Localanimator.SetTrigger("Swing");
         }
     }
 

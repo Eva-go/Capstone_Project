@@ -9,7 +9,6 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
     public static Transform[] points;
     public static int idx;
     private GameObject player;
-    public GameObject LocalPlayer;
     
     void Start()
     {
@@ -24,10 +23,12 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
             player.name = GameValue.nickNumae;
             Transform OtherPlayer = player.transform.Find("OtherPlayer");
             Transform LocalPlayer = player.transform.Find("LocalPlayer");
-            Transform LocalTool = player.transform.Find("Player001");
+            Transform Tool = player.transform.Find("Player001");
+            Transform T_LocalPlayerTool = player.transform.Find("Camera").transform.Find("Local_Tool");
             OtherPlayer.gameObject.SetActive(false);
             LocalPlayer.gameObject.SetActive(true);
-            LocalTool.gameObject.SetActive(false);
+            Tool.gameObject.SetActive(false);
+            T_LocalPlayerTool.gameObject.SetActive(true);
 
             PhotonView photonView = player.GetComponent<PhotonView>();
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer); // 플레이어 소유권 설정
