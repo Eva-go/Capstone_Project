@@ -28,7 +28,7 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
             OtherPlayer.gameObject.SetActive(false);
             LocalPlayer.gameObject.SetActive(true);
             Tool.gameObject.SetActive(false);
-            T_LocalPlayerTool.gameObject.SetActive(true);
+            //T_LocalPlayerTool.gameObject.SetActive(true);
 
             PhotonView photonView = player.GetComponent<PhotonView>();
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer); // 플레이어 소유권 설정
