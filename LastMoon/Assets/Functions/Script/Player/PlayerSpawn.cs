@@ -24,7 +24,7 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
             Transform OtherPlayer = player.transform.Find("OtherPlayer");
             Transform LocalPlayer = player.transform.Find("LocalPlayer");
             Transform Tool = player.transform.Find("Player001");
-            Transform T_LocalPlayerTool = player.transform.Find("Camera").transform.Find("Local_Tool");
+            //Transform T_LocalPlayerTool = player.transform.Find("Camera").transform.Find("ToolCamera").transform.Find("Local_Tool");
             OtherPlayer.gameObject.SetActive(false);
             LocalPlayer.gameObject.SetActive(true);
             Tool.gameObject.SetActive(false);
