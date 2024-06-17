@@ -9,82 +9,79 @@ using UnityEngine.SceneManagement;
 public class ToolController : MonoBehaviour
 {
 
-    [SerializeField]
-    private Animator animator;
+    public GameObject[] Tools;
+    public GameObject[] ToolSwitching;
+    private int selectedToolIndex = 0;
 
-    public GameObject[] weapons; // 무기 오브젝트 배열
-    private int selectedWeaponIndex = 0;
-    public GameObject[] weaponsSwitching;
-    void Start()
+
+    private void Start()
     {
-
+        GameObject ToolInstance = Instantiate(Tools[0], gameObject.transform.position, gameObject.transform.rotation);
+        ToolInstance.transform.SetParent(gameObject.transform);
     }
-
-    void Update()
+    private void Update()
     {
         Switching();
-        Attack();
     }
-
     private void Switching()
     {
-        int previousSelectedWeaponIndex = selectedWeaponIndex;
+        int previousSelectedWeaponIndex = selectedToolIndex;
         if (GameValue.Axe == 1)
         {
-            weapons[0] = weaponsSwitching[0];
+            Tools[0] = ToolSwitching[0];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 1;
+                selectedToolIndex = 1;
                 GameValue.toolSwitching = false;
             }
 
         }
         else if (GameValue.Axe == 2)
         {
-            weapons[0] = weaponsSwitching[3];
+            Tools[0] = ToolSwitching[3];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 1;
+                selectedToolIndex = 1;
                 GameValue.toolSwitching = false;
             }
 
         }
         if (GameValue.Pickaxe == 1)
         {
-            weapons[1] = weaponsSwitching[1];
+            Tools[1] = ToolSwitching[1];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 2;
+                selectedToolIndex = 2;
                 GameValue.toolSwitching = false;
             }
 
         }
         else if (GameValue.Pickaxe == 2)
         {
-            weapons[1] = weaponsSwitching[4];
+            Tools[1] = ToolSwitching[4];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 2;
+                selectedToolIndex = 2;
                 GameValue.toolSwitching = false;
             }
 
         }
         if (GameValue.Shovel == 1)
         {
-            weapons[2] = weaponsSwitching[2];
+            Tools[2] = ToolSwitching[2];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 0;
+                selectedToolIndex = 0;
                 GameValue.toolSwitching = false;
             }
 
         }
         else if (GameValue.Shovel == 2)
         {
-            weapons[2] = weaponsSwitching[5];
+            Tools[2] = ToolSwitching[5];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 0;
+                selectedToolIndex = 0;
                 GameValue.toolSwitching = false;
             }
         }
@@ -92,35 +89,34 @@ public class ToolController : MonoBehaviour
         // 무기 번호 키로 무기 교체
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            selectedWeaponIndex = 0;
+            selectedToolIndex = 0;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2) && weapons.Length >= 2)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && Tools.Length >= 2)
         {
-            selectedWeaponIndex = 1;
+            selectedToolIndex = 1;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3) && weapons.Length >= 3)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && Tools.Length >= 3)
         {
-            selectedWeaponIndex = 2;
+            selectedToolIndex = 2;
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha9))
+        // 무기 교체가 필요하면 새로운 무기를 장착
+        if (previousSelectedWeaponIndex != selectedToolIndex)
         {
-            Cursor.lockState = CursorLockMode.None;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
+            EquipWeapon(selectedToolIndex);
         }
     }
 
-
-    
-    private void Attack()
+    private void EquipWeapon(int index)
     {
-        if (Input.GetMouseButtonDown(0)) //(Input.GetButton("Fire1")) 누르고있을때 반복
+        // 기존에 장착된 무기 비활성화
+        foreach (Transform child in gameObject.transform)
         {
-            animator.SetTrigger("Swing");
+            Destroy(child.gameObject);
         }
-    }
 
+        // 새로운 무기 인스턴스 생성 및 장착
+        GameObject weaponInstance = Instantiate(Tools[index], gameObject.transform.position, gameObject.transform.rotation);
+        weaponInstance.transform.SetParent(gameObject.transform);
+    }
 }
