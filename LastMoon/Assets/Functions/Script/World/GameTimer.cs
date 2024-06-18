@@ -15,7 +15,6 @@ public class GameTimer : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        GameValue.Round = 0;
         GameValue.RoundEnd = false;
         totalTime = GameValue.setMaxtime * 60;
         currentTime = totalTime;
@@ -44,13 +43,20 @@ public class GameTimer : MonoBehaviourPunCallbacks
         }
         if (currentTime <= 0 && SceneManager.GetActiveScene().name == "Map" && !GameValue.RoundEnd)
         {
-            GameValue.Round += 1;
-            if(GameValue.Round >3)
+            if(GameValue.Round<3)
             {
+                GameValue.Round += 1;
+                Debug.Log("¶ó¿îµå" + GameValue.Round);
                 GameValue.RoundEnd = true;
                 if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.LoadLevel("Shop");
                 totalTime = GameValue.setMaxtime * 60;
+            }
+            else
+            {
+                GameValue.RoundEnd = true;
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.LoadLevel("Ending");
             }
         }
     }

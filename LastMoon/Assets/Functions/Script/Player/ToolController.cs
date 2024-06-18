@@ -16,6 +16,7 @@ public class ToolController : MonoBehaviour
 
     private void Start()
     {
+        Switching();
         GameObject ToolInstance = Instantiate(Tools[0], gameObject.transform.position, gameObject.transform.rotation);
         ToolInstance.transform.SetParent(gameObject.transform);
     }
@@ -25,65 +26,36 @@ public class ToolController : MonoBehaviour
     }
     private void Switching()
     {
+       
         int previousSelectedWeaponIndex = selectedToolIndex;
         if (GameValue.Axe == 1)
         {
             Tools[0] = ToolSwitching[0];
-            if (GameValue.toolSwitching)
-            {
-                selectedToolIndex = 1;
-                GameValue.toolSwitching = false;
-            }
 
         }
         else if (GameValue.Axe == 2)
         {
             Tools[0] = ToolSwitching[3];
-            if (GameValue.toolSwitching)
-            {
-                selectedToolIndex = 1;
-                GameValue.toolSwitching = false;
-            }
 
         }
         if (GameValue.Pickaxe == 1)
         {
             Tools[1] = ToolSwitching[1];
-            if (GameValue.toolSwitching)
-            {
-                selectedToolIndex = 2;
-                GameValue.toolSwitching = false;
-            }
 
         }
         else if (GameValue.Pickaxe == 2)
         {
             Tools[1] = ToolSwitching[4];
-            if (GameValue.toolSwitching)
-            {
-                selectedToolIndex = 2;
-                GameValue.toolSwitching = false;
-            }
 
         }
         if (GameValue.Shovel == 1)
         {
             Tools[2] = ToolSwitching[2];
-            if (GameValue.toolSwitching)
-            {
-                selectedToolIndex = 0;
-                GameValue.toolSwitching = false;
-            }
 
         }
         else if (GameValue.Shovel == 2)
         {
             Tools[2] = ToolSwitching[5];
-            if (GameValue.toolSwitching)
-            {
-                selectedToolIndex = 0;
-                GameValue.toolSwitching = false;
-            }
         }
 
         // 무기 번호 키로 무기 교체
