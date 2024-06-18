@@ -7,24 +7,25 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class GameValue : MonoBehaviour
 {
-    public static bool LocalPlayer;
+    private NetworkManager networkManager;
+    
+    public static bool LocalPlayer=false;
     static public int seed1;
     static public int seed2;
     static public int setMaxtime;
-    static public string nickNumae;
-    private NetworkManager networkManager;
-    static public int Money_total;
+    static public string nickNumae =null;
+    static public int Money_total=0;
     private static Text money;
     static public int Round = 0;
-    static public bool RoundEnd;
+    static public bool RoundEnd=false;
 
     public static int Axe = 0;
     public static int Pickaxe = 0;
     public static int Shovel = 0;
 
-    public static bool toolSwitching;
-    public static string NodeName;
-    public static int[] NodeCount;
+    public static bool toolSwitching =false;
+    public static string NodeName =null;
+    public static int[] NodeCount =null;
 
     
     private void Awake()
