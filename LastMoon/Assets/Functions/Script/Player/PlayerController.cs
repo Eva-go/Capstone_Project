@@ -38,23 +38,27 @@ public class PlayerController : MonoBehaviour
 
     public GameObject[] weapons; // 무기 오브젝트 배열
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
-    private int selectedWeaponIndex = 0;
     public GameObject[] weaponsSwitching;
-   
+
+    private int selectedWeaponIndex = 0;
+    private int OtherWeaponIndex = 0;
+
+
     public static int getMoney;
     public GameObject insidegameObject;
 
     public static bool insideActive;
     public static bool PreViewCam;
     public static bool Poi;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
-        cam.SetActive(false); 
+        cam.SetActive(false);
         // 초기 무기 장착
-        EquipWeapon(selectedWeaponIndex);
+        EquipWeapon(selectedWeaponIndex, OtherWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
         GameValue.setMoney();
         PreViewCam = false;
@@ -66,7 +70,7 @@ public class PlayerController : MonoBehaviour
         {
             cam.SetActive(true);
             Move();
-            if(!Poi)
+            if (!Poi)
             {
                 CameraRotation();
                 CharacterRotation();
@@ -84,11 +88,11 @@ public class PlayerController : MonoBehaviour
             {
                 walkSpeed = 10;
             }
-            if(Input.GetKeyDown(KeyCode.F4))
+            if (Input.GetKeyDown(KeyCode.F4))
             {
                 gameObject.transform.position = new Vector3(gameObject.transform.position.x, -5f, gameObject.transform.position.z);
             }
-            if(Input.GetKeyDown(KeyCode.F5))
+            if (Input.GetKeyDown(KeyCode.F5))
             {
                 GameValue.GetMomey(1000);
             }
@@ -104,57 +108,63 @@ public class PlayerController : MonoBehaviour
             weapons[0] = weaponsSwitching[0];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 1;
+                OtherWeaponIndex = 0;
+                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 0);
                 GameValue.toolSwitching = false;
             }
-            
+
         }
-        else if (GameValue.Axe == 2 )
+        else if (GameValue.Axe == 2)
         {
             weapons[0] = weaponsSwitching[3];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 1;
+                OtherWeaponIndex = 3;
+                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 0);
                 GameValue.toolSwitching = false;
             }
-            
+
         }
-        if (GameValue.Pickaxe == 1 )
+        if (GameValue.Pickaxe == 1)
         {
             weapons[1] = weaponsSwitching[1];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 2;
+                OtherWeaponIndex = 1;
+                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 1);
                 GameValue.toolSwitching = false;
             }
-            
+
         }
         else if (GameValue.Pickaxe == 2)
         {
             weapons[1] = weaponsSwitching[4];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 2;
+                OtherWeaponIndex = 4;
+                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 1);
                 GameValue.toolSwitching = false;
             }
-           
+
         }
         if (GameValue.Shovel == 1)
         {
             weapons[2] = weaponsSwitching[2];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 0;
+                OtherWeaponIndex = 2;
+                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 2);
                 GameValue.toolSwitching = false;
             }
-           
+
         }
         else if (GameValue.Shovel == 2)
         {
             weapons[2] = weaponsSwitching[5];
             if (GameValue.toolSwitching)
             {
-                selectedWeaponIndex = 0;
+                OtherWeaponIndex = 5;
+                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 2);
                 GameValue.toolSwitching = false;
             }
         }
@@ -176,7 +186,7 @@ public class PlayerController : MonoBehaviour
         // 무기 교체가 필요하면 새로운 무기를 장착
         if (previousSelectedWeaponIndex != selectedWeaponIndex)
         {
-            pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
+            pv.RPC("RPC_EquipWeapon", RpcTarget.OthersBuffered, selectedWeaponIndex, OtherWeaponIndex);
         }
 
 
@@ -192,19 +202,24 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    private void RPC_EquipWeapon(int index)
+    private void RPC_IndexWeapon(int index, int weapon)
     {
-        EquipWeapon(index);
+        weapons[weapon] = weaponsSwitching[index];
     }
 
-    private void EquipWeapon(int index)
+    [PunRPC]
+    private void RPC_EquipWeapon(int index, int Otherindex)
+    {
+        EquipWeapon(index, Otherindex);
+    }
+
+    private void EquipWeapon(int index, int Otherindex)
     {
         // 기존에 장착된 무기 비활성화
         foreach (Transform child in weaponHoldPoint)
         {
             Destroy(child.gameObject);
         }
-
         // 새로운 무기 인스턴스 생성 및 장착
         GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
         weaponInstance.transform.SetParent(weaponHoldPoint);
@@ -214,7 +229,7 @@ public class PlayerController : MonoBehaviour
     {
         //아파트 레이케스트
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-        if (Input.GetKey(KeyCode.E)&& Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
+        if (Input.GetKey(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
         {
             insideActive = true;
         }
@@ -247,7 +262,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0)&&!Poi) //(Input.GetButton("Fire1")) 누르고있을때 반복
+        if (Input.GetMouseButtonDown(0) && !Poi) //(Input.GetButton("Fire1")) 누르고있을때 반복
         {
             animator.SetTrigger("Swing");
             Localanimator.SetTrigger("Swing");
