@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUM_Sand
-  m_Shader: {fileID: -6465566751694194690, guid: 8eb3a1c9785204a40b8a65cbda2bf3ad, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 9da7ef2ce82df8f4f9052b66321f373b, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -86,7 +86,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: 08bc3b8ae3657444185d574bf71d04ba, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -187,6 +187,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _Texture_Specular: 0
+    - _Transparency: 1
     - _Use_LU_Specular: 1
     - _Use_Look_up_Texture: 1
     - _WorkflowMode: 1
