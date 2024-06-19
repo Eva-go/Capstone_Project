@@ -83,4 +83,6 @@ public class GameValue : MonoBehaviour
     {
         setMaxtime = maxtime;
     }
+
+
 }

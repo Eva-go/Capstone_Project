@@ -21,6 +21,7 @@ public class MiscTab : MonoBehaviour
     private void Update()
     {
         nodeCountUpdate();
+        Die();
     }
 
 
@@ -37,4 +38,14 @@ public class MiscTab : MonoBehaviour
         }
     }
 
+    public void Die()
+    {
+        if(PlayerController.Hp==0)
+        {
+            for (int i = 0; i < nodesCount.Length; i++)
+            {
+                nodesCount[i].text = "0";
+            }
+        }
+    }
 }
