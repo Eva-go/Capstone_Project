@@ -98,10 +98,14 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             Debug.Log("Player died, starting respawn process.");
-            RespawnManager.Instance.RespawnPlayer();
             PhotonNetwork.Destroy(gameObject);
+
+            // 플레이어 리스폰 요청
+            Transform[] spawnPoints = GameObject.Find("APTSpawner").GetComponentsInChildren<Transform>();
+            RespawnManager.Instance.RespawnPlayer(spawnPoints);
         }
     }
+
 
     private void OnDestroy()
     {

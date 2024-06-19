@@ -6,14 +6,11 @@ public class RespawnManager : MonoBehaviour
 {
     public static RespawnManager Instance;
 
-    private Transform[] spawnPoints;
-
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 이 오브젝트가 씬 변경 시에도 파괴되지 않도록 함
         }
         else
         {
@@ -21,34 +18,16 @@ public class RespawnManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void RespawnPlayer(Transform[] spawnPoints)
     {
-        spawnPoints = GameObject.Find("APTSpawner").GetComponentsInChildren<Transform>(); // 스폰 포인트 가져오기
-        if (spawnPoints.Length > 1)
-        {
-            SpawnPlayer();
-        }
-        else
-        {
-            Debug.LogError("스폰 포인트가 없거나 충분하지 않습니다.");
-        }
+        StartCoroutine(RespawnCoroutine(spawnPoints));
     }
 
-    public void RespawnPlayer()
-    {
-        StartCoroutine(RespawnCoroutine());
-    }
-
-    private IEnumerator RespawnCoroutine()
+    private IEnumerator RespawnCoroutine(Transform[] spawnPoints)
     {
         Debug.Log("Waiting before respawning...");
         yield return new WaitForSeconds(2.0f); // 2초 대기 (필요에 따라 변경 가능)
 
-        SpawnPlayer();
-    }
-
-    private void SpawnPlayer()
-    {
         int idx = Random.Range(1, spawnPoints.Length);
         Debug.Log("Spawning player at point: " + idx);
 
