@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CircleFillHandler : MonoBehaviour
 {
-    private float fillValue = 0;
+    private float fillValue = 1;
     public Image circleFillImage;
     public RectTransform handlerEdgeImage;
     public RectTransform fillHandler;
     public Text HP;
     public GameObject Hp;
     private float time;
-    private int HP_count;
+
+    private bool isHpMax = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,13 +23,32 @@ public class CircleFillHandler : MonoBehaviour
     void Update()
     {
         time += Time.deltaTime;
-        if (fillValue < 100)
+        if(!isHpMax)
         {
-            fillValue += time/100;
+            if (fillValue < 100)
+            {
+                fillValue += time / 100;
+            }
+            PlayerController.Hp = ((int)fillValue);
+            FillCircleValue(fillValue);
+            if(PlayerController.Hp>=100)
+            {
+                PlayerController.Hp = 100;
+                
+                isHpMax = true;
+            }
+            
         }
-        HP_count = ((int)fillValue);
-        FillCircleValue(fillValue);
-        HP.text = HP_count.ToString();
+        if (PlayerController.Hp <= 0)
+        {
+            FillCircleValue(0);
+        }
+        if(PlayerController.Hp>=100)
+        {
+            FillCircleValue(100);
+        }
+
+        HP.text = PlayerController.Hp.ToString();
 
         if(PlayerController.PreViewCam)
         {
