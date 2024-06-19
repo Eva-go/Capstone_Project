@@ -15,7 +15,7 @@ public class GameValue : MonoBehaviour
     static public int setMaxtime;
     static public string nickNumae =null;
     static public int Money_total=0;
-    private static Text money;
+    public static Text money;
     static public int Round = 0;
     static public bool RoundEnd=false;
 
@@ -27,7 +27,9 @@ public class GameValue : MonoBehaviour
     public static string NodeName =null;
     public static int[] NodeCount =null;
 
-    
+    public static bool lived = false;
+
+
     private void Awake()
     {
         networkManager = FindObjectOfType<NetworkManager>();
@@ -55,13 +57,11 @@ public class GameValue : MonoBehaviour
     {
         Money_total = getMomey + Money_total;
         money.text = Money_total.ToString();
-        
     }
 
     static public void GetNode(string nodeName)
     {
         NodeName = nodeName;
-        
     }
 
     static public void UseMoney(int useMoney)

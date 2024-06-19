@@ -33,7 +33,6 @@ public class PlayerController : MonoBehaviour
     public static bool insideActive;
     public static bool PreViewCam;
     public static bool Poi;
-
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -43,7 +42,7 @@ public class PlayerController : MonoBehaviour
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex, OtherWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-        GameValue.setMoney();
+        //GameValue.setMoney();
         PreViewCam = false;
     }
 
@@ -97,7 +96,6 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            Debug.Log("Player died, starting respawn process.");
             PhotonNetwork.Destroy(gameObject);
 
             // 플레이어 리스폰 요청

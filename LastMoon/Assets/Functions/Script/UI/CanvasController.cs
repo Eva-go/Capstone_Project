@@ -9,9 +9,20 @@ public class CanvasController : MonoBehaviour
     public GameObject inside;
     public GameObject inventory;
     public GameObject money;
+    public GameObject Tab;
+
 
     private int keyTabCode = 0;
     private bool inventory_ck;
+    private int TotalSell=0;
+    private int Amount = 0;
+    //노드
+    public GameObject[] nodes;
+    public Text[] nodesCount;
+    public int[] count;
+    public int[] SellCount;
+    public int[] salePrice;
+
 
     private Transform inventoryTransform;
 
@@ -20,9 +31,18 @@ public class CanvasController : MonoBehaviour
         inside.SetActive(false);
         poi.SetActive(false);
         inventory.SetActive(false);
-        money.SetActive(true);
+        Tab.SetActive(false);
+        money.SetActive(false);
+
 
         inventoryTransform = inventory.transform;
+
+        for (int i = 0; i < nodesCount.Length; i++)
+        {
+            nodesCount[i].text = "0";
+            count[i] = 0;
+            SellCount[i] = 0;
+        }
     }
 
     void Update()
@@ -31,6 +51,72 @@ public class CanvasController : MonoBehaviour
         UpdatePoiActive();
         UpdateInventoryActive();
         UpdateInventoryTabActive();
+        UpdateMoneyActive();
+
+
+        //노드 관련 함수
+        nodeCountUpdate();
+        Sell();
+        Die();
+    }
+
+    public void nodeCountUpdate()
+    {
+
+        for (int i = 0; i < nodesCount.Length; i++)
+        {
+            if (nodes[i].name + "(Clone)" == GameValue.NodeName)
+            {
+                count[i]++;
+                SellCount[i] = count[i];
+                nodesCount[i].text = count[i].ToString();
+                GameValue.GetNode("");
+            }
+        }
+    }
+
+    private void Sell()
+    {
+        if(GameValue.lived)
+        {
+            money.SetActive(true);
+            GameValue.setMoney();
+            for (int i = 0; i < nodesCount.Length; i++)
+            {
+                Amount = SellCount[i] * salePrice[i];
+                TotalSell += Amount;
+            }
+            GameValue.GetMomey(TotalSell);
+            GameValue.lived = false;
+
+            for (int i = 0; i < nodesCount.Length; i++)
+            {
+                nodesCount[i].text = "0";
+                SellCount[i] = 0;
+                count[i] = 0;
+            }
+        }
+    }
+
+    private void Die()
+    {
+        if(PlayerController.Hp==0)
+        {
+            for (int i = 0; i < nodesCount.Length; i++)
+            {
+                nodesCount[i].text = "0";
+            }
+        }     
+    }
+
+    void UpdateMoneyActive()
+    {
+        if (GameValue.lived)
+        {
+            money.SetActive(true);
+            inventory.SetActive(false);
+            Tab.SetActive(false);
+        }
     }
 
     void UpdateInsideActive()
@@ -46,12 +132,9 @@ public class CanvasController : MonoBehaviour
         if (isPoiActive)
         {
             inventory.SetActive(true);
+            Tab.SetActive(true);
             money.SetActive(false);
             Cursor.lockState = CursorLockMode.Confined;
-        }
-        else
-        {
-            money.SetActive(true);
         }
     }
 
@@ -61,6 +144,7 @@ public class CanvasController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         PlayerController.Poi = false;
         inventory.SetActive(false);
+        Tab.SetActive(false);
     }
 
     void UpdateInventoryActive()
@@ -69,7 +153,8 @@ public class CanvasController : MonoBehaviour
         {
             inventory_ck = !inventory_ck;
             inventory.SetActive(inventory_ck);
-            money.SetActive(!inventory_ck);
+            Tab.SetActive(inventory_ck);
+            //money.SetActive(!inventory_ck);
         }
     }
 

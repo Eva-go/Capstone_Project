@@ -11,10 +11,10 @@ public class InsideFillHandler : MonoBehaviour
     public  RectTransform handlerEdgeImage;
     public  RectTransform fillHandler;
     public GameObject insidegameObject;
+
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -31,7 +31,7 @@ public class InsideFillHandler : MonoBehaviour
             {
                 fillValue = 100;
                 PlayerController.PreViewCam = true;
-                
+                GameValue.lived = true;
             }
             FillCircleValue(fillValue);
         }
