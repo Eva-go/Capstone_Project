@@ -6,7 +6,6 @@ public class DraggableObject : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private Vector3 startPosition;
     private Transform startParent;
     private CanvasGroup canvasGroup;
-
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
@@ -48,4 +47,5 @@ public class DraggableObject : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         transform.position = startPosition;
         transform.SetParent(startParent);
     }
+
 }

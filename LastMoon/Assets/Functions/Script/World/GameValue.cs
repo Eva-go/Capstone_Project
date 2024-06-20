@@ -27,6 +27,8 @@ public class GameValue : MonoBehaviour
     public static string NodeName =null;
     public static int[] NodeCount =null;
 
+    public static Camera mainCamera = null;
+
     public static bool lived = false;
 
 

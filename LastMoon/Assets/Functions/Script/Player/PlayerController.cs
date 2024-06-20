@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
         myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
+        GameValue.mainCamera = theCamera;
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex, OtherWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
