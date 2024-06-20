@@ -29,14 +29,18 @@ public class GameValue : MonoBehaviour
 
     public static Camera mainCamera = null;
 
+    public static Vector3 playerPos;
+
     public static bool lived = false;
 
 
     private void Awake()
     {
+       
         networkManager = FindObjectOfType<NetworkManager>();
         DontDestroyOnLoad(gameObject);
     }
+
 
     public void Update()
     {

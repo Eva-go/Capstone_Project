@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
-
+using System.Collections.Generic;
 public class PlayerController : MonoBehaviour
 {
     public PhotonView pv;
@@ -33,6 +33,13 @@ public class PlayerController : MonoBehaviour
     public static bool insideActive;
     public static bool PreViewCam;
     public static bool Poi;
+
+    //≈∏¿œ∏  wave
+    private float downwave = -1.5f;
+    public GameObject wavePrefab;
+    private List<Vector3> tileMapPositions = new List<Vector3>();
+    private float waveY;
+    private GameObject[] tileMapsWave;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -45,6 +52,8 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         //GameValue.setMoney();
         PreViewCam = false;
+        //≈∏¿œ∏ 
+        GameValue.playerPos = new Vector3(gameObject.transform.position.x, -15f + (GameValue.Round * downwave), gameObject.transform.position.z); ;
     }
 
     void Update()
@@ -66,11 +75,11 @@ public class PlayerController : MonoBehaviour
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                walkSpeed = 100;
+                walkSpeed = 1000;
             }
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                walkSpeed = 10;
+                walkSpeed = 100;
             }
             if (Input.GetKeyDown(KeyCode.F4))
             {
@@ -92,6 +101,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+   
 
     private void Die()
     {
