@@ -3,31 +3,45 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-public class DropTarget : MonoBehaviour
+public class DropTarget: MonoBehaviour
 {
+    //이미지 충돌처리 코드
+    
     public GameObject canvas;
+
+    private AddNode poiAddNode;
+
     private GraphicRaycaster raycaster;
     private PointerEventData pointer;
     private EventSystem eventSystem;
 
-    public Sprite nodeAlpha;
-    public Sprite[] nodeImage;
-    private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap", "Alpha" };
-    private int nodeAdd = 0;
     private bool nodeTarget = false;
+
+    private string nodeCountck;
+
+    private Collider2D collisionName1;
+    private Collider2D collisionName2;
+
     private void Start()
     {
         raycaster = canvas.GetComponent<GraphicRaycaster>();
         eventSystem = GetComponent<EventSystem>();
+        poiAddNode = transform.GetComponentInParent<AddNode>();
     }
 
     private void Update()
     {
-        
-        if (Input.GetMouseButtonUp(0)&& nodeTarget)
+        if (nodeCountck == "node1"&& Input.GetMouseButtonUp(0)&&nodeTarget)
         {
-            gameObject.GetComponent<Image>().sprite = nodeImage[nodeAdd];
+            Debug.Log("노드1");
+            poiAddNode.addNode1(collisionName1);
         }
+        else if (nodeCountck == "node2"&& Input.GetMouseButtonUp(0) && nodeTarget)
+        {
+            Debug.Log("노드");
+            poiAddNode.addNode2(collisionName2);
+        }
+        
     }
 
     private void Ray(Collider2D collision)
@@ -37,28 +51,16 @@ public class DropTarget : MonoBehaviour
         List<RaycastResult> results = new List<RaycastResult>();
         raycaster.Raycast(pointer, results);
         GameObject hit = results[0].gameObject;
-
-        if (hit.tag == "MixNode")
+        if (hit.name == "node1")
         {
-            for (int i = 0; i < nodeName.Length; i++)
-            {
-                if (collision.name == nodeName[i])
-                {
-                    nodeAdd = i;
-                    break;
-                }
-
-            }
+            nodeCountck = hit.name;
+            collisionName1 = collision;
         }
-    }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Draggable"))
+        else if (hit.name == "node2")
         {
-            Ray(collision);
-            nodeTarget = true;
+            nodeCountck = hit.name;
+            collisionName2= collision;
         }
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -66,10 +68,17 @@ public class DropTarget : MonoBehaviour
         nodeTarget = false;
     }
 
-    public void poi_Exit()
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        nodeAdd = 7;
-        gameObject.GetComponent<Image>().sprite = nodeAlpha;
+        if (collision.gameObject.CompareTag("Draggable"))
+        {
+            Ray(collision);
+            nodeTarget = true;
+        }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        nodeTarget = false;
+    }
 }
