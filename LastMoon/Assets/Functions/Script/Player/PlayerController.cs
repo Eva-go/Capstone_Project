@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
-using System.Collections.Generic;
+
 public class PlayerController : MonoBehaviour
 {
     public PhotonView pv;
@@ -34,26 +34,17 @@ public class PlayerController : MonoBehaviour
     public static bool PreViewCam;
     public static bool Poi;
 
-    //타일맵 wave
-    private float downwave = -1.5f;
-    public GameObject wavePrefab;
-    private List<Vector3> tileMapPositions = new List<Vector3>();
-    private float waveY;
-    private GameObject[] tileMapsWave;
     void Start()
     {
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
-        GameValue.mainCamera = theCamera;
         // 초기 무기 장착
-        EquipWeapon(selectedWeaponIndex, OtherWeaponIndex);
+        EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
         //GameValue.setMoney();
         PreViewCam = false;
-        //타일맵
-        GameValue.playerPos = new Vector3(gameObject.transform.position.x, -15f + (GameValue.Round * downwave), gameObject.transform.position.z); ;
     }
 
     void Update()
@@ -75,11 +66,11 @@ public class PlayerController : MonoBehaviour
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                walkSpeed = 1000;
+                walkSpeed = 100;
             }
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                walkSpeed = 100;
+                walkSpeed = 10;
             }
             if (Input.GetKeyDown(KeyCode.F4))
             {
@@ -101,12 +92,12 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-   
 
     private void Die()
     {
         if (pv.IsMine)
         {
+            Debug.Log("Player died, starting respawn process.");
             PhotonNetwork.Destroy(gameObject);
 
             // 플레이어 리스폰 요청
@@ -211,52 +202,109 @@ public class PlayerController : MonoBehaviour
             weapons[0] = weaponsSwitching[0];
             if (GameValue.toolSwitching)
             {
-                OtherWeaponIndex = 0;
-                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 0);
+                selectedWeaponIndex = 1;
                 GameValue.toolSwitching = false;
             }
+
         }
         else if (GameValue.Axe == 2)
         {
             weapons[0] = weaponsSwitching[3];
             if (GameValue.toolSwitching)
             {
-                OtherWeaponIndex = 3;
-                pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, OtherWeaponIndex, 0);
+                selectedWeaponIndex = 1;
+                GameValue.toolSwitching = false;
+            }
+
+        }
+        if (GameValue.Pickaxe == 1)
+        {
+            weapons[1] = weaponsSwitching[1];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 2;
+                GameValue.toolSwitching = false;
+            }
+
+        }
+        else if (GameValue.Pickaxe == 2)
+        {
+            weapons[1] = weaponsSwitching[4];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 2;
+                GameValue.toolSwitching = false;
+            }
+
+        }
+        if (GameValue.Shovel == 1)
+        {
+            weapons[2] = weaponsSwitching[2];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 0;
+                GameValue.toolSwitching = false;
+            }
+
+        }
+        else if (GameValue.Shovel == 2)
+        {
+            weapons[2] = weaponsSwitching[5];
+            if (GameValue.toolSwitching)
+            {
+                selectedWeaponIndex = 0;
                 GameValue.toolSwitching = false;
             }
         }
-        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+
+        // 무기 번호 키로 무기 교체
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            selectedWeaponIndex = (selectedWeaponIndex + 1) % weapons.Length;
+            selectedWeaponIndex = 0;
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        if (Input.GetKeyDown(KeyCode.Alpha2) && weapons.Length >= 2)
         {
-            selectedWeaponIndex = (selectedWeaponIndex - 1 + weapons.Length) % weapons.Length;
+            selectedWeaponIndex = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3) && weapons.Length >= 3)
+        {
+            selectedWeaponIndex = 2;
         }
 
+        // 무기 교체가 필요하면 새로운 무기를 장착
         if (previousSelectedWeaponIndex != selectedWeaponIndex)
         {
-            EquipWeapon(selectedWeaponIndex, OtherWeaponIndex);
-            pv.RPC("RPC_IndexWeapon", RpcTarget.OthersBuffered, selectedWeaponIndex, OtherWeaponIndex);
+            pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
         }
-    }
 
-    private void EquipWeapon(int index, int otherIndex)
-    {
-        for (int i = 0; i < weapons.Length; i++)
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            weapons[i].SetActive(i == index);
+            Cursor.lockState = CursorLockMode.None;
         }
-        for (int i = 0; i < weaponsSwitching.Length; i++)
+        if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            weaponsSwitching[i].SetActive(i == otherIndex);
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 
     [PunRPC]
-    public void RPC_IndexWeapon(int index, int otherIndex)
+    private void RPC_EquipWeapon(int index)
     {
-        EquipWeapon(index, otherIndex);
+        EquipWeapon(index);
+    }
+
+    private void EquipWeapon(int index)
+    {
+        // 기존에 장착된 무기 비활성화
+        foreach (Transform child in weaponHoldPoint)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 새로운 무기 인스턴스 생성 및 장착
+        GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
+        weaponInstance.transform.SetParent(weaponHoldPoint);
     }
 }

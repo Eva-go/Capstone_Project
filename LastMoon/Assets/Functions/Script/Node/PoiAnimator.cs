@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class PoiAnimator : MonoBehaviour
+using Photon.Pun;
+public class PoiAnimator : MonoBehaviourPunCallbacks
 {
     public Animator animator;
     private bool ani;
@@ -16,6 +14,12 @@ public class PoiAnimator : MonoBehaviour
     void Update()
     {
         ani = PlayerController.Poi;
+        photonView.RPC("RPC_PoiSet", RpcTarget.AllBuffered, ani);
+
+    }
+    [PunRPC]
+    void RPC_PoiSet(bool ani)
+    {
         if (ani)
         {
             animator.SetBool("isActvie", ani);

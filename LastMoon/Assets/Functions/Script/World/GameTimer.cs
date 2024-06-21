@@ -36,28 +36,25 @@ public class GameTimer : MonoBehaviourPunCallbacks
             int minutes = Mathf.FloorToInt(currentTime / 60f);
             int seconds = Mathf.FloorToInt(currentTime % 60f);
         }
+        if(GameValue.inside)
+        {
+            photonView.RPC("RPC_All_Inside_Time", RpcTarget.AllBuffered);
+            GameValue.inside = false;
+        }
         // f1 키를 누르면 시간 감소
         if (Input.GetKeyDown(KeyCode.F1))
         {
             photonView.RPC("RPC_DecreaseTime", RpcTarget.AllBuffered);
         }
-        if (currentTime <= 0 && SceneManager.GetActiveScene().name == "Map" && !GameValue.RoundEnd)
+        RoundEnd();
+    }
+    [PunRPC]
+    void RPC_All_Inside_Time()
+    {
+        GameValue.insideUser++;
+        if(GameValue.insideUser >= GameValue.MaxUser)
         {
-            if (GameValue.Round < 3)
-            {
-                GameValue.Round += 1;
-                Debug.Log("라운드" + GameValue.Round);
-                GameValue.RoundEnd = true;
-                if (PhotonNetwork.IsMasterClient)
-                    PhotonNetwork.LoadLevel("Shop");
-                totalTime = GameValue.setMaxtime * 60;
-            }
-            else
-            {
-                //GameValue.RoundEnd = true;
-                //if (PhotonNetwork.IsMasterClient)
-                //    PhotonNetwork.LoadLevel("Ending");
-            }
+            currentTime = 0;
         }
     }
     [PunRPC]
@@ -68,6 +65,29 @@ public class GameTimer : MonoBehaviourPunCallbacks
         if (currentTime < 0)
         {
             currentTime = 0;
+        }
+    }
+
+    private void RoundEnd()
+    {
+        if (currentTime <= 0 && SceneManager.GetActiveScene().name == "Map" && !GameValue.RoundEnd)
+        {
+            if (GameValue.Round < 3)
+            {
+                GameValue.Round += 1;
+                Debug.Log("라운드" + GameValue.Round);
+                GameValue.RoundEnd = true;
+                if (PhotonNetwork.IsMasterClient)
+                    PhotonNetwork.LoadLevel("Shop");
+                totalTime = GameValue.setMaxtime * 60;
+                GameValue.insideUser = 0;
+            }
+            else
+            {
+                //GameValue.RoundEnd = true;
+                //if (PhotonNetwork.IsMasterClient)
+                //    PhotonNetwork.LoadLevel("Ending");
+            }
         }
     }
 }

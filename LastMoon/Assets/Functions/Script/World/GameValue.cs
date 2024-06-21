@@ -8,7 +8,10 @@ using UnityEngine.SceneManagement;
 public class GameValue : MonoBehaviour
 {
     private NetworkManager networkManager;
-    
+    public static int MaxUser = 0;
+    public static int insideUser = 0;
+    public static bool inside = false;
+
     public static bool LocalPlayer=false;
     static public int seed1;
     static public int seed2;
@@ -32,13 +35,15 @@ public class GameValue : MonoBehaviour
     public static Vector3 playerPos;
 
     public static bool lived = false;
-
+  
 
     private void Awake()
     {
-       
         networkManager = FindObjectOfType<NetworkManager>();
         DontDestroyOnLoad(gameObject);
+        MaxUser = 0;
+        insideUser = 0;
+        inside = false;
     }
 
 
@@ -47,6 +52,7 @@ public class GameValue : MonoBehaviour
         Axe = MoneyController.Bt_Axe;
         Pickaxe = MoneyController.Bt_Pickaxe;
         Shovel = MoneyController.Bt_Shovel;
+        Debug.Log("¾ÈÂÊ :" + insideUser + " MAX : " + MaxUser);
     }
 
     static public void setMoney()

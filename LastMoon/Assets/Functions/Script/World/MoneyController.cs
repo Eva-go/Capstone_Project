@@ -39,11 +39,19 @@ public class MoneyController : MonoBehaviour
         int_PickaxeMoney = int.Parse(PickaxeMoney.text);
         int_ShovelMoney = int.Parse(ShovelMoney.text);
         GameValue.toolSwitching = true;
+        GameValue.insideUser = 0;
+        GameValue.setMoney();
 
     }
     private void Update()
     {
-        
+        if (Input.GetKey("escape"))
+            Application.Quit();
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            GameValue.GetMomey(1000);
+        }
+
         if (int_AxeMoney > total_Money)
         {
             AxeBT.interactable = false;

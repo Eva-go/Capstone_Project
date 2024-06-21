@@ -5,7 +5,7 @@ using UnityEngine;
 public class Wavetransform : MonoBehaviour
 {
     private float downwave = -1.5f;
-    private float waveY;
+    public float waveY;
     private Vector3 wave;
     void Start()
     {
