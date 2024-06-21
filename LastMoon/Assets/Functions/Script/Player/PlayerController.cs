@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
             PhotonNetwork.Destroy(gameObject);
 
             // 플레이어 리스폰 요청
-            Transform[] spawnPoints = GameObject.Find("APTSpawner").GetComponentsInChildren<Transform>();
+            Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
             RespawnManager.Instance.RespawnPlayer(spawnPoints);
         }
     }

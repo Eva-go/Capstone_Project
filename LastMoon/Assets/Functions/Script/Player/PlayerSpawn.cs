@@ -11,7 +11,7 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        points = GameObject.Find("APTSpawner").GetComponentsInChildren<Transform>(); // 스폰 포인트 가져오기
+        points = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>(); // 스폰 포인트 가져오기
         if (points.Length > 1)
         {
             idx = Random.Range(1, points.Length); // 랜덤 스폰 포인트 선택
