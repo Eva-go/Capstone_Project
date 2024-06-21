@@ -1440,9 +1440,9 @@ GameObject:
   - component: {fileID: 256402073}
   - component: {fileID: 256402072}
   - component: {fileID: 256402071}
-  - component: {fileID: 256402070}
+  - component: {fileID: 256402074}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: node1
   m_TagString: MixNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1467,35 +1467,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &256402070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 256402068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95dde57e9feb8724c9d853728235597c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 2757998006768885233}
-  nodeAlpha: {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
-  nodeCounts:
-  - {fileID: 66169835}
-  - {fileID: 1001815588}
-  - {fileID: 1522258575}
-  - {fileID: 785239203}
-  - {fileID: 141243850}
-  - {fileID: 1383392562}
-  nodeImage:
-  - {fileID: 21300000, guid: 14a81f5d074a08d469ebac649bdaf5bd, type: 3}
-  - {fileID: 21300000, guid: 4f7cefce6590f7c408978fb17327ffd8, type: 3}
-  - {fileID: 21300000, guid: 5fa7e354cfd84c84e92bde5d7dfd778a, type: 3}
-  - {fileID: 21300000, guid: 74351f0ee2b54954195f3a86807a9d15, type: 3}
-  - {fileID: 21300000, guid: 8e2a900949684104d9161a1202412894, type: 3}
-  - {fileID: 21300000, guid: acaf994980777404c9b97cbf20a6938a, type: 3}
-  - {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
 --- !u!61 &256402071
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1579,6 +1550,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 256402068}
   m_CullTransparentMesh: 1
+--- !u!114 &256402074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256402068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95dde57e9feb8724c9d853728235597c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 2757998006768885233}
 --- !u!1 &274985392
 GameObject:
   m_ObjectHideFlags: 0
@@ -6068,7 +6052,7 @@ GameObject:
   - component: {fileID: 1312308638}
   - component: {fileID: 1312308641}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: node2
   m_TagString: MixNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6189,16 +6173,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 2757998006768885233}
-  nodeAlpha: {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
-  nodeCounts: []
-  nodeImage:
-  - {fileID: 21300000, guid: 14a81f5d074a08d469ebac649bdaf5bd, type: 3}
-  - {fileID: 21300000, guid: 4f7cefce6590f7c408978fb17327ffd8, type: 3}
-  - {fileID: 21300000, guid: 5fa7e354cfd84c84e92bde5d7dfd778a, type: 3}
-  - {fileID: 21300000, guid: 74351f0ee2b54954195f3a86807a9d15, type: 3}
-  - {fileID: 21300000, guid: 8e2a900949684104d9161a1202412894, type: 3}
-  - {fileID: 21300000, guid: acaf994980777404c9b97cbf20a6938a, type: 3}
-  - {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
 --- !u!1 &1353752485
 GameObject:
   m_ObjectHideFlags: 0
@@ -6756,6 +6730,7 @@ GameObject:
   - component: {fileID: 1501044535}
   - component: {fileID: 1501044536}
   - component: {fileID: 1501044537}
+  - component: {fileID: 1501044538}
   m_Layer: 5
   m_Name: PoiMix
   m_TagString: Untagged
@@ -6813,6 +6788,30 @@ MonoBehaviour:
   alphaNode: {fileID: 2008818170}
   resultNode: {fileID: 21300000, guid: 7af41815a60959a45b970dcd7f51674e, type: 3}
   time_coolTime: 10
+--- !u!114 &1501044538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501044534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62a39bd2da05f724d8041cc037958303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node1: {fileID: 256402072}
+  node2: {fileID: 1312308639}
+  nodeAlpha: {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
+  nodeCounts: []
+  nodeImage:
+  - {fileID: 21300000, guid: 1da5f079b3f9c4c4b8b77f3a4e080cbe, type: 3}
+  - {fileID: 21300000, guid: 11982d09a831aad4f80bcad7834084a5, type: 3}
+  - {fileID: 21300000, guid: 85120161b60fe594c9a005881da9f622, type: 3}
+  - {fileID: 21300000, guid: e6a2bc779d48aa144a28e07da0ce42ef, type: 3}
+  - {fileID: 21300000, guid: d977a315e89dade42b012f7de3b02099, type: 3}
+  - {fileID: 21300000, guid: e0378eae4c1e2ac4cbc67e745d5c366d, type: 3}
+  - {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
 --- !u!1 &1515440958
 GameObject:
   m_ObjectHideFlags: 0
@@ -8778,7 +8777,7 @@ GameObject:
   - component: {fileID: 2008818169}
   m_Layer: 5
   m_Name: Image (1)
-  m_TagString: MixNode
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15713,30 +15712,6 @@ MonoBehaviour:
       - m_Target: {fileID: 742255275}
         m_TargetAssemblyTypeName: CanvasController, Assembly-CSharp
         m_MethodName: Bt_poiExt
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 256402070}
-        m_TargetAssemblyTypeName: DropTarget, Assembly-CSharp
-        m_MethodName: poi_Exit
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1312308641}
-        m_TargetAssemblyTypeName: DropTarget, Assembly-CSharp
-        m_MethodName: poi_Exit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
