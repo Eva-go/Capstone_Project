@@ -26,7 +26,7 @@ public class RespawnManager : MonoBehaviour
     private IEnumerator RespawnCoroutine(Transform[] spawnPoints)
     {
         Debug.Log("Waiting before respawning...");
-        yield return new WaitForSeconds(2.0f); // 2초 대기 (필요에 따라 변경 가능)
+        yield return new WaitForSeconds(0.01f); // 2초 대기 (필요에 따라 변경 가능)
 
         int idx = Random.Range(1, spawnPoints.Length);
         Debug.Log("Spawning player at point: " + idx);
