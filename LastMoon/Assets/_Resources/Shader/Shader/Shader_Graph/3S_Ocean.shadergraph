@@ -47,6 +47,9 @@
         },
         {
             "m_Id": "37d8ebf3ef3a49ccb2affd65340695e0"
+        },
+        {
+            "m_Id": "88af134d7502487290138ec3e7e73a20"
         }
     ],
     "m_Keywords": [
@@ -1658,10 +1661,10 @@
     "m_Type": "UnityEditor.ShaderGraph.BooleanMaterialSlot",
     "m_ObjectId": "4a0b8300352842f4a6cbc412747d9373",
     "m_Id": -1452958811,
-    "m_DisplayName": "UseWorldCoord",
+    "m_DisplayName": "RotateNormal",
     "m_SlotType": 0,
     "m_Hidden": false,
-    "m_ShaderOutputName": "_UseWorldCoord",
+    "m_ShaderOutputName": "_RotateNormal",
     "m_StageCapability": 2,
     "m_Value": true,
     "m_DefaultValue": false
@@ -1844,7 +1847,7 @@
     "m_Type": "UnityEditor.ShaderGraph.BooleanMaterialSlot",
     "m_ObjectId": "5e02d48019724143b5fce9ebbd3a27db",
     "m_Id": 0,
-    "m_DisplayName": "Use World Coord",
+    "m_DisplayName": "Rotate Normal",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -2058,10 +2061,10 @@
     "m_Guid": {
         "m_GuidSerialized": "0a7d80e2-c687-4a01-a524-e1c3713f74bd"
     },
-    "m_Name": "Use World Coord",
+    "m_Name": "Rotate Normal",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Use World Coord",
-    "m_DefaultReferenceName": "_Use_World_Coord",
+    "m_RefNameGeneratedByDisplayName": "Rotate Normal",
+    "m_DefaultReferenceName": "_Rotate_Normal",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -2194,6 +2197,34 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "88af134d7502487290138ec3e7e73a20",
+    "m_Guid": {
+        "m_GuidSerialized": "5ea6b722-08bc-438e-990c-489a4e0a6ad2"
+    },
+    "m_Name": "Size",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Size",
+    "m_DefaultReferenceName": "_Size",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.0,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
 }
 
 {
@@ -2379,6 +2410,9 @@
         },
         {
             "m_Id": "7cc4365875f5483fbfe6a99fc8922f2e"
+        },
+        {
+            "m_Id": "88af134d7502487290138ec3e7e73a20"
         }
     ]
 }
