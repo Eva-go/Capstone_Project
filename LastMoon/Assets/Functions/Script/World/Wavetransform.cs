@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Wavetransform : MonoBehaviour
 {
-    private float downwave = -1.5f;
+    private float downwave = -10f;
     public float waveY;
     private Vector3 wave;
 
     private MaterialPropertyBlock propertyBlock;
 
     public float currentTime = 0;
-    GameTimer gameTimer;
+    public float normalizedTime;
 
     void Start()
     {
@@ -19,6 +19,7 @@ public class Wavetransform : MonoBehaviour
         waveY = -15f + (GameValue.Round * downwave);
 
         propertyBlock = new MaterialPropertyBlock();
+       
     }
 
     // Update is called once per frame
@@ -28,7 +29,12 @@ public class Wavetransform : MonoBehaviour
         currentPosition.y = waveY;
         transform.position = currentPosition;
 
-        currentTime = gameTimer.currentTime;
+        //정규화
+        normalizedTime = 1.0f - (GameValue.WaveTimer / 600.0f);
+        //보간
+        currentTime = Mathf.Lerp(0.0f, 3.0f, normalizedTime);
+
+
         propertyBlock.SetFloat("_Strength", currentTime);
         gameObject.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }

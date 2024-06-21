@@ -35,7 +35,8 @@ public class GameValue : MonoBehaviour
     public static Vector3 playerPos;
 
     public static bool lived = false;
-  
+
+    public static float WaveTimer;
 
     private void Awake()
     {

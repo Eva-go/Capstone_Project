@@ -64,6 +64,10 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetKey("escape"))
                 Application.Quit();
+            if(Input.GetKeyDown(KeyCode.F7))
+            {
+                GameValue.Round = 0;
+            }
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 walkSpeed = 100;

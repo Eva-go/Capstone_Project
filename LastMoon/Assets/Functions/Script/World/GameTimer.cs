@@ -20,6 +20,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
         currentTime = totalTime;
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
         PhotonNetwork.AutomaticallySyncScene = true;
+        GameValue.WaveTimer = currentTime;
     }
 
     void Update()
@@ -28,6 +29,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
         if (SceneManager.GetActiveScene().name == "Map")
         {
             currentTime -= Time.deltaTime;
+            GameValue.WaveTimer = currentTime;
             float ratio = currentTime / totalTime;
             float posX = Mathf.Lerp(finalPosX, initialPosX, ratio);
             timerImage.localPosition = new Vector3(posX, timerImage.localPosition.y, timerImage.localPosition.z);
