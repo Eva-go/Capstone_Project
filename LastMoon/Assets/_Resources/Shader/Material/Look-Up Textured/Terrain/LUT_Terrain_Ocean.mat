@@ -26,14 +26,16 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _SHADOWS_SOFT
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap:
-    RenderType: Opaque
-  disabledShaderPasses: []
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -166,7 +168,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _DstBlendAlpha: 0
     - _Emission_Map_Strength: 0
     - _Emission_Strength: 0
@@ -195,36 +197,40 @@ Material:
     - _RL_Texture_Brightness: 1.5
     - _RL_With_Texture: 1
     - _ReceiveShadows: 1
+    - _RotateNormal: 0
+    - _Rotate_Normal: 0
     - _SHADOWS_SOFT: 1
     - _Shadow_Ambient_Strength: 4
     - _Shadow_Power: 2.5
     - _Shadow_Step: 4
     - _Shadow_Strength: 1
+    - _Size: 0
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _Smoothness_Map_Strength: 0
     - _Smoothness_Strength: 0
     - _SpecularHighlights: 1
-    - _Specular_Brightness: 1
+    - _Specular_Brightness: 0
     - _Specular_Map_Strength: 1
     - _Specular_Multiplier: 0.25
     - _Specular_Power: 1
     - _Specular_Step: 4
-    - _Specular_Strength: 0.25
-    - _SrcBlend: 1
+    - _Specular_Strength: 0
+    - _SrcBlend: 5
     - _SrcBlendAlpha: 1
-    - _Strength: 0.5
-    - _Surface: 0
+    - _Strength: 0
+    - _Surface: 1
     - _Texture_Specular: 0
+    - _Time_Scale: 1
     - _Transparency: 1
     - _Use_Base_Texture: 1
     - _Use_LU_Specular: 1
     - _Use_Look_up_Texture: 1
     - _Use_Normal_Ambient: 1
-    - _Use_World_Coord: 0
+    - _Use_World_Coord: 1
     - _WorkflowMode: 0
     - _ZTest: 4
-    - _ZWrite: 1
+    - _ZWrite: 0
     - _ZWriteControl: 0
     - _transparency: 1
     m_Colors:

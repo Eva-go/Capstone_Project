@@ -8,7 +8,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
     private float totalTime;
     public float decreaseTime = 180f; // f1 누를 때 감소시킬 시간 (3분)
 
-    private float currentTime;
+    public float currentTime;
     private float initialPosX = 234f;
     private float finalPosX = -234f;
 
