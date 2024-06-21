@@ -21,6 +21,11 @@ public class DraggableObject : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         count = int.Parse(Text_count.text);
     }
 
+    private void Update()
+    {
+        count = int.Parse(Text_count.text);
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         startPosition = transform.position;

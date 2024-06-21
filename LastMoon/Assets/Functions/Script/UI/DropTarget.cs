@@ -18,7 +18,6 @@ public class DropTarget: MonoBehaviour
     private bool nodeTarget = false;
 
     private string nodeCountck;
-    private string []collisionNamae;
 
     private Collider2D collisionName1;
     private Collider2D collisionName2;
@@ -32,20 +31,17 @@ public class DropTarget: MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0) && nodeTarget)
+        if (nodeCountck == "node1"&& Input.GetMouseButtonUp(0)&&nodeTarget)
         {
-            if (nodeCountck == "node1")
-            {
-                poiAddNode.addNode1(collisionName1);
-            }
-            else if (nodeCountck == "node2")
-            {
-                poiAddNode.addNode2(collisionName2);
-            }
-            else
-                nodeCountck = "null";
+            Debug.Log("노드1");
+            poiAddNode.addNode1(collisionName1);
         }
-
+        else if (nodeCountck == "node2"&& Input.GetMouseButtonUp(0) && nodeTarget)
+        {
+            Debug.Log("노드");
+            poiAddNode.addNode2(collisionName2);
+        }
+        
     }
 
     private void Ray(Collider2D collision)
@@ -67,18 +63,21 @@ public class DropTarget: MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        nodeTarget = false;
+    }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Draggable"))
         {
-            Debug.Log("노드 충돌");
             Ray(collision);
             nodeTarget = true;
         }
-
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         nodeTarget = false;
     }

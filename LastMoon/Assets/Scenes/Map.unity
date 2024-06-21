@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 66169836}
   - component: {fileID: 66169835}
   m_Layer: 7
-  m_Name: count
+  m_Name: Dirtcount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -717,7 +717,7 @@ GameObject:
   - component: {fileID: 141243851}
   - component: {fileID: 141243850}
   m_Layer: 7
-  m_Name: count
+  m_Name: Plankscount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1510,7 +1510,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 150, y: 150}
+  m_Size: {x: 200, y: 200}
   m_EdgeRadius: 0
 --- !u!114 &256402072
 MonoBehaviour:
@@ -3793,7 +3793,7 @@ GameObject:
   - component: {fileID: 785239204}
   - component: {fileID: 785239203}
   m_Layer: 7
-  m_Name: count
+  m_Name: Sandcount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4963,7 +4963,7 @@ GameObject:
   - component: {fileID: 1001815589}
   - component: {fileID: 1001815588}
   m_Layer: 7
-  m_Name: count
+  m_Name: Concretecount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6120,7 +6120,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 150, y: 150}
+  m_Size: {x: 200, y: 200}
   m_EdgeRadius: 0
 --- !u!114 &1312308639
 MonoBehaviour:
@@ -6380,7 +6380,7 @@ GameObject:
   - component: {fileID: 1383392563}
   - component: {fileID: 1383392562}
   m_Layer: 7
-  m_Name: count
+  m_Name: Scrapcount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6802,8 +6802,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   node1: {fileID: 256402072}
   node2: {fileID: 1312308639}
+  nodeCounts_Text:
+  - {fileID: 66169835}
+  - {fileID: 1001815588}
+  - {fileID: 1522258575}
+  - {fileID: 785239203}
+  - {fileID: 141243850}
+  - {fileID: 1383392562}
+  nodeCounts: 000000000000000000000000000000000000000000000000
+  oldNodeCounts: 000000000000000000000000000000000000000000000000
   nodeAlpha: {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
-  nodeCounts: []
   nodeImage:
   - {fileID: 21300000, guid: 1da5f079b3f9c4c4b8b77f3a4e080cbe, type: 3}
   - {fileID: 21300000, guid: 11982d09a831aad4f80bcad7834084a5, type: 3}
@@ -6811,7 +6819,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e6a2bc779d48aa144a28e07da0ce42ef, type: 3}
   - {fileID: 21300000, guid: d977a315e89dade42b012f7de3b02099, type: 3}
   - {fileID: 21300000, guid: e0378eae4c1e2ac4cbc67e745d5c366d, type: 3}
-  - {fileID: 21300000, guid: bda1350119296ec42918474f2c29c593, type: 3}
 --- !u!1 &1515440958
 GameObject:
   m_ObjectHideFlags: 0
@@ -6900,7 +6907,7 @@ GameObject:
   - component: {fileID: 1522258576}
   - component: {fileID: 1522258575}
   m_Layer: 7
-  m_Name: count
+  m_Name: Driftwoodcount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15712,6 +15719,18 @@ MonoBehaviour:
       - m_Target: {fileID: 742255275}
         m_TargetAssemblyTypeName: CanvasController, Assembly-CSharp
         m_MethodName: Bt_poiExt
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1501044538}
+        m_TargetAssemblyTypeName: AddNode, Assembly-CSharp
+        m_MethodName: poi_Exit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
