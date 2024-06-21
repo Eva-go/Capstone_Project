@@ -11,10 +11,13 @@ public class DropTarget : MonoBehaviour
     private EventSystem eventSystem;
 
     public Sprite nodeAlpha;
+    public Text[] nodeCounts;
     public Sprite[] nodeImage;
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap", "Alpha" };
     private int nodeAdd = 0;
     private bool nodeTarget = false;
+
+    private DraggableObject nodeCount;
     private void Start()
     {
         raycaster = canvas.GetComponent<GraphicRaycaster>();
