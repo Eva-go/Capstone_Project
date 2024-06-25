@@ -103,7 +103,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -120,6 +120,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85422fa97f57c5d47b93291d1704cf3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waveY: 0
+  currentTime: 0
+  normalizedTime: 0
 --- !u!1001 &6198095165167704007
 PrefabInstance:
   m_ObjectHideFlags: 0

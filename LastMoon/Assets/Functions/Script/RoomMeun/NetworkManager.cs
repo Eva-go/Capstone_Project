@@ -18,7 +18,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Button mbutton_Start;
 
     
-    private static int PlayerID = -1; //플레이어 번호
+    public static int PlayerID = -1; //플레이어 번호
 
 
 
