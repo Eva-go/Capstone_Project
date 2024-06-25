@@ -2220,9 +2220,9 @@ MonoBehaviour:
   - {fileID: 46765404269634581, guid: 7c438977b89a5b04bbb538c6e6ec81bc, type: 3}
   - {fileID: 1067324668941804349, guid: c9f33f739c8d4164eb92dbe708f44cbd, type: 3}
   - {fileID: 4760096997482513493, guid: 5b3e9a17e11f22042b6c0b03b50df4cd, type: 3}
+  - {fileID: 4397636451757101403, guid: 099c236559131ad41b0eaf450085837e, type: 3}
   - {fileID: 4383904846621012237, guid: a80f4ba41c3bc1b41b2b2efe66b1ed2d, type: 3}
   - {fileID: 1256879839655810891, guid: eb7c9bae9917b7b438b1bbbd8f9c2a5b, type: 3}
-  - {fileID: 4397636451757101403, guid: 099c236559131ad41b0eaf450085837e, type: 3}
   spawnArea: {fileID: 6467865225669960456}
   itemCount: 500
   minDistance: 2
@@ -2413,7 +2413,7 @@ GameObject:
   - component: {fileID: 443451435}
   - component: {fileID: 443451436}
   m_Layer: 7
-  m_Name: Planks
+  m_Name: node_Planks
   m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3576,7 +3576,7 @@ GameObject:
   - component: {fileID: 773956960}
   - component: {fileID: 773956961}
   m_Layer: 7
-  m_Name: Sand
+  m_Name: node_Sand
   m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4523,7 +4523,7 @@ GameObject:
   - component: {fileID: 941943043}
   - component: {fileID: 941943044}
   m_Layer: 7
-  m_Name: Driftwood
+  m_Name: node_Driftwood
   m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4872,12 +4872,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemPrefabs:
+  - {fileID: 1377024598281373172, guid: 238b979b3d496e84bbf80493c335ad20, type: 3}
   - {fileID: 6168536886686802060, guid: e4d5ad35d50095844af75ebbe6e21d76, type: 3}
-  - {fileID: 459871703104435304, guid: a1ca82e184360294d9cf861f58ff0ee2, type: 3}
-  - {fileID: 4602713722304676980, guid: a4e93a2ac38c7dd4b9a595842e46ba63, type: 3}
-  - {fileID: 1478360869261646978, guid: 23a68ec0c2bc287479fd9d44228ddbc3, type: 3}
-  - {fileID: 5371151852980298888, guid: 8348f3e586f3b2d40b39eac5f8255ae2, type: 3}
-  - {fileID: 1573298627077628865, guid: 450e9e22cb792264ba66d152ca3d680f, type: 3}
   spawnArea: {fileID: 6467865225669960456}
   itemCount: 25
   minDistance: 2
@@ -5487,7 +5483,7 @@ GameObject:
   - component: {fileID: 1148532398}
   - component: {fileID: 1148532399}
   m_Layer: 7
-  m_Name: Scrap
+  m_Name: node_Scrap
   m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7029,7 +7025,7 @@ GameObject:
   - component: {fileID: 1536441872}
   - component: {fileID: 1536441873}
   m_Layer: 7
-  m_Name: Concrete
+  m_Name: node_Concrete
   m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9454,7 +9450,7 @@ GameObject:
   - component: {fileID: 2141873984}
   - component: {fileID: 2141873985}
   m_Layer: 7
-  m_Name: Dirt
+  m_Name: node_Dirt
   m_TagString: Draggable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

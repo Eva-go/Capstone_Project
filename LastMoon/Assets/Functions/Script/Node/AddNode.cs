@@ -26,7 +26,7 @@ public class AddNode : MonoBehaviour
     private bool nodeck2 = false;
 
 
-    private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap"};
+    private string[] nodeName = { "node_Dirt", "node_Concrete", "node_Driftwood", "node_Sand", "node_Planks", "node_Scrap" };
     private int nodeAdd = 0;
     private void Start()
     {

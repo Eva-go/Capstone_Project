@@ -17,6 +17,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Text m_text_CurrentPlayerCount; // 로딩 UI 중에서 현재 인원 수를 나타냄.
     public Button mbutton_Start;
 
+    
+    private static int PlayerID = -1; //플레이어 번호
+
+
+
     // 게임 시간
     private const byte StartTimeEventCode = 1;
 
@@ -104,9 +109,22 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+
+        int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
+        Player[] sortedPlayers = PhotonNetwork.PlayerList;
+
+        for (int i = 0; i < sortedPlayers.Length; i += 1)
+        {
+            if (sortedPlayers[i].ActorNumber == actorNumber)
+            {
+                PlayerID = i;
+                break;
+            }
+        }
+       
         print("방 참가 완료.");
 
-        Debug.Log($"{PhotonNetwork.LocalPlayer.NickName}은 인원수 {PhotonNetwork.CurrentRoom.MaxPlayers} 매칭 기다리는 중.");
+        Debug.Log($"{PhotonNetwork.LocalPlayer.NickName}은 인원수 {PhotonNetwork.CurrentRoom.MaxPlayers} 매칭 기다리는 중. "+PlayerID+"플레이어 번호");
         UpdatePlayerCounts();
 
         m_panel_Loading.SetActive(true);
