@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
-
+using ExitGames.Client.Photon;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
+
 public class GameValue : MonoBehaviour
 {
     private NetworkManager networkManager;
@@ -13,14 +15,16 @@ public class GameValue : MonoBehaviour
     public static bool inside = false;
 
     public static bool LocalPlayer=false;
-    static public int seed1;
-    static public int seed2;
-    static public int setMaxtime;
-    static public string nickNumae =null;
-    static public int Money_total=0;
+    public static int seed1;
+    public static int seed2;
+    public static int setMaxtime;
+    public static string nickNumae =null;
+    public static int Money_total=0;
     public static Text money;
-    static public int Round = 0;
-    static public bool RoundEnd=false;
+    public static int[] PlayerID_money;
+
+    public static int Round = 0;
+    public static bool RoundEnd=false;
 
     public static int Axe = 0;
     public static int Pickaxe = 0;
@@ -56,28 +60,46 @@ public class GameValue : MonoBehaviour
         Debug.Log("¾ÈÂÊ :" + insideUser + " MAX : " + MaxUser);
     }
 
-    static public void setMoney()
+    public static void setPlayerIDMoney()
+    {
+        for(int i=0; i< MaxUser;i++)
+        {
+            PlayerID_money[i] = 0;
+        }
+    }
+
+    public static void getPlayerIDMoney()
+    {
+        int i = NetworkManager.PlayerID;
+        PlayerID_money[i] = Money_total;
+        for(int n=0; i<PhotonNetwork.PlayerList.Length; n++)
+        {
+            
+        }
+    }
+
+    public static void setMoney()
     {
         money = GameObject.Find("Money_Text").GetComponent<Text>();
         SaveMoney(Money_total);
     }
-    static public void SaveMoney(int saveMoney)
+    public static void SaveMoney(int saveMoney)
     {
         Money_total = saveMoney;
         money.text = Money_total.ToString();
     }
-    static public void GetMomey(int getMomey)
+    public static void GetMomey(int getMomey)
     {
         Money_total = getMomey + Money_total;
         money.text = Money_total.ToString();
     }
 
-    static public void GetNode(string nodeName)
+    public static void GetNode(string nodeName)
     {
         NodeName = nodeName;
     }
 
-    static public void UseMoney(int useMoney)
+    public static void UseMoney(int useMoney)
     {
         Money_total -= useMoney;
     }

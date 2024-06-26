@@ -69,7 +69,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); // 드롭다운에서 값 얻어오기.
         maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
         GameValue.MaxUser = maxPlayers;
+        GameValue.setPlayerIDMoney();
         RoomOptions roomOptions = new RoomOptions();
+
         roomOptions.MaxPlayers = maxPlayers; // 인원 지정.
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }; // 게임 시간 지정.
         roomOptions.CustomRoomPropertiesForLobby = new string[] { "maxTime" }; // 여기에 키 값을 등록해야, 필터링이 가능하다.
