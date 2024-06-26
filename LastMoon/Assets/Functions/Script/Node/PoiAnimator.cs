@@ -20,6 +20,7 @@ public class PoiAnimator : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_PoiSet(bool ani)
     {
+        Debug.Log("Ani: " + ani);
         if (ani)
         {
             animator.SetBool("isActvie", ani);
