@@ -43,8 +43,9 @@ public class PlayerController : MonoBehaviour
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-        //GameValue.setMoney();
+        
         PreViewCam = false;
+        GameValue.setMoney();
     }
 
     void Update()

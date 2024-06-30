@@ -7,8 +7,9 @@ using ExitGames.Client.Photon;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
-public class GameValue : MonoBehaviour
+public class GameValue : MonoBehaviourPunCallbacks
 {
+    //싱글톤 디자인 패턴 사용인가?
     private NetworkManager networkManager;
     public static int MaxUser = 0;
     public static int insideUser = 0;
@@ -18,10 +19,11 @@ public class GameValue : MonoBehaviour
     public static int seed1;
     public static int seed2;
     public static int setMaxtime;
-    public static string nickNumae =null;
+    public static string nickName =null;
     public static int Money_total=0;
     public static Text money;
-    public static int[] PlayerID_money;
+    public static int[] PlayerID_money =null;
+    public static string[] PlayerName =null;
 
     public static int Round = 0;
     public static bool RoundEnd=false;
@@ -46,9 +48,11 @@ public class GameValue : MonoBehaviour
     {
         networkManager = FindObjectOfType<NetworkManager>();
         DontDestroyOnLoad(gameObject);
-        MaxUser = 0;
+        MaxUser = 8;
         insideUser = 0;
         inside = false;
+        PlayerID_money = new int[MaxUser];
+        PlayerName = new string[MaxUser];
     }
 
 
@@ -57,25 +61,26 @@ public class GameValue : MonoBehaviour
         Axe = MoneyController.Bt_Axe;
         Pickaxe = MoneyController.Bt_Pickaxe;
         Shovel = MoneyController.Bt_Shovel;
-        Debug.Log("안쪽 :" + insideUser + " MAX : " + MaxUser);
     }
-
-    public static void setPlayerIDMoney()
+    public void RankingUpdate()
     {
-        for(int i=0; i< MaxUser;i++)
+        if (photonView != null)
         {
-            PlayerID_money[i] = 0;
+            photonView.RPC("RPC_RankingMoney", RpcTarget.AllBuffered, Money_total, nickName);
+        }
+        else
+        {
+            Debug.LogError("PhotonView가 null입니다.");
         }
     }
 
-    public static void getPlayerIDMoney()
+    [PunRPC]
+    void RPC_RankingMoney(int Money,string name)
     {
         int i = NetworkManager.PlayerID;
-        PlayerID_money[i] = Money_total;
-        for(int n=0; i<PhotonNetwork.PlayerList.Length; n++)
-        {
-            
-        }
+        Debug.Log("랭킹" + i+"돈"+ Money+"이름"+name);
+        PlayerID_money[i] = Money;
+        PlayerName[i] = name;
     }
 
     public static void setMoney()
@@ -105,7 +110,7 @@ public class GameValue : MonoBehaviour
     }
     public void NickName(string name)
     {
-        nickNumae = name;
+        nickName = name;
     }
     public void seed(int a, int b)
     {

@@ -32,7 +32,7 @@ public class CanvasController : MonoBehaviour
         poi.SetActive(false);
         inventory.SetActive(false);
         Tab.SetActive(false);
-        money.SetActive(false);
+        money.SetActive(true);
 
 
         inventoryTransform = inventory.transform;

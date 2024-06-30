@@ -69,7 +69,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); // 드롭다운에서 값 얻어오기.
         maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
         GameValue.MaxUser = maxPlayers;
-        GameValue.setPlayerIDMoney();
+        
         RoomOptions roomOptions = new RoomOptions();
 
         roomOptions.MaxPlayers = maxPlayers; // 인원 지정.
@@ -81,7 +81,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             expectedCustomRoomProperties: new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }, expectedMaxPlayers: maxPlayers, // 참가할 때의 기준.
             roomOptions: roomOptions // 생성할 때의 기준.
         );
-
     }
 
     public void CancelMatching()
@@ -130,7 +129,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         UpdatePlayerCounts();
 
         m_panel_Loading.SetActive(true);
-
         if (PhotonNetwork.IsMasterClient)
         {
             // 마스터 클라이언트에서만 시드 값을 생성합니다.

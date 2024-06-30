@@ -87,6 +87,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
             else
             {
                 GameValue.RoundEnd = true;
+
                 if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.LoadLevel("GameEnding");
             }

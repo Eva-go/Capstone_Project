@@ -34,7 +34,7 @@ public class RespawnManager : MonoBehaviour
         GameObject player = PhotonNetwork.Instantiate("Player", spawnPoints[idx].position, spawnPoints[idx].rotation, 0);
         if (player != null)
         {
-            player.name = GameValue.nickNumae;
+            player.name = GameValue.nickName;
             Transform OtherPlayer = player.transform.Find("OtherPlayer");
             Transform LocalPlayer = player.transform.Find("LocalPlayer");
             Transform Tool = player.transform.Find("Player001");
