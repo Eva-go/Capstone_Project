@@ -27,17 +27,20 @@ public class RaningUpdate : MonoBehaviour
             
         }
         value.GetComponent<GameValue>().RankingUpdate();
-        for(int i=0; i<GameValue.MaxUser;i++)
+       
+        for (int i=0; i<GameValue.MaxUser;i++)
         {
             NickName[i].text = GameValue.PlayerName[i].ToString();
             TotalMoney[i].text = GameValue.PlayerID_money[i].ToString();
         }
+
+       
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

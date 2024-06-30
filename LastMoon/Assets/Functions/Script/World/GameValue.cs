@@ -44,6 +44,8 @@ public class GameValue : MonoBehaviourPunCallbacks
 
     public static float WaveTimer;
 
+    public int userNumber;
+
     private void Awake()
     {
         networkManager = FindObjectOfType<NetworkManager>();
@@ -64,6 +66,7 @@ public class GameValue : MonoBehaviourPunCallbacks
     }
     public void RankingUpdate()
     {
+        userNumber = NetworkManager.PlayerID;
         if (photonView != null)
         {
             photonView.RPC("RPC_RankingMoney", RpcTarget.AllBuffered, Money_total, nickName);
@@ -77,10 +80,8 @@ public class GameValue : MonoBehaviourPunCallbacks
     [PunRPC]
     void RPC_RankingMoney(int Money,string name)
     {
-        int i = NetworkManager.PlayerID;
-        Debug.Log("∑©≈∑" + i+"µ∑"+ Money+"¿Ã∏ß"+name);
-        PlayerID_money[i] = Money;
-        PlayerName[i] = name;
+        PlayerID_money[userNumber] = Money;
+        PlayerName[userNumber] = name;
     }
 
     public static void setMoney()
