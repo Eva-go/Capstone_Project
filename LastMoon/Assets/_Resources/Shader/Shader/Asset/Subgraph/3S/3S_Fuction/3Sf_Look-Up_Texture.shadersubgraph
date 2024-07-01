@@ -17,6 +17,9 @@
         },
         {
             "m_Id": "125e1a9210774d91b0c3f91bdbcf3059"
+        },
+        {
+            "m_Id": "9ac414e542264b85a9719fe7447a3d7d"
         }
     ],
     "m_Keywords": [],
@@ -2266,10 +2269,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 1522.0,
-            "y": -294.9999694824219,
-            "width": 118.0,
-            "height": 34.0
+            "x": 1248.800048828125,
+            "y": -252.80003356933595,
+            "width": 118.39990234375,
+            "height": 33.60002136230469
         }
     },
     "m_Slots": [
@@ -3402,6 +3405,34 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "9ac414e542264b85a9719fe7447a3d7d",
+    "m_Guid": {
+        "m_GuidSerialized": "1ac6f7c9-7cd5-487d-8cf8-2fb412b3b3bf"
+    },
+    "m_Name": "Specular",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Specular",
+    "m_DefaultReferenceName": "_Specular",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.0,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "a3df989b52354eda8c5b3ba2fa67dc08",
@@ -4214,6 +4245,9 @@
         },
         {
             "m_Id": "0180029e879544398fa919ae9f646bf0"
+        },
+        {
+            "m_Id": "9ac414e542264b85a9719fe7447a3d7d"
         }
     ]
 }
@@ -4655,8 +4689,8 @@
     "m_ObjectId": "ef720ff532e1453ba4835fc3d904e7b6",
     "m_Title": "Look-Up Texture",
     "m_Position": {
-        "x": 1657.0,
-        "y": -711.0
+        "x": 1656.7998046875,
+        "y": -712.0
     }
 }
 
