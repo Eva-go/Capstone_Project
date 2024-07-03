@@ -29,7 +29,7 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
         player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0); // 플레이어 인스턴스화
         if (player != null)
         {
-            player.name = GameValue.nickName;
+            player.name = PhotonNetwork.LocalPlayer.NickName;
             Transform OtherPlayer = player.transform.Find("OtherPlayer");
             Transform LocalPlayer = player.transform.Find("LocalPlayer");
             Transform Tool = player.transform.Find("Player001");

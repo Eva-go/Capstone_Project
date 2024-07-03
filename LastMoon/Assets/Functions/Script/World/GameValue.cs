@@ -22,8 +22,6 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static string nickName =null;
     public static int Money_total=0;
     public static Text money;
-    public static int[] PlayerID_money =null;
-    public static string[] PlayerName =null;
 
     public static int Round = 0;
     public static bool RoundEnd=false;
@@ -46,6 +44,7 @@ public class GameValue : MonoBehaviourPunCallbacks
 
     public int userNumber;
 
+
     private void Awake()
     {
         networkManager = FindObjectOfType<NetworkManager>();
@@ -53,8 +52,6 @@ public class GameValue : MonoBehaviourPunCallbacks
         MaxUser = 8;
         insideUser = 0;
         inside = false;
-        PlayerID_money = new int[MaxUser];
-        PlayerName = new string[MaxUser];
     }
 
 
@@ -63,25 +60,6 @@ public class GameValue : MonoBehaviourPunCallbacks
         Axe = MoneyController.Bt_Axe;
         Pickaxe = MoneyController.Bt_Pickaxe;
         Shovel = MoneyController.Bt_Shovel;
-    }
-    public void RankingUpdate()
-    {
-        userNumber = NetworkManager.PlayerID;
-        if (photonView != null)
-        {
-            photonView.RPC("RPC_RankingMoney", RpcTarget.AllBuffered, Money_total, nickName);
-        }
-        else
-        {
-            Debug.LogError("PhotonView가 null입니다.");
-        }
-    }
-
-    [PunRPC]
-    void RPC_RankingMoney(int Money,string name)
-    {
-        PlayerID_money[userNumber] = Money;
-        PlayerName[userNumber] = name;
     }
 
     public static void setMoney()

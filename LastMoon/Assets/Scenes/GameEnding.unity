@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 142457577}
   - component: {fileID: 142457576}
+  - component: {fileID: 142457579}
   - component: {fileID: 142457578}
   m_Layer: 0
   m_Name: RaningUpdate
@@ -153,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a3dd456d487c684ba5f3151fac93190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Raning:
+  Ranking:
   - {fileID: 792500898}
   - {fileID: 1429568774}
   - {fileID: 856224325}
@@ -210,13 +211,28 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 0
+  Synchronization: 2
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 142457579}
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &142457579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142457575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa0a169016c32c14f8516e10aac761ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: []
+  score: 
 --- !u!1 &163105343
 GameObject:
   m_ObjectHideFlags: 0

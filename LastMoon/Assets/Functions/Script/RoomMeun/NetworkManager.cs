@@ -17,10 +17,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Text m_text_CurrentPlayerCount; // 로딩 UI 중에서 현재 인원 수를 나타냄.
     public Button mbutton_Start;
 
-    
+
+    Player[] sortedPlayers;
     public static int PlayerID = -1; //플레이어 번호
-
-
 
     // 게임 시간
     private const byte StartTimeEventCode = 1;
@@ -33,6 +32,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private bool LocalClient = true;
 
     private int maxTime;
+
+
+
     void Awake()
     {
         //DontDestroyOnLoad(gameObject);
@@ -112,7 +114,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
 
         int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-        Player[] sortedPlayers = PhotonNetwork.PlayerList;
+        sortedPlayers = PhotonNetwork.PlayerList;
 
         for (int i = 0; i < sortedPlayers.Length; i += 1)
         {
@@ -122,7 +124,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 break;
             }
         }
-       
+
         print("방 참가 완료.");
 
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName}은 인원수 {PhotonNetwork.CurrentRoom.MaxPlayers} 매칭 기다리는 중. "+PlayerID+"플레이어 번호");
@@ -153,6 +155,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             gameValue.seed(seed1, seed2);
             LocalClient = false;
         }
+
 
     }
     [PunRPC]
