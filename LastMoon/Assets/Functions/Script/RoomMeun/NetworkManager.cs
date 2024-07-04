@@ -12,6 +12,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Dropdown m_dropdown_RoomMaxPlayers; // 최대 인원 몇 명까지 할지.
     public Dropdown m_dropdown_MaxTime; // 게임 시간은 몇 초로 정할 건지.
     public Button m_button_RadomMatching;
+    public Dropdown dropdown_MaxRound;
+
 
     public GameObject m_panel_Loading; // 로딩 UI.
     public Text m_text_CurrentPlayerCount; // 로딩 UI 중에서 현재 인원 수를 나타냄.
@@ -32,7 +34,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private bool LocalClient = true;
 
     private int maxTime;
-
 
 
     void Awake()
@@ -69,7 +70,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         gameValue.NickName(nick);
         // UI에서 값 얻어오기.
         byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); // 드롭다운에서 값 얻어오기.
+        byte maxRound = byte.Parse(dropdown_MaxRound.options[dropdown_MaxRound.value].text);
         maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
+
+        GameValue.MaxRound = maxRound;
         GameValue.MaxUser = maxPlayers;
         
         RoomOptions roomOptions = new RoomOptions();

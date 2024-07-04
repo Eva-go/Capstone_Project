@@ -23,7 +23,8 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static int Money_total=0;
     public static Text money;
 
-    public static int Round = 0;
+    public static int Round = 1;
+    public static int MaxRound = 0;
     public static bool RoundEnd=false;
 
     public static int Axe = 0;
@@ -43,6 +44,8 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static float WaveTimer;
 
     public int userNumber;
+
+
 
 
     private void Awake()
