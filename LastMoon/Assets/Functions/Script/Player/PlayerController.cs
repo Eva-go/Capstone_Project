@@ -13,7 +13,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
     [SerializeField] public Camera theCamera;
+    [SerializeField] private Camera toolCamera;
     private Rigidbody myRigid;
+
+    //Jump and Crouch
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float crouchHeight = 0.5f;
+    private bool isGrounded;
+    private bool isCrouching;
 
     //ray
     private RaycastHit hitInfo;
@@ -34,11 +41,11 @@ public class PlayerController : MonoBehaviour
     public static bool insideActive;
     public static bool PreViewCam;
     public static bool Poi;
-    bool isRun = false;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        myRigid = GetComponent<Rigidbody>();
+        myRigid = this.GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
         // 초기 무기 장착
@@ -55,7 +62,7 @@ public class PlayerController : MonoBehaviour
         {
             cam.SetActive(true);
             Move();
-
+            Crouch();
             if (!Poi)
             {
                 CameraRotation();
@@ -126,41 +133,31 @@ public class PlayerController : MonoBehaviour
         Vector3 moveHorizontal;
         Vector3 moveVertical;
         Vector3 velocity;
-        isRun = false;
-        if (Input.GetKey(KeyCode.LeftShift))
+        moveDirX = Input.GetAxisRaw("Horizontal");
+        moveDirZ = Input.GetAxisRaw("Vertical");
+
+        moveHorizontal = transform.right * moveDirX;
+        moveVertical = transform.forward * moveDirZ;
+
+        velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+
+        myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+
+        if(isCrouching)
         {
-            moveDirX = Input.GetAxisRaw("Horizontal");
-            moveDirZ = Input.GetAxisRaw("Vertical");
-
-            moveHorizontal = transform.right * moveDirX;
-            moveVertical = transform.forward * moveDirZ;
-
-            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
-
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-
             if (velocity != Vector3.zero)
             {
-                animator.SetBool("isRun", true);
+                animator.SetBool("isCrouchWalk", true);
             }
             else
             {
-                animator.SetBool("isRun", false);
+                animator.SetBool("isCrouchWalk", false);
             }
-            isRun = true;
+           
         }
-        if(!isRun)
+        else
         {
-            moveDirX = Input.GetAxisRaw("Horizontal");
-            moveDirZ = Input.GetAxisRaw("Vertical");
-
-            moveHorizontal = transform.right * moveDirX;
-            moveVertical = transform.forward * moveDirZ;
-
-            velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
-
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-
+            animator.SetBool("isCrouchWalk", false);
             if (velocity != Vector3.zero)
             {
                 animator.SetBool("isMove", true);
@@ -169,8 +166,57 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetBool("isMove", false);
             }
-        }  
+        }
+        
     }
+
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            animator.SetTrigger("Jump");
+        }
+    }
+
+    private void Crouch()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            isCrouching = !isCrouching;
+
+            if (isCrouching)
+            {
+                //theCamera.transform.position = new Vector3(0, theCamera.transform.transform.position.y - 1, 0);
+                //toolCamera.transform.position = new Vector3(0, toolCamera.transform.transform.position.y - 1, 0);
+                walkSpeed /= 2;
+            }
+            else
+            {
+                //theCamera.transform.position = new Vector3(0, theCamera.transform.transform.position.y + 1, 0);
+                //toolCamera.transform.position = new Vector3(0, toolCamera.transform.transform.position.y + 1, 0);
+                walkSpeed *= 2;
+            }
+            animator.SetBool("isCrouch", isCrouching);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = false;
+        }
+    }
+
     private void CameraRotation()
     {
         float xRotation = Input.GetAxisRaw("Mouse Y");
@@ -179,6 +225,8 @@ public class PlayerController : MonoBehaviour
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+       
+        
     }
 
     private void CharacterRotation()
@@ -226,8 +274,16 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !Poi)
         {
-            animator.SetTrigger("Swing");
-            Localanimator.SetTrigger("Swing");
+            if (isCrouching)
+            {
+                animator.SetTrigger("Crouch_Swing");
+                Localanimator.SetTrigger("Crouch_Swing");
+            }
+            else
+            {
+                animator.SetTrigger("Swing");
+                Localanimator.SetTrigger("Swing");
+            }
         }
     }
 

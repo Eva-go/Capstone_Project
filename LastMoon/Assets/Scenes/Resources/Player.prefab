@@ -938,7 +938,10 @@ MonoBehaviour:
   runSpeed: 0
   lookSensitivity: 1
   cameraRotationLimit: 90
-  theCamera: {fileID: 8268691556345852432}
+  theCamera: {fileID: 2960148082690960981}
+  toolCamera: {fileID: 8268691556345852432}
+  jumpForce: 5
+  crouchHeight: 0.5
   animator: {fileID: 7613318284708378742}
   Localanimator: {fileID: 7175914839842542247}
   weapons:
@@ -992,9 +995,18 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 1
     Name: Hit
-  - Type: 3
+  - Type: 4
     SynchronizeType: 0
-    Name: MoveSpeed
+    Name: isRun
+  - Type: 4
+    SynchronizeType: 0
+    Name: isCrouch
+  - Type: 9
+    SynchronizeType: 0
+    Name: Crouch_Swing
+  - Type: 4
+    SynchronizeType: 0
+    Name: isCrouchWalk
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
