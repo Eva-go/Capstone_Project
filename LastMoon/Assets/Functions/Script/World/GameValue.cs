@@ -7,8 +7,9 @@ using ExitGames.Client.Photon;
 using UnityEngine.SceneManagement;
 using Unity.VisualScripting;
 
-public class GameValue : MonoBehaviour
+public class GameValue : MonoBehaviourPunCallbacks
 {
+    //싱글톤 디자인 패턴 사용인가?
     private NetworkManager networkManager;
     public static int MaxUser = 0;
     public static int insideUser = 0;
@@ -18,12 +19,12 @@ public class GameValue : MonoBehaviour
     public static int seed1;
     public static int seed2;
     public static int setMaxtime;
-    public static string nickNumae =null;
+    public static string nickName =null;
     public static int Money_total=0;
     public static Text money;
-    public static int[] PlayerID_money;
 
-    public static int Round = 0;
+    public static int Round = 1;
+    public static int MaxRound = 0;
     public static bool RoundEnd=false;
 
     public static int Axe = 0;
@@ -42,11 +43,16 @@ public class GameValue : MonoBehaviour
 
     public static float WaveTimer;
 
+    public int userNumber;
+
+
+
+
     private void Awake()
     {
         networkManager = FindObjectOfType<NetworkManager>();
         DontDestroyOnLoad(gameObject);
-        MaxUser = 0;
+        MaxUser = 8;
         insideUser = 0;
         inside = false;
     }
@@ -57,25 +63,6 @@ public class GameValue : MonoBehaviour
         Axe = MoneyController.Bt_Axe;
         Pickaxe = MoneyController.Bt_Pickaxe;
         Shovel = MoneyController.Bt_Shovel;
-        Debug.Log("안쪽 :" + insideUser + " MAX : " + MaxUser);
-    }
-
-    public static void setPlayerIDMoney()
-    {
-        for(int i=0; i< MaxUser;i++)
-        {
-            PlayerID_money[i] = 0;
-        }
-    }
-
-    public static void getPlayerIDMoney()
-    {
-        int i = NetworkManager.PlayerID;
-        PlayerID_money[i] = Money_total;
-        for(int n=0; i<PhotonNetwork.PlayerList.Length; n++)
-        {
-            
-        }
     }
 
     public static void setMoney()
@@ -105,7 +92,7 @@ public class GameValue : MonoBehaviour
     }
     public void NickName(string name)
     {
-        nickNumae = name;
+        nickName = name;
     }
     public void seed(int a, int b)
     {

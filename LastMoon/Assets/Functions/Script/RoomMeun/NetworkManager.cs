@@ -12,15 +12,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Dropdown m_dropdown_RoomMaxPlayers; // 최대 인원 몇 명까지 할지.
     public Dropdown m_dropdown_MaxTime; // 게임 시간은 몇 초로 정할 건지.
     public Button m_button_RadomMatching;
+    public Dropdown dropdown_MaxRound;
+
 
     public GameObject m_panel_Loading; // 로딩 UI.
     public Text m_text_CurrentPlayerCount; // 로딩 UI 중에서 현재 인원 수를 나타냄.
     public Button mbutton_Start;
 
-    
+
+    Player[] sortedPlayers;
     public static int PlayerID = -1; //플레이어 번호
-
-
 
     // 게임 시간
     private const byte StartTimeEventCode = 1;
@@ -33,6 +34,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     private bool LocalClient = true;
 
     private int maxTime;
+
+
     void Awake()
     {
         //DontDestroyOnLoad(gameObject);
@@ -67,9 +70,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         gameValue.NickName(nick);
         // UI에서 값 얻어오기.
         byte maxPlayers = byte.Parse(m_dropdown_RoomMaxPlayers.options[m_dropdown_RoomMaxPlayers.value].text); // 드롭다운에서 값 얻어오기.
+        byte maxRound = byte.Parse(dropdown_MaxRound.options[dropdown_MaxRound.value].text);
         maxTime = int.Parse(m_dropdown_MaxTime.options[m_dropdown_MaxTime.value].text);
+
+        GameValue.MaxRound = maxRound;
         GameValue.MaxUser = maxPlayers;
-        GameValue.setPlayerIDMoney();
+        
         RoomOptions roomOptions = new RoomOptions();
 
         roomOptions.MaxPlayers = maxPlayers; // 인원 지정.
@@ -81,7 +87,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             expectedCustomRoomProperties: new ExitGames.Client.Photon.Hashtable() { { "maxTime", maxTime } }, expectedMaxPlayers: maxPlayers, // 참가할 때의 기준.
             roomOptions: roomOptions // 생성할 때의 기준.
         );
-
     }
 
     public void CancelMatching()
@@ -113,7 +118,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
 
         int actorNumber = PhotonNetwork.LocalPlayer.ActorNumber;
-        Player[] sortedPlayers = PhotonNetwork.PlayerList;
+        sortedPlayers = PhotonNetwork.PlayerList;
 
         for (int i = 0; i < sortedPlayers.Length; i += 1)
         {
@@ -123,14 +128,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 break;
             }
         }
-       
+
         print("방 참가 완료.");
 
         Debug.Log($"{PhotonNetwork.LocalPlayer.NickName}은 인원수 {PhotonNetwork.CurrentRoom.MaxPlayers} 매칭 기다리는 중. "+PlayerID+"플레이어 번호");
         UpdatePlayerCounts();
 
         m_panel_Loading.SetActive(true);
-
         if (PhotonNetwork.IsMasterClient)
         {
             // 마스터 클라이언트에서만 시드 값을 생성합니다.
@@ -155,6 +159,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             gameValue.seed(seed1, seed2);
             LocalClient = false;
         }
+
 
     }
     [PunRPC]

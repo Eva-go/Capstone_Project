@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public static float Hp = 100;
     private GameObject cam;
     [SerializeField] private float walkSpeed;
+    [SerializeField] private float runSpeed;
     [SerializeField] private float lookSensitivity;
     [SerializeField] private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public static bool insideActive;
     public static bool PreViewCam;
     public static bool Poi;
-
+    bool isRun = false;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -43,8 +44,9 @@ public class PlayerController : MonoBehaviour
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-        //GameValue.setMoney();
+        
         PreViewCam = false;
+        GameValue.setMoney();
     }
 
     void Update()
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
         {
             cam.SetActive(true);
             Move();
+
             if (!Poi)
             {
                 CameraRotation();
@@ -118,26 +121,56 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float moveDirX = Input.GetAxisRaw("Horizontal");
-        float moveDirZ = Input.GetAxisRaw("Vertical");
-
-        Vector3 moveHorizontal = transform.right * moveDirX;
-        Vector3 moveVertical = transform.forward * moveDirZ;
-
-        Vector3 velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
-
-        myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-
-        if (velocity != Vector3.zero)
+        float moveDirX;
+        float moveDirZ;
+        Vector3 moveHorizontal;
+        Vector3 moveVertical;
+        Vector3 velocity;
+        isRun = false;
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            animator.SetBool("isMove", true);
+            moveDirX = Input.GetAxisRaw("Horizontal");
+            moveDirZ = Input.GetAxisRaw("Vertical");
+
+            moveHorizontal = transform.right * moveDirX;
+            moveVertical = transform.forward * moveDirZ;
+
+            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+
+            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+
+            if (velocity != Vector3.zero)
+            {
+                animator.SetBool("isRun", true);
+            }
+            else
+            {
+                animator.SetBool("isRun", false);
+            }
+            isRun = true;
         }
-        else
+        if(!isRun)
         {
-            animator.SetBool("isMove", false);
-        }
+            moveDirX = Input.GetAxisRaw("Horizontal");
+            moveDirZ = Input.GetAxisRaw("Vertical");
+
+            moveHorizontal = transform.right * moveDirX;
+            moveVertical = transform.forward * moveDirZ;
+
+            velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+
+            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+
+            if (velocity != Vector3.zero)
+            {
+                animator.SetBool("isMove", true);
+            }
+            else
+            {
+                animator.SetBool("isMove", false);
+            }
+        }  
     }
-
     private void CameraRotation()
     {
         float xRotation = Input.GetAxisRaw("Mouse Y");

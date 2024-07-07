@@ -16,11 +16,13 @@ public class GameTimer : MonoBehaviourPunCallbacks
     void Start()
     {
         GameValue.RoundEnd = false;
-        totalTime = GameValue.setMaxtime * 60;
+        totalTime = 0.5f * (GameValue.Round - 1)*60f / GameValue.MaxRound*60f + (GameValue.setMaxtime * 60f);
         currentTime = totalTime;
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
         PhotonNetwork.AutomaticallySyncScene = true;
         GameValue.WaveTimer = currentTime;
+
+        Debug.Log("토탈 타이머: " + totalTime+"현재 라운드: "+GameValue.Round+"최대 라운드: "+GameValue.MaxRound+"세팅 시간: "+GameValue.setMaxtime);
     }
 
     void Update()
@@ -74,10 +76,9 @@ public class GameTimer : MonoBehaviourPunCallbacks
     {
         if (currentTime <= 0 && SceneManager.GetActiveScene().name == "Map" && !GameValue.RoundEnd)
         {
-            if (GameValue.Round < 3)
+            if (GameValue.Round < GameValue.MaxRound)
             {
                 GameValue.Round += 1;
-                Debug.Log("라운드" + GameValue.Round);
                 GameValue.RoundEnd = true;
                 if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.LoadLevel("Shop");
@@ -87,6 +88,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
             else
             {
                 GameValue.RoundEnd = true;
+
                 if (PhotonNetwork.IsMasterClient)
                     PhotonNetwork.LoadLevel("GameEnding");
             }
