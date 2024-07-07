@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Clay
-  m_Shader: {fileID: -6465566751694194690, guid: 0a85aeb23dc288240b7cd63863d04a9c, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 8e12386977c632648b6fa24405b2fc40, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -70,6 +70,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _LUT_Mask:
+        m_Texture: {fileID: 2800000, guid: bdf44790a227b8a49bc81d36f3fa7901, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
         m_Texture: {fileID: 2800000, guid: 0b32f7a99ce7c8748ba530c81af1e7a0, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -100,6 +104,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Sub_LUTA:
+        m_Texture: {fileID: 18700000, guid: cdbb4ad831287e541953cf5c5fecbc3e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Sub_LUT_1:
@@ -158,7 +166,8 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Strength: 1
+    - _Ambient_Strength: 0
+    - _Bias: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1

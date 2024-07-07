@@ -11,6 +11,9 @@
         },
         {
             "m_Id": "46590ea977754cfc95ecac0640456c67"
+        },
+        {
+            "m_Id": "392fa10d2435471e9fd5a86410741cbe"
         }
     ],
     "m_Keywords": [],
@@ -92,6 +95,9 @@
         },
         {
             "m_Id": "81216cfa669949aeb294c78553560064"
+        },
+        {
+            "m_Id": "f13e859fa28948afa13a66832320720b"
         }
     ],
     "m_GroupDatas": [
@@ -416,6 +422,20 @@
                     "m_Id": "627f2ccaa79e4f05909d1a8a4ad307b8"
                 },
                 "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "f13e859fa28948afa13a66832320720b"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "627f2ccaa79e4f05909d1a8a4ad307b8"
+                },
+                "m_SlotId": 3
             }
         },
         {
@@ -1213,6 +1233,33 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateShaderProperty",
+    "m_ObjectId": "392fa10d2435471e9fd5a86410741cbe",
+    "m_Guid": {
+        "m_GuidSerialized": "b649a2df-9e04-43a9-a47b-025dd6697da3"
+    },
+    "m_Name": "TLU SamplerState",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "TLU SamplerState",
+    "m_DefaultReferenceName": "TLU_SamplerState",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": {
+        "m_filter": 0,
+        "m_wrap": 0,
+        "m_anisotropic": 0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "3ddb28d9cf404575af87aaec84554ce6",
@@ -1650,7 +1697,7 @@
     },
     "m_Name": "Sample Texture 2D",
     "m_DrawState": {
-        "m_Expanded": true,
+        "m_Expanded": false,
         "m_Position": {
             "serializedVersion": "2",
             "x": -2808.999755859375,
@@ -1689,7 +1736,7 @@
         "tex2d"
     ],
     "m_Precision": 0,
-    "m_PreviewExpanded": true,
+    "m_PreviewExpanded": false,
     "m_DismissedVersion": 0,
     "m_PreviewMode": 0,
     "m_CustomColors": {
@@ -1949,10 +1996,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -2957.999755859375,
-            "y": 98.00003051757813,
-            "width": 133.0,
-            "height": 33.99995422363281
+            "x": -2958.400146484375,
+            "y": 72.0,
+            "width": 132.800048828125,
+            "height": 33.600013732910159
         }
     },
     "m_Slots": [
@@ -2070,6 +2117,19 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateMaterialSlot",
+    "m_ObjectId": "87c82fc36d704d999b9bf152d2ad9105",
+    "m_Id": 0,
+    "m_DisplayName": "TLU SamplerState",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_BareResource": false
 }
 
 {
@@ -3027,6 +3087,9 @@
         },
         {
             "m_Id": "46590ea977754cfc95ecac0640456c67"
+        },
+        {
+            "m_Id": "392fa10d2435471e9fd5a86410741cbe"
         }
     ]
 }
@@ -3333,6 +3396,42 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "f13e859fa28948afa13a66832320720b",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -3176.800048828125,
+            "y": 98.39999389648438,
+            "width": 179.199951171875,
+            "height": 33.600006103515628
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "87c82fc36d704d999b9bf152d2ad9105"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "392fa10d2435471e9fd5a86410741cbe"
+    }
 }
 
 {

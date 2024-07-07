@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Wood
-  m_Shader: {fileID: -6465566751694194690, guid: 0a85aeb23dc288240b7cd63863d04a9c, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 8e12386977c632648b6fa24405b2fc40, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -66,6 +66,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: 8452496262051ba49952a72c21598a8c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HOST_Map_R:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LUT_Mask:
+        m_Texture: {fileID: 2800000, guid: 4c834f3c7b61bf145927c6f1862ad5be, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
         m_Texture: {fileID: 2800000, guid: 532f00312240ce24a9eab9bed20e3fc0, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -82,6 +90,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 281ddf56375dfc847a46271bb5abfdb0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Normal_Map_R:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -92,6 +104,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Sub_LUTA:
+        m_Texture: {fileID: 18700000, guid: e04b6844930fc454faa0df2a68b5017e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Sub_LUT_1:
@@ -126,6 +142,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4c834f3c7b61bf145927c6f1862ad5be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sub_LUT_Mask_R:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Sub_LUT_R:
         m_Texture: {fileID: 2800000, guid: 0491096cb5fffed429cd2f40e224f265, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -146,7 +166,8 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Strength: 1
+    - _Ambient_Strength: 0
+    - _Bias: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
