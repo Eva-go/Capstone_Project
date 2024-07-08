@@ -935,7 +935,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pv: {fileID: 0}
   walkSpeed: 10
-  runSpeed: 0
+  runSpeed: 40
   lookSensitivity: 1
   cameraRotationLimit: 90
   theCamera: {fileID: 2960148082690960981}
@@ -999,13 +999,13 @@ MonoBehaviour:
     SynchronizeType: 0
     Name: isRun
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: isCrouch
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Crouch_Swing
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: isCrouchWalk
   m_SynchronizeLayers:
   - SynchronizeType: 0

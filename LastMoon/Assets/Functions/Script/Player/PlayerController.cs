@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private float originalToolCameraY;
     private bool isGrounded;
     private bool isCrouching;
+    private bool isRunning;
 
     //ray
     private RaycastHit hitInfo;
@@ -69,6 +70,7 @@ public class PlayerController : MonoBehaviour
             cam.SetActive(true);
             Move();
             Crouch();
+            Run();
             if (!Poi)
             {
                 CameraRotation();
@@ -126,7 +128,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     private void OnDestroy()
     {
         Debug.Log("Player object destroyed.");
@@ -134,18 +135,20 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float moveDirX;
-        float moveDirZ;
-        Vector3 moveHorizontal;
-        Vector3 moveVertical;
+        float moveDirX = Input.GetAxisRaw("Horizontal");
+        float moveDirZ = Input.GetAxisRaw("Vertical");
+        Vector3 moveHorizontal = transform.right * moveDirX;
+        Vector3 moveVertical = transform.forward * moveDirZ;
         Vector3 velocity;
-        moveDirX = Input.GetAxisRaw("Horizontal");
-        moveDirZ = Input.GetAxisRaw("Vertical");
 
-        moveHorizontal = transform.right * moveDirX;
-        moveVertical = transform.forward * moveDirZ;
-
-        velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+        if (isRunning)
+        {
+            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+        }
+        else
+        {
+            velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+        }
 
         myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
 
@@ -159,21 +162,33 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetBool("isCrouchWalk", false);
             }
-
         }
         else
         {
             animator.SetBool("isCrouchWalk", false);
-            if (velocity != Vector3.zero)
+            if (isRunning)
             {
-                animator.SetBool("isMove", true);
+                if (velocity != Vector3.zero)
+                {
+                    animator.SetBool("isRun", true);
+                }
+                else
+                {
+                    animator.SetBool("isRun", false);
+                }
             }
             else
             {
-                animator.SetBool("isMove", false);
+                if (velocity != Vector3.zero)
+                {
+                    animator.SetBool("isMove", true);
+                }
+                else
+                {
+                    animator.SetBool("isMove", false);
+                }
             }
         }
-
     }
 
     private void Jump()
@@ -183,6 +198,11 @@ public class PlayerController : MonoBehaviour
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             animator.SetTrigger("Jump");
         }
+    }
+
+    private void Run()
+    {
+        isRunning = Input.GetKey(KeyCode.LeftShift);
     }
 
     private void Crouch()
