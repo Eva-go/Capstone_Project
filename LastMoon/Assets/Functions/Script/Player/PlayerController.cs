@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     //Jump and Crouch
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float crouchHeight = 0.5f;
+    private float originalCameraY;
+    private float originalToolCameraY;
     private bool isGrounded;
     private bool isCrouching;
 
@@ -51,9 +53,13 @@ public class PlayerController : MonoBehaviour
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-        
+
         PreViewCam = false;
         GameValue.setMoney();
+
+        // 카메라의 초기 y축 위치 저장
+        originalCameraY = theCamera.transform.localPosition.y;
+        originalToolCameraY = toolCamera.transform.localPosition.y;
     }
 
     void Update()
@@ -143,7 +149,7 @@ public class PlayerController : MonoBehaviour
 
         myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
 
-        if(isCrouching)
+        if (isCrouching)
         {
             if (velocity != Vector3.zero)
             {
@@ -153,7 +159,7 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetBool("isCrouchWalk", false);
             }
-           
+
         }
         else
         {
@@ -167,7 +173,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isMove", false);
             }
         }
-        
+
     }
 
     private void Jump()
@@ -187,15 +193,17 @@ public class PlayerController : MonoBehaviour
 
             if (isCrouching)
             {
-                //theCamera.transform.position = new Vector3(0, theCamera.transform.transform.position.y - 1, 0);
-                //toolCamera.transform.position = new Vector3(0, toolCamera.transform.transform.position.y - 1, 0);
                 walkSpeed /= 2;
+                // 카메라의 y축 위치를 crouchHeight 만큼 낮춤
+                theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY * crouchHeight, theCamera.transform.localPosition.z);
+                toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY * crouchHeight, toolCamera.transform.localPosition.z);
             }
             else
             {
-                //theCamera.transform.position = new Vector3(0, theCamera.transform.transform.position.y + 1, 0);
-                //toolCamera.transform.position = new Vector3(0, toolCamera.transform.transform.position.y + 1, 0);
                 walkSpeed *= 2;
+                // 카메라의 y축 위치를 원래대로 되돌림
+                theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY, theCamera.transform.localPosition.z);
+                toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY, toolCamera.transform.localPosition.z);
             }
             animator.SetBool("isCrouch", isCrouching);
         }
@@ -225,8 +233,7 @@ public class PlayerController : MonoBehaviour
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
-       
-        
+        toolCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
     private void CharacterRotation()
@@ -369,8 +376,6 @@ public class PlayerController : MonoBehaviour
         {
             pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
         }
-
-
 
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
