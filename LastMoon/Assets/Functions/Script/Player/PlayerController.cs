@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
+    private Vector3 velocity;
+
 
     //ray
     private RaycastHit hitInfo;
@@ -68,9 +70,13 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             cam.SetActive(true);
-            Move();
-            Crouch();
+            Debug.Log("¶Ù´ÂÁß?"+isRunning);
+            if(!isRunning)
+            {
+                Move();
+            }
             Run();
+            Crouch();
             if (!Poi)
             {
                 CameraRotation();
@@ -135,25 +141,20 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float moveDirX = Input.GetAxisRaw("Horizontal");
-        float moveDirZ = Input.GetAxisRaw("Vertical");
-        Vector3 moveHorizontal = transform.right * moveDirX;
-        Vector3 moveVertical = transform.forward * moveDirZ;
-        Vector3 velocity;
-
-        if (isRunning)
+        if(!isRunning)
         {
-            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
-        }
-        else
-        {
+            animator.SetBool("isRuns", false);
+            float moveDirX = Input.GetAxisRaw("Horizontal");
+            float moveDirZ = Input.GetAxisRaw("Vertical");
+            Vector3 moveHorizontal = transform.right * moveDirX;
+            Vector3 moveVertical = transform.forward * moveDirZ;
             velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
         }
-
-        myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
 
         if (isCrouching)
         {
+            animator.SetBool("isMove", false);
             if (velocity != Vector3.zero)
             {
                 animator.SetBool("isCrouchWalk", true);
@@ -166,18 +167,8 @@ public class PlayerController : MonoBehaviour
         else
         {
             animator.SetBool("isCrouchWalk", false);
-            if (isRunning)
-            {
-                if (velocity != Vector3.zero)
-                {
-                    animator.SetBool("isRun", true);
-                }
-                else
-                {
-                    animator.SetBool("isRun", false);
-                }
-            }
-            else
+
+            if(!isRunning)
             {
                 if (velocity != Vector3.zero)
                 {
@@ -187,6 +178,7 @@ public class PlayerController : MonoBehaviour
                 {
                     animator.SetBool("isMove", false);
                 }
+
             }
         }
     }
@@ -203,6 +195,29 @@ public class PlayerController : MonoBehaviour
     private void Run()
     {
         isRunning = Input.GetKey(KeyCode.LeftShift);
+        
+        if (isRunning)
+        {
+            animator.SetBool("isMove", false);
+            float moveDirX = Input.GetAxisRaw("Horizontal");
+            float moveDirZ = Input.GetAxisRaw("Vertical");
+            Vector3 moveHorizontal = transform.right * moveDirX;
+            Vector3 moveVertical = transform.forward * moveDirZ;
+            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+        }
+        if (isRunning)
+        {
+            if (velocity != Vector3.zero)
+            {
+                animator.SetBool("isRuns", true);
+            }
+            else
+            {
+                animator.SetBool("isRuns", false);
+            }
+
+        }
     }
 
     private void Crouch()
