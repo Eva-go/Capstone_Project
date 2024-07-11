@@ -13,7 +13,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
     [SerializeField] public Camera theCamera;
+    [SerializeField] private Camera toolCamera;
     private Rigidbody myRigid;
+
+    //Jump and Crouch
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float crouchHeight = 0.5f;
+    private float originalCameraY;
+    private float originalToolCameraY;
+    private bool isGrounded;
+    private bool isCrouching;
+    private bool isRunning;
+    private Vector3 velocity;
+
 
     //ray
     private RaycastHit hitInfo;
@@ -34,19 +46,23 @@ public class PlayerController : MonoBehaviour
     public static bool insideActive;
     public static bool PreViewCam;
     public static bool Poi;
-    bool isRun = false;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        myRigid = GetComponent<Rigidbody>();
+        myRigid = this.GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-        
+
         PreViewCam = false;
         GameValue.setMoney();
+
+        // 카메라의 초기 y축 위치 저장
+        originalCameraY = theCamera.transform.localPosition.y;
+        originalToolCameraY = toolCamera.transform.localPosition.y;
     }
 
     void Update()
@@ -54,8 +70,17 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             cam.SetActive(true);
-            Move();
-
+            if(!isRunning)
+            {
+                Move();
+                Crouch();
+            }
+            if(!isCrouching)
+            {
+                Run();
+            }
+               
+            
             if (!Poi)
             {
                 CameraRotation();
@@ -113,7 +138,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     private void OnDestroy()
     {
         Debug.Log("Player object destroyed.");
@@ -121,56 +145,126 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        float moveDirX;
-        float moveDirZ;
-        Vector3 moveHorizontal;
-        Vector3 moveVertical;
-        Vector3 velocity;
-        isRun = false;
-        if (Input.GetKey(KeyCode.LeftShift))
+        if(!isRunning)
         {
-            moveDirX = Input.GetAxisRaw("Horizontal");
-            moveDirZ = Input.GetAxisRaw("Vertical");
-
-            moveHorizontal = transform.right * moveDirX;
-            moveVertical = transform.forward * moveDirZ;
-
-            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
-
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-
-            if (velocity != Vector3.zero)
-            {
-                animator.SetBool("isRun", true);
-            }
-            else
-            {
-                animator.SetBool("isRun", false);
-            }
-            isRun = true;
-        }
-        if(!isRun)
-        {
-            moveDirX = Input.GetAxisRaw("Horizontal");
-            moveDirZ = Input.GetAxisRaw("Vertical");
-
-            moveHorizontal = transform.right * moveDirX;
-            moveVertical = transform.forward * moveDirZ;
-
+            animator.SetBool("isRuns", false);
+            float moveDirX = Input.GetAxisRaw("Horizontal");
+            float moveDirZ = Input.GetAxisRaw("Vertical");
+            Vector3 moveHorizontal = transform.right * moveDirX;
+            Vector3 moveVertical = transform.forward * moveDirZ;
             velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
-
             myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+        }
 
+        if (isCrouching&&!isRunning)
+        {
+            animator.SetBool("isMove", false);
             if (velocity != Vector3.zero)
             {
-                animator.SetBool("isMove", true);
+                animator.SetBool("isCrouchWalk", true);
             }
             else
             {
-                animator.SetBool("isMove", false);
+                animator.SetBool("isCrouchWalk", false);
             }
-        }  
+        }
+        else if(!isCrouching&&!isRunning)
+        {
+            animator.SetBool("isCrouchWalk", false);
+
+            if(!isRunning)
+            {
+                if (velocity != Vector3.zero)
+                {
+                    animator.SetBool("isMove", true);
+                }
+                else
+                {
+                    animator.SetBool("isMove", false);
+                }
+
+            }
+        }
     }
+
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            animator.SetTrigger("Jump");
+        }
+    }
+
+    private void Run()
+    {
+        if(!isCrouching)
+            isRunning = Input.GetKey(KeyCode.LeftShift);
+        
+        if (isRunning&&!isCrouching)
+        {
+            animator.SetBool("isMove", false);
+            float moveDirX = Input.GetAxisRaw("Horizontal");
+            float moveDirZ = Input.GetAxisRaw("Vertical");
+            Vector3 moveHorizontal = transform.right * moveDirX;
+            Vector3 moveVertical = transform.forward * moveDirZ;
+            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+        }
+        if (isRunning)
+        {
+            if (velocity != Vector3.zero)
+            {
+                animator.SetBool("isRuns", true);
+            }
+            else
+            {
+                animator.SetBool("isRuns", false);
+            }
+
+        }
+    }
+
+    private void Crouch()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            isCrouching = !isCrouching;
+
+            if (isCrouching)
+            {
+                walkSpeed /= 2;
+                // 카메라의 y축 위치를 crouchHeight 만큼 낮춤
+                theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY * crouchHeight, theCamera.transform.localPosition.z);
+                toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY * crouchHeight, toolCamera.transform.localPosition.z);
+            }
+            else
+            {
+                walkSpeed *= 2;
+                // 카메라의 y축 위치를 원래대로 되돌림
+                theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY, theCamera.transform.localPosition.z);
+                toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY, toolCamera.transform.localPosition.z);
+            }
+            animator.SetBool("isCrouch", isCrouching);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            isGrounded = false;
+        }
+    }
+
     private void CameraRotation()
     {
         float xRotation = Input.GetAxisRaw("Mouse Y");
@@ -179,6 +273,7 @@ public class PlayerController : MonoBehaviour
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        toolCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
     }
 
     private void CharacterRotation()
@@ -213,7 +308,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 5f))
         {
             NodeController nodeController = hit.collider.GetComponent<NodeController>();
-            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5f);
+            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5);
             if (nodeController != null)
             {
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
@@ -226,8 +321,16 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !Poi)
         {
-            animator.SetTrigger("Swing");
-            Localanimator.SetTrigger("Swing");
+            if (isCrouching)
+            {
+                animator.SetTrigger("Crouch_Swing");
+                Localanimator.SetTrigger("Crouch_Swing");
+            }
+            else
+            {
+                animator.SetTrigger("Swing");
+                Localanimator.SetTrigger("Swing");
+            }
         }
     }
 
@@ -313,8 +416,6 @@ public class PlayerController : MonoBehaviour
         {
             pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
         }
-
-
 
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
