@@ -784,7 +784,7 @@ GameObject:
   - component: {fileID: 4093038744633329124}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -987,30 +987,33 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isMove
   - Type: 9
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Swing
   - Type: 9
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Hit
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: isRun
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isCrouch
   - Type: 9
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Crouch_Swing
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isCrouchWalk
+  - Type: 4
+    SynchronizeType: 2
+    Name: isRuns
   m_SynchronizeLayers:
-  - SynchronizeType: 0
+  - SynchronizeType: 2
     LayerIndex: 0
-  - SynchronizeType: 0
+  - SynchronizeType: 2
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
