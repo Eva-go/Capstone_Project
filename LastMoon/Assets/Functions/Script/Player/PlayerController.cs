@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera toolCamera;
     private Rigidbody myRigid;
 
-    //Jump and Crouch
+    // Jump and Crouch
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float crouchHeight = 0.5f;
     private float originalCameraY;
@@ -26,20 +27,16 @@ public class PlayerController : MonoBehaviour
     private bool isRunning;
     private Vector3 velocity;
 
-
-    //ray
+    // ray
     private RaycastHit hitInfo;
-    private Vector3 previousPosition;
-    private bool ins = true;
 
     [SerializeField] private Animator animator;
-    [SerializeField] private Animator Localanimator; //로컬플레이어 무기 애니메이션
+    [SerializeField] private Animator Localanimator; // 로컬 플레이어 무기 애니메이션
 
     public GameObject[] weapons; // 무기 오브젝트 배열
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     public GameObject[] weaponsSwitching;
     private int selectedWeaponIndex = 0;
-    private int OtherWeaponIndex = 0;
 
     public static int getMoney;
     public GameObject insidegameObject;
@@ -50,9 +47,10 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        myRigid = this.GetComponent<Rigidbody>();
+        myRigid = GetComponent<Rigidbody>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
+
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
@@ -70,17 +68,16 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             cam.SetActive(true);
-            if(!isRunning)
+            if (!isRunning)
             {
                 Move();
                 Crouch();
             }
-            if(!isCrouching)
+            if (!isCrouching)
             {
                 Run();
             }
-               
-            
+
             if (!Poi)
             {
                 CameraRotation();
@@ -102,7 +99,7 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.F4))
             {
-                gameObject.transform.position = new Vector3(gameObject.transform.position.x, -5f, gameObject.transform.position.z);
+                transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
             }
             if (Input.GetKeyDown(KeyCode.F5))
             {
@@ -145,7 +142,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        if(!isRunning)
+        if (!isRunning)
         {
             animator.SetBool("isRuns", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
@@ -156,7 +153,7 @@ public class PlayerController : MonoBehaviour
             myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
         }
 
-        if (isCrouching&&!isRunning)
+        if (isCrouching && !isRunning)
         {
             animator.SetBool("isMove", false);
             if (velocity != Vector3.zero)
@@ -168,11 +165,11 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isCrouchWalk", false);
             }
         }
-        else if(!isCrouching&&!isRunning)
+        else if (!isCrouching && !isRunning)
         {
             animator.SetBool("isCrouchWalk", false);
 
-            if(!isRunning)
+            if (!isRunning)
             {
                 if (velocity != Vector3.zero)
                 {
@@ -182,7 +179,6 @@ public class PlayerController : MonoBehaviour
                 {
                     animator.SetBool("isMove", false);
                 }
-
             }
         }
     }
@@ -198,10 +194,10 @@ public class PlayerController : MonoBehaviour
 
     private void Run()
     {
-        if(!isCrouching)
+        if (!isCrouching)
             isRunning = Input.GetKey(KeyCode.LeftShift);
-        
-        if (isRunning&&!isCrouching)
+
+        if (isRunning && !isCrouching)
         {
             animator.SetBool("isMove", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
@@ -221,7 +217,6 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetBool("isRuns", false);
             }
-
         }
     }
 
@@ -305,7 +300,7 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 5f))
+        if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Node"))
         {
             NodeController nodeController = hit.collider.GetComponent<NodeController>();
             Debug.DrawRay(ray.origin, ray.direction, Color.red, 5);
@@ -314,6 +309,11 @@ public class PlayerController : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
                 nodeController.TakeDamage(10);
             }
+        }
+        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
+        {
+            // 플레이어 공격 처리
+            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
         }
     }
 
@@ -330,6 +330,36 @@ public class PlayerController : MonoBehaviour
             {
                 animator.SetTrigger("Swing");
                 Localanimator.SetTrigger("Swing");
+            }
+        }
+    }
+
+    [PunRPC]
+    private void RPC_TakeDamage(int viewID, int damage)
+    {
+        PhotonView targetPv = PhotonView.Find(viewID);
+        if (targetPv != null)
+        {
+            PlayerController targetPlayer = targetPv.GetComponent<PlayerController>();
+            if (targetPlayer != null)
+            {
+                targetPlayer.TakeDamage(damage);
+            }
+        }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (pv.IsMine)
+        {
+            Hp -= damage;
+            ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+            customProperties["HP"] = Hp;
+            PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+
+            if (Hp <= 0)
+            {
+                Die();
             }
         }
     }

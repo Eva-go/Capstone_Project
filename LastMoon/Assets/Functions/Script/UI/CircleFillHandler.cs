@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CircleFillHandler : MonoBehaviour
 {
-    private float fillValue = 1;
+    private float playerHP_UI = 1;
     public Image circleFillImage;
     public RectTransform handlerEdgeImage;
     public RectTransform fillHandler;
@@ -17,6 +17,7 @@ public class CircleFillHandler : MonoBehaviour
     void Start()
     {
         Hp.SetActive(true);
+        playerHP_UI = PlayerController.Hp;
     }
 
     // Update is called once per frame
@@ -25,29 +26,8 @@ public class CircleFillHandler : MonoBehaviour
         time += Time.deltaTime;
         if(!isHpMax)
         {
-            if (fillValue < 100)
-            {
-                fillValue += time / 100;
-            }
-            PlayerController.Hp = ((int)fillValue);
-            FillCircleValue(fillValue);
-            if(PlayerController.Hp>=100)
-            {
-                PlayerController.Hp = 100;
-                
-                isHpMax = true;
-            }
-            
+            FillCircleValue(PlayerController.Hp); 
         }
-        if (PlayerController.Hp <= 0)
-        {
-            FillCircleValue(0);
-        }
-        if(PlayerController.Hp>=100)
-        {
-            FillCircleValue(100);
-        }
-
         HP.text = PlayerController.Hp.ToString();
 
         if(PlayerController.PreViewCam)
