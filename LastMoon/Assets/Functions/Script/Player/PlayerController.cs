@@ -70,13 +70,17 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             cam.SetActive(true);
-            Debug.Log("¶Ù´ÂÁß?"+isRunning);
             if(!isRunning)
             {
                 Move();
+                Crouch();
             }
-            Run();
-            Crouch();
+            if(!isCrouching)
+            {
+                Run();
+            }
+               
+            
             if (!Poi)
             {
                 CameraRotation();
@@ -152,7 +156,7 @@ public class PlayerController : MonoBehaviour
             myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
         }
 
-        if (isCrouching)
+        if (isCrouching&&!isRunning)
         {
             animator.SetBool("isMove", false);
             if (velocity != Vector3.zero)
@@ -164,7 +168,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isCrouchWalk", false);
             }
         }
-        else
+        else if(!isCrouching&&!isRunning)
         {
             animator.SetBool("isCrouchWalk", false);
 
@@ -194,9 +198,10 @@ public class PlayerController : MonoBehaviour
 
     private void Run()
     {
-        isRunning = Input.GetKey(KeyCode.LeftShift);
+        if(!isCrouching)
+            isRunning = Input.GetKey(KeyCode.LeftShift);
         
-        if (isRunning)
+        if (isRunning&&!isCrouching)
         {
             animator.SetBool("isMove", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
@@ -303,7 +308,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 5f))
         {
             NodeController nodeController = hit.collider.GetComponent<NodeController>();
-            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5f);
+            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5);
             if (nodeController != null)
             {
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
