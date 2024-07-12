@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Earthenware
-  m_Shader: {fileID: -6465566751694194690, guid: 9da7ef2ce82df8f4f9052b66321f373b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 8e12386977c632648b6fa24405b2fc40, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -74,8 +74,16 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4f7efae4f581c304ebe6ec96ec912d93, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HOST_Map:
+        m_Texture: {fileID: 2800000, guid: bacd7e9a724de864d940835f3c5852d8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Height_Map:
         m_Texture: {fileID: 2800000, guid: 9a2b9b81dafec1745a5500ee1bf95905, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LUT_Mask:
+        m_Texture: {fileID: 2800000, guid: d5e4c5dda7572b4418b0d0410b0c288f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LU_Mask_Map:
@@ -87,7 +95,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: 6fb7db010fe05a94197e36d6e2309a78, type: 3}
+        m_Texture: {fileID: 2800000, guid: 44d460563233cba4180d434eb7c71a94, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -103,7 +111,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: b013dd4be1754014fac8f81690eac6cb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5834a53baa0defd4c8d5c144116b16a3, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -130,6 +138,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sub_LUTA:
+        m_Texture: {fileID: 18700000, guid: 89e7f94a9584b3d4b95d729fe7f7340f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -146,7 +158,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Strength: 1
+    - _Ambient_Strength: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _Brghtness_Limit: 5
@@ -174,6 +186,7 @@ Material:
     - _Normal_Map_Strength: 1
     - _Normal_Strength: 1
     - _OcclusionStrength: 0.25
+    - _Occlusion_Emmision_Map_Strength: 1
     - _Occlusion_Map_Strength: 1
     - _Occlusion_Strength: 1
     - _Parallax: 0.04

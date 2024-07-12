@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Triplanar-Terrain_DS
-  m_Shader: {fileID: -6465566751694194690, guid: d29acc425c4f6a44a89a33bc61f1e2d2, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 005a9b77f561b3444bae030371b59566, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -82,8 +82,52 @@ Material:
         m_Texture: {fileID: 2800000, guid: f5de3b8933560ff4bb7913081a661ab0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HOST_Map:
+        m_Texture: {fileID: 18700000, guid: 0df9b0a1c03f49244ac3c1b05d8c9e12, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HOST_Map_1:
+        m_Texture: {fileID: 18700000, guid: a5d208141798c6b43be752e8e4cea55c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Height_Map:
-        m_Texture: {fileID: 2800000, guid: b812ab2b369de4841961999752718fde, type: 3}
+        m_Texture: {fileID: 2800000, guid: eee1bf5f27c5c2940881bd01adab7a33, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map_1:
+        m_Texture: {fileID: 2800000, guid: c9ab7b8dfc578fb429cf0e7fda0b0735, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map_2:
+        m_Texture: {fileID: 2800000, guid: f69f60c9ef4273a47a12aa746ca1225d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map_3:
+        m_Texture: {fileID: 2800000, guid: a62af3b6a620b0d45aa2c64518263a2e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map_4:
+        m_Texture: {fileID: 2800000, guid: 25d2aa11b0f20274aacbe4d7026e457b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map_5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map_6:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map_7:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LUT_Mask:
+        m_Texture: {fileID: 18700000, guid: 11af53b5c2dc93d4eb5eff07b2035b9b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LUT_Mask_1:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LU_Mask_Map:
@@ -95,11 +139,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: b595b29b6b15acb45af7d155ee42d132, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0f5d4dc480322b04890c9c4f6022d3d6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 0afddb9e45359de46aad0dc86fc5bc97, type: 3}
+        m_Texture: {fileID: 2800000, guid: b41f553d180bd964fb731dddef34ad7f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -115,11 +159,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: baa63485ba8bf5c4da0f31da3bea6c62, type: 3}
+        m_Texture: {fileID: 18700000, guid: 7457bb5f51350bf49b2bb50028443a97, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_Map_1:
-        m_Texture: {fileID: 2800000, guid: c3033b27bf10ed54683a05369f2165a7, type: 3}
+        m_Texture: {fileID: 18700000, guid: bdf31fc72aacfcb408173f09b4f4943a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -170,6 +214,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sub_LUTA:
+        m_Texture: {fileID: 18700000, guid: 6bf15f4d3a3e4214ebe55c66cb079294, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Sub_LUTA_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -186,7 +238,13 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Strength: 1
+    - _Ambient_Strength: 0
+    - _Bias_1: 0.1
+    - _Bias_2: -0.1
+    - _Bias_3: 0
+    - _Bias_4: 0
+    - _Bias_5: 0
+    - _Bias_6: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _Brghtness_Limit: 2
@@ -209,7 +267,7 @@ Material:
     - _GlossyReflections: 0
     - _Height_Steps: 8
     - _Height_Steps_1: 8
-    - _Height_Strength: 0.04
+    - _Height_Strength: 0.08
     - _Height_Strength_1: 0.02
     - _Look_Up_Mask_Value: 1
     - _Look_Up_Mask_Value_1: 1
@@ -219,6 +277,8 @@ Material:
     - _Normal_Map_Strength_1: 1
     - _Normal_Strength: 1
     - _OcclusionStrength: 0.25
+    - _Occlusion_Emmision_Map_Strength: 1
+    - _Occlusion_Emmision_Map_Strength_1: 1
     - _Occlusion_Map_Strength: 1
     - _Occlusion_Map_Strength_1: 1
     - _Occlusion_Strength: 1
@@ -235,7 +295,7 @@ Material:
     - _ReceiveShadows: 1
     - _SHADOWS_SOFT: 1
     - _Shadow_Ambient_Strength: 4
-    - _Shadow_Power: 2
+    - _Shadow_Power: 1.5
     - _Shadow_Step: 4
     - _Shadow_Strength: 1
     - _Smoothness: 0
@@ -252,14 +312,17 @@ Material:
     - _Specular_Power_1: 1
     - _Specular_Step: 4
     - _Specular_Step_1: 4
-    - _Specular_Strength: 0.25
+    - _Specular_Strength: 1
     - _Specular_Strength_1: 0.25
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _TT_Add: 0.09
     - _TT_Mult: 1
-    - _TT_Power: 125
+    - _TT_Power: 10
+    - _TT_Step: 4
+    - _TT_Strength: 4
+    - _TT_Value: 0
     - _Texture_Specular: 0
     - _Transparency: 1
     - _Transparency_1: 1
@@ -267,6 +330,12 @@ Material:
     - _Use_LU_Specular: 1
     - _Use_Look_up_Texture: 1
     - _Use_Normal_Ambient: 1
+    - _Use_Random_Texture_1: 1
+    - _Use_Random_Texture_2: 1
+    - _Use_Random_Texture_3: 1
+    - _Use_Random_Texture_4: 0
+    - _Use_Random_Texture_5: 0
+    - _Use_Random_Texture_6: 0
     - _WorkflowMode: 0
     - _ZTest: 4
     - _ZWrite: 1
@@ -276,9 +345,17 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Noise_Offset_1: {r: -2, g: -2, b: 0, a: 0}
+    - _Noise_Offset_2: {r: 0, g: 0, b: 0, a: 0}
+    - _Noise_Offset_3: {r: 2, g: 2, b: 0, a: 0}
+    - _Noise_Offset_4: {r: 0, g: 0, b: 0, a: 0}
+    - _Noise_Offset_5: {r: 0, g: 0, b: 0, a: 0}
+    - _Noise_Offset_6: {r: 0, g: 0, b: 0, a: 0}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset_1: {r: 0, g: 0, b: 0, a: 0}
     - _RL_Color: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Specular_Color: {r: 1, g: 1, b: 1, a: 0}
     - _Tiling: {r: 120, g: 120, b: 0, a: 0}
+    - _Tiling_1: {r: 120, g: 120, b: 0, a: 0}
   m_BuildTextureStacks: []

@@ -4308,7 +4308,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "3Sf_Glint_Brightness",
+    "m_Name": "cel_Glint_Brightness",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -5625,6 +5625,19 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateMaterialSlot",
+    "m_ObjectId": "5f5272cd121e4434b2f3feb869814ed7",
+    "m_Id": 551207262,
+    "m_DisplayName": "TLU SamplerState",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "TLU_SamplerState",
+    "m_StageCapability": 2,
+    "m_BareResource": false
 }
 
 {
@@ -7093,7 +7106,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "3Sf_Glint_Brightness",
+    "m_Name": "cel_Glint_Brightness",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -9655,12 +9668,25 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SamplerStateMaterialSlot",
+    "m_ObjectId": "d70529cdf0684eaa9dad1827a70aa017",
+    "m_Id": 194981545,
+    "m_DisplayName": "TLU SamplerState",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "TLU_SamplerState",
+    "m_StageCapability": 2,
+    "m_BareResource": false
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.SubGraphNode",
     "m_ObjectId": "d7f8fe3340f54243b76f0e90d313b6f8",
     "m_Group": {
         "m_Id": "42f9f6ce07c14c4fa28220990ebc6c9f"
     },
-    "m_Name": "3Sf_Height_UV",
+    "m_Name": "3Sf_Height_Unpacker",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -9691,6 +9717,9 @@
             "m_Id": "31579a5f60ec45c89f040e73536ee4d6"
         },
         {
+            "m_Id": "5f5272cd121e4434b2f3feb869814ed7"
+        },
+        {
             "m_Id": "245f0d9363a04666acc2702f26a983ec"
         }
     ],
@@ -9709,7 +9738,8 @@
         "1ceccb37-9b92-4a13-a28e-ab26af62cb86",
         "b239cf5a-4853-4c82-a3af-ee0ad6e593ef",
         "c3a5990b-0bdf-42a6-8a15-6699714d54ca",
-        "2da28c7b-f5a8-4189-b687-523f050ee359"
+        "2da28c7b-f5a8-4189-b687-523f050ee359",
+        "ce08f21e-b213-4708-a9f2-4811fa7392b8"
     ],
     "m_PropertyIds": [
         880255164,
@@ -9717,7 +9747,8 @@
         -157303640,
         466013564,
         -768488913,
-        177926240
+        177926240,
+        551207262
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
@@ -9815,6 +9846,9 @@
             "m_Id": "410de634bc2144d0baaac3db6039427b"
         },
         {
+            "m_Id": "d70529cdf0684eaa9dad1827a70aa017"
+        },
+        {
             "m_Id": "416c13918bc94fcea0c28c88a78e1427"
         }
     ],
@@ -9830,12 +9864,14 @@
     "m_PropertyGuids": [
         "bb316993-e1e2-4a94-a260-e14fc98f51cc",
         "424ee5f3-ffcf-4886-8ddc-7d15af612327",
-        "fe9e3152-75a1-42bd-a656-6c5fd977fa63"
+        "fe9e3152-75a1-42bd-a656-6c5fd977fa63",
+        "b649a2df-9e04-43a9-a47b-025dd6697da3"
     ],
     "m_PropertyIds": [
         1914005274,
         949397278,
-        -2135595636
+        -2135595636,
+        194981545
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
@@ -10612,7 +10648,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "3Sf_Glint_Brightness",
+    "m_Name": "cel_Glint_Brightness",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {

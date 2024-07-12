@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Node_Dirt_Pile
-  m_Shader: {fileID: -6465566751694194690, guid: 9da7ef2ce82df8f4f9052b66321f373b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 8e12386977c632648b6fa24405b2fc40, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -78,8 +78,16 @@ Material:
         m_Texture: {fileID: 2800000, guid: ce972e8066f7ebf4abe8abc990303225, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HOST_Map:
+        m_Texture: {fileID: 2800000, guid: db3cb864e8528744087c99aff1ce4347, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Height_Map:
         m_Texture: {fileID: 2800000, guid: 626f8cc688fcff04fa30e112ba6f465e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LUT_Mask:
+        m_Texture: {fileID: 2800000, guid: d99dc41a265e8bf40ab3e3d723655298, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LU_Mask_Map:
@@ -87,7 +95,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: b595b29b6b15acb45af7d155ee42d132, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0f5d4dc480322b04890c9c4f6022d3d6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -99,7 +107,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: f457a9d4182946147a41175d10c156fa, type: 3}
+        m_Texture: {fileID: 2800000, guid: d819f39b077120c41a4c9b17abb8a7e7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -138,6 +146,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sub_LUTA:
+        m_Texture: {fileID: 18700000, guid: 6bf15f4d3a3e4214ebe55c66cb079294, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -154,7 +166,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Strength: 1
+    - _Ambient_Strength: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -178,6 +190,7 @@ Material:
     - _Metallic: 0
     - _Normal_Map_Strength: 1
     - _OcclusionStrength: 1
+    - _Occlusion_Emmision_Map_Strength: 1
     - _Occlusion_Map_Strength: 1
     - _Parallax: 0.005
     - _QueueControl: 0

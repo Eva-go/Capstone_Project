@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Station_Farm
-  m_Shader: {fileID: -6465566751694194690, guid: 9da7ef2ce82df8f4f9052b66321f373b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 8e12386977c632648b6fa24405b2fc40, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -74,8 +74,16 @@ Material:
         m_Texture: {fileID: 2800000, guid: 158201f3fd0f7c440b1b1c8707f9ad14, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HOST_Map:
+        m_Texture: {fileID: 2800000, guid: d2d40989587d97d4dac1e0127ee29176, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Height_Map:
         m_Texture: {fileID: 2800000, guid: 8d73649ffaf44c249a1b9563f40835a8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LUT_Mask:
+        m_Texture: {fileID: 2800000, guid: 357ccad35d740dd43a28d5dd639c180e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LU_Mask_Map:
@@ -87,7 +95,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: ae1f0ddf68f937149a6b1bb6bcb060bb, type: 3}
+        m_Texture: {fileID: 2800000, guid: b67a71c335ae8ba4ca8121344d30a9be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -99,7 +107,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: 67d31b2430be43447aa46cae811a2cee, type: 3}
+        m_Texture: {fileID: 2800000, guid: d4a95b69b55d52742b9ada7554ecd5ef, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -126,6 +134,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Sub_LUTA:
+        m_Texture: {fileID: 18700000, guid: 820f2e191313e0c46ab70549e9b59057, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -142,7 +154,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Strength: 1
+    - _Ambient_Strength: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 0.75
@@ -166,6 +178,7 @@ Material:
     - _Metallic: 0
     - _Normal_Map_Strength: 1
     - _OcclusionStrength: 1
+    - _Occlusion_Emmision_Map_Strength: 1
     - _Occlusion_Map_Strength: 1
     - _Parallax: 0.04
     - _QueueControl: 0
