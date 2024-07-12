@@ -352,6 +352,7 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
+            animator.SetTrigger("Hit");
             Hp -= damage;
             ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
             customProperties["HP"] = Hp;
