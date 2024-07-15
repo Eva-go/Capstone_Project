@@ -10,13 +10,14 @@ public class PlayerController : MonoBehaviour
     private GameObject cam;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
+    [SerializeField] private float crouchSpeed;
     [SerializeField] private float lookSensitivity;
     [SerializeField] private float cameraRotationLimit;
     private float currentCameraRotationX = 0;
     [SerializeField] public Camera theCamera;
     [SerializeField] private Camera toolCamera;
     private Rigidbody myRigid;
-
+    private CapsuleCollider myCollider;
     // Jump and Crouch
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float crouchHeight = 0.5f;
@@ -26,6 +27,9 @@ public class PlayerController : MonoBehaviour
     private bool isCrouching;
     private bool isRunning;
     private Vector3 velocity;
+    private Vector3 UpCenter;
+    private Vector3 DownCenter;
+
 
     // ray
     private RaycastHit hitInfo;
@@ -48,6 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
+        myCollider = GetComponent<CapsuleCollider>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
 
@@ -61,6 +66,10 @@ public class PlayerController : MonoBehaviour
         // 카메라의 초기 y축 위치 저장
         originalCameraY = theCamera.transform.localPosition.y;
         originalToolCameraY = toolCamera.transform.localPosition.y;
+
+        //콜라이더 크기 조절
+        UpCenter = new Vector3(0f,1f,0f);
+        DownCenter = new Vector3(0f,0.5f,0f);
     }
 
     void Update()
@@ -68,9 +77,9 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             cam.SetActive(true);
+            Move();
             if (!isRunning)
             {
-                Move();
                 Crouch();
             }
             if (!isCrouching)
@@ -222,25 +231,35 @@ public class PlayerController : MonoBehaviour
 
     private void Crouch()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        isCrouching = Input.GetKey(KeyCode.LeftControl);
+        
+        if (isCrouching && !isRunning)
         {
-            isCrouching = !isCrouching;
+            float moveDirX = Input.GetAxisRaw("Horizontal");
+            float moveDirZ = Input.GetAxisRaw("Vertical");
+            Vector3 moveHorizontal = transform.right * moveDirX;
+            Vector3 moveVertical = transform.forward * moveDirZ;
+            velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+        }
 
-            if (isCrouching)
-            {
-                walkSpeed /= 2;
-                // 카메라의 y축 위치를 crouchHeight 만큼 낮춤
-                theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY * crouchHeight, theCamera.transform.localPosition.z);
-                toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY * crouchHeight, toolCamera.transform.localPosition.z);
-            }
-            else
-            {
-                walkSpeed *= 2;
-                // 카메라의 y축 위치를 원래대로 되돌림
-                theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY, theCamera.transform.localPosition.z);
-                toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY, toolCamera.transform.localPosition.z);
-            }
-            animator.SetBool("isCrouch", isCrouching);
+        if (isCrouching)
+        {
+            //myCollider.height = 1;
+            //myCollider.center = DownCenter;
+            animator.SetBool("isCrouch", true);
+            // 카메라의 y축 위치를 crouchHeight 만큼 낮춤
+            theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY * crouchHeight, theCamera.transform.localPosition.z);
+            toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY * crouchHeight, toolCamera.transform.localPosition.z);
+        }
+        else
+        {
+            //myCollider.height = 2;
+            //myCollider.center = UpCenter;
+            animator.SetBool("isCrouch", false);
+            // 카메라의 y축 위치를 원래대로 되돌림
+            theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY, theCamera.transform.localPosition.z);
+            toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY, toolCamera.transform.localPosition.z);
         }
     }
 
