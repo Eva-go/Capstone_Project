@@ -25,6 +25,8 @@ public class MapGenerator : MonoBehaviour
     public Vector2 offset1;
     public Vector2 offset2;
 
+    public float minHeight;
+
     public bool autoUpdate;
 
     float[,] falloffMap;
@@ -91,9 +93,9 @@ public class MapGenerator : MonoBehaviour
     }
 
 
-    public void PlaceBuildingsOnTop()
+    public void PlaceBuildingsOnTop(float minHeight)
     {
-        Vector3[] topPositions = GetTopPositionsOnMesh(placementArea);
+        Vector3[] topPositions = GetTopPositionsOnMesh(placementArea, minHeight);
 
         // 무작위로 선택할 위치의 인덱스를 저장할 리스트
         List<int> selectedIndices = new List<int>();
@@ -119,39 +121,25 @@ public class MapGenerator : MonoBehaviour
         }
     }
     // 주어진 메쉬 콜라이더 표면에서 가장 높은 위치들을 반환하는 메서드
-    private Vector3[] GetTopPositionsOnMesh(MeshCollider meshCollider)
+    private Vector3[] GetTopPositionsOnMesh(MeshCollider meshCollider, float minHeight)
     {
         Mesh mesh = meshCollider.sharedMesh;
         int[] triangles = mesh.triangles;
         Vector3[] vertices = mesh.vertices;
 
-        float highestY = float.NegativeInfinity;
-
-        // 먼저 가장 높은 y 값을 찾습니다.
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            Vector3 vertex1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
-            Vector3 vertex2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
-            Vector3 vertex3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
-
-            if (vertex1.y > highestY) highestY = vertex1.y;
-            if (vertex2.y > highestY) highestY = vertex2.y;
-            if (vertex3.y > highestY) highestY = vertex3.y;
-        }
-
         // 가장 높은 위치들(혹은 그 근처 위치들)을 저장할 리스트를 만듭니다.
         List<Vector3> topPositions = new List<Vector3>();
 
-        // 가장 높은 y 값 이상인 모든 정점을 찾아 리스트에 추가합니다.
+        // 특정 y축 이상인 모든 정점을 찾아 리스트에 추가합니다.
         for (int i = 0; i < triangles.Length; i += 3)
         {
             Vector3 vertex1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
             Vector3 vertex2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
             Vector3 vertex3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
 
-            if (vertex1.y >= highestY) topPositions.Add(vertex1);
-            if (vertex2.y >= highestY) topPositions.Add(vertex2);
-            if (vertex3.y >= highestY) topPositions.Add(vertex3);
+            if (vertex1.y >= minHeight) topPositions.Add(vertex1);
+            if (vertex2.y >= minHeight) topPositions.Add(vertex2);
+            if (vertex3.y >= minHeight) topPositions.Add(vertex3);
         }
 
         // 최종적으로 리스트를 배열로 변환하여 반환합니다.
@@ -370,7 +358,7 @@ public class MapGenerator : MonoBehaviour
 
         if (placementArea != null && buildingPrefabs.Length > 0)
         {
-            PlaceBuildingsOnTop(); // 건물을 꼭대기 층에 배치
+            PlaceBuildingsOnTop(minHeight); // 건물을 꼭대기 층에 배치
         }
         else
         {
