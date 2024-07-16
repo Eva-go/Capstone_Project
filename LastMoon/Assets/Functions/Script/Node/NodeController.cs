@@ -37,7 +37,6 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
 
         // 포톤 네트워크를 통해 HP 동기화
         photonView.RPC("SyncHealth", RpcTarget.OthersBuffered, currentHealth);
-        Debug.Log(currentHealth);
     }
 
     [PunRPC]

@@ -69,7 +69,6 @@ public class CanvasController : MonoBehaviour
             
             if (nodes[i].name + "(Clone)" == GameValue.NodeName)
             {
-                Debug.Log("노드 들어감");
                 count[i]++;
                 SellCount[i] = count[i];
                 nodesCount[i].text = count[i].ToString();
