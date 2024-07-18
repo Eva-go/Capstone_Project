@@ -139,23 +139,23 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_4:
-        m_Texture: {fileID: 2800000, guid: eee1bf5f27c5c2940881bd01adab7a33, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Height_Map_5:
         m_Texture: {fileID: 2800000, guid: c9ab7b8dfc578fb429cf0e7fda0b0735, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Height_Map_6:
+    - _Height_Map_5:
         m_Texture: {fileID: 2800000, guid: f69f60c9ef4273a47a12aa746ca1225d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Height_Map_7:
+    - _Height_Map_6:
         m_Texture: {fileID: 2800000, guid: a62af3b6a620b0d45aa2c64518263a2e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Height_Map_7:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Height_Map_8:
-        m_Texture: {fileID: 2800000, guid: 25d2aa11b0f20274aacbe4d7026e457b, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_9:
@@ -163,15 +163,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_Main:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: eee1bf5f27c5c2940881bd01adab7a33, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_Main_1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: eee1bf5f27c5c2940881bd01adab7a33, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_Main_2:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 25d2aa11b0f20274aacbe4d7026e457b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_Main_3:
@@ -307,6 +307,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Sub_LUTA_3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _var3SLUTATerrainFragment_f1e0850d4de54ee884d8e9c1cca2979e_HeightMap_2338057291_Texture2D:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -479,8 +483,8 @@ Material:
     - _RL_Color: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Specular_Color: {r: 1, g: 1, b: 1, a: 0}
-    - _Tiling: {r: 240, g: 240, b: 0, a: 0}
-    - _Tiling_1: {r: 120, g: 120, b: 0, a: 0}
-    - _Tiling_2: {r: 60, g: 60, b: 0, a: 0}
-    - _Tiling_3: {r: 30, g: 30, b: 0, a: 0}
+    - _Tiling: {r: 8, g: 8, b: 0, a: 0}
+    - _Tiling_1: {r: 4, g: 4, b: 0, a: 0}
+    - _Tiling_2: {r: 2, g: 2, b: 0, a: 0}
+    - _Tiling_3: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
