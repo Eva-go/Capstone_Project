@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 public class AddNode : MonoBehaviour
 {
-    //충돌처리후 이미지 변경 및 노드 갯수 코드
+    public GameObject uiPanel; // UI 패널
+
+    // 충돌 처리 후 이미지 변경 및 노드 갯수 코드
     public Image node1;
     public Image node2;
 
@@ -16,7 +18,6 @@ public class AddNode : MonoBehaviour
     public Sprite nodeAlpha;
     public Sprite[] nodeImage;
 
-
     private string oldNode;
 
     private int node1numeber = 0;
@@ -25,27 +26,28 @@ public class AddNode : MonoBehaviour
     private bool nodeck1 = false;
     private bool nodeck2 = false;
 
-
     public Text node1_Text;
     public Text node2_Text;
 
-
     private string[] nodeName = { "node_Dirt", "node_Concrete", "node_Driftwood", "node_Sand", "node_Planks", "node_Scrap" };
     private int nodeAdd = 0;
+
+    private PoiStart poiStartScript; // PoiStart 스크립트 참조
+
     private void Start()
     {
-        for(int i=0; i< nodeCounts_Text.Length;i++)
+        for (int i = 0; i < nodeCounts_Text.Length; i++)
         {
             nodeCounts[i] = int.Parse(nodeCounts_Text[i].text);
             oldNodeCounts[i] = int.Parse(nodeCounts_Text[i].text);
         }
-    }
 
-    
+        poiStartScript = FindObjectOfType<PoiStart>(); // PoiStart 스크립트 찾기
+    }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha0))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             for (int i = 0; i < nodeCounts_Text.Length; i++)
             {
@@ -58,18 +60,18 @@ public class AddNode : MonoBehaviour
 
     private void addnodeck()
     {
-        if(nodeck1&& nodeck2)
+        if (nodeck1 && nodeck2)
         {
-            for(int i=0; i< nodeName.Length;i++)
+            for (int i = 0; i < nodeName.Length; i++)
             {
-                if(i!= node1numeber&&i!= node2numeber)
+                if (i != node1numeber && i != node2numeber)
                 {
                     nodeCounts[i] = oldNodeCounts[i];
                     nodeCounts_Text[i].text = oldNodeCounts[i].ToString();
                     nodeck1 = false;
                     nodeck2 = false;
                 }
-                else if(node1numeber== node2numeber)
+                else if (node1numeber == node2numeber)
                 {
                     for (int j = 0; j < nodeName.Length; j++)
                     {
@@ -81,11 +83,8 @@ public class AddNode : MonoBehaviour
                             nodeck2 = false;
                         }
                     }
-
-
                 }
             }
-           
         }
     }
 
@@ -96,12 +95,11 @@ public class AddNode : MonoBehaviour
             if (collision.name == nodeName[i])
             {
                 node1.sprite = nodeImage[i];
-                if(oldNode != nodeName[i])
+                if (oldNode != nodeName[i])
                 {
-                    //nodeCounts[i] -= 1;
                     node1_Text.text = oldNodeCounts[i].ToString();
                 }
-           
+
                 nodeCounts_Text[i].text = nodeCounts[i].ToString();
                 node1numeber = i;
                 nodeck1 = true;
@@ -120,7 +118,6 @@ public class AddNode : MonoBehaviour
                 node2.sprite = nodeImage[i];
                 if (oldNode != nodeName[i])
                 {
-                    //nodeCounts[i] -= 1;
                     node2_Text.text = oldNodeCounts[i].ToString();
                 }
                 nodeCounts_Text[i].text = nodeCounts[i].ToString();
@@ -134,14 +131,10 @@ public class AddNode : MonoBehaviour
 
     public void poi_Exit()
     {
-        node1.sprite = nodeAlpha;
-        node2.sprite = nodeAlpha;
-        node1_Text.text = " ";
-        node2_Text.text = " ";
-        for(int i=0;i<nodeName.Length;i++)
+        // PoiStart의 코루틴 재개
+        if (poiStartScript != null)
         {
-            nodeCounts[i] = oldNodeCounts[i];
-            nodeCounts_Text[i].text = oldNodeCounts[i].ToString();
+            poiStartScript.ResumeExecution();
         }
     }
 }
