@@ -26,6 +26,10 @@ public class AddNode : MonoBehaviour
     private bool nodeck2 = false;
 
 
+    public Text node1_Text;
+    public Text node2_Text;
+
+
     private string[] nodeName = { "node_Dirt", "node_Concrete", "node_Driftwood", "node_Sand", "node_Planks", "node_Scrap" };
     private int nodeAdd = 0;
     private void Start()
@@ -94,7 +98,8 @@ public class AddNode : MonoBehaviour
                 node1.sprite = nodeImage[i];
                 if(oldNode != nodeName[i])
                 {
-                    nodeCounts[i] -= 1;
+                    //nodeCounts[i] -= 1;
+                    node1_Text.text = oldNodeCounts[i].ToString();
                 }
            
                 nodeCounts_Text[i].text = nodeCounts[i].ToString();
@@ -115,7 +120,8 @@ public class AddNode : MonoBehaviour
                 node2.sprite = nodeImage[i];
                 if (oldNode != nodeName[i])
                 {
-                    nodeCounts[i] -= 1;
+                    //nodeCounts[i] -= 1;
+                    node2_Text.text = oldNodeCounts[i].ToString();
                 }
                 nodeCounts_Text[i].text = nodeCounts[i].ToString();
                 node2numeber = i;
@@ -130,6 +136,8 @@ public class AddNode : MonoBehaviour
     {
         node1.sprite = nodeAlpha;
         node2.sprite = nodeAlpha;
+        node1_Text.text = " ";
+        node2_Text.text = " ";
         for(int i=0;i<nodeName.Length;i++)
         {
             nodeCounts[i] = oldNodeCounts[i];

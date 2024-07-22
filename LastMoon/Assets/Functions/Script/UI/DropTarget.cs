@@ -33,12 +33,10 @@ public class DropTarget: MonoBehaviour
     {
         if (nodeCountck == "node1"&& Input.GetMouseButtonUp(0)&&nodeTarget)
         {
-            Debug.Log("노드1");
             poiAddNode.addNode1(collisionName1);
         }
         else if (nodeCountck == "node2"&& Input.GetMouseButtonUp(0) && nodeTarget)
         {
-            Debug.Log("노드");
             poiAddNode.addNode2(collisionName2);
         }
         
