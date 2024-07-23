@@ -1,72 +1,134 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class PoiStart : MonoBehaviour
 {
-   
-    public Image image_fill; // fill type을 통해 연출할 이미지
+    public Image image_fill;
     public Image alphaNode;
     public Sprite resultNode;
-    public float time_coolTime = 2; // 쿨타임 public으로 인스펙터에서 조절할 수 있게 했다.
-    private float time_current; // 진행된 시간을 저장할 필드 변수
-    private bool isEnded = true; // 종료 여부를 저장할 필드 변수
+    public float time_coolTime = 2;
 
+    private float time_current;
+    private bool isRunning = false; // 쿨타임 체크가 실행 중인지 여부
+    private int loopStart;
+    private int currentLoopIndex = 0; // 현재 루프 인덱스
 
-    private void Update() // 매 프레임 쿨타임을 체크한다.
+    public Text node1_Text;
+    public Text node2_Text;
+    public Text node_Text;
+
+    private int node1Value;
+    private int node2Value;
+
+    private Coroutine repeatCoroutine; // 코루틴 참조를 저장할 변수
+
+    private void Start()
     {
-        if (isEnded)
-        {
-              return;
-        }
-            
-        Check_CoolTime();
+        loopStart = 0;
+        node1Value = 0;
+        node2Value = 0;
+        node_Text.text = " ";
+    }
+
+    private void Update()
+    {
+        // Update 메서드에서 코루틴의 진행을 제어하지 않음
     }
 
     void Check_CoolTime()
     {
-        time_current += Time.deltaTime; //증가한 시간을 더한다.
-        if (time_current < time_coolTime) //아직 쿨타임이 안됐으면
+        time_current += Time.deltaTime;
+        if (time_current < time_coolTime)
         {
-            Set_FillAmount(time_current); //이미지를 갱신한다.
+            Set_FillAmount(time_current);
         }
-        else if (!isEnded)//쿨타임이 다됐는데 안끝났으면
+        else
         {
-            End_CoolTime(); //쿨타임을 끝낸다.
+            End_CoolTime();
         }
     }
 
     void End_CoolTime()
     {
-        Set_FillAmount(time_coolTime); //이미지를 갱신한다.
-        isEnded = true; //끝낸다.
+        Set_FillAmount(time_coolTime);
+        isRunning = false;
         alphaNode.sprite = resultNode;
-
+        Debug.Log("루프 끝남");
     }
 
-    void Trigger_Skill()
+    IEnumerator ExecuteRepeatedly()
     {
-        if (!isEnded) return; //아직 쿨타임이면 안한다.
+        for (currentLoopIndex = 0; currentLoopIndex < loopStart; currentLoopIndex++)
+        {
+            isRunning = true; // 쿨타임 시작
 
-        Reset_CoolTime(); // 쿨타임을 돌린다.
+            Reset_CoolTime();
+
+            while (isRunning) // 쿨타임이 진행 중일 때 대기
+            {
+                Check_CoolTime(); // 쿨타임 체크
+                yield return null;
+            }
+
+            // node_Text의 값 증가
+            IncreaseNodeTextValue();
+
+            // 재료 소모
+            int node1Value = int.Parse(node1_Text.text) - 1;
+            int node2Value = int.Parse(node2_Text.text) - 1;
+            node1_Text.text = node1Value.ToString();
+            node2_Text.text = node2Value.ToString();
+        }
+
+        Debug.Log("모든 루프 종료");
+    }
+
+    void IncreaseNodeTextValue()
+    {
+        if (int.TryParse(node_Text.text, out int currentValue))
+        {
+            currentValue++;
+            node_Text.text = currentValue.ToString();
+        }
+        else
+        {
+            node_Text.text = "1";
+        }
     }
 
     void Reset_CoolTime()
     {
-      
         time_current = 0;
         Set_FillAmount(0);
-        isEnded = false;
+        isRunning = true;
     }
 
     void Set_FillAmount(float value)
     {
         image_fill.fillAmount = value / time_coolTime;
-        
     }
 
-    public void on_Btn() //버튼 입력을 받아서 스킬을 시전한 걸로 친다.
+    public void on_Btn()
     {
-        Trigger_Skill();
+        int node1Value = int.Parse(node1_Text.text);
+        int node2Value = int.Parse(node2_Text.text);
+
+        loopStart = Mathf.Min(node1Value, node2Value); // loopStart의 최솟값 설정
+
+        if (repeatCoroutine != null)
+        {
+            StopCoroutine(repeatCoroutine); // 이전 코루틴 중지
+        }
+
+        repeatCoroutine = StartCoroutine(ExecuteRepeatedly()); // 코루틴 시작
+    }
+
+    public void ResumeExecution()
+    {
+        if (repeatCoroutine == null && loopStart > 0)
+        {
+            repeatCoroutine = StartCoroutine(ExecuteRepeatedly());
+        }
     }
 }
