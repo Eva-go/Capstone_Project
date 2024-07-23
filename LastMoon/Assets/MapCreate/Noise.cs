@@ -85,43 +85,7 @@ public static class Noise
         }
         return noiseMap;
     }
-
-    public static float[,] GenerateIrregularNoiseMap(int mapWidth, int mapHeight, int seed,
-    float scale, float irregularity, Vector2 offset)
-    {
-        float[,] noiseMap = new float[mapWidth, mapHeight];
-
-        System.Random prng = new System.Random(seed);
-        offset = new Vector2(prng.Next(-100000, 100000) + offset.x, prng.Next(-100000, 100000) + offset.y);
-
-        if (scale <= 0)
-        {
-            scale = 0.0001f;
-        }
-
-        float halfWidth = mapWidth / 2f;
-        float halfHeight = mapHeight / 2f;
-
-        for (int y = 0; y < mapHeight; y++)
-        {
-            for (int x = 0; x < mapHeight; x++)
-            {
-                float sampleX = (x - halfWidth + offset.x) / scale;
-                float sampleY = (y - halfHeight + offset.y) / scale;
-
-                float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
-
-                // Apply irregularity factor
-                perlinValue *= irregularity;
-
-                noiseMap[x, y] = perlinValue;
-            }
-        }
-
-        return noiseMap;
-    }
-
-    public static float[,] AddNoise(float[,] baseNoiseMap, float[,] additionalNoiseMap, float[,] irregularNoiseMap, float blendStrength, float irregularBlendStrength)
+    public static float[,] AddNoise(float[,] baseNoiseMap, float[,] additionalNoiseMap, float blendStrength)
     {
         int width = baseNoiseMap.GetLength(0);
         int height = baseNoiseMap.GetLength(1);
@@ -132,8 +96,7 @@ public static class Noise
         {
             for (int x = 0; x < width; x++)
             {
-                float blendedNoise = Mathf.Lerp(baseNoiseMap[x, y], additionalNoiseMap[x, y], blendStrength);
-                newNoiseMap[x, y] = Mathf.Lerp(blendedNoise, irregularNoiseMap[x, y], irregularBlendStrength);
+                newNoiseMap[x, y] = Mathf.Lerp(baseNoiseMap[x, y], additionalNoiseMap[x, y], blendStrength);
             }
         }
 

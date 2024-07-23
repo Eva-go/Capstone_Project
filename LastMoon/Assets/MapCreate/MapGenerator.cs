@@ -5,7 +5,6 @@ using System.Threading;
 using UnityEngine;
 using Unity.Mathematics;
 using Photon.Pun;
-using UnityEngine.UIElements;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -26,8 +25,6 @@ public class MapGenerator : MonoBehaviour
     public Vector2 offset1;
     public Vector2 offset2;
 
-    public float irregularity;
-
     public float minHeight;
 
     public bool autoUpdate;
@@ -36,9 +33,6 @@ public class MapGenerator : MonoBehaviour
 
     [Range(0, 1)]
     public float blendStrength;
-
-    [Range(0, 1)]
-    public float irregularBlendStrength;
 
     Queue<MapThreadInfo<MapData>> mapDataThreadInfoQueue = new Queue<MapThreadInfo<MapData>>();
     Queue<MapThreadInfo<MeshData>> meshDataThreadInfoQueue = new Queue<MapThreadInfo<MeshData>>();
@@ -298,9 +292,7 @@ public class MapGenerator : MonoBehaviour
         float[,] noiseMap2 = Noise.GenerateNoiseMap(mapChunkSize, mapChunkSize, seed2, noiseData.noiseScale2,
             noiseData.octaves2, noiseData.persistance, noiseData.lacunarity, center + offset2, noiseData.normalizedMode);
 
-        float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, center + offset1);
-
-        float[,] noiseMap = Noise.AddNoise(noiseMap1, noiseMap2, irregularNoiseMap, blendStrength, irregularBlendStrength);
+        float[,] noiseMap = Noise.AddNoise(noiseMap1, noiseMap2, blendStrength);
 
         if (terrainData.useFalloff)
         {
