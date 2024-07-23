@@ -7,7 +7,7 @@ void LightingRecive_float(float3 WorldPos, out float3 Direction, out float3 Colo
 		Light light = GetMainLight();
 		Direction = light.direction;
 		Color = light.color;
-		
+
 		//ShadowAtten = light.shadowAttenuation;
 		//Shadows.hlsl MainLightRealtimeShadow();
 		ShadowSamplingData shadowSamplingData = GetMainLightShadowSamplingData();

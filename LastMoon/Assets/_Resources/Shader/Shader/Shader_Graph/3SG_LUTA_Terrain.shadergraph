@@ -349,6 +349,9 @@
     "m_Keywords": [
         {
             "m_Id": "58312e75369e47649d31b1e5cd31736f"
+        },
+        {
+            "m_Id": "fac07b7f78e24aa8bcd8821f2d801db6"
         }
     ],
     "m_Dropdowns": [],
@@ -13799,7 +13802,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "3Sf_Triplanar_UV",
+    "m_Name": "Triplanar_UV",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -18988,6 +18991,9 @@
     "m_Name": "Shadow",
     "m_ChildObjectList": [
         {
+            "m_Id": "fac07b7f78e24aa8bcd8821f2d801db6"
+        },
+        {
             "m_Id": "58312e75369e47649d31b1e5cd31736f"
         },
         {
@@ -19386,6 +19392,31 @@
         "y": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "fac07b7f78e24aa8bcd8821f2d801db6",
+    "m_Guid": {
+        "m_GuidSerialized": "34792434-9fdb-42e7-85cc-1e4407187f2b"
+    },
+    "m_Name": "_MAIN_LIGHT_SHADOWS_CASCADE",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "_MAIN_LIGHT_SHADOWS_CASCADE",
+    "m_DefaultReferenceName": "_MAIN_LIGHT_SHADOWS_CASCADE",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 1,
+    "m_KeywordScope": 0,
+    "m_KeywordStages": 63,
+    "m_Entries": [],
+    "m_Value": 1,
+    "m_IsEditable": true
 }
 
 {

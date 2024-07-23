@@ -34,8 +34,10 @@ public class Wavetransform : MonoBehaviour
         //º¸°£
         currentTime = Mathf.Lerp(0.0f, 3.0f, normalizedTime);
 
-
         propertyBlock.SetFloat("_Strength", currentTime);
         gameObject.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+
+        if (RenderSettings.skybox.HasProperty("_Strength"))
+            RenderSettings.skybox.SetFloat("_Strength", currentTime);
     }
 }
