@@ -6,6 +6,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using Photon.Pun;
 using UnityEngine.UIElements;
+using Unity.Burst.CompilerServices;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -46,6 +47,9 @@ public class MapGenerator : MonoBehaviour
     public MeshCollider placementArea;
     public int maxBuildings = 40;
     public LayerMask groundLayer; // 지면 레이어 마스크
+
+    // 빈 게임 오브젝트의 Transform
+    public Transform parentTransform;
 
     public float irregularity = 2f;
 
@@ -114,40 +118,44 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 12; x < mapChunkSize; x += 24)
             {
-                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
-                // heightThreshold에 따라 다른 프리팹 배열 선택
-                GameObject prefabToPlace = null;
+                Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
 
-                if (noiseMap[x, y] > BuildingThreshold1)
+                RaycastHit hit;
+                if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    prefabToPlace = highNoisePrefabs[prng.Next(highNoisePrefabs.Length)];
-                }
-                else if (noiseMap[x, y] > BuildingThreshold2)
-                {
-                    prefabToPlace = mediumNoisePrefabs[prng.Next(mediumNoisePrefabs.Length)];
-                }
-                else if (noiseMap[x, y] > BuildingThreshold3)
-                {
-                    prefabToPlace = lowNoisePrefabs[prng.Next(lowNoisePrefabs.Length)];
-                }
+                    float height = hit.point.y;
+                    position = new Vector3(x, height, y);
 
-                if (prefabToPlace != null)
-                {
-                    // 건물 생성
-                    GameObject newBuilding = Instantiate(prefabToPlace, position, Quaternion.identity);
+                    GameObject prefabToPlace = null;
 
-                    // 건물을 지면에 붙이기
-                    if (PositionBuildingOnGround(newBuilding, BuildingYMin, BuildingYMax))
+                    if (noiseMap[x, y] > BuildingThreshold1)
                     {
-                        // 지면에 성공적으로 배치된 경우에만 건물을 활성화
-                        newBuilding.SetActive(true);
+                        prefabToPlace = highNoisePrefabs[prng.Next(highNoisePrefabs.Length)];
                     }
-                    else
+                    else if (noiseMap[x, y] > BuildingThreshold2)
                     {
-                        // 실패한 경우 건물 파괴
-                        Destroy(newBuilding);
+                        prefabToPlace = mediumNoisePrefabs[prng.Next(mediumNoisePrefabs.Length)];
+                    }
+                    else if (noiseMap[x, y] > BuildingThreshold3)
+                    {
+                        prefabToPlace = lowNoisePrefabs[prng.Next(lowNoisePrefabs.Length)];
                     }
 
+                    if (prefabToPlace != null)
+                    {
+                        GameObject newBliding = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
+                        newBliding.transform.SetParent(parentTransform);
+
+
+                        if (PositionBuildingOnGround(newBliding, BuildingYMin, BuildingYMax))
+                        {
+                            newBliding.SetActive(true);
+                        }
+                        else
+                        {
+                            newBliding.SetActive(false);
+                        }
+                    }
                 }
             }
         }
@@ -163,37 +171,44 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < mapChunkSize; x += 1)
             {
-                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
+                Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
 
-                GameObject prefabToPlace = null;
+                RaycastHit hit;
+                if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
+                {
+                    float height = hit.point.y;
+                    position = new Vector3(x, height, y);
 
-                // heightThreshold에 따라 다른 프리팹 배열 선택
-                if (noiseMap[x, y] > NodedirtThreshold1)
-                {
-                    prefabToPlace = dirtlowNodePrefabs[prng.Next(dirtlowNodePrefabs.Length)];
-                }
-                else if (noiseMap[x, y] > NodedirtThreshold2)
-                {
-                    prefabToPlace = dirtmediumNodePrefabs[prng.Next(dirtmediumNodePrefabs.Length)];
-                }
-                else if (noiseMap[x, y] > NodedirtThreshold3)
-                {
-                    prefabToPlace = dirthighNodePrefabs[prng.Next(dirthighNodePrefabs.Length)];
-                }
+                    GameObject prefabToPlace = null;
 
-                if (prefabToPlace != null)
-                {
-                    GameObject newNode = Instantiate(prefabToPlace, position, Quaternion.identity);
-
-                    if (PositionBuildingOnGround(newNode, NodedirtYMin, NodedirtYMax))
+                    // heightThreshold에 따라 다른 프리팹 배열 선택
+                    if (noiseMap[x, y] > NodedirtThreshold1)
                     {
-                        newNode.SetActive(true);
+                        prefabToPlace = dirtlowNodePrefabs[prng.Next(dirtlowNodePrefabs.Length)];
                     }
-                    else
+                    else if (noiseMap[x, y] > NodedirtThreshold2)
                     {
-                        Destroy(newNode);
+                        prefabToPlace = dirtmediumNodePrefabs[prng.Next(dirtmediumNodePrefabs.Length)];
+                    }
+                    else if (noiseMap[x, y] > NodedirtThreshold3)
+                    {
+                        prefabToPlace = dirthighNodePrefabs[prng.Next(dirthighNodePrefabs.Length)];
                     }
 
+                    if (prefabToPlace != null)
+                    {
+                        GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
+                        newNode.transform.SetParent(parentTransform);
+
+                        if (PositionBuildingOnGround(newNode, NodedirtYMin, NodedirtYMax))
+                        {
+                            newNode.SetActive(true);
+                        }
+                        else
+                        {
+                            newNode.SetActive(false);
+                        }
+                    }
                 }
             }
         }
@@ -207,37 +222,44 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < mapChunkSize; x += 1)
             {
-                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
+                Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
 
-                GameObject prefabToPlace = null;
+                RaycastHit hit;
+                if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
+                {
+                    float height = hit.point.y;
+                    position = new Vector3(x, height, y);
+                    
+                    GameObject prefabToPlace = null;
 
-                // heightThreshold에 따라 다른 프리팹 배열 선택
-                if (noiseMap[x, y] > NodedirtThreshold1)
-                {
-                    prefabToPlace = sandlowNodePrefabs[prng.Next(sandlowNodePrefabs.Length)];
-                }
-                else if (noiseMap[x, y] > NodedirtThreshold2)
-                {
-                    prefabToPlace = sandmediumNodePrefabs[prng.Next(sandmediumNodePrefabs.Length)];
-                }
-                else if (noiseMap[x, y] > NodedirtThreshold3)
-                {
-                    prefabToPlace = sandhighNodePrefabs[prng.Next(sandhighNodePrefabs.Length)];
-                }
-
-                if (prefabToPlace != null)
-                {
-                    GameObject newNode = Instantiate(prefabToPlace, position, Quaternion.identity);
-
-                    if (PositionBuildingOnGround(newNode, NodesandYMin, NodesandYMax))
+                    // heightThreshold에 따라 다른 프리팹 배열 선택
+                    if (noiseMap[x, y] > NodedirtThreshold1)
                     {
-                        newNode.SetActive(true);
+                        prefabToPlace = sandlowNodePrefabs[prng.Next(sandlowNodePrefabs.Length)];
                     }
-                    else
+                    else if (noiseMap[x, y] > NodedirtThreshold2)
                     {
-                        Destroy(newNode);
+                        prefabToPlace = sandmediumNodePrefabs[prng.Next(sandmediumNodePrefabs.Length)];
+                    }
+                    else if (noiseMap[x, y] > NodedirtThreshold3)
+                    {
+                        prefabToPlace = sandhighNodePrefabs[prng.Next(sandhighNodePrefabs.Length)];
                     }
 
+                    if (prefabToPlace != null)
+                    {
+                        GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
+                        newNode.transform.SetParent(parentTransform);
+
+                        if (PositionBuildingOnGround(newNode, BuildingYMin, BuildingYMax))
+                        {   
+                            newNode.SetActive(true);
+                        }
+                        else
+                        {
+                            newNode.SetActive(false);
+                        }
+                    }
                 }
             }
         }
@@ -253,129 +275,59 @@ public class MapGenerator : MonoBehaviour
             {
                 Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
 
-                // heightThreshold에 따라 다른 프리팹 배열 선택
-                GameObject prefabToPlace = null;
-                if (noiseMap[x, y] > POIThreshold1)
+                RaycastHit hit;
+                if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    prefabToPlace = POIPrefabs1[prng.Next(POIPrefabs1.Length)];
-                }
-                else if (noiseMap[x, y] > POIThreshold2)
-                {
-                    prefabToPlace = POIPrefabs2[prng.Next(POIPrefabs2.Length)];
-                }
-                else if (noiseMap[x, y] > POIThreshold3)
-                {
-                    prefabToPlace = POIPrefabs3[prng.Next(POIPrefabs3.Length)];
-                }
-                else if (noiseMap[x, y] > POIThreshold4)
-                {
-                    prefabToPlace = POIPrefabs4[prng.Next(POIPrefabs4.Length)];
-                }
-                else if (noiseMap[x, y] > POIThreshold5)
-                {
-                    prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
-                }
-                else if (noiseMap[x, y] > POIThreshold6)
-                {
-                    prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
-                }
+                    float height = hit.point.y;
+                    position = new Vector3(x, height, y);
 
-                if (prefabToPlace != null)
-                {
-                    GameObject newPOI = Instantiate(prefabToPlace, position, Quaternion.identity);
+                    GameObject prefabToPlace = null;
 
-                    if (PositionBuildingOnGround(newPOI, POIYMin, POIYMax))
+                    if (noiseMap[x, y] > POIThreshold1)
                     {
-                        newPOI.SetActive(true);
+                        prefabToPlace = POIPrefabs1[prng.Next(POIPrefabs1.Length)];
                     }
-                    else
+                    else if (noiseMap[x, y] > POIThreshold2)
                     {
-                        Destroy(newPOI);
+                        prefabToPlace = POIPrefabs2[prng.Next(POIPrefabs2.Length)];
+                    }
+                    else if (noiseMap[x, y] > POIThreshold3)
+                    {
+                        prefabToPlace = POIPrefabs3[prng.Next(POIPrefabs3.Length)];
+                    }
+                    else if (noiseMap[x, y] > POIThreshold4)
+                    {
+                        prefabToPlace = POIPrefabs4[prng.Next(POIPrefabs4.Length)];
+                    }
+                    else if (noiseMap[x, y] > POIThreshold5)
+                    {
+                        prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
+                    }
+                    else if (noiseMap[x, y] > POIThreshold6)
+                    {
+                        prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
                     }
 
+                    if (prefabToPlace != null)
+                    {
+                        GameObject newPOI = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
+                        newPOI.transform.SetParent(parentTransform);
+
+                        // Only activate the POI if it can be placed within the height constraints
+                        if (PositionBuildingOnGround(newPOI, POIYMin, POIYMax))
+                        {
+                            newPOI.SetActive(true);
+                        }
+                        else
+                        {
+                            // Instead of destroying, just deactivate the POI
+                            newPOI.SetActive(false);
+                        }
+                    }
                 }
             }
         }
     }
-
-    // 주어진 영역 내에서 랜덤한 위치를 반환하는 메서드
-    private Vector3 GetRandomPositionInBounds(Bounds bounds)
-    {
-        float randomX = UnityEngine.Random.Range(bounds.min.x, bounds.max.x);
-        float randomZ = UnityEngine.Random.Range(bounds.min.z, bounds.max.z);
-        return new Vector3(randomX, 0, randomZ); // y 값을 0으로 설정
-    }
-
-
-    public void PlaceBuildingsOnTop(float minHeight, Vector3[] fixedPositions)
-    {
-        Vector3[] topPositions = GetTopPositionsOnMesh(placementArea, minHeight);
-
-        // 무작위로 선택할 위치의 인덱스를 저장할 리스트
-        List<int> selectedIndices = new List<int>();
-        int positionIndex = 0;
-
-        while (selectedIndices.Count < maxBuildings && positionIndex < fixedPositions.Length)
-        {
-            // 정해진 위치에서 가장 가까운 topPositions의 인덱스를 찾음
-            float minDistance = float.MaxValue;
-            int closestIndex = -1;
-            for (int i = 0; i < topPositions.Length; i++)
-            {
-                float distance = Vector3.Distance(fixedPositions[positionIndex], topPositions[i]);
-                if (distance < minDistance && !selectedIndices.Contains(i))
-                {
-                    minDistance = distance;
-                    closestIndex = i;
-                }
-            }
-
-            if (closestIndex != -1)
-            {
-                selectedIndices.Add(closestIndex);
-            }
-
-            positionIndex++;
-        }
-
-        foreach (int index in selectedIndices)
-        {
-            // 랜덤한 프리팹 선택
-            GameObject selectedPrefab = buildingPrefabs[UnityEngine.Random.Range(0, buildingPrefabs.Length)];
-
-            // 건물 생성
-            GameObject newBuilding = Instantiate(selectedPrefab, topPositions[index], Quaternion.identity);
-
-            // 건물을 지면에 붙이기
-            PositionBuildingOnGround(newBuilding, BuildingYMin, BuildingYMax);
-        }
-    }
-    // 주어진 메쉬 콜라이더 표면에서 가장 높은 위치들을 반환하는 메서드
-    private Vector3[] GetTopPositionsOnMesh(MeshCollider meshCollider, float minHeight)
-    {
-        Mesh mesh = meshCollider.sharedMesh;
-        int[] triangles = mesh.triangles;
-        Vector3[] vertices = mesh.vertices;
-
-        // 가장 높은 위치들(혹은 그 근처 위치들)을 저장할 리스트를 만듭니다.
-        List<Vector3> topPositions = new List<Vector3>();
-
-        // 특정 y축 이상인 모든 정점을 찾아 리스트에 추가합니다.
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            Vector3 vertex1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
-            Vector3 vertex2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
-            Vector3 vertex3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
-
-            if (vertex1.y >= minHeight) topPositions.Add(vertex1);
-            if (vertex2.y >= minHeight) topPositions.Add(vertex2);
-            if (vertex3.y >= minHeight) topPositions.Add(vertex3);
-        }
-
-        // 최종적으로 리스트를 배열로 변환하여 반환합니다.
-        return topPositions.ToArray();
-    }
-
     // 건물을 지면에 붙이는 메서드
     private bool PositionBuildingOnGround(GameObject building, float minY, float maxY)
     {
@@ -572,39 +524,41 @@ public class MapGenerator : MonoBehaviour
     }
     void Start()
     {
-        if (placementArea != null && nodePrefabs.Length > 0)
+        if (PhotonNetwork.IsMasterClient)
         {
-            float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
-            PlaceDirtNodes(irregularNoiseMap);
-            PlaceSandNodes(irregularNoiseMap);
-        }
-        else
-        {
-            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
-        }
+            if (placementArea != null && nodePrefabs.Length > 0)
+            {
+                float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
+                PlaceDirtNodes(irregularNoiseMap);
+                PlaceSandNodes(irregularNoiseMap);
+            }
+            else
+            {
+                Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+            }
 
-        if (placementArea != null && POIPrefabs.Length > 0)
-        {
-            float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
-            PlacePOIs(irregularNoiseMap);
-        }
-        else
-        {
-            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
-        }
+            if (placementArea != null && POIPrefabs.Length > 0)
+            {
+                float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
+                PlacePOIs(irregularNoiseMap);
+            }
+            else
+            {
+                Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+            }
 
-        if (placementArea != null && buildingPrefabs.Length > 0)
-        {
-            float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
-            PlaceBuildings(irregularNoiseMap);
-        }
-        else
-        {
-            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
-        }
+            if (placementArea != null && buildingPrefabs.Length > 0)
+            {
+                float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
+                PlaceBuildings(irregularNoiseMap);
+            }
+            else
+            {
+                Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+            }
 
-
-        DrawMapInEditor(); // 맵 생성 메서드 호출
+            DrawMapInEditor(); // 맵 생성 메서드 호출
+        }
     }
 
     void OnEnable()
