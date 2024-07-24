@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
-    private bool isJumping;
+
 
     private Vector3 velocity;
     private Vector3 UpCenter;
@@ -51,6 +51,9 @@ public class PlayerController : MonoBehaviour
     public static bool PreViewCam;
     public static bool Poi;
 
+    public LayerMask groundLayer;
+    public float groundCheckDistance = 0.1f;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -71,8 +74,8 @@ public class PlayerController : MonoBehaviour
         originalToolCameraY = toolCamera.transform.localPosition.y;
 
         //콜라이더 크기 조절
-        UpCenter = new Vector3(0f,1f,0f);
-        DownCenter = new Vector3(0f,0.5f,0f);
+        UpCenter = new Vector3(0f, 1f, 0f);
+        DownCenter = new Vector3(0f, 0.5f, 0f);
     }
 
     void Update()
@@ -89,15 +92,13 @@ public class PlayerController : MonoBehaviour
             {
                 Run();
             }
-            if (!isJumping)
-            {
-                Jump();
-            }
+
             if (!Poi)
             {
                 CameraRotation();
                 CharacterRotation();
             }
+            Jump();
             Interaction();
             Attack();
             Switching();
@@ -201,10 +202,12 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKey(KeyCode.Space) && isGrounded)
         {
+
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            animator.SetTrigger("Jump");
+
+            isGrounded = false;
         }
     }
 
@@ -239,7 +242,7 @@ public class PlayerController : MonoBehaviour
     private void Crouch()
     {
         isCrouching = Input.GetKey(KeyCode.LeftControl);
-        
+
         if (isCrouching && !isRunning)
         {
             float moveDirX = Input.GetAxisRaw("Horizontal");
@@ -272,7 +275,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "PLANE")
         {
             isGrounded = true;
         }
