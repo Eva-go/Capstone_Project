@@ -118,43 +118,36 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 12; x < mapChunkSize; x += 24)
             {
-                Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
-
+                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed\
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    float height = hit.point.y;
-                    position = new Vector3(x, height, y);
-
                     GameObject prefabToPlace = null;
-
-                    if (noiseMap[x, y] > BuildingThreshold1)
+                    float height = hit.point.y;
+                    if (height > BuildingYMin)
                     {
-                        prefabToPlace = highNoisePrefabs[prng.Next(highNoisePrefabs.Length)];
-                    }
-                    else if (noiseMap[x, y] > BuildingThreshold2)
-                    {
-                        prefabToPlace = mediumNoisePrefabs[prng.Next(mediumNoisePrefabs.Length)];
-                    }
-                    else if (noiseMap[x, y] > BuildingThreshold3)
-                    {
-                        prefabToPlace = lowNoisePrefabs[prng.Next(lowNoisePrefabs.Length)];
+                        if (height <= BuildingYMax)
+                        {
+                            position = new Vector3(x - 120, height, y - 120);
+                            if (noiseMap[x, y] > BuildingThreshold1)
+                            {
+                                prefabToPlace = highNoisePrefabs[prng.Next(highNoisePrefabs.Length)];
+                            }
+                            else if (noiseMap[x, y] > BuildingThreshold2)
+                            {
+                                prefabToPlace = mediumNoisePrefabs[prng.Next(mediumNoisePrefabs.Length)];
+                            }
+                            else if (noiseMap[x, y] > BuildingThreshold3)
+                            {
+                                prefabToPlace = lowNoisePrefabs[prng.Next(lowNoisePrefabs.Length)];
+                            }
+                        }
                     }
 
                     if (prefabToPlace != null)
                     {
                         GameObject newBliding = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
                         newBliding.transform.SetParent(parentTransform);
-
-
-                        if (PositionBuildingOnGround(newBliding, BuildingYMin, BuildingYMax))
-                        {
-                            newBliding.SetActive(true);
-                        }
-                        else
-                        {
-                            newBliding.SetActive(false);
-                        }
                     }
                 }
             }
@@ -165,49 +158,43 @@ public class MapGenerator : MonoBehaviour
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
-
-
         for (int y = 0; y < mapChunkSize; y += 1)
         {
             for (int x = 0; x < mapChunkSize; x += 1)
             {
-                Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
+                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
 
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    float height = hit.point.y;
-                    position = new Vector3(x, height, y);
-
                     GameObject prefabToPlace = null;
-
-                    // heightThreshold에 따라 다른 프리팹 배열 선택
-                    if (noiseMap[x, y] > NodedirtThreshold1)
+                    float height = hit.point.y;
+                    if (height > NodedirtYMin)
                     {
-                        prefabToPlace = dirtlowNodePrefabs[prng.Next(dirtlowNodePrefabs.Length)];
+                        if (height <= NodedirtYMax)
+                        {
+                            position = new Vector3(x - 120, height, y - 120);
+                            // heightThreshold에 따라 다른 프리팹 배열 선택
+                            if (noiseMap[x, y] > NodedirtThreshold1)
+                            {
+                                prefabToPlace = dirtlowNodePrefabs[prng.Next(dirtlowNodePrefabs.Length)];
+                            }
+                            else if (noiseMap[x, y] > NodedirtThreshold2)
+                            {
+                                prefabToPlace = dirtmediumNodePrefabs[prng.Next(dirtmediumNodePrefabs.Length)];
+                            }
+                            else if (noiseMap[x, y] > NodedirtThreshold3)
+                            {
+                                prefabToPlace = dirthighNodePrefabs[prng.Next(dirthighNodePrefabs.Length)];
+                            }
+                        }
                     }
-                    else if (noiseMap[x, y] > NodedirtThreshold2)
-                    {
-                        prefabToPlace = dirtmediumNodePrefabs[prng.Next(dirtmediumNodePrefabs.Length)];
-                    }
-                    else if (noiseMap[x, y] > NodedirtThreshold3)
-                    {
-                        prefabToPlace = dirthighNodePrefabs[prng.Next(dirthighNodePrefabs.Length)];
-                    }
+                            
 
                     if (prefabToPlace != null)
                     {
                         GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
                         newNode.transform.SetParent(parentTransform);
-
-                        if (PositionBuildingOnGround(newNode, NodedirtYMin, NodedirtYMax))
-                        {
-                            newNode.SetActive(true);
-                        }
-                        else
-                        {
-                            newNode.SetActive(false);
-                        }
                     }
                 }
             }
@@ -222,43 +209,38 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < mapChunkSize; x += 1)
             {
-                Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
+                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
 
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    float height = hit.point.y;
-                    position = new Vector3(x, height, y);
-                    
                     GameObject prefabToPlace = null;
-
-                    // heightThreshold에 따라 다른 프리팹 배열 선택
-                    if (noiseMap[x, y] > NodedirtThreshold1)
+                    float height = hit.point.y;
+                    if (height > NodesandYMin)
                     {
-                        prefabToPlace = sandlowNodePrefabs[prng.Next(sandlowNodePrefabs.Length)];
-                    }
-                    else if (noiseMap[x, y] > NodedirtThreshold2)
-                    {
-                        prefabToPlace = sandmediumNodePrefabs[prng.Next(sandmediumNodePrefabs.Length)];
-                    }
-                    else if (noiseMap[x, y] > NodedirtThreshold3)
-                    {
-                        prefabToPlace = sandhighNodePrefabs[prng.Next(sandhighNodePrefabs.Length)];
+                        if (height <= NodesandYMax)
+                        {
+                            position = new Vector3(x - 120, height, y - 120);
+                            // heightThreshold에 따라 다른 프리팹 배열 선택
+                            if (noiseMap[x, y] > NodedirtThreshold1)
+                            {
+                                prefabToPlace = sandlowNodePrefabs[prng.Next(sandlowNodePrefabs.Length)];
+                            }
+                            else if (noiseMap[x, y] > NodedirtThreshold2)
+                            {
+                                prefabToPlace = sandmediumNodePrefabs[prng.Next(sandmediumNodePrefabs.Length)];
+                            }
+                            else if (noiseMap[x, y] > NodedirtThreshold3)
+                            {
+                                prefabToPlace = sandhighNodePrefabs[prng.Next(sandhighNodePrefabs.Length)];
+                            }
+                        }
                     }
 
                     if (prefabToPlace != null)
                     {
                         GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
                         newNode.transform.SetParent(parentTransform);
-
-                        if (PositionBuildingOnGround(newNode, BuildingYMin, BuildingYMax))
-                        {   
-                            newNode.SetActive(true);
-                        }
-                        else
-                        {
-                            newNode.SetActive(false);
-                        }
                     }
                 }
             }
@@ -273,13 +255,13 @@ public class MapGenerator : MonoBehaviour
         {
             for (int x = 0; x < mapChunkSize; x += 10)
             {
-                Vector3 position = new Vector3(x, 0, y); // Adjust the y value if needed
+                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
 
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
                     float height = hit.point.y;
-                    position = new Vector3(x, height, y);
+                    position = new Vector3(x - 120, height, y - 120);
 
                     GameObject prefabToPlace = null;
 
