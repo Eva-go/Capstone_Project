@@ -42,6 +42,7 @@ public class MapGenerator : MonoBehaviour
 
     public GameObject[] buildingPrefabs; // 건물 프리팹 배열
     public GameObject[] nodePrefabs;
+    public GameObject[] POIPrefabs;
     public MeshCollider placementArea;
     public int maxBuildings = 40;
     public LayerMask groundLayer; // 지면 레이어 마스크
@@ -54,6 +55,8 @@ public class MapGenerator : MonoBehaviour
     public float NodedirtYMax;
     public float NodesandYMin;
     public float NodesandYMax;
+    public float POIYMin;
+    public float POIYMax;
 
     [Range(0, 1)]
     public float BuildingThreshold1 = 0.8f;
@@ -92,8 +95,12 @@ public class MapGenerator : MonoBehaviour
     public GameObject[] sandmediumNodePrefabs;
     public GameObject[] sandhighNodePrefabs;
 
-
-    public GameObject[] POIPrefabs;
+    public GameObject[] POIPrefabs1;
+    public GameObject[] POIPrefabs2;
+    public GameObject[] POIPrefabs3;
+    public GameObject[] POIPrefabs4;
+    public GameObject[] POIPrefabs5;
+    public GameObject[] POIPrefabs6;
 
     //public GameObject selectedPrefab;
 
@@ -250,30 +257,43 @@ public class MapGenerator : MonoBehaviour
                 GameObject prefabToPlace = null;
                 if (noiseMap[x, y] > POIThreshold1)
                 {
-                    prefabToPlace = POIPrefabs[prng.Next(POIPrefabs.Length)];
+                    prefabToPlace = POIPrefabs1[prng.Next(POIPrefabs1.Length)];
                 }
                 else if (noiseMap[x, y] > POIThreshold2)
                 {
-                    prefabToPlace = POIPrefabs[prng.Next(POIPrefabs.Length)];
+                    prefabToPlace = POIPrefabs2[prng.Next(POIPrefabs2.Length)];
                 }
                 else if (noiseMap[x, y] > POIThreshold3)
                 {
-                    prefabToPlace = POIPrefabs[prng.Next(POIPrefabs.Length)];
+                    prefabToPlace = POIPrefabs3[prng.Next(POIPrefabs3.Length)];
                 }
                 else if (noiseMap[x, y] > POIThreshold4)
                 {
-                    prefabToPlace = POIPrefabs[prng.Next(POIPrefabs.Length)];
+                    prefabToPlace = POIPrefabs4[prng.Next(POIPrefabs4.Length)];
                 }
                 else if (noiseMap[x, y] > POIThreshold5)
                 {
-                    prefabToPlace = POIPrefabs[prng.Next(POIPrefabs.Length)];
+                    prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
                 }
                 else if (noiseMap[x, y] > POIThreshold6)
                 {
-                    prefabToPlace = POIPrefabs[prng.Next(POIPrefabs.Length)];
+                    prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
                 }
 
-                Instantiate(prefabToPlace, position, Quaternion.identity);
+                if (prefabToPlace != null)
+                {
+                    GameObject newPOI = Instantiate(prefabToPlace, position, Quaternion.identity);
+
+                    if (PositionBuildingOnGround(newPOI, POIYMin, POIYMax))
+                    {
+                        newPOI.SetActive(true);
+                    }
+                    else
+                    {
+                        Destroy(newPOI);
+                    }
+
+                }
             }
         }
     }
@@ -557,6 +577,16 @@ public class MapGenerator : MonoBehaviour
             float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
             PlaceDirtNodes(irregularNoiseMap);
             PlaceSandNodes(irregularNoiseMap);
+        }
+        else
+        {
+            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+        }
+
+        if (placementArea != null && POIPrefabs.Length > 0)
+        {
+            float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
+            PlacePOIs(irregularNoiseMap);
         }
         else
         {
