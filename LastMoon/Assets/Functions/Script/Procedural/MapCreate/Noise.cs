@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Noise
 {
-    public enum NormalizedMode { Local , Grobal};
+    public enum NormalizedMode { Local, Grobal };
     public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed,
         float scale, int octaves, float persistance, float lacunarity, Vector2 offset, NormalizedMode normalizedMode)
     {
@@ -49,7 +49,7 @@ public static class Noise
                 for (int i = 0; i < octaves; i++)
                 {
                     float sampleX = (x - halfWidth + octaveOffsets[i].x) / scale * frequency;
-                    float sampleY = (y- halfHeight + octaveOffsets[i].y) / scale * frequency;
+                    float sampleY = (y - halfHeight + octaveOffsets[i].y) / scale * frequency;
 
                     float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
                     noiseHeight += perlinValue * amplitude;
@@ -70,21 +70,55 @@ public static class Noise
         }
         for (int y = 0; y < mapHeight; y++)
         {
-            for (int x = 0; x < mapWidth; x++)  
+            for (int x = 0; x < mapWidth; x++)
             {
                 if (normalizedMode == NormalizedMode.Local)
                 {
                     noiseMap[x, y] = Mathf.InverseLerp(minLocalNoiseHeight, maxLocalNoiseHeight, noiseMap[x, y]);
-                } 
+                }
                 else
                 {
                     float normalizedHeight = (noiseMap[x, y] + 1) / (maxPossibleHeight);
-                    noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, 1);  
+                    noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, 1);
                 }
             }
         }
         return noiseMap;
     }
+    public static float[,] GenerateIrregularNoiseMap(int mapWidth, int mapHeight, int seed,
+    float scale, float irregularity, Vector2 offset)
+    {
+        float[,] noiseMap = new float[mapWidth, mapHeight];
+
+        System.Random prng = new System.Random(seed);
+        offset = new Vector2(prng.Next(-100000, 100000) + offset.x, prng.Next(-100000, 100000) + offset.y);
+
+        if (scale <= 0)
+        {
+            scale = 0.0001f;
+        }
+
+        float halfWidth = mapWidth / 2f;
+        float halfHeight = mapHeight / 2f;
+
+        for (int y = 0; y < mapHeight; y++)
+        {
+            for (int x = 0; x < mapWidth; x++) // Fixed: mapWidth instead of mapHeight
+            {
+                // Generate random noise value
+                float randomValue = (float)prng.NextDouble();
+
+                // Add offset
+                float sampleX = (x - halfWidth + offset.x) / scale;
+                float sampleY = (y - halfHeight + offset.y) / scale;
+
+                // Add the random noise to the noise map
+                noiseMap[x, y] = randomValue;
+            }
+        }
+        return noiseMap;
+    }
+
     public static float[,] AddNoise(float[,] baseNoiseMap, float[,] additionalNoiseMap, float blendStrength)
     {
         int width = baseNoiseMap.GetLength(0);
