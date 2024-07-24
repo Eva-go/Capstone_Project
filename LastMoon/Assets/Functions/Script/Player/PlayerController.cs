@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
+    private bool isJumping;
+
     private Vector3 velocity;
     private Vector3 UpCenter;
     private Vector3 DownCenter;
@@ -87,7 +89,10 @@ public class PlayerController : MonoBehaviour
             {
                 Run();
             }
-
+            if (!isJumping)
+            {
+                Jump();
+            }
             if (!Poi)
             {
                 CameraRotation();
