@@ -364,10 +364,13 @@ public class MapGenerator : MonoBehaviour
         if (Physics.Raycast(building.transform.position, Vector3.down, out hit, Mathf.Infinity))
         {
             // 지면을 찾으면 건물의 위치를 해당 지점으로 이동
-            if (hit.point.y <= maxY)
+            if (hit.point.y > minY)
             {
-                building.transform.position = hit.point;
-                return true;
+                if (hit.point.y <= maxY)
+                {
+                    building.transform.position = hit.point;
+                    return true;
+                }
             }
             else
             {
