@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        sfx_PlayerWalk.Play();
+        //sfx_PlayerWalk.enabled = false;
         if (!isRunning)
         {
             animator.SetBool("isRuns", false);
