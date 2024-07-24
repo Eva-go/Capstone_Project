@@ -103,20 +103,19 @@ public static class Noise
 
         for (int y = 0; y < mapHeight; y++)
         {
-            for (int x = 0; x < mapHeight; x++)
+            for (int x = 0; x < mapWidth; x++) // Fixed: mapWidth instead of mapHeight
             {
+                // Generate random noise value
+                float randomValue = (float)prng.NextDouble();
+
+                // Add offset
                 float sampleX = (x - halfWidth + offset.x) / scale;
                 float sampleY = (y - halfHeight + offset.y) / scale;
 
-                float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
-
-                // Apply irregularity factor
-                perlinValue *= irregularity;
-
-                noiseMap[x, y] = perlinValue;
+                // Add the random noise to the noise map
+                noiseMap[x, y] = randomValue;
             }
         }
-
         return noiseMap;
     }
 
