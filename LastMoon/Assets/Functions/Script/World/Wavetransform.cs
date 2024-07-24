@@ -15,6 +15,7 @@ public class Wavetransform : MonoBehaviour
 
     void Start()
     {
+        downwave = -30 / GameValue.MaxRound;
         wave = new Vector3(gameObject.transform.position.x, -15f+(GameValue.Round * downwave), gameObject.transform.position.z);
         waveY = -15f + (GameValue.Round * downwave);
 

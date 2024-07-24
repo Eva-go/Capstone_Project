@@ -8,6 +8,10 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     public int currentHealth;
     public Animator animator;
     public string nodeName;
+    
+    public AudioSource sfx_NodeHit;
+    public AudioClip sfx_NodeHit1, sfx_NodeHit2, sfx_NodeHit3, sfx_NodeHit4;
+
     //private int giveMoney = 50;
 
     private void Start()
@@ -18,6 +22,15 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void TakeDamage(int Damage)
     {
+        
+        float R_sfx = Random.value;
+        
+        if (R_sfx > 0.75) sfx_NodeHit.clip = sfx_NodeHit1;
+        else if (R_sfx > 0.5) sfx_NodeHit.clip = sfx_NodeHit2;
+        else if (R_sfx > 0.25) sfx_NodeHit.clip = sfx_NodeHit3;
+        else sfx_NodeHit.clip = sfx_NodeHit4;
+        sfx_NodeHit.Play();
+
         currentHealth -= Damage;
         if (currentHealth > 0)
         {

@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 UpCenter;
     private Vector3 DownCenter;
 
+    public AudioSource sfx_PlayerHit, sfx_PlayerWalk, sfx_PlayerSwing;
 
     // ray
     private RaycastHit hitInfo;
@@ -151,6 +152,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        sfx_PlayerWalk.Play();
         if (!isRunning)
         {
             animator.SetBool("isRuns", false);
@@ -340,6 +342,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !Poi)
         {
+            sfx_PlayerSwing.Play();
             if (isCrouching)
             {
                 animator.SetTrigger("Crouch_Swing");
@@ -369,6 +372,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        sfx_PlayerHit.Play();
         if (pv.IsMine)
         {
             animator.SetTrigger("Hit");

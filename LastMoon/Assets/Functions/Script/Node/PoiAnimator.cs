@@ -5,6 +5,9 @@ public class PoiAnimator : MonoBehaviourPunCallbacks
     public Animator animator;
     private bool ani;
     // Start is called before the first frame update
+
+    public AudioSource sfx_Station_Start, sfx_Station_Loop;
+
     void Start()
     {
         
@@ -22,9 +25,11 @@ public class PoiAnimator : MonoBehaviourPunCallbacks
     {
         if (ani)
         {
+            sfx_Station_Loop.Play();
             animator.SetBool("isActvie", ani);
         }
         else
+            sfx_Station_Loop.Stop();
             animator.SetBool("isActvie", ani);
     }
 }
