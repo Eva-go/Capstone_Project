@@ -12,7 +12,7 @@ public class CanvasController : MonoBehaviour
     public GameObject Tab;
 
 
-    private int keyTabCode = 0;
+    private int keyTabCode = 2;
     private bool inventory_ck;
     private int TotalSell=0;
     private int Amount = 0;
@@ -160,7 +160,6 @@ public class CanvasController : MonoBehaviour
             inventory_ck = !inventory_ck;
             inventory.SetActive(inventory_ck);
             Tab.SetActive(inventory_ck);
-            //money.SetActive(!inventory_ck);
         }
     }
 
@@ -168,12 +167,16 @@ public class CanvasController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            keyTabCode = (keyTabCode + 1) % 3;
-            bool isCraftManualActive = CraftMaunal.isActivated && !CraftMaunal.isPreViewActivated;
+            if(inventory_ck)
+            {
+                keyTabCode = (keyTabCode + 1) % 3;
+                bool isCraftManualActive = CraftMaunal.isActivated && !CraftMaunal.isPreViewActivated;
 
-            SetInventoryTabActive(keyTabCode);
+                SetInventoryTabActive(keyTabCode);
 
-            SetTabActive(keyTabCode);
+                SetTabActive(keyTabCode);
+            }
+           
         }
     }
 
