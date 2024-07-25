@@ -34,7 +34,6 @@ public class CanvasController : MonoBehaviour
         Tab.SetActive(false);
         money.SetActive(true);
 
-
         inventoryTransform = inventory.transform;
 
         for (int i = 0; i < nodesCount.Length; i++)

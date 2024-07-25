@@ -159,6 +159,7 @@ public class PlayerController : MonoBehaviour
     private void Move()
     {
         //sfx_PlayerWalk.enabled = false;
+
         if (!isRunning)
         {
             animator.SetBool("isRuns", false);
@@ -204,11 +205,17 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space) && isGrounded)
         {
+            if (!sfx_PlayerWalk.isPlaying)
+            {
+                sfx_PlayerWalk.Play();
+            }
+
 
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
             isGrounded = false;
         }
+        animator.SetBool("isGrounded", isGrounded);
     }
 
     private void Run()
@@ -350,7 +357,11 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !Poi)
         {
-            sfx_PlayerSwing.Play();
+            if (!sfx_PlayerSwing.isPlaying)
+            {
+                sfx_PlayerSwing.Play();
+            }
+
             if (isCrouching)
             {
                 animator.SetTrigger("Crouch_Swing");
@@ -380,7 +391,10 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        sfx_PlayerHit.Play();
+        if (!sfx_PlayerHit.isPlaying)
+        {
+            sfx_PlayerHit.Play();
+        }
         if (pv.IsMine)
         {
             animator.SetTrigger("Hit");
