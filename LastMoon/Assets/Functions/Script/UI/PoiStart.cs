@@ -6,7 +6,7 @@ public class PoiStart : MonoBehaviour
 {
     public Image image_fill;
     public Image alphaNode;
-    public Sprite resultNode;
+    public Sprite[] resultNode;
     public float time_coolTime = 2;
 
     private float time_current;
@@ -18,8 +18,15 @@ public class PoiStart : MonoBehaviour
     public Text node2_Text;
     public Text node_Text;
 
+    public Text nodetGet_Text;
+    
+    public GameObject nodeGet_BT;
+
+
+
     private int node1Value;
     private int node2Value;
+    private int mixCount = 1;
 
     private Coroutine repeatCoroutine; // 코루틴 참조를 저장할 변수
 
@@ -29,6 +36,7 @@ public class PoiStart : MonoBehaviour
         node1Value = 0;
         node2Value = 0;
         node_Text.text = " ";
+        nodeGet_BT.SetActive(false);
     }
 
     private void Update()
@@ -53,8 +61,7 @@ public class PoiStart : MonoBehaviour
     {
         Set_FillAmount(time_coolTime);
         isRunning = false;
-        alphaNode.sprite = resultNode;
-        Debug.Log("루프 끝남");
+        alphaNode.sprite = resultNode[0];
     }
 
     IEnumerator ExecuteRepeatedly()
@@ -89,12 +96,19 @@ public class PoiStart : MonoBehaviour
         if (int.TryParse(node_Text.text, out int currentValue))
         {
             currentValue++;
+            mixCount = currentValue;
             node_Text.text = currentValue.ToString();
         }
         else
         {
             node_Text.text = "1";
+            currentValue=mixCount;
         }
+        if(currentValue>0)
+        {
+            nodeGet_BT.SetActive(true);
+        }
+        
     }
 
     void Reset_CoolTime()
@@ -107,6 +121,11 @@ public class PoiStart : MonoBehaviour
     void Set_FillAmount(float value)
     {
         image_fill.fillAmount = value / time_coolTime;
+    }
+    
+    public void Get_Btn()
+    {
+        nodetGet_Text.text = mixCount.ToString();
     }
 
     public void on_Btn()

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AddNode : MonoBehaviour
 {
-    public GameObject uiPanel; // UI 패널
+    //public GameObject uiPanel; // UI 패널
 
     // 충돌 처리 후 이미지 변경 및 노드 갯수 코드
     public Image node1;
