@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 UpCenter;
     private Vector3 DownCenter;
 
-    public AudioSource sfx_PlayerHit, sfx_PlayerWalk, sfx_PlayerSwing;
+    public AudioSource sfx_PlayerHit, sfx_PlayerJump, sfx_PlayerWalk, sfx_PlayerSwing;
 
     // ray
     private RaycastHit hitInfo;
@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     public GameObject[] weaponsSwitching;
     private int selectedWeaponIndex = 0;
+    private int selectedWeaponStrength = 1;
 
     public static int getMoney;
     public GameObject insidegameObject;
@@ -173,13 +174,15 @@ public class PlayerController : MonoBehaviour
     //}
     public void WaveTic()
     {
-        float waveHeight;
+        float waveHeight, WaterDepth;
         waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime);
-        if (transform.position.y < wavetransform.waveY + waveHeight)
+        WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
+
+        if (WaterDepth > 0)
         {
             if (Time.time >= lastDamageTime + damageInterval)
             {
-                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage);
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.currentTime + WaterDepth * WaterDepth / 10);
                 lastDamageTime = Time.time;
             }
         }
@@ -227,18 +230,28 @@ public class PlayerController : MonoBehaviour
 
             if (moveDirX != 0 || moveDirZ != 0)
             {
+                if (isGrounded) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
                 animator.SetBool("isMove", true);
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
             }
             else
             {
+                sfx_PlayerWalk.mute = true;
                 animator.SetBool("isMove", false);
             }
         }
@@ -246,11 +259,11 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            if (!sfx_PlayerWalk.isPlaying)
+            if (!sfx_PlayerJump.isPlaying)
             {
-                sfx_PlayerWalk.Play();
+                sfx_PlayerJump.Play();
             }
             if (myRigid.velocity.y > 0)
             {
@@ -259,9 +272,7 @@ public class PlayerController : MonoBehaviour
                 velocity = new Vector3(moveDirX, 0, moveDirZ);
                 myRigid.velocity = velocity;
             }
-
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-
         }
     }
 
@@ -277,19 +288,29 @@ public class PlayerController : MonoBehaviour
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
+                if (isGrounded) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
             }
-        }
-        else
-        {
-            animator.SetBool("isRuns", false);
+            else
+            {
+                sfx_PlayerWalk.mute = true;
+                animator.SetBool("isRuns", false);
+            }
         }
     }
 
@@ -303,18 +324,28 @@ public class PlayerController : MonoBehaviour
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
+                if (isGrounded) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
                 animator.SetBool("isCrouchWalk", true);
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
             }
             else
             {
+                sfx_PlayerWalk.mute = true;
                 animator.SetBool("isCrouchWalk", false);
             }
         }
@@ -406,7 +437,15 @@ public class PlayerController : MonoBehaviour
             if (nodeController != null)
             {
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                nodeController.TakeDamage(10f);
+                if (nodeController.Node_Type == selectedWeaponIndex)
+                {
+                    nodeController.TakeDamage(10f * selectedWeaponStrength, true);
+                }
+                else
+                {
+                    nodeController.TakeDamage(5f * selectedWeaponStrength, false);
+
+                }
             }
         }
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
@@ -418,22 +457,21 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0) && !Poi)
+        if (Input.GetMouseButton(0) && !Poi)
         {
             if (!sfx_PlayerSwing.isPlaying)
             {
                 sfx_PlayerSwing.Play();
-            }
-
-            if (isCrouching)
-            {
-                animator.SetTrigger("Crouch_Swing");
-                Localanimator.SetTrigger("Crouch_Swing");
-            }
-            else
-            {
-                animator.SetTrigger("Swing");
-                Localanimator.SetTrigger("Swing");
+                if (isCrouching)
+                {
+                    animator.SetTrigger("Crouch_Swing");
+                    Localanimator.SetTrigger("Crouch_Swing");
+                }
+                else
+                {
+                    animator.SetTrigger("Swing");
+                    Localanimator.SetTrigger("Swing");
+                }
             }
         }
     }
