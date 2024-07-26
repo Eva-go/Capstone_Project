@@ -5,7 +5,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
 {
     public int maxHealth = 30;
     [HideInInspector]
-    public int currentHealth;
+    public float currentHealth;
     public Animator animator;
     public string nodeName;
     
@@ -20,7 +20,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         //PlayerController.getMoney = giveMoney;
     }
 
-    public void TakeDamage(int Damage)
+    public void TakeDamage(float Damage)
     {
         
         float R_sfx = Random.value;

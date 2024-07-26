@@ -6,7 +6,7 @@ using Photon.Realtime;
 public class PlayerController : MonoBehaviour
 {
     public PhotonView pv;
-    public static float Hp = 100;
+    public static float Hp = 100f;
     private GameObject cam;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
@@ -54,8 +54,15 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
 
+    //파도 y축 위치
+    private Wavetransform wavetransform;
+    private float damageInterval = 1.0f; // interval between damage ticks
+    private float tickDamage = 5.0f;     // damage per tick
+    private float lastDamageTime = 0;    // time of the last tick damage
+
     void Start()
     {
+
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
@@ -76,6 +83,9 @@ public class PlayerController : MonoBehaviour
         //콜라이더 크기 조절
         UpCenter = new Vector3(0f, 1f, 0f);
         DownCenter = new Vector3(0f, 0.5f, 0f);
+
+        //파도 찾기
+        wavetransform = FindObjectOfType<Wavetransform>();
     }
 
     void Update()
@@ -102,7 +112,7 @@ public class PlayerController : MonoBehaviour
             Interaction();
             Attack();
             Switching();
-
+            WaveTic();
             if (Input.GetKey("escape"))
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
@@ -138,6 +148,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    public void WaveTic()
+    {
+        if (transform.position.y < wavetransform.waveY)
+        {
+            if (Time.time >= lastDamageTime + damageInterval)
+            {
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage);
+                lastDamageTime = Time.time;
+            }
+        }
+    }
     private void Die()
     {
         if (pv.IsMine)
@@ -336,7 +358,7 @@ public class PlayerController : MonoBehaviour
             if (nodeController != null)
             {
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                nodeController.TakeDamage(10);
+                nodeController.TakeDamage(10f);
             }
         }
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
@@ -365,7 +387,7 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    private void RPC_TakeDamage(int viewID, int damage)
+    private void RPC_TakeDamage(int viewID, float damage)
     {
         PhotonView targetPv = PhotonView.Find(viewID);
         if (targetPv != null)
@@ -378,7 +400,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         sfx_PlayerHit.Play();
         if (pv.IsMine)
