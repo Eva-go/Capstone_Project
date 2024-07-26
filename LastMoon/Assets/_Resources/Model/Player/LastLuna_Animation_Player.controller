@@ -650,6 +650,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: isMove
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: isRuns
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7518071429708295845}
   m_Solo: 0
@@ -945,8 +948,8 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: 4371844095555043505}
   - {fileID: 6446303075393075726}
+  - {fileID: 4371844095555043505}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -1053,6 +1056,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: isMove
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: isRuns
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7518071429708295845}

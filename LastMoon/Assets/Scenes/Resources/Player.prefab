@@ -1027,6 +1027,7 @@ MonoBehaviour:
   toolCamera: {fileID: 8268691556345852432}
   jumpForce: 375
   crouchHeight: 0.5
+  inWaterdebug: 0
   sfx_PlayerHit: {fileID: 7701677681895841406}
   sfx_PlayerWalk: {fileID: -8643451468561478562}
   sfx_PlayerSwing: {fileID: 1414001347073707484}
@@ -1102,6 +1103,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 2
     Name: isRuns
+  - Type: 4
+    SynchronizeType: 0
+    Name: isGrounded
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0

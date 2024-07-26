@@ -42,6 +42,7 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static bool lived = false;
 
     public static float WaveTimer;
+    public static float WaveTimerMax;
 
     public int userNumber;
 

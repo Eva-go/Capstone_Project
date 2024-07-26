@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     private bool isCrouching;
     private bool isRunning;
 
+    public float inWaterdebug;
 
     private Vector3 velocity;
     private Vector3 UpCenter;
@@ -152,12 +153,16 @@ public class PlayerController : MonoBehaviour
     public void WaveTic()
     {
         float waveHeight;
-        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime);
-        if (transform.position.y < wavetransform.waveY + waveHeight)
+        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime, 0.5f);
+        float WaterDepth = wavetransform.waveY + waveHeight - transform.position.y + 0.25f;
+        
+        inWaterdebug = waveHeight;
+
+        if (WaterDepth > 0)
         {
             if (Time.time >= lastDamageTime + damageInterval)
             {
-                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage);
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.currentTime + WaterDepth * WaterDepth / 10);
                 lastDamageTime = Time.time;
             }
         }
@@ -197,7 +202,14 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
@@ -211,7 +223,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             if (!sfx_PlayerWalk.isPlaying)
             {
@@ -246,7 +258,14 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
@@ -273,7 +292,14 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
@@ -383,22 +409,21 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0) && !Poi)
+        if (Input.GetMouseButton(0) && !Poi)
         {
             if (!sfx_PlayerSwing.isPlaying)
             {
                 sfx_PlayerSwing.Play();
-            }
-
-            if (isCrouching)
-            {
-                animator.SetTrigger("Crouch_Swing");
-                Localanimator.SetTrigger("Crouch_Swing");
-            }
-            else
-            {
-                animator.SetTrigger("Swing");
-                Localanimator.SetTrigger("Swing");
+                if (isCrouching)
+                {
+                    animator.SetTrigger("Crouch_Swing");
+                    Localanimator.SetTrigger("Crouch_Swing");
+                }
+                else
+                {
+                    animator.SetTrigger("Swing");
+                    Localanimator.SetTrigger("Swing");
+                }
             }
         }
     }
