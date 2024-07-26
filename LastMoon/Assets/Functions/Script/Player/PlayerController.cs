@@ -26,8 +26,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
-
-    public float inWaterdebug;
+    private bool live;
 
     private Vector3 velocity;
     private Vector3 UpCenter;
@@ -61,9 +60,12 @@ public class PlayerController : MonoBehaviour
     private float tickDamage = 5.0f;     // damage per tick
     private float lastDamageTime = 0;    // time of the last tick damage
 
+
+    //인벤토리 아이템 갯수
+    //public int[] nodeItiems;
+    //public int[] mixItiems;
     void Start()
     {
-
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
@@ -85,8 +87,11 @@ public class PlayerController : MonoBehaviour
         UpCenter = new Vector3(0f, 1f, 0f);
         DownCenter = new Vector3(0f, 0.5f, 0f);
 
+        //아이템 초기화
+        //Items();
         //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
+        live = true;
     }
 
     void Update()
@@ -140,6 +145,14 @@ public class PlayerController : MonoBehaviour
             {
                 GameValue.Round = 0;
             }
+            //if(Input.GetKeyDown(KeyCode.F8))
+            //{
+            //    for(int i=0;i<6;i++)
+            //    {
+            //        nodeItiems[i] = 10;
+            //        mixItiems[i] = 10;
+            //    }
+            //}
 
             // Check if the player is dead
             if (Hp <= 0)
@@ -150,19 +163,23 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    //public void Items()
+    //{
+    //    for(int i=0;i<6;i++)
+    //    {
+    //        nodeItiems[i] = 0;
+    //        mixItiems[i] = 0;
+    //    }
+    //}
     public void WaveTic()
     {
         float waveHeight;
-        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime, 0.5f);
-        float WaterDepth = wavetransform.waveY + waveHeight - transform.position.y + 0.25f;
-        
-        inWaterdebug = waveHeight;
-
-        if (WaterDepth > 0)
+        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime);
+        if (transform.position.y < wavetransform.waveY + waveHeight)
         {
             if (Time.time >= lastDamageTime + damageInterval)
             {
-                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.currentTime + WaterDepth * WaterDepth / 10);
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage);
                 lastDamageTime = Time.time;
             }
         }
@@ -171,13 +188,26 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
+            Poi = false;
             Debug.Log("Player died, starting respawn process.");
-            PhotonNetwork.Destroy(gameObject);
-
-            // 플레이어 리스폰 요청
+            if(live)
+            {
+                PhotonNetwork.Destroy(gameObject);
+                live = false;
+                reSpwan();
+            }
+           
+        }
+    }
+    
+    private void reSpwan()
+    {
+        if(pv.IsMine&&!live)
+        {
             Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
             RespawnManager.Instance.RespawnPlayer(spawnPoints);
         }
+      
     }
 
     private void OnDestroy()
@@ -202,14 +232,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                if (isGrounded)
-                {
-                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
-                }
-                else
-                {
-                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed * 0.5f;
-                }
+                velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
@@ -223,7 +246,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKey(KeyCode.Space) && isGrounded)
         {
             if (!sfx_PlayerWalk.isPlaying)
             {
@@ -258,14 +281,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                if (isGrounded)
-                {
-                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
-                }
-                else
-                {
-                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed * 0.5f;
-                }
+                velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
@@ -292,14 +308,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                if (isGrounded)
-                {
-                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
-                }
-                else
-                {
-                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed * 0.5f;
-                }
+                velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
@@ -382,7 +391,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            Poi = true;
+            Poi=!Poi;
         }
     }
 
@@ -409,21 +418,22 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButton(0) && !Poi)
+        if (Input.GetMouseButtonDown(0) && !Poi)
         {
             if (!sfx_PlayerSwing.isPlaying)
             {
                 sfx_PlayerSwing.Play();
-                if (isCrouching)
-                {
-                    animator.SetTrigger("Crouch_Swing");
-                    Localanimator.SetTrigger("Crouch_Swing");
-                }
-                else
-                {
-                    animator.SetTrigger("Swing");
-                    Localanimator.SetTrigger("Swing");
-                }
+            }
+
+            if (isCrouching)
+            {
+                animator.SetTrigger("Crouch_Swing");
+                Localanimator.SetTrigger("Crouch_Swing");
+            }
+            else
+            {
+                animator.SetTrigger("Swing");
+                Localanimator.SetTrigger("Swing");
             }
         }
     }

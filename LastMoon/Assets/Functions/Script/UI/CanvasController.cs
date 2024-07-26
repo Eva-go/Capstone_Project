@@ -47,7 +47,7 @@ public class CanvasController : MonoBehaviour
     void Update()
     {
         UpdateInsideActive();
-        UpdatePoiActive();
+        //UpdatePoiActive();
         UpdateInventoryActive();
         UpdateInventoryTabActive();
         UpdateMoneyActive();
