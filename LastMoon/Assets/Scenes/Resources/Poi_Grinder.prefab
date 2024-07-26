@@ -72,9 +72,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poiItem: 0
+  nodeItem: 
   animator: {fileID: 5273659194352868418}
   sfx_Station_Start: {fileID: -6086055802904456117}
   sfx_Station_Loop: {fileID: -1204528744865690132}
+  increaseInterval: 5
 --- !u!65 &8967602037494354336
 BoxCollider:
   m_ObjectHideFlags: 0

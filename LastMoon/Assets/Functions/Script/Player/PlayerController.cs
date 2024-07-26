@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
-
+    private bool live;
 
     private Vector3 velocity;
     private Vector3 UpCenter;
@@ -62,8 +62,8 @@ public class PlayerController : MonoBehaviour
 
 
     //인벤토리 아이템 갯수
-    public int[] nodeItiems;
-    public int[] mixItiems;
+    //public int[] nodeItiems;
+    //public int[] mixItiems;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -88,9 +88,10 @@ public class PlayerController : MonoBehaviour
         DownCenter = new Vector3(0f, 0.5f, 0f);
 
         //아이템 초기화
-        Items();
+        //Items();
         //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
+        live = true;
     }
 
     void Update()
@@ -144,14 +145,14 @@ public class PlayerController : MonoBehaviour
             {
                 GameValue.Round = 0;
             }
-            if(Input.GetKeyDown(KeyCode.F8))
-            {
-                for(int i=0;i<6;i++)
-                {
-                    nodeItiems[i] = 10;
-                    mixItiems[i] = 10;
-                }
-            }
+            //if(Input.GetKeyDown(KeyCode.F8))
+            //{
+            //    for(int i=0;i<6;i++)
+            //    {
+            //        nodeItiems[i] = 10;
+            //        mixItiems[i] = 10;
+            //    }
+            //}
 
             // Check if the player is dead
             if (Hp <= 0)
@@ -162,14 +163,14 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void Items()
-    {
-        for(int i=0;i<6;i++)
-        {
-            nodeItiems[i] = 0;
-            mixItiems[i] = 0;
-        }
-    }
+    //public void Items()
+    //{
+    //    for(int i=0;i<6;i++)
+    //    {
+    //        nodeItiems[i] = 0;
+    //        mixItiems[i] = 0;
+    //    }
+    //}
     public void WaveTic()
     {
         float waveHeight;
@@ -189,12 +190,24 @@ public class PlayerController : MonoBehaviour
         {
             Poi = false;
             Debug.Log("Player died, starting respawn process.");
-            PhotonNetwork.Destroy(gameObject);
-
-            // 플레이어 리스폰 요청
+            if(live)
+            {
+                PhotonNetwork.Destroy(gameObject);
+                live = false;
+                reSpwan();
+            }
+           
+        }
+    }
+    
+    private void reSpwan()
+    {
+        if(pv.IsMine&&!live)
+        {
             Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
             RespawnManager.Instance.RespawnPlayer(spawnPoints);
         }
+      
     }
 
     private void OnDestroy()
