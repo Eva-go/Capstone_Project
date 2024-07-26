@@ -21,20 +21,23 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Terrain_Ocean_Background
-  m_Shader: {fileID: -6465566751694194690, guid: f66d4dcdda7bd9a458350f0a7de0192e, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 7b4c396927ac823498c5e286593a0f81, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ALPHATEST_ON
   - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 3000
   stringTagMap:
-    RenderType: Opaque
-  disabledShaderPasses: []
+    RenderType: Transparent
+  disabledShaderPasses:
+  - DepthOnly
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -157,7 +160,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaClip: 0
+    - _AlphaClip: 1
     - _AlphaToMask: 0
     - _Ambient_Strength: 0.5
     - _Blend: 0
@@ -171,7 +174,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _DstBlendAlpha: 0
     - _Emission_Map_Strength: 0
     - _Emission_Strength: 0
@@ -220,10 +223,10 @@ Material:
     - _Specular_Power: 1
     - _Specular_Step: 4
     - _Specular_Strength: 0
-    - _SrcBlend: 1
+    - _SrcBlend: 5
     - _SrcBlendAlpha: 1
-    - _Strength: 1
-    - _Surface: 0
+    - _Strength: 2
+    - _Surface: 1
     - _Texture_Specular: 0
     - _Time_Scale: 1
     - _Transparency: 1
@@ -234,7 +237,7 @@ Material:
     - _Use_World_Coord: 1
     - _WorkflowMode: 0
     - _ZTest: 4
-    - _ZWrite: 1
+    - _ZWrite: 0
     - _ZWriteControl: 0
     - _transparency: 1
     m_Colors:

@@ -165,38 +165,22 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isRuns", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-            Vector3 moveHorizontal = transform.right * moveDirX;
-            Vector3 moveVertical = transform.forward * moveDirZ;
-            velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-        }
 
-        if (isCrouching && !isRunning)
-        {
-            animator.SetBool("isMove", false);
-            if (velocity != Vector3.zero)
+            if (moveDirX != 0 || moveDirZ != 0)
             {
-                animator.SetBool("isCrouchWalk", true);
+                animator.SetBool("isMove", true);
+                float moveDirY = myRigid.velocity.y;
+
+                Vector3 moveHorizontal = transform.right * moveDirX;
+                Vector3 moveVertical = transform.forward * moveDirZ;
+                velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+
+                velocity.y = moveDirY;
+                myRigid.velocity = velocity;
             }
             else
             {
-                animator.SetBool("isCrouchWalk", false);
-            }
-        }
-        else if (!isCrouching && !isRunning)
-        {
-            animator.SetBool("isCrouchWalk", false);
-
-            if (!isRunning)
-            {
-                if (velocity != Vector3.zero)
-                {
-                    animator.SetBool("isMove", true);
-                }
-                else
-                {
-                    animator.SetBool("isMove", false);
-                }
+                animator.SetBool("isMove", false);
             }
         }
     }
@@ -209,13 +193,17 @@ public class PlayerController : MonoBehaviour
             {
                 sfx_PlayerWalk.Play();
             }
-
+            if (myRigid.velocity.y > 0)
+            {
+                float moveDirX = myRigid.velocity.x;
+                float moveDirZ = myRigid.velocity.z;
+                velocity = new Vector3(moveDirX, 0, moveDirZ);
+                myRigid.velocity = velocity;
+            }
 
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-            isGrounded = false;
         }
-        animator.SetBool("isGrounded", isGrounded);
     }
 
     private void Run()
@@ -225,24 +213,24 @@ public class PlayerController : MonoBehaviour
 
         if (isRunning && !isCrouching)
         {
-            animator.SetBool("isMove", false);
+            animator.SetBool("isRuns", true);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-            Vector3 moveHorizontal = transform.right * moveDirX;
-            Vector3 moveVertical = transform.forward * moveDirZ;
-            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+            if (moveDirX != 0 || moveDirZ != 0)
+            {
+                float moveDirY = myRigid.velocity.y;
+
+                Vector3 moveHorizontal = transform.right * moveDirX;
+                Vector3 moveVertical = transform.forward * moveDirZ;
+                velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+
+                velocity.y = moveDirY;
+                myRigid.velocity = velocity;
+            }
         }
-        if (isRunning)
+        else
         {
-            if (velocity != Vector3.zero)
-            {
-                animator.SetBool("isRuns", true);
-            }
-            else
-            {
-                animator.SetBool("isRuns", false);
-            }
+            animator.SetBool("isRuns", false);
         }
     }
 
@@ -254,10 +242,22 @@ public class PlayerController : MonoBehaviour
         {
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-            Vector3 moveHorizontal = transform.right * moveDirX;
-            Vector3 moveVertical = transform.forward * moveDirZ;
-            velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+            if (moveDirX != 0 || moveDirZ != 0)
+            {
+                animator.SetBool("isCrouchWalk", true);
+                float moveDirY = myRigid.velocity.y;
+
+                Vector3 moveHorizontal = transform.right * moveDirX;
+                Vector3 moveVertical = transform.forward * moveDirZ;
+                velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+
+                velocity.y = moveDirY;
+                myRigid.velocity = velocity;
+            }
+            else
+            {
+                animator.SetBool("isCrouchWalk", false);
+            }
         }
 
         if (isCrouching)
@@ -285,14 +285,18 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "PLANE")
         {
             isGrounded = true;
+            myRigid.drag = 5;
+            animator.SetBool("isGrounded", true);
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "PLANE")
         {
             isGrounded = false;
+            myRigid.drag = 1;
+            animator.SetBool("isGrounded", false);
         }
     }
 
