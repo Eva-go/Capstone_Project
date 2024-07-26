@@ -151,7 +151,9 @@ public class PlayerController : MonoBehaviour
 
     public void WaveTic()
     {
-        if (transform.position.y < wavetransform.waveY)
+        float waveHeight;
+        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime);
+        if (transform.position.y < wavetransform.waveY + waveHeight)
         {
             if (Time.time >= lastDamageTime + damageInterval)
             {
