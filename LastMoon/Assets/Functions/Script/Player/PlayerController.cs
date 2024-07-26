@@ -60,9 +60,12 @@ public class PlayerController : MonoBehaviour
     private float tickDamage = 5.0f;     // damage per tick
     private float lastDamageTime = 0;    // time of the last tick damage
 
+
+    //인벤토리 아이템 갯수
+    public int[] nodeItiems;
+    public int[] mixItiems;
     void Start()
     {
-
         pv = GetComponent<PhotonView>();
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
@@ -84,6 +87,8 @@ public class PlayerController : MonoBehaviour
         UpCenter = new Vector3(0f, 1f, 0f);
         DownCenter = new Vector3(0f, 0.5f, 0f);
 
+        //아이템 초기화
+        Items();
         //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
     }
@@ -139,6 +144,14 @@ public class PlayerController : MonoBehaviour
             {
                 GameValue.Round = 0;
             }
+            if(Input.GetKeyDown(KeyCode.F8))
+            {
+                for(int i=0;i<6;i++)
+                {
+                    nodeItiems[i] = 10;
+                    mixItiems[i] = 10;
+                }
+            }
 
             // Check if the player is dead
             if (Hp <= 0)
@@ -149,6 +162,14 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    public void Items()
+    {
+        for(int i=0;i<6;i++)
+        {
+            nodeItiems[i] = 0;
+            mixItiems[i] = 0;
+        }
+    }
     public void WaveTic()
     {
         if (transform.position.y < wavetransform.waveY)
@@ -164,6 +185,7 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
+            Poi = false;
             Debug.Log("Player died, starting respawn process.");
             PhotonNetwork.Destroy(gameObject);
 
@@ -343,7 +365,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            Poi = true;
+            Poi=!Poi;
         }
     }
 
