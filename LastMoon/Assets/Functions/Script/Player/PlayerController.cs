@@ -124,12 +124,13 @@ public class PlayerController : MonoBehaviour
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                walkSpeed = 100;
+                Hp = 100;
             }
+            /*
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                walkSpeed = 2.5f;
             }
+             */
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
@@ -436,6 +437,19 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(ray.origin, ray.direction, Color.red, 5);
             if (nodeController != null)
             {
+                if (selectedWeaponIndex == 0)
+                {
+                    selectedWeaponStrength = GameValue.Axe + 1;
+                }
+                else if (selectedWeaponIndex == 1)
+                {
+                    selectedWeaponStrength = GameValue.Pickaxe + 1;
+                }
+                else if (selectedWeaponIndex == 2)
+                {
+                    selectedWeaponStrength = GameValue.Shovel + 1;
+                }
+
                 Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
                 if (nodeController.Node_Type == selectedWeaponIndex)
                 {

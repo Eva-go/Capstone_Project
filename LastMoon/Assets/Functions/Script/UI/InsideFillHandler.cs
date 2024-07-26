@@ -30,6 +30,7 @@ public class InsideFillHandler : MonoBehaviour
             else if(fillValue >=100)
             {
                 fillValue = 100;
+                PlayerController.Hp = 100;
                 PlayerController.PreViewCam = true;
                 GameValue.lived = true;
             }
