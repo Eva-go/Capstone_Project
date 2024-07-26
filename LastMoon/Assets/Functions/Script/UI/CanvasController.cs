@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class CanvasController : MonoBehaviour
 {
-    public GameObject poi;
     public GameObject inside;
     public GameObject inventory;
     public GameObject money;
@@ -29,7 +28,6 @@ public class CanvasController : MonoBehaviour
     void Start()
     {
         inside.SetActive(false);
-        poi.SetActive(false);
         inventory.SetActive(false);
         Tab.SetActive(false);
         money.SetActive(true);
@@ -130,28 +128,6 @@ public class CanvasController : MonoBehaviour
         }
     }
 
-    void UpdatePoiActive()
-    {
-        bool isPoiActive = PlayerController.Poi;
-        poi.SetActive(isPoiActive);
-
-        if (isPoiActive)
-        {
-            inventory.SetActive(true);
-            Tab.SetActive(true);
-            money.SetActive(false);
-            Cursor.lockState = CursorLockMode.Confined;
-        }
-    }
-
-    public void Bt_poiExt()
-    {
-        poi.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
-        PlayerController.Poi = false;
-        inventory.SetActive(false);
-        Tab.SetActive(false);
-    }
 
     void UpdateInventoryActive()
     {

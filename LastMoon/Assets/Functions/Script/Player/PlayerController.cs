@@ -5,6 +5,7 @@ using Photon.Realtime;
 
 public class PlayerController : MonoBehaviour
 {
+    public string nickName; 
     public PhotonView pv;
     public static float Hp = 100f;
     private GameObject cam;
@@ -49,7 +50,6 @@ public class PlayerController : MonoBehaviour
     public GameObject insidegameObject;
     public static bool insideActive;
     public static bool PreViewCam;
-    public static bool Poi;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
@@ -62,8 +62,9 @@ public class PlayerController : MonoBehaviour
 
 
     //인벤토리 아이템 갯수
-    //public int[] nodeItiems;
-    //public int[] mixItiems;
+    private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
+    public int[] nodeItiems;
+    public int[] mixItiems;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -71,6 +72,9 @@ public class PlayerController : MonoBehaviour
         myCollider = GetComponent<CapsuleCollider>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
+
+        //플레이어 이름
+        nickName = this.gameObject.name;
 
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
@@ -88,7 +92,7 @@ public class PlayerController : MonoBehaviour
         DownCenter = new Vector3(0f, 0.5f, 0f);
 
         //아이템 초기화
-        //Items();
+        Items();
         //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
         live = true;
@@ -108,12 +112,8 @@ public class PlayerController : MonoBehaviour
             {
                 Run();
             }
-
-            if (!Poi)
-            {
-                CameraRotation();
-                CharacterRotation();
-            }
+            CameraRotation();
+            CharacterRotation();
             Jump();
             Interaction();
             Attack();
@@ -145,14 +145,22 @@ public class PlayerController : MonoBehaviour
             {
                 GameValue.Round = 0;
             }
-            //if(Input.GetKeyDown(KeyCode.F8))
-            //{
-            //    for(int i=0;i<6;i++)
-            //    {
-            //        nodeItiems[i] = 10;
-            //        mixItiems[i] = 10;
-            //    }
-            //}
+            if(Input.GetKeyDown(KeyCode.F8))
+            {
+                for(int i=0;i<6;i++)
+                {
+                    nodeItiems[i] = 10;
+                }
+            }
+            if(Input.GetKeyDown(KeyCode.F9))
+            {
+                for(int i=0; i<6; i++)
+                {
+                    Debug.Log("아이템 갯수" +i+"번째 아이템" +nodeItiems[i]);
+                    Debug.Log("믹스 아이템 갯수" + i + "번째 아이템" + mixItiems[i]);
+                }
+               
+            }
 
             // Check if the player is dead
             if (Hp <= 0)
@@ -163,14 +171,14 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    //public void Items()
-    //{
-    //    for(int i=0;i<6;i++)
-    //    {
-    //        nodeItiems[i] = 0;
-    //        mixItiems[i] = 0;
-    //    }
-    //}
+    public void Items()
+    {
+        for(int i=0;i<6;i++)
+        {
+            nodeItiems[i] = 0;
+            mixItiems[i] = 0;
+        }
+    }
     public void WaveTic()
     {
         float waveHeight;
@@ -188,7 +196,6 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            Poi = false;
             Debug.Log("Player died, starting respawn process.");
             if(live)
             {
@@ -391,7 +398,15 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            Poi=!Poi;
+            PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
+            if(targetPv !=null)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName);
+
+                }
+            }
         }
     }
 
@@ -414,11 +429,127 @@ public class PlayerController : MonoBehaviour
             // 플레이어 공격 처리
             pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
         }
+        else if(Physics.Raycast(ray,out hit, 5f)&&hit.collider.CompareTag("Poi"))
+        {
+            if(hit.transform.gameObject.name == "Poi_Distiller(Clone)")
+            {
+                Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+                            nodeItiems[i] = distillerController.nodeCount;
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                            Debug.Log("아이템 수집" + mixItiems[i]);
+                        }
+                    }
+                }
+            }
+            else if(hit.transform.gameObject.name == "Poi_Dryer(Clone)")
+            {
+                Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+                            nodeItiems[i] = distillerController.nodeCount;
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                            Debug.Log("아이템 수집" + mixItiems[i]);
+                        }
+                    }
+                }
+            }
+            else if(hit.transform.gameObject.name == "Poi_Filter(Clone)")
+            {
+                Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+                            nodeItiems[i] = distillerController.nodeCount;
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                            Debug.Log("아이템 수집" + mixItiems[i]);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Grinder(Clone)")
+            {
+                Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+                            nodeItiems[i] = distillerController.nodeCount;
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                            Debug.Log("아이템 수집" + mixItiems[i]);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Heater(Clone)")
+            {
+                Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+                            nodeItiems[i] = distillerController.nodeCount;
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                            Debug.Log("아이템 수집" + mixItiems[i]);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Smelter(Clone)")
+            {
+                Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+                            nodeItiems[i] = distillerController.nodeCount;
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                            Debug.Log("아이템 수집" + mixItiems[i]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    [PunRPC]
+    public void UpdateMixItem(int index, int mixItemCount)
+    {
+        mixItiems[index] = mixItemCount;
     }
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0) && !Poi)
+        if (Input.GetMouseButtonDown(0))
         {
             if (!sfx_PlayerSwing.isPlaying)
             {
@@ -437,6 +568,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 
     [PunRPC]
     private void RPC_TakeDamage(int viewID, float damage)

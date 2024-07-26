@@ -1017,6 +1017,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b5b9052fa619f140b889fdc459a67f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nickName: 
   pv: {fileID: 0}
   walkSpeed: 10
   runSpeed: 15
@@ -1049,6 +1050,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   groundCheckDistance: 0.1
+  nodeItiems: 000000000000000000000000000000000000000000000000
+  mixItiems: 000000000000000000000000000000000000000000000000
 --- !u!114 &6555621457796106470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1102,6 +1105,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 2
     Name: isRuns
+  - Type: 4
+    SynchronizeType: 0
+    Name: isGrounded
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0

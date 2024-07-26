@@ -36,19 +36,7 @@ public class PoiController : MonoBehaviourPunCallbacks
     void Update()
     {
         // 현재 플레이어가 소유자이고 ani를 조작할 수 있는 경우
-        if (photonView.IsMine && PlayerController.Poi != ani)
-        {
-            if (ani == false && !isBeingUsed)
-            {
-                // ani를 true로 변경
-                photonView.RPC("RPC_PoiSet", RpcTarget.AllBuffered, true, PhotonNetwork.LocalPlayer.ActorNumber);
-            }
-            else if (ani == true && aniOwner == PhotonNetwork.LocalPlayer.ActorNumber)
-            {
-                // 소유자만 ani를 false로 변경 가능
-                photonView.RPC("RPC_PoiSet", RpcTarget.AllBuffered, false, -1);
-            }
-        }
+       
     }
 
     [PunRPC]
