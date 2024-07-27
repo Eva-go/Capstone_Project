@@ -48,6 +48,7 @@ public class Poi_GrinderController : MonoBehaviour
             // Start processing only if not already processing
             if (!processing)
             {
+                Debug.Log("아이템 갯수" + nodeCount);
                 StartCoroutine(ProcessItems());
             }
         }
@@ -57,20 +58,23 @@ public class Poi_GrinderController : MonoBehaviour
         processing = true; // Start processing
         while (nodeItme > 0)
         {
-            animator.SetBool("isActvie", true);
-            yield return new WaitForSeconds(5f); // Wait for 5 seconds
-
-            mixItme++; // Increase mix item count
-            nodeItme--; // Decrease node item count
             nodeCount--;
-            Debug.Log("아이템 제작");
-
-            // PlayerController의 nodeItiems[i] 값을 업데이트
-            if (pv.IsMine)
+            nodeItme--; // Decrease node item count       
+            if (nodeCount>=0)
             {
-                pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, SandNumber, nodeCount);
+                // PlayerController의 nodeItiems[i] 값을 업데이트
+                if (pv.IsMine)
+                {
+                    pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, SandNumber, nodeCount);
+                }
+                animator.SetBool("isActvie", true);
+                yield return new WaitForSeconds(5f); // Wait for 5 seconds
+                mixItme++; // Increase mix item count
+                  
+                Debug.Log("아이템 제작");
             }
         }
+        nodeCount = 0;
         processing = false; // Stop processing
         animator.SetBool("isActvie", false);
     }

@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
+    public int[] nodeCounts = new int[6];
 
     public event Action OnInventoryChanged;
 
@@ -138,6 +139,7 @@ public class PlayerController : MonoBehaviour
             Attack();
             Switching();
             WaveTic();
+            nodeCountck();
             if (Input.GetKey("escape"))
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
@@ -788,7 +790,6 @@ public class PlayerController : MonoBehaviour
     public void UpdateMixItem(int index, int mixItemCount)
     {
         mixItiems[index] = mixItemCount;
-        nodeItiems[index] -= 1;
     }
     public void UpdateNodeItem(int index, int newCount)
     {
@@ -796,6 +797,15 @@ public class PlayerController : MonoBehaviour
         {
             nodeItiems[index] = newCount;
             OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
+        }
+    }
+
+
+    private void nodeCountck()
+    {
+        for(int i=0; i<nodeCounts.Length;i++)
+        {
+            nodeCounts[i] = nodeItiems[i];
         }
     }
     //todo 멀티테스트
