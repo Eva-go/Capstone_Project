@@ -25,6 +25,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -75,7 +76,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HOST_Map:
-        m_Texture: {fileID: 2800000, guid: a22a668ac2d8d2d4c8815dd9c0e926eb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 00a681559f66e424eb8b142d17395fa1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map:
@@ -177,6 +178,7 @@ Material:
     - _Height_Steps: 8
     - _Height_Strength: 0.06
     - _Look_Up_Mask_Value: 1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metalic_Strength: 0
     - _Metallic: 0
     - _Normal_Map_Strength: 1

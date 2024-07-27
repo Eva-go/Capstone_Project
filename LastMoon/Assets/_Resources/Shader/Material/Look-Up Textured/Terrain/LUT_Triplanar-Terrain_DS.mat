@@ -48,6 +48,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0a5a85fb0ca68f0459faf99ea593b784, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BottomLUT:
+        m_Texture: {fileID: 2800000, guid: 44d460563233cba4180d434eb7c71a94, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: ac7ff4294b228a041958b85b30141a13, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -85,11 +89,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HOST_Map:
-        m_Texture: {fileID: 18700000, guid: 0df9b0a1c03f49244ac3c1b05d8c9e12, type: 3}
+        m_Texture: {fileID: 18700000, guid: b424f0992bf2c484bb1825ecbd7e2ead, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HOST_Map_1:
-        m_Texture: {fileID: 18700000, guid: 0df9b0a1c03f49244ac3c1b05d8c9e12, type: 3}
+        m_Texture: {fileID: 18700000, guid: b424f0992bf2c484bb1825ecbd7e2ead, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HOST_Map_2:
@@ -105,7 +109,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 30cacca6c2a020846b1e5dba7c245190, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_10:
@@ -133,23 +137,23 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_2:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: abb141c424d4ad84bacc538e01df8cba, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_3:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: defe1ccd1dfbd57428a5946f33e812c6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_4:
-        m_Texture: {fileID: 2800000, guid: c9ab7b8dfc578fb429cf0e7fda0b0735, type: 3}
+        m_Texture: {fileID: 2800000, guid: 30cacca6c2a020846b1e5dba7c245190, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_5:
-        m_Texture: {fileID: 2800000, guid: f69f60c9ef4273a47a12aa746ca1225d, type: 3}
+        m_Texture: {fileID: 2800000, guid: abb141c424d4ad84bacc538e01df8cba, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_6:
-        m_Texture: {fileID: 2800000, guid: a62af3b6a620b0d45aa2c64518263a2e, type: 3}
+        m_Texture: {fileID: 2800000, guid: defe1ccd1dfbd57428a5946f33e812c6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_7:
@@ -165,11 +169,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_Main:
-        m_Texture: {fileID: 2800000, guid: eee1bf5f27c5c2940881bd01adab7a33, type: 3}
+        m_Texture: {fileID: 2800000, guid: d18844e83555e6f40993c8f8cac729e1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_Main_1:
-        m_Texture: {fileID: 2800000, guid: eee1bf5f27c5c2940881bd01adab7a33, type: 3}
+        m_Texture: {fileID: 2800000, guid: d18844e83555e6f40993c8f8cac729e1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Height_Map_Main_2:
@@ -312,6 +316,26 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _var3SLUTATerrainFragment_4a59e6c59dcc4b2e9336c914fe459895_HeightMap1_2337526434_Texture2D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _var3SLUTATerrainFragment_4a59e6c59dcc4b2e9336c914fe459895_HeightMap2_606312207_Texture2D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _var3SLUTATerrainFragment_4a59e6c59dcc4b2e9336c914fe459895_HeightMap3_2554698128_Texture2D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _var3SLUTATerrainFragment_4a59e6c59dcc4b2e9336c914fe459895_LUTMask_3517215775_Texture2DArray:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _var3SLUTATerrainFragment_4a59e6c59dcc4b2e9336c914fe459895_SubLUTA_131331990_Texture2DArray:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _var3SLUTATerrainFragment_f1e0850d4de54ee884d8e9c1cca2979e_HeightMap_2338057291_Texture2D:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -350,6 +374,7 @@ Material:
     - _Bias_9: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _BottomHeight: 55
     - _Brghtness_Limit: 2
     - _BumpScale: 1
     - _CastShadows: 1
