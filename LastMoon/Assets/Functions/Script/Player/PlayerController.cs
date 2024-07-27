@@ -152,15 +152,6 @@ public class PlayerController : MonoBehaviour
                     nodeItiems[i] = 10;
                 }
             }
-            if(Input.GetKeyDown(KeyCode.F9))
-            {
-                for(int i=0; i<6; i++)
-                {
-                    Debug.Log("아이템 갯수" +i+"번째 아이템" +nodeItiems[i]);
-                    Debug.Log("믹스 아이템 갯수" + i + "번째 아이템" + mixItiems[i]);
-                }
-               
-            }
 
             // Check if the player is dead
             if (Hp <= 0)
@@ -196,7 +187,6 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            Debug.Log("Player died, starting respawn process.");
             if(live)
             {
                 PhotonNetwork.Destroy(gameObject);
@@ -417,11 +407,17 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Node"))
         {
             NodeController nodeController = hit.collider.GetComponent<NodeController>();
-            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5);
             if (nodeController != null)
             {
-                Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
                 nodeController.TakeDamage(10f);
+                for(int i=0;i<6;i++)
+                {
+                    if (nodeController.nodeName.Equals("node_"+nodeName[i]+"(Clone)"))
+                    {
+                        nodeItiems[i] += nodeController.nodeCount;
+                    }
+                }
+               
             }
         }
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
@@ -444,7 +440,6 @@ public class PlayerController : MonoBehaviour
                             nodeItiems[i] = distillerController.nodeCount;
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
 
-                            Debug.Log("아이템 수집" + mixItiems[i]);
                         }
                     }
                 }
@@ -461,8 +456,6 @@ public class PlayerController : MonoBehaviour
                             int mixItemCount = distillerController.mixItme;
                             nodeItiems[i] = distillerController.nodeCount;
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-
-                            Debug.Log("아이템 수집" + mixItiems[i]);
                         }
                     }
                 }
@@ -479,8 +472,6 @@ public class PlayerController : MonoBehaviour
                             int mixItemCount = distillerController.mixItme;
                             nodeItiems[i] = distillerController.nodeCount;
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-
-                            Debug.Log("아이템 수집" + mixItiems[i]);
                         }
                     }
                 }
@@ -497,8 +488,6 @@ public class PlayerController : MonoBehaviour
                             int mixItemCount = distillerController.mixItme;
                             nodeItiems[i] = distillerController.nodeCount;
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-
-                            Debug.Log("아이템 수집" + mixItiems[i]);
                         }
                     }
                 }
@@ -515,8 +504,6 @@ public class PlayerController : MonoBehaviour
                             int mixItemCount = distillerController.mixItme;
                             nodeItiems[i] = distillerController.nodeCount;
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-
-                            Debug.Log("아이템 수집" + mixItiems[i]);
                         }
                     }
                 }
@@ -533,8 +520,6 @@ public class PlayerController : MonoBehaviour
                             int mixItemCount = distillerController.mixItme;
                             nodeItiems[i] = distillerController.nodeCount;
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-
-                            Debug.Log("아이템 수집" + mixItiems[i]);
                         }
                     }
                 }

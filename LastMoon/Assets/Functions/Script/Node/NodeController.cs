@@ -12,12 +12,14 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     public AudioSource sfx_NodeHit;
     public AudioClip sfx_NodeHit1, sfx_NodeHit2, sfx_NodeHit3, sfx_NodeHit4;
 
+    public int nodeCount;
+
     //private int giveMoney = 50;
 
     private void Start()
     {
         currentHealth = maxHealth;
-        //PlayerController.getMoney = giveMoney;
+        nodeCount = 0;
     }
 
     public void TakeDamage(float Damage)
@@ -45,7 +47,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
             photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest");
             // 애니메이션 끝날 때 오브젝트 삭제
             nodeName = gameObject.name;
-            GameValue.GetNode(nodeName);
+            nodeCount++;
         }
 
         // 포톤 네트워크를 통해 HP 동기화

@@ -7,7 +7,7 @@ public class Poi_DryerController : MonoBehaviour
 {
     public PhotonView pv;
 
-    //public Animator animator;
+    public Animator animator;
     public int nodeItme = 0;
     public int mixItme = 0;
     public int nodeCount = 0;
@@ -55,6 +55,7 @@ public class Poi_DryerController : MonoBehaviour
         processing = true; // Start processing
         while (nodeItme > 0)
         {
+            animator.SetBool("isActvie", true);
             yield return new WaitForSeconds(5f); // Wait for 5 seconds
 
             mixItme++; // Increase mix item count
@@ -69,6 +70,7 @@ public class Poi_DryerController : MonoBehaviour
             }
         }
         processing = false; // Stop processing
+        animator.SetBool("isActvie", false);
     }
 
     [PunRPC]
