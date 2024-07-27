@@ -23,7 +23,7 @@ public class CanvasController : MonoBehaviour
     public int[] salePrice = new int[6]; // 배열 크기 초기화
     private PlayerController playerController;
 
-    private bool localplayerck=false;
+    private bool localplayerck = false;
 
     //아이템 획득 여부
     private bool isItme = false;
@@ -42,7 +42,7 @@ public class CanvasController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
+
     }
 
     void Start()
@@ -82,7 +82,7 @@ public class CanvasController : MonoBehaviour
 
     public void RegisterPlayerController(PlayerController player)
     {
-        if(!localplayerck)
+        if (!localplayerck)
         {
             playerController = player;
             Debug.Log("플레이어 연동 " + playerController);
@@ -94,14 +94,14 @@ public class CanvasController : MonoBehaviour
             }
             localplayerck = true;
         }
-        
+
     }
 
     public void nodeCountUpdate()
     {
         for (int i = 0; i < 6; i++)
         {
-            Debug.Log("아이템 UI " + playerController.nodeItiems[i]+"플레이어 이름 "+playerController.name);
+            Debug.Log("아이템 UI " + playerController.nodeItiems[i] + "플레이어 이름 " + playerController.name);
             count[i] = playerController.nodeItiems[i];
             nodesCount[i].text = count[i].ToString();
         }
