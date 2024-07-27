@@ -21,6 +21,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
         PhotonNetwork.AutomaticallySyncScene = true;
         GameValue.WaveTimer = currentTime;
+        GameValue.WaveTimerMax = totalTime;
 
         Debug.Log("토탈 타이머: " + totalTime+"현재 라운드: "+GameValue.Round+"최대 라운드: "+GameValue.MaxRound+"세팅 시간: "+GameValue.setMaxtime);
     }
@@ -32,6 +33,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
         {
             currentTime -= Time.deltaTime;
             GameValue.WaveTimer = currentTime;
+            GameValue.WaveTimerMax = totalTime;
             float ratio = currentTime / totalTime;
             float posX = Mathf.Lerp(finalPosX, initialPosX, ratio);
             timerImage.localPosition = new Vector3(posX, timerImage.localPosition.y, timerImage.localPosition.z);

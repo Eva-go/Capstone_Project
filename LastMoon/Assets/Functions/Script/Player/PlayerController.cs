@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
@@ -6,7 +5,6 @@ using Photon.Realtime;
 
 public class PlayerController : MonoBehaviour
 {
-    public string nickName; 
     public PhotonView pv;
     public static float Hp = 100f;
     private GameObject cam;
@@ -34,7 +32,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 UpCenter;
     private Vector3 DownCenter;
 
-    public AudioSource sfx_PlayerHit, sfx_PlayerWalk, sfx_PlayerSwing;
+    public AudioSource sfx_PlayerHit, sfx_PlayerJump, sfx_PlayerWalk, sfx_PlayerSwing;
 
     // ray
     private RaycastHit hitInfo;
@@ -46,11 +44,13 @@ public class PlayerController : MonoBehaviour
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     public GameObject[] weaponsSwitching;
     private int selectedWeaponIndex = 0;
+    private int selectedWeaponStrength = 1;
 
     public static int getMoney;
     public GameObject insidegameObject;
     public static bool insideActive;
     public static bool PreViewCam;
+    public static bool Poi;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
@@ -61,26 +61,24 @@ public class PlayerController : MonoBehaviour
     private float tickDamage = 5.0f;     // damage per tick
     private float lastDamageTime = 0;    // time of the last tick damage
 
+    private bool Jumpforgived = false;
+    private bool isWallCliming = false;
+
+    private float JumpforgivenessTime = 0;
+
+    public float speeed = 0;
+
 
     //인벤토리 아이템 갯수
-    private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
-    public int[] nodeItiems = new int[6];
-    public int[] mixItiems = new int[6];
-
-    public event Action OnInventoryChanged;
+    //public int[] nodeItiems;
+    //public int[] mixItiems;
     void Start()
     {
-
         pv = GetComponent<PhotonView>();
-        LocalPlayerManger.Instance.RegisterLocalPlayer(this);
-        CanvasController.Instance.RegisterPlayerController(this);
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
-
-        //플레이어 이름
-        nickName = this.gameObject.name;
 
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
@@ -98,7 +96,7 @@ public class PlayerController : MonoBehaviour
         DownCenter = new Vector3(0f, 0.5f, 0f);
 
         //아이템 초기화
-        Items();
+        //Items();
         //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
         live = true;
@@ -118,8 +116,12 @@ public class PlayerController : MonoBehaviour
             {
                 Run();
             }
-            CameraRotation();
-            CharacterRotation();
+
+            if (!Poi)
+            {
+                CameraRotation();
+                CharacterRotation();
+            }
             Jump();
             Interaction();
             Attack();
@@ -129,12 +131,13 @@ public class PlayerController : MonoBehaviour
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                walkSpeed = 100;
+                Hp = 100;
             }
+            /*
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                walkSpeed = 2.5f;
             }
+             */
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
@@ -151,21 +154,14 @@ public class PlayerController : MonoBehaviour
             {
                 GameValue.Round = 0;
             }
-            if(Input.GetKeyDown(KeyCode.F8))
-            {
-                for(int i=0;i<6;i++)
-                {
-                    nodeItiems[i] = 10;
-                }
-            }
-            if(Input.GetKeyDown(KeyCode.F9))
-            {
-                for(int i=0;i<6;i++)
-                {
-                    Debug.Log("노드 아이템 " + nodeItiems[i]);
-                    Debug.Log("믹스 아이템 " + mixItiems[i]);
-                }
-            }
+            //if(Input.GetKeyDown(KeyCode.F8))
+            //{
+            //    for(int i=0;i<6;i++)
+            //    {
+            //        nodeItiems[i] = 10;
+            //        mixItiems[i] = 10;
+            //    }
+            //}
 
             // Check if the player is dead
             if (Hp <= 0)
@@ -176,23 +172,25 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public void Items()
-    {
-        for(int i=0;i<6;i++)
-        {
-            nodeItiems[i] = 0;
-            mixItiems[i] = 0;
-        }
-    }
+    //public void Items()
+    //{
+    //    for(int i=0;i<6;i++)
+    //    {
+    //        nodeItiems[i] = 0;
+    //        mixItiems[i] = 0;
+    //    }
+    //}
     public void WaveTic()
     {
-        float waveHeight;
+        float waveHeight, WaterDepth;
         waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime);
-        if (transform.position.y < wavetransform.waveY + waveHeight)
+        WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
+
+        if (WaterDepth > 0)
         {
             if (Time.time >= lastDamageTime + damageInterval)
             {
-                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage);
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.currentTime + WaterDepth * WaterDepth / 10);
                 lastDamageTime = Time.time;
             }
         }
@@ -201,6 +199,8 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
+            Poi = false;
+            Debug.Log("Player died, starting respawn process.");
             if(live)
             {
                 PhotonNetwork.Destroy(gameObject);
@@ -228,40 +228,54 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        //sfx_PlayerWalk.enabled = false;
 
         if (!isRunning)
         {
             animator.SetBool("isRuns", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-
             if (moveDirX != 0 || moveDirZ != 0)
             {
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / walkSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
+
                 animator.SetBool("isMove", true);
+                Localanimator.SetBool("isMove", true);
+
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
             }
             else
             {
+                sfx_PlayerWalk.mute = true;
                 animator.SetBool("isMove", false);
+                Localanimator.SetBool("isMove", false);
             }
         }
     }
 
     private void Jump()
     {
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
         {
-            if (!sfx_PlayerWalk.isPlaying)
+            if (!sfx_PlayerJump.isPlaying)
             {
-                sfx_PlayerWalk.Play();
+                sfx_PlayerJump.Play();
             }
             if (myRigid.velocity.y > 0)
             {
@@ -270,9 +284,24 @@ public class PlayerController : MonoBehaviour
                 velocity = new Vector3(moveDirX, 0, moveDirZ);
                 myRigid.velocity = velocity;
             }
-
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
+            isGrounded = false;
+            myRigid.drag = 1;
+            animator.SetBool("isGrounded", false);
+            Jumpforgived = false;
+        }
+
+        if (Jumpforgived)
+        {
+            if (Time.time >= JumpforgivenessTime + 0.25f)
+            {
+                isGrounded = false;
+                myRigid.drag = 1;
+                animator.SetBool("isGrounded", false);
+                Jumpforgived = false;
+                isWallCliming = false;
+            }
         }
     }
 
@@ -283,24 +312,38 @@ public class PlayerController : MonoBehaviour
 
         if (isRunning && !isCrouching)
         {
-            animator.SetBool("isRuns", true);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
-                float moveDirY = myRigid.velocity.y;
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / runSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
 
+                animator.SetBool("isRuns", true);
+                Localanimator.SetBool("isMove", true);
+                float moveDirY = myRigid.velocity.y;
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
             }
-        }
-        else
-        {
-            animator.SetBool("isRuns", false);
+            else
+            {
+                sfx_PlayerWalk.mute = true;
+                animator.SetBool("isRuns", false);
+                Localanimator.SetBool("isMove", false);
+            }
         }
     }
 
@@ -314,19 +357,34 @@ public class PlayerController : MonoBehaviour
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / crouchSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
+
                 animator.SetBool("isCrouchWalk", true);
+                Localanimator.SetBool("isMove", true);
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed * 0.5f;
+                }
 
                 velocity.y = moveDirY;
                 myRigid.velocity = velocity;
             }
             else
             {
+                sfx_PlayerWalk.mute = true;
                 animator.SetBool("isCrouchWalk", false);
+                Localanimator.SetBool("isMove", false);
             }
         }
 
@@ -357,6 +415,8 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
             myRigid.drag = 5;
             animator.SetBool("isGrounded", true);
+            Jumpforgived = false;
+            isWallCliming = true;
         }
     }
 
@@ -364,9 +424,19 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "PLANE")
         {
-            isGrounded = false;
-            myRigid.drag = 1;
-            animator.SetBool("isGrounded", false);
+            if (Jumpforgived)
+            {
+                isGrounded = false;
+                myRigid.drag = 1;
+                animator.SetBool("isGrounded", false);
+                Jumpforgived = false;
+            }
+            else
+            {
+                Jumpforgived = true;
+                JumpforgivenessTime = Time.time;
+            }
+            isWallCliming = false;
         }
     }
 
@@ -402,14 +472,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
-            if(targetPv !=null)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName);
-                }
-            }
+            Poi=!Poi;
         }
     }
 
@@ -417,153 +480,70 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Node"))
-        {
-            NodeController nodeController = hit.collider.GetComponent<NodeController>();
-            if (nodeController != null)
-            {
-                nodeController.TakeDamage(10f);
-                for(int i=0;i<6;i++)
-                {
-                    if (nodeController.nodeName.Equals("node_"+nodeName[i]+"(Clone)"))
-                    {
-                        nodeItiems[i] += nodeController.nodeCount;
-                    }
-                }
-               
-            }
-        }
-        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
-        {
-            // 플레이어 공격 처리
-            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
-        }
-        else if(Physics.Raycast(ray,out hit, 5f)&&hit.collider.CompareTag("Poi"))
-        {
-            if(hit.transform.gameObject.name == "Poi_Distiller(Clone)")
-            {
-                Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
-                if (distillerController != null)
-                {
-                    for (int i = 0; i < nodeName.Length; i++)
-                    {
-                        if (nodeName[i] == distillerController.nodeName)
-                        {
-                            int mixItemCount = distillerController.mixItme;
-                            
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
 
-                        }
-                    }
-                }
-            }
-            else if(hit.transform.gameObject.name == "Poi_Dryer(Clone)")
+        if (Physics.Raycast(ray, out hit, 5f))
+        {
+            if (hit.collider.CompareTag("Node"))
             {
-                Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
-                if (distillerController != null)
+                NodeController nodeController = hit.collider.GetComponent<NodeController>();
+                if (nodeController != null)
                 {
-                    for (int i = 0; i < nodeName.Length; i++)
+                    if (selectedWeaponIndex == 0)
                     {
-                        if (nodeName[i] == distillerController.nodeName)
-                        {
-                            int mixItemCount = distillerController.mixItme;
-                           
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                        }
+                        selectedWeaponStrength = GameValue.Axe + 1;
+                    }
+                    else if (selectedWeaponIndex == 1)
+                    {
+                        selectedWeaponStrength = GameValue.Pickaxe + 1;
+                    }
+                    else if (selectedWeaponIndex == 2)
+                    {
+                        selectedWeaponStrength = GameValue.Shovel + 1;
+                    }
+
+                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
+                    if (nodeController.Node_Type == selectedWeaponIndex)
+                    {
+                        nodeController.TakeDamage(10f * selectedWeaponStrength, true);
+                    }
+                    else
+                    {
+                        nodeController.TakeDamage(5f * selectedWeaponStrength, false);
+
                     }
                 }
             }
-            else if(hit.transform.gameObject.name == "Poi_Filter(Clone)")
+            else if (hit.collider.CompareTag("Player"))
             {
-                Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
-                if (distillerController != null)
-                {
-                    for (int i = 0; i < nodeName.Length; i++)
-                    {
-                        if (nodeName[i] == distillerController.nodeName)
-                        {
-                            int mixItemCount = distillerController.mixItme;
-                            
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                        }
-                    }
-                }
+                // 플레이어 공격 처리
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
             }
-            else if (hit.transform.gameObject.name == "Poi_Grinder(Clone)")
-            {
-                Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
-                if (distillerController != null)
-                {
-                    for (int i = 0; i < nodeName.Length; i++)
-                    {
-                        if (nodeName[i] == distillerController.nodeName)
-                        {
-                            int mixItemCount = distillerController.mixItme;
-                            
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                        }
-                    }
-                }
-            }
-            else if (hit.transform.gameObject.name == "Poi_Heater(Clone)")
-            {
-                Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
-                if (distillerController != null)
-                {
-                    for (int i = 0; i < nodeName.Length; i++)
-                    {
-                        if (nodeName[i] == distillerController.nodeName)
-                        {
-                            int mixItemCount = distillerController.mixItme;
-                            
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                        }
-                    }
-                }
-            }
-            else if (hit.transform.gameObject.name == "Poi_Smelter(Clone)")
-            {
-                Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
-                if (distillerController != null)
-                {
-                    for (int i = 0; i < nodeName.Length; i++)
-                    {
-                        if (nodeName[i] == distillerController.nodeName)
-                        {
-                            int mixItemCount = distillerController.mixItme;
-                           
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                        }
-                    }
-                }
-            }
+            else Debug.DrawRay(ray.origin, ray.direction, Color.yellow, 15);
         }
+        else Debug.DrawRay(ray.origin, ray.direction, Color.red, 15);
     }
-
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0) && !Poi)
         {
             if (!sfx_PlayerSwing.isPlaying)
             {
                 sfx_PlayerSwing.Play();
-            }
 
-            if (isCrouching)
-            {
-                animator.SetTrigger("Crouch_Swing");
-                Localanimator.SetTrigger("Crouch_Swing");
-            }
-            else
-            {
-                animator.SetTrigger("Swing");
-                Localanimator.SetTrigger("Swing");
+                if (isCrouching || isRunning || !isGrounded)
+                {
+                    animator.SetTrigger("Combat_Swing");
+                    Localanimator.SetTrigger("Combat_Swing");
+                }
+                else
+                {
+                    animator.SetTrigger("Swing");
+                    Localanimator.SetTrigger("Swing");
+                }
             }
         }
     }
-
-
 
     [PunRPC]
     private void RPC_TakeDamage(int viewID, float damage)
@@ -677,7 +657,18 @@ public class PlayerController : MonoBehaviour
             selectedWeaponIndex = 2;
         }
 
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex + 1) % 3;
+        }
+        else if (scroll < 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex + 2) % 3;
+        }
+
         // 무기 교체가 필요하면 새로운 무기를 장착
+
         if (previousSelectedWeaponIndex != selectedWeaponIndex)
         {
             pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
@@ -690,21 +681,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             Cursor.lockState = CursorLockMode.Locked;
-        }
-    }
-
-    [PunRPC]
-    public void UpdateMixItem(int index, int mixItemCount)
-    {
-        mixItiems[index] = mixItemCount;
-    }
-
-    public void UpdateNodeItem(int index, int newCount)
-    {
-        if (index >= 0 && index < nodeItiems.Length)
-        {
-            nodeItiems[index] = newCount;
-            OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
         }
     }
 

@@ -72,6 +72,16 @@ public class ToolController : MonoBehaviour
             selectedToolIndex = 2;
         }
 
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0f)
+        {
+            selectedToolIndex = (selectedToolIndex + 1) % 3;
+        }
+        else if (scroll < 0f)
+        {
+            selectedToolIndex = (selectedToolIndex + 2) % 3;
+        }
+
         // 무기 교체가 필요하면 새로운 무기를 장착
         if (previousSelectedWeaponIndex != selectedToolIndex)
         {
