@@ -61,6 +61,13 @@ public class PlayerController : MonoBehaviour
     private float tickDamage = 5.0f;     // damage per tick
     private float lastDamageTime = 0;    // time of the last tick damage
 
+    private bool Jumpforgived = false;
+    private bool isWallCliming = false;
+
+    private float JumpforgivenessTime = 0;
+
+    public float speeed = 0;
+
 
     //인벤토리 아이템 갯수
     //public int[] nodeItiems;
@@ -221,19 +228,22 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        //sfx_PlayerWalk.enabled = false;
 
         if (!isRunning)
         {
             animator.SetBool("isRuns", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-
             if (moveDirX != 0 || moveDirZ != 0)
             {
-                if (isGrounded) sfx_PlayerWalk.mute = false;
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / walkSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
                 else sfx_PlayerWalk.mute = true;
+
                 animator.SetBool("isMove", true);
+                Localanimator.SetBool("isMove", true);
+
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
@@ -254,13 +264,14 @@ public class PlayerController : MonoBehaviour
             {
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isMove", false);
+                Localanimator.SetBool("isMove", false);
             }
         }
     }
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
         {
             if (!sfx_PlayerJump.isPlaying)
             {
@@ -274,6 +285,23 @@ public class PlayerController : MonoBehaviour
                 myRigid.velocity = velocity;
             }
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            isGrounded = false;
+            myRigid.drag = 1;
+            animator.SetBool("isGrounded", false);
+            Jumpforgived = false;
+        }
+
+        if (Jumpforgived)
+        {
+            if (Time.time >= JumpforgivenessTime + 0.25f)
+            {
+                isGrounded = false;
+                myRigid.drag = 1;
+                animator.SetBool("isGrounded", false);
+                Jumpforgived = false;
+                isWallCliming = false;
+            }
         }
     }
 
@@ -284,15 +312,18 @@ public class PlayerController : MonoBehaviour
 
         if (isRunning && !isCrouching)
         {
-            animator.SetBool("isRuns", true);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
-                if (isGrounded) sfx_PlayerWalk.mute = false;
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / runSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
                 else sfx_PlayerWalk.mute = true;
-                float moveDirY = myRigid.velocity.y;
 
+                animator.SetBool("isRuns", true);
+                Localanimator.SetBool("isMove", true);
+                float moveDirY = myRigid.velocity.y;
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
                 if (isGrounded)
@@ -311,6 +342,7 @@ public class PlayerController : MonoBehaviour
             {
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isRuns", false);
+                Localanimator.SetBool("isMove", false);
             }
         }
     }
@@ -325,9 +357,13 @@ public class PlayerController : MonoBehaviour
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
-                if (isGrounded) sfx_PlayerWalk.mute = false;
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / crouchSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
                 else sfx_PlayerWalk.mute = true;
+
                 animator.SetBool("isCrouchWalk", true);
+                Localanimator.SetBool("isMove", true);
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
@@ -348,6 +384,7 @@ public class PlayerController : MonoBehaviour
             {
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isCrouchWalk", false);
+                Localanimator.SetBool("isMove", false);
             }
         }
 
@@ -378,6 +415,8 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
             myRigid.drag = 5;
             animator.SetBool("isGrounded", true);
+            Jumpforgived = false;
+            isWallCliming = true;
         }
     }
 
@@ -385,9 +424,19 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "PLANE")
         {
-            isGrounded = false;
-            myRigid.drag = 1;
-            animator.SetBool("isGrounded", false);
+            if (Jumpforgived)
+            {
+                isGrounded = false;
+                myRigid.drag = 1;
+                animator.SetBool("isGrounded", false);
+                Jumpforgived = false;
+            }
+            else
+            {
+                Jumpforgived = true;
+                JumpforgivenessTime = Time.time;
+            }
+            isWallCliming = false;
         }
     }
 
@@ -431,42 +480,47 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Node"))
+
+        if (Physics.Raycast(ray, out hit, 5f))
         {
-            NodeController nodeController = hit.collider.GetComponent<NodeController>();
-            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5);
-            if (nodeController != null)
+            if (hit.collider.CompareTag("Node"))
             {
-                if (selectedWeaponIndex == 0)
+                NodeController nodeController = hit.collider.GetComponent<NodeController>();
+                if (nodeController != null)
                 {
-                    selectedWeaponStrength = GameValue.Axe + 1;
-                }
-                else if (selectedWeaponIndex == 1)
-                {
-                    selectedWeaponStrength = GameValue.Pickaxe + 1;
-                }
-                else if (selectedWeaponIndex == 2)
-                {
-                    selectedWeaponStrength = GameValue.Shovel + 1;
-                }
+                    if (selectedWeaponIndex == 0)
+                    {
+                        selectedWeaponStrength = GameValue.Axe + 1;
+                    }
+                    else if (selectedWeaponIndex == 1)
+                    {
+                        selectedWeaponStrength = GameValue.Pickaxe + 1;
+                    }
+                    else if (selectedWeaponIndex == 2)
+                    {
+                        selectedWeaponStrength = GameValue.Shovel + 1;
+                    }
 
-                Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                if (nodeController.Node_Type == selectedWeaponIndex)
-                {
-                    nodeController.TakeDamage(10f * selectedWeaponStrength, true);
-                }
-                else
-                {
-                    nodeController.TakeDamage(5f * selectedWeaponStrength, false);
+                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
+                    if (nodeController.Node_Type == selectedWeaponIndex)
+                    {
+                        nodeController.TakeDamage(10f * selectedWeaponStrength, true);
+                    }
+                    else
+                    {
+                        nodeController.TakeDamage(5f * selectedWeaponStrength, false);
 
+                    }
                 }
             }
+            else if (hit.collider.CompareTag("Player"))
+            {
+                // 플레이어 공격 처리
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
+            }
+            else Debug.DrawRay(ray.origin, ray.direction, Color.yellow, 15);
         }
-        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
-        {
-            // 플레이어 공격 처리
-            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
-        }
+        else Debug.DrawRay(ray.origin, ray.direction, Color.red, 15);
     }
 
     private void Attack()
@@ -476,10 +530,11 @@ public class PlayerController : MonoBehaviour
             if (!sfx_PlayerSwing.isPlaying)
             {
                 sfx_PlayerSwing.Play();
-                if (isCrouching)
+
+                if (isCrouching || isRunning || !isGrounded)
                 {
-                    animator.SetTrigger("Crouch_Swing");
-                    Localanimator.SetTrigger("Crouch_Swing");
+                    animator.SetTrigger("Combat_Swing");
+                    Localanimator.SetTrigger("Combat_Swing");
                 }
                 else
                 {
