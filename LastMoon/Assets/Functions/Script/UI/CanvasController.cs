@@ -1,29 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CanvasController : MonoBehaviour
 {
+    public static CanvasController Instance;
+
     public GameObject inside;
     public GameObject inventory;
     public GameObject money;
     public GameObject Tab;
 
-
     private int keyTabCode = 2;
     private bool inventory_ck;
-    private int TotalSell=0;
+    private int TotalSell = 0;
     private int Amount = 0;
-    //노드
+    // 노드
     public GameObject[] nodes;
     public Text[] nodesCount;
-    public int[] count;
-    public int[] SellCount;
-    public int[] salePrice;
+    public Text[] mixCount;
+    public int[] count = new int[6]; // 배열 크기 초기화
+    public int[] SellCount = new int[6]; // 배열 크기 초기화
+    public int[] salePrice = new int[6]; // 배열 크기 초기화
+    private PlayerController playerController;
 
+    //아이템 획득 여부
+    private bool isItme=false;
 
     private Transform inventoryTransform;
+
+    void Awake()
+    {
+        isItme = false;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -37,6 +53,7 @@ public class CanvasController : MonoBehaviour
         for (int i = 0; i < nodesCount.Length; i++)
         {
             nodesCount[i].text = "0";
+            mixCount[i].text = "0";
             count[i] = 0;
             SellCount[i] = 0;
         }
@@ -48,28 +65,47 @@ public class CanvasController : MonoBehaviour
         UpdateInventoryActive();
         UpdateInventoryTabActive();
         UpdateMoneyActive();
-
-
-        //노드 관련 함수
-        nodeCountUpdate();
+        // 노드 관련 함수
         Sell();
         Die();
+        //아이템 업데이트
+        if(isItme)
+        {
+            nodeCountUpdate();
+            mixCountUpdate();
+        }
+    }
+
+    public void RegisterPlayerController(PlayerController player)
+    {
+        playerController = player;
+  
+        if (playerController != null)
+        {
+            playerController.OnInventoryChanged += nodeCountUpdate;
+            nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
+            isItme = true;
+        }
+        
     }
 
     public void nodeCountUpdate()
     {
-        
-
         for (int i = 0; i < nodesCount.Length; i++)
         {
-            
-            if (nodes[i].name + "(Clone)" == GameValue.NodeName)
-            {
-                count[i]++;
-                SellCount[i] = count[i];
-                nodesCount[i].text = count[i].ToString();
-                GameValue.GetNode("");
-            }
+            Debug.Log("아이템 UI" + playerController.nodeItiems[i]);
+            count[i] = playerController.nodeItiems[i];
+            nodesCount[i].text = count[i].ToString();
+        }
+    }
+
+    public void mixCountUpdate()
+    {
+        for (int i = 0; i < mixCount.Length; i++)
+        {
+            Debug.Log("아이템 UI" + playerController.mixItiems[i]);
+            count[i] = playerController.mixItiems[i];
+            mixCount[i].text = count[i].ToString();
         }
     }
 

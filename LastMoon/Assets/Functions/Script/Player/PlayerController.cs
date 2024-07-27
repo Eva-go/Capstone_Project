@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
@@ -63,11 +64,16 @@ public class PlayerController : MonoBehaviour
 
     //인벤토리 아이템 갯수
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
-    public int[] nodeItiems;
-    public int[] mixItiems;
+    public int[] nodeItiems = new int[6];
+    public int[] mixItiems = new int[6];
+
+    public event Action OnInventoryChanged;
     void Start()
     {
+
         pv = GetComponent<PhotonView>();
+        LocalPlayerManger.Instance.RegisterLocalPlayer(this);
+        CanvasController.Instance.RegisterPlayerController(this);
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
         cam = GameObject.Find("Camera");
@@ -150,6 +156,14 @@ public class PlayerController : MonoBehaviour
                 for(int i=0;i<6;i++)
                 {
                     nodeItiems[i] = 10;
+                }
+            }
+            if(Input.GetKeyDown(KeyCode.F9))
+            {
+                for(int i=0;i<6;i++)
+                {
+                    Debug.Log("노드 아이템 " + nodeItiems[i]);
+                    Debug.Log("믹스 아이템 " + mixItiems[i]);
                 }
             }
 
@@ -394,7 +408,6 @@ public class PlayerController : MonoBehaviour
                 for (int i = 0; i < 6; i++)
                 {
                     targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName);
-
                 }
             }
         }
@@ -437,7 +450,7 @@ public class PlayerController : MonoBehaviour
                         if (nodeName[i] == distillerController.nodeName)
                         {
                             int mixItemCount = distillerController.mixItme;
-                            nodeItiems[i] = distillerController.nodeCount;
+                            
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
 
                         }
@@ -454,7 +467,7 @@ public class PlayerController : MonoBehaviour
                         if (nodeName[i] == distillerController.nodeName)
                         {
                             int mixItemCount = distillerController.mixItme;
-                            nodeItiems[i] = distillerController.nodeCount;
+                           
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
                         }
                     }
@@ -470,7 +483,7 @@ public class PlayerController : MonoBehaviour
                         if (nodeName[i] == distillerController.nodeName)
                         {
                             int mixItemCount = distillerController.mixItme;
-                            nodeItiems[i] = distillerController.nodeCount;
+                            
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
                         }
                     }
@@ -486,7 +499,7 @@ public class PlayerController : MonoBehaviour
                         if (nodeName[i] == distillerController.nodeName)
                         {
                             int mixItemCount = distillerController.mixItme;
-                            nodeItiems[i] = distillerController.nodeCount;
+                            
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
                         }
                     }
@@ -502,7 +515,7 @@ public class PlayerController : MonoBehaviour
                         if (nodeName[i] == distillerController.nodeName)
                         {
                             int mixItemCount = distillerController.mixItme;
-                            nodeItiems[i] = distillerController.nodeCount;
+                            
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
                         }
                     }
@@ -518,7 +531,7 @@ public class PlayerController : MonoBehaviour
                         if (nodeName[i] == distillerController.nodeName)
                         {
                             int mixItemCount = distillerController.mixItme;
-                            nodeItiems[i] = distillerController.nodeCount;
+                           
                             pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
                         }
                     }
@@ -526,11 +539,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    [PunRPC]
-    public void UpdateMixItem(int index, int mixItemCount)
-    {
-        mixItiems[index] = mixItemCount;
-    }
+
 
     private void Attack()
     {
@@ -681,6 +690,21 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+
+    [PunRPC]
+    public void UpdateMixItem(int index, int mixItemCount)
+    {
+        mixItiems[index] = mixItemCount;
+    }
+
+    public void UpdateNodeItem(int index, int newCount)
+    {
+        if (index >= 0 && index < nodeItiems.Length)
+        {
+            nodeItiems[index] = newCount;
+            OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
         }
     }
 

@@ -32,8 +32,6 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static int Shovel = 0;
 
     public static bool toolSwitching =false;
-    public static string NodeName =null;
-    public static int[] NodeCount =null;
 
     public static Camera mainCamera = null;
 
@@ -79,11 +77,6 @@ public class GameValue : MonoBehaviourPunCallbacks
     {
         Money_total = getMomey + Money_total;
         money.text = Money_total.ToString();
-    }
-
-    public static void GetNode(string nodeName)
-    {
-        NodeName = nodeName;
     }
 
     public static void UseMoney(int useMoney)

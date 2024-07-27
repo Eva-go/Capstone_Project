@@ -13,6 +13,7 @@ public class Poi_HeaterController : MonoBehaviour
     public int mixItme = 0;
     public int nodeCount = 0;
     private int mixoldItem = 0;
+    private int PlanksNumber = 4;
     public string nodeName = "Planks";
     private string playerName = " ";
     private bool processing = false;
@@ -63,21 +64,24 @@ public class Poi_HeaterController : MonoBehaviour
             nodeItme--; // Decrease node item count
             nodeCount--;
             Debug.Log("아이템 제작");
-            // Synchronize with PlayerController
+
+            // PlayerController의 nodeItiems[i] 값을 업데이트
             if (pv.IsMine)
             {
-                pv.RPC("SyncNodeItem", RpcTarget.OthersBuffered, nodeItme);
-                pv.RPC("UpdateNodeItems", RpcTarget.AllBuffered, nodeName, nodeItme);
+                pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, PlanksNumber, nodeCount);
             }
         }
         processing = false; // Stop processing
         animator.SetBool("isActvie", false);
     }
-
     [PunRPC]
-    public void UpdateNodeItems(string name, int itemCount)
+    public void UpdatePlayerNodeItem(int index, int newCount)
     {
-
+        PlayerController localPlayer = LocalPlayerManger.Instance.GetLocalPlayer();
+        if (localPlayer != null)
+        {
+            localPlayer.UpdateNodeItem(index, newCount);
+        }
     }
 
     [PunRPC]

@@ -13,6 +13,7 @@ public class Poi_DistillerController : MonoBehaviour
     public int mixItme = 0;
     public int nodeCount = 0;
     private int mixoldItem = 0;
+    private int DirtNumber = 0;
     public string nodeName = "Dirt";
     private string playerName= " ";
     private bool processing = false;
@@ -56,28 +57,31 @@ public class Poi_DistillerController : MonoBehaviour
         processing = true; // Start processing
         while (nodeItme > 0)
         {
-            animator.SetBool("isActvie",true);
+            animator.SetBool("isActvie", true);
             yield return new WaitForSeconds(5f); // Wait for 5 seconds
 
             mixItme++; // Increase mix item count
             nodeItme--; // Decrease node item count
             nodeCount--;
             Debug.Log("아이템 제작");
-            // Synchronize with PlayerController
+
+            // PlayerController의 nodeItiems[i] 값을 업데이트
             if (pv.IsMine)
             {
-                pv.RPC("SyncNodeItem", RpcTarget.OthersBuffered, nodeItme);
-                pv.RPC("UpdateNodeItems", RpcTarget.AllBuffered, nodeName, nodeItme);
+                pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, DirtNumber, nodeCount);
             }
         }
         processing = false; // Stop processing
         animator.SetBool("isActvie", false);
     }
-
     [PunRPC]
-    public void UpdateNodeItems(string name, int itemCount)
+    public void UpdatePlayerNodeItem(int index, int newCount)
     {
-        
+        PlayerController localPlayer = LocalPlayerManger.Instance.GetLocalPlayer();
+        if (localPlayer != null)
+        {
+            localPlayer.UpdateNodeItem(index, newCount);
+        }
     }
 
     [PunRPC]
