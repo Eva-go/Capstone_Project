@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
+
 public class PlayerController : MonoBehaviour
 {
     public PhotonView pv;
+    public string nickName;
     public static float Hp = 100f;
     private GameObject cam;
     [SerializeField] private float walkSpeed;
@@ -50,7 +53,6 @@ public class PlayerController : MonoBehaviour
     public GameObject insidegameObject;
     public static bool insideActive;
     public static bool PreViewCam;
-    public static bool Poi;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
@@ -68,17 +70,30 @@ public class PlayerController : MonoBehaviour
 
     public float speeed = 0;
 
-
     //인벤토리 아이템 갯수
-    //public int[] nodeItiems;
-    //public int[] mixItiems;
+    private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
+    public int[] nodeItiems = new int[6];
+    public int[] mixItiems = new int[6];
+
+    public event Action OnInventoryChanged;
+
     void Start()
     {
+        //포톤 네트워크 연결
         pv = GetComponent<PhotonView>();
+        //로컬플레이어 설정 및 로컬캔버스 설정
+        LocalPlayerManger.Instance.RegisterLocalPlayer(this);
+        CanvasController.Instance.RegisterPlayerController(this);
+
+        //컴포넌트 설정
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
+
+        //플레이어 이름
+        nickName = this.gameObject.name;
+
 
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
@@ -96,7 +111,7 @@ public class PlayerController : MonoBehaviour
         DownCenter = new Vector3(0f, 0.5f, 0f);
 
         //아이템 초기화
-        //Items();
+        Items();
         //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
         live = true;
@@ -116,12 +131,8 @@ public class PlayerController : MonoBehaviour
             {
                 Run();
             }
-
-            if (!Poi)
-            {
-                CameraRotation();
-                CharacterRotation();
-            }
+            CameraRotation();
+            CharacterRotation();
             Jump();
             Interaction();
             Attack();
@@ -133,11 +144,6 @@ public class PlayerController : MonoBehaviour
             {
                 Hp = 100;
             }
-            /*
-            if (Input.GetKeyDown(KeyCode.F3))
-            {
-            }
-             */
             if (Input.GetKeyDown(KeyCode.F4))
             {
                 transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
@@ -154,14 +160,18 @@ public class PlayerController : MonoBehaviour
             {
                 GameValue.Round = 0;
             }
-            //if(Input.GetKeyDown(KeyCode.F8))
-            //{
-            //    for(int i=0;i<6;i++)
-            //    {
-            //        nodeItiems[i] = 10;
-            //        mixItiems[i] = 10;
-            //    }
-            //}
+            if (Input.GetKeyDown(KeyCode.F8))
+            {
+                IncreaseLocalPlayerItems();
+            }
+            if (Input.GetKeyDown(KeyCode.F9))
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    Debug.Log("노드 아이템 " + nodeItiems[i]);
+                    Debug.Log("믹스 아이템 " + mixItiems[i]);
+                }
+            }
 
             // Check if the player is dead
             if (Hp <= 0)
@@ -170,16 +180,14 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-
-    //public void Items()
-    //{
-    //    for(int i=0;i<6;i++)
-    //    {
-    //        nodeItiems[i] = 0;
-    //        mixItiems[i] = 0;
-    //    }
-    //}
+    public void Items()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            nodeItiems[i] = 0;
+            mixItiems[i] = 0;
+        }
+    }
     public void WaveTic()
     {
         float waveHeight, WaterDepth;
@@ -199,7 +207,6 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            Poi = false;
             Debug.Log("Player died, starting respawn process.");
             if(live)
             {
@@ -472,7 +479,14 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            Poi=!Poi;
+            PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
+            if (targetPv != null)
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName);
+                }
+            }
         }
     }
 
@@ -480,52 +494,132 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 5f))
+        if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Node"))
         {
-            if (hit.collider.CompareTag("Node"))
+            NodeController nodeController = hit.collider.GetComponent<NodeController>();
+            if (nodeController != null)
             {
-                NodeController nodeController = hit.collider.GetComponent<NodeController>();
-                if (nodeController != null)
+                nodeController.TakeDamage(10f);
+                for (int i = 0; i < 6; i++)
                 {
-                    if (selectedWeaponIndex == 0)
+                    if (nodeController.nodeName.Equals("node_" + nodeName[i] + "(Clone)"))
                     {
-                        selectedWeaponStrength = GameValue.Axe + 1;
+                        nodeItiems[i] += nodeController.nodeCount;
                     }
-                    else if (selectedWeaponIndex == 1)
-                    {
-                        selectedWeaponStrength = GameValue.Pickaxe + 1;
-                    }
-                    else if (selectedWeaponIndex == 2)
-                    {
-                        selectedWeaponStrength = GameValue.Shovel + 1;
-                    }
+                }
 
-                    Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                    if (nodeController.Node_Type == selectedWeaponIndex)
+            }
+        }
+        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
+        {
+            // 플레이어 공격 처리
+            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
+        }
+        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Poi"))
+        {
+            if (hit.transform.gameObject.name == "Poi_Distiller(Clone)")
+            {
+                Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
                     {
-                        nodeController.TakeDamage(10f * selectedWeaponStrength, true);
-                    }
-                    else
-                    {
-                        nodeController.TakeDamage(5f * selectedWeaponStrength, false);
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
 
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                        }
                     }
                 }
             }
-            else if (hit.collider.CompareTag("Player"))
+            else if (hit.transform.gameObject.name == "Poi_Dryer(Clone)")
             {
-                // 플레이어 공격 처리
-                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
+                Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
             }
-            else Debug.DrawRay(ray.origin, ray.direction, Color.yellow, 15);
+            else if (hit.transform.gameObject.name == "Poi_Filter(Clone)")
+            {
+                Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Grinder(Clone)")
+            {
+                Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Heater(Clone)")
+            {
+                Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Smelter(Clone)")
+            {
+                Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
         }
-        else Debug.DrawRay(ray.origin, ray.direction, Color.red, 15);
     }
 
     private void Attack()
     {
-        if (Input.GetMouseButton(0) && !Poi)
+        if (Input.GetMouseButton(0))
         {
             if (!sfx_PlayerSwing.isPlaying)
             {
@@ -689,6 +783,35 @@ public class PlayerController : MonoBehaviour
     {
         EquipWeapon(index);
     }
+
+    [PunRPC]
+    public void UpdateMixItem(int index, int mixItemCount)
+    {
+        mixItiems[index] = mixItemCount;
+        nodeItiems[index] -= 1;
+    }
+    public void UpdateNodeItem(int index, int newCount)
+    {
+        if (index >= 0 && index < nodeItiems.Length)
+        {
+            nodeItiems[index] = newCount;
+            OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
+        }
+    }
+    //todo 멀티테스트
+    private void IncreaseLocalPlayerItems()
+    {
+        // 로컬 플레이어의 아이템 갯수만 증가시킵니다.
+       
+        for (int i = 0; i < nodeItiems.Length; i++)
+        {
+            nodeItiems[i] += 10;
+            Debug.Log("아이템 증가" + nodeItiems[i]);
+        }
+        // 아이템 변경을 UI에 알립니다.
+        OnInventoryChanged?.Invoke();
+    }
+
 
     private void EquipWeapon(int index)
     {

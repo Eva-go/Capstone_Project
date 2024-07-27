@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2206388233697376635}
   - component: {fileID: 5223760760334705409}
-  - component: {fileID: 3874181515838277839}
   - component: {fileID: 5569000830120223761}
+  - component: {fileID: 8773791406821143453}
   - component: {fileID: 527718943812757758}
   - component: {fileID: 6808606798516353917}
   - component: {fileID: -935872782112775922}
@@ -61,24 +61,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3874181515838277839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573298627077628865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  poiItem: 0
-  nodeItem: 
-  animator: {fileID: 5223760760334705409}
-  sfx_Station_Start: {fileID: -935872782112775922}
-  sfx_Station_Loop: {fileID: 2306740109581733371}
-  increaseInterval: 5
 --- !u!65 &5569000830120223761
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -100,6 +82,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2.5, z: 2}
   m_Center: {x: 0, y: 1.25, z: 0.5}
+--- !u!114 &8773791406821143453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573298627077628865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2dca97ac3ebdf241978ff94cbae4fa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: {fileID: 0}
+  animator: {fileID: 5223760760334705409}
+  nodeItme: 0
+  mixItme: 0
+  nodeCount: 0
+  nodeName: Scrap
 --- !u!114 &527718943812757758
 MonoBehaviour:
   m_ObjectHideFlags: 0

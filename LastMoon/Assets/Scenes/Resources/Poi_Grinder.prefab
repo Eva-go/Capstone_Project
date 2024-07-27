@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2292299002258769464}
   - component: {fileID: 5273659194352868418}
-  - component: {fileID: 9117606526090464777}
+  - component: {fileID: 2124685949257388035}
   - component: {fileID: 8967602037494354336}
   - component: {fileID: 2937159026886568493}
   - component: {fileID: 6369805564078711892}
@@ -60,7 +60,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &9117606526090464777
+--- !u!114 &2124685949257388035
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,15 +69,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1478360869261646978}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
+  m_Script: {fileID: 11500000, guid: be1526e34f1283a45b7e53305fbcba03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  poiItem: 0
-  nodeItem: 
+  pv: {fileID: 0}
   animator: {fileID: 5273659194352868418}
-  sfx_Station_Start: {fileID: -6086055802904456117}
-  sfx_Station_Loop: {fileID: -1204528744865690132}
-  increaseInterval: 5
+  nodeItme: 0
+  mixItme: 0
+  nodeCount: 0
+  nodeName: Sand
 --- !u!65 &8967602037494354336
 BoxCollider:
   m_ObjectHideFlags: 0
