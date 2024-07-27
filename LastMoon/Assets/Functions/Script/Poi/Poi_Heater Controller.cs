@@ -48,6 +48,7 @@ public class Poi_HeaterController : MonoBehaviour
             // Start processing only if not already processing
             if (!processing)
             {
+                Debug.Log("아이템 갯수" + nodeCount);
                 StartCoroutine(ProcessItems());
             }
         }
@@ -57,22 +58,27 @@ public class Poi_HeaterController : MonoBehaviour
         processing = true; // Start processing
         while (nodeItme > 0)
         {
-            animator.SetBool("isActvie", true);
-            yield return new WaitForSeconds(5f); // Wait for 5 seconds
-
-            mixItme++; // Increase mix item count
+           
             nodeItme--; // Decrease node item count
-            nodeCount--;
-            Debug.Log("아이템 제작");
-
-            // PlayerController의 nodeItiems[i] 값을 업데이트
-            if (pv.IsMine)
+            if (nodeCount>=0)
             {
-                pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, PlanksNumber, nodeCount);
+                nodeCount--;
+                // PlayerController의 nodeItiems[i] 값을 업데이트
+                if (pv.IsMine)
+                {
+                    pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, PlanksNumber, nodeCount);
+                }
+                animator.SetBool("isActvie", true);
+                yield return new WaitForSeconds(5f); // Wait for 5 seconds
+
+                mixItme++; // Increase mix item count
+               
             }
         }
+        nodeCount = 0;
         processing = false; // Stop processing
         animator.SetBool("isActvie", false);
+
     }
     [PunRPC]
     public void UpdatePlayerNodeItem(int index, int newCount)
