@@ -788,6 +788,7 @@ public class PlayerController : MonoBehaviour
     public void UpdateMixItem(int index, int mixItemCount)
     {
         mixItiems[index] = mixItemCount;
+        nodeItiems[index] -= 1;
     }
     public void UpdateNodeItem(int index, int newCount)
     {

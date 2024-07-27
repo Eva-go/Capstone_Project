@@ -23,6 +23,8 @@ public class CanvasController : MonoBehaviour
     public int[] salePrice = new int[6]; // 배열 크기 초기화
     private PlayerController playerController;
 
+    private bool localplayerck=false;
+
     //아이템 획득 여부
     private bool isItme = false;
 
@@ -31,6 +33,7 @@ public class CanvasController : MonoBehaviour
     void Awake()
     {
         isItme = false;
+        localplayerck = false;
         if (Instance == null)
         {
             Instance = this;
@@ -39,6 +42,7 @@ public class CanvasController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
 
     void Start()
@@ -50,7 +54,7 @@ public class CanvasController : MonoBehaviour
 
         inventoryTransform = inventory.transform;
 
-        for (int i = 0; i < nodesCount.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
             nodesCount[i].text = "0";
             mixCount[i].text = "0";
@@ -78,21 +82,26 @@ public class CanvasController : MonoBehaviour
 
     public void RegisterPlayerController(PlayerController player)
     {
-        playerController = player;
-        Debug.Log("플레이어 연동");
-        if (playerController != null)
+        if(!localplayerck)
         {
-            playerController.OnInventoryChanged += nodeCountUpdate;
-            nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
-            isItme = true;
+            playerController = player;
+            Debug.Log("플레이어 연동 " + playerController);
+            if (playerController != null)
+            {
+                playerController.OnInventoryChanged += nodeCountUpdate;
+                nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
+                isItme = true;
+            }
+            localplayerck = true;
         }
+        
     }
 
     public void nodeCountUpdate()
     {
-        for (int i = 0; i < nodesCount.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
-            Debug.Log("아이템 UI" + playerController.nodeItiems[i]);
+            Debug.Log("아이템 UI " + playerController.nodeItiems[i]+"플레이어 이름 "+playerController.name);
             count[i] = playerController.nodeItiems[i];
             nodesCount[i].text = count[i].ToString();
         }
@@ -100,7 +109,7 @@ public class CanvasController : MonoBehaviour
 
     public void mixCountUpdate()
     {
-        for (int i = 0; i < mixCount.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
             Debug.Log("아이템 UI" + playerController.mixItiems[i]);
             count[i] = playerController.mixItiems[i];
@@ -138,6 +147,7 @@ public class CanvasController : MonoBehaviour
             for (int i = 0; i < nodesCount.Length; i++)
             {
                 nodesCount[i].text = "0";
+                mixCount[i].text = "0";
             }
         }
     }
