@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
 
     private bool Jumpforgived = false;
     private bool isWallCliming = false;
+    private bool isSwimming = false;
+    private bool isUnderWater = false;
 
     private float JumpforgivenessTime = 0;
 
@@ -196,13 +198,26 @@ public class PlayerController : MonoBehaviour
         waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.waveStrength);
         WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
 
-        if (WaterDepth > 0)
+        if (WaterDepth > 1.8f) RenderSettings.fog = true;
+        else RenderSettings.fog = false;
+
+        if (WaterDepth > 0.25f)
         {
+            isUnderWater = true;
+            if (!isGrounded) isSwimming = true;
+            if (!isCrouching) myRigid.AddForce(Vector3.up * 5 * WaterDepth, ForceMode.Impulse);
+            else myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
+
             if (Time.time >= lastDamageTime + damageInterval)
             {
                 pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.waveStrength + WaterDepth * WaterDepth / 10);
                 lastDamageTime = Time.time;
             }
+        }
+        else
+        {
+            if (isUnderWater) isUnderWater = false;
+            if (isSwimming) isSwimming = false;
         }
     }
     private void Die()
@@ -257,7 +272,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                if (isGrounded)
+                if (isGrounded || isUnderWater)
                 {
                     velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
                 }
@@ -280,7 +295,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming || isSwimming))
         {
             if (!sfx_PlayerJump.isPlaying)
             {
@@ -335,7 +350,7 @@ public class PlayerController : MonoBehaviour
                 float moveDirY = myRigid.velocity.y;
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                if (isGrounded)
+                if (isGrounded || isUnderWater)
                 {
                     velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
                 }
@@ -377,7 +392,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
-                if (isGrounded)
+                if (isGrounded || isUnderWater)
                 {
                     velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
                 }
