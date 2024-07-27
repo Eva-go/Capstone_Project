@@ -11,8 +11,6 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
     private float initialPosX = 234f;
     private float finalPosX = -234f;
 
-    public AudioSource sfx_Shop_Music, sfx_Round_End;
-
     private int seed1;
     private int seed2;
     private bool LocalClient = true;
@@ -36,11 +34,6 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
         // 타이머 텍스트 업데이트
         int minutes = Mathf.FloorToInt(currentTime / 60f);
         int seconds = Mathf.FloorToInt(currentTime % 60f);
-        
-        if (!sfx_Round_End.isPlaying && !sfx_Shop_Music.isPlaying)
-        {
-            sfx_Shop_Music.Play();
-        }
 
         if (currentTime <= 0 && SceneManager.GetActiveScene().name == "Shop" && GameValue.RoundEnd)
         {

@@ -602,7 +602,18 @@ public class PlayerController : MonoBehaviour
             selectedWeaponIndex = 2;
         }
 
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex + 1) % 3;
+        }
+        else if (scroll < 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex + 2) % 3;
+        }
+
         // 무기 교체가 필요하면 새로운 무기를 장착
+
         if (previousSelectedWeaponIndex != selectedWeaponIndex)
         {
             pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
