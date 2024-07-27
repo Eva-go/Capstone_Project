@@ -7,10 +7,11 @@ public class Wavetransform : MonoBehaviour
     private float downwave = -10f;
     public float waveY;
 
+    //매테리얼 인스턴스 값 변경
     private MaterialPropertyBlock propertyBlock;
 
-    float waveHeightTime = 0;
-    public float currentTime = 0;
+    public float waveHeightTime = 0;
+    public float waveStrength = 0;
     public float normalizedTime;
 
     void Start()
@@ -33,17 +34,19 @@ public class Wavetransform : MonoBehaviour
         //정규화
         normalizedTime = 1.0f - (GameValue.WaveTimer / GameValue.WaveTimerMax);
         //보간
-        currentTime = Mathf.Lerp(0.0f, 2.0f + GameValue.Round, normalizedTime);
+        waveStrength = Mathf.Lerp(0.0f, 2.0f + GameValue.Round, normalizedTime);
 
-        propertyBlock.SetFloat("_Strength", currentTime);
+        //매테리얼 인스턴스 값 변경
+        propertyBlock.SetFloat("_Strength", waveStrength);
         propertyBlock.SetFloat("_waveHeightTime", waveHeightTime);
         gameObject.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+        //
 
         if (RenderSettings.skybox.HasProperty("_Strength"))
-            RenderSettings.skybox.SetFloat("_Strength", currentTime);
+            RenderSettings.skybox.SetFloat("_Strength", waveStrength);
     }
 
-    public float GetWaveHeight(float _x, float _z, float _strength, float _time_scale = 1)
+    public float GetWaveHeight(float _x, float _z, float _strength, float _time_scale = 0.1f)
     {
         float Wavelength;
         if (_strength > 1) Wavelength = 1 / _strength;

@@ -183,14 +183,14 @@ public class PlayerController : MonoBehaviour
     public void WaveTic()
     {
         float waveHeight, WaterDepth;
-        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.currentTime);
+        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.waveStrength);
         WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
 
         if (WaterDepth > 0)
         {
             if (Time.time >= lastDamageTime + damageInterval)
             {
-                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.currentTime + WaterDepth * WaterDepth / 10);
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.waveStrength + WaterDepth * WaterDepth / 10);
                 lastDamageTime = Time.time;
             }
         }

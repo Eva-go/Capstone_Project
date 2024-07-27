@@ -77,6 +77,9 @@
         },
         {
             "m_Id": "d95aaec31fd945428c38df5338f2a32d"
+        },
+        {
+            "m_Id": "1c19d2c29f0c431090b159098a3e5d88"
         }
     ],
     "m_GroupDatas": [
@@ -98,6 +101,20 @@
                     "m_Id": "2f4a054d1aa64124a96b7f33759d9f1d"
                 },
                 "m_SlotId": 10
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "1c19d2c29f0c431090b159098a3e5d88"
+                },
+                "m_SlotId": 1
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "2f4a054d1aa64124a96b7f33759d9f1d"
+                },
+                "m_SlotId": 7
             }
         },
         {
@@ -473,6 +490,56 @@
         "e32": 0.0,
         "e33": 1.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.SubGraphNode",
+    "m_ObjectId": "1c19d2c29f0c431090b159098a3e5d88",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Camera_Distance",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -495.0,
+            "y": 167.0,
+            "width": 163.0,
+            "height": 119.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "a354143b1dc14d349180024aba20fe33"
+        },
+        {
+            "m_Id": "baf347ca8965433bb112ba54f680eec3"
+        },
+        {
+            "m_Id": "a5aff890750a453fb18cd6274aff01ea"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": false,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedSubGraph": "{\n    \"subGraph\": {\n        \"fileID\": -5475051401550479605,\n        \"guid\": \"09c15acfd19c2114b96b0d65e04c818e\",\n        \"type\": 3\n    }\n}",
+    "m_PropertyGuids": [
+        "813c2301-9ffe-4714-a1ea-b33183a93de4",
+        "b89ff336-8c66-4bb2-b3ca-0c6e9dd98339"
+    ],
+    "m_PropertyIds": [
+        329711581,
+        -1532859266
+    ],
+    "m_Dropdowns": [],
+    "m_DropdownSelectedEntries": []
 }
 
 {
@@ -1519,6 +1586,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "a354143b1dc14d349180024aba20fe33",
+    "m_Id": 329711581,
+    "m_DisplayName": "Multiply",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Multiply",
+    "m_StageCapability": 3,
+    "m_Value": 0.05000000074505806,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "a4eea774b8d048a996626a2c2650079a",
     "m_Id": 0,
@@ -1547,6 +1629,21 @@
     "m_ObjectId": "a59cbc7438d84a57aa729b3bd56c9bb3",
     "m_Id": 0,
     "m_DisplayName": "Height Steps",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "a5aff890750a453fb18cd6274aff01ea",
+    "m_Id": 1,
+    "m_DisplayName": "Out",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -1730,6 +1827,21 @@
     "m_ShaderOutputName": "Out",
     "m_StageCapability": 3,
     "m_BareResource": false
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "baf347ca8965433bb112ba54f680eec3",
+    "m_Id": -1532859266,
+    "m_DisplayName": "Subtract",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "_Subtract",
+    "m_StageCapability": 3,
+    "m_Value": 0.25,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
 }
 
 {

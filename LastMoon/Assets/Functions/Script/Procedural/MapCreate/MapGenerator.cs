@@ -260,51 +260,45 @@ public class MapGenerator : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
+                    GameObject prefabToPlace = null;
                     float height = hit.point.y;
                     position = new Vector3(x - 120, height, y - 120);
+                    if (height > POIYMin)
+                    {
+                        if (height <= POIYMax)
+                        {
 
-                    GameObject prefabToPlace = null;
-
-                    if (noiseMap[x, y] > POIThreshold1)
-                    {
-                        prefabToPlace = POIPrefabs1[prng.Next(POIPrefabs1.Length)];
-                    }
-                    else if (noiseMap[x, y] > POIThreshold2)
-                    {
-                        prefabToPlace = POIPrefabs2[prng.Next(POIPrefabs2.Length)];
-                    }
-                    else if (noiseMap[x, y] > POIThreshold3)
-                    {
-                        prefabToPlace = POIPrefabs3[prng.Next(POIPrefabs3.Length)];
-                    }
-                    else if (noiseMap[x, y] > POIThreshold4)
-                    {
-                        prefabToPlace = POIPrefabs4[prng.Next(POIPrefabs4.Length)];
-                    }
-                    else if (noiseMap[x, y] > POIThreshold5)
-                    {
-                        prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
-                    }
-                    else if (noiseMap[x, y] > POIThreshold6)
-                    {
-                        prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
+                            if (noiseMap[x, y] > POIThreshold1)
+                            {
+                                prefabToPlace = POIPrefabs1[prng.Next(POIPrefabs1.Length)];
+                            }
+                            else if (noiseMap[x, y] > POIThreshold2)
+                            {
+                                prefabToPlace = POIPrefabs2[prng.Next(POIPrefabs2.Length)];
+                            }
+                            else if (noiseMap[x, y] > POIThreshold3)
+                            {
+                                prefabToPlace = POIPrefabs3[prng.Next(POIPrefabs3.Length)];
+                            }
+                            else if (noiseMap[x, y] > POIThreshold4)
+                            {
+                                prefabToPlace = POIPrefabs4[prng.Next(POIPrefabs4.Length)];
+                            }
+                            else if (noiseMap[x, y] > POIThreshold5)
+                            {
+                                prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
+                            }
+                            else if (noiseMap[x, y] > POIThreshold6)
+                            {
+                                prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
+                            }
+                        }
                     }
 
                     if (prefabToPlace != null)
                     {
                         GameObject newPOI = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
                         newPOI.transform.SetParent(parentTransform);
-
-                        // Only activate the POI if it can be placed within the height constraints
-                        if (PositionBuildingOnGround(newPOI, POIYMin, POIYMax))
-                        {
-                            newPOI.SetActive(true);
-                        }
-                        else
-                        {
-                            // Instead of destroying, just deactivate the POI
-                            newPOI.SetActive(false);
-                        }
                     }
                 }
             }
