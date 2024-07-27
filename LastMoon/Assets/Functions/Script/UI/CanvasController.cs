@@ -24,7 +24,7 @@ public class CanvasController : MonoBehaviour
     private PlayerController playerController;
 
     //아이템 획득 여부
-    private bool isItme=false;
+    private bool isItme = false;
 
     private Transform inventoryTransform;
 
@@ -69,7 +69,7 @@ public class CanvasController : MonoBehaviour
         Sell();
         Die();
         //아이템 업데이트
-        if(isItme)
+        if (isItme)
         {
             nodeCountUpdate();
             mixCountUpdate();
@@ -79,14 +79,13 @@ public class CanvasController : MonoBehaviour
     public void RegisterPlayerController(PlayerController player)
     {
         playerController = player;
-  
+        Debug.Log("플레이어 연동");
         if (playerController != null)
         {
             playerController.OnInventoryChanged += nodeCountUpdate;
             nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
             isItme = true;
         }
-        
     }
 
     public void nodeCountUpdate()
@@ -111,7 +110,7 @@ public class CanvasController : MonoBehaviour
 
     private void Sell()
     {
-        if(GameValue.lived)
+        if (GameValue.lived)
         {
             money.SetActive(true);
             GameValue.setMoney();
@@ -134,13 +133,13 @@ public class CanvasController : MonoBehaviour
 
     private void Die()
     {
-        if(PlayerController.Hp==0)
+        if (PlayerController.Hp == 0)
         {
             for (int i = 0; i < nodesCount.Length; i++)
             {
                 nodesCount[i].text = "0";
             }
-        }     
+        }
     }
 
     void UpdateMoneyActive()
@@ -156,9 +155,9 @@ public class CanvasController : MonoBehaviour
 
     void UpdateInsideActive()
     {
-        if(GameValue.insideUser<GameValue.MaxUser)
+        if (GameValue.insideUser < GameValue.MaxUser)
         {
-            inside.SetActive(PlayerController.insideActive && !PlayerController.PreViewCam);   
+            inside.SetActive(PlayerController.insideActive && !PlayerController.PreViewCam);
 
         }
     }
@@ -178,7 +177,7 @@ public class CanvasController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if(inventory_ck)
+            if (inventory_ck)
             {
                 keyTabCode = (keyTabCode + 1) % 3;
                 bool isCraftManualActive = CraftMaunal.isActivated && !CraftMaunal.isPreViewActivated;
@@ -187,7 +186,7 @@ public class CanvasController : MonoBehaviour
 
                 SetTabActive(keyTabCode);
             }
-           
+
         }
     }
 
