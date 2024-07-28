@@ -78,7 +78,16 @@ public class PlayerController : MonoBehaviour
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
 
+    //이벤트 처리
     public event Action OnInventoryChanged;
+
+    //멀티플레이 보간
+    public float positionLerpSpeed = 8f; // 위치 보간 속도
+    public float rotationLerpSpeed = 8f; // 회전 보간 속도
+
+    private Vector3 networkPosition;
+    private Quaternion networkRotation;
+
 
     void Start()
     {
@@ -141,7 +150,6 @@ public class PlayerController : MonoBehaviour
             Attack();
             Switching();
             WaveTic();
-            nodeCountck();
             if (Input.GetKey("escape"))
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
@@ -176,12 +184,17 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("믹스 아이템 " + mixItiems[i]);
                 }
             }
-
             // Check if the player is dead
             if (Hp <= 0)
             {
                 Die();
             }
+        }
+        else
+        {
+            // 다른 플레이어의 위치와 회전을 보간하여 부드럽게 처리
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * positionLerpSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * rotationLerpSpeed);
         }
     }
     public void Items()
@@ -291,6 +304,11 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isMove", false);
                 Localanimator.SetBool("isMove", false);
             }
+            if (pv.IsMine)
+            {
+                // 네트워크 위치와 회전을 업데이트
+                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+            }
         }
     }
 
@@ -369,6 +387,11 @@ public class PlayerController : MonoBehaviour
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isRuns", false);
                 Localanimator.SetBool("isMove", false);
+            }
+            if (pv.IsMine)
+            {
+                // 네트워크 위치와 회전을 업데이트
+                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
     }
@@ -502,14 +525,105 @@ public class PlayerController : MonoBehaviour
             PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
             if (targetPv != null)
             {
-                for (int i = 0; i < 6; i++)
+                if (Physics.Raycast(ray, out hitInfo, 5f) && hitInfo.collider.CompareTag("Poi"))
                 {
-                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName);
+                    if (hitInfo.transform.gameObject.name == "Poi_Distiller(Clone)")
+                    {
+                        Poi_DistillerController distillerController = hitInfo.collider.GetComponent<Poi_DistillerController>();
+                        if (distillerController != null)
+                        {
+                            int nodeIndex = distillerController.nodeNumber;
+                            if (nodeItiems[nodeIndex] >0)
+                            {
+                                nodeItiems[nodeIndex]--;
+                                targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Dryer(Clone)")
+                    {
+                        Poi_DryerController distillerController = hitInfo.collider.GetComponent<Poi_DryerController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Filter(Clone)")
+                    {
+                        Poi_FilterController distillerController = hitInfo.collider.GetComponent<Poi_FilterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Grinder(Clone)")
+                    {
+                        Poi_GrinderController distillerController = hitInfo.collider.GetComponent<Poi_GrinderController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Heater(Clone)")
+                    {
+                        Poi_HeaterController distillerController = hitInfo.collider.GetComponent<Poi_HeaterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Smelter(Clone)")
+                    {
+                        Poi_SmelterController distillerController = hitInfo.collider.GetComponent<Poi_SmelterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
+        }   
     }
-
     public void Attack_Time()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
@@ -533,7 +647,7 @@ public class PlayerController : MonoBehaviour
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
         {
             // 플레이어 공격 처리
-            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
+            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10f);
         }
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Poi"))
         {
@@ -657,6 +771,14 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    [PunRPC]
+    private void RPC_UpdatePositionAndRotation(Vector3 position, Quaternion rotation)
+    {
+        networkPosition = position;
+        networkRotation = rotation;
     }
 
     [PunRPC]
@@ -818,14 +940,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void nodeCountck()
-    {
-        for(int i=0; i<nodeCounts.Length;i++)
-        {
-            nodeCounts[i] = nodeItiems[i];
-        }
-    }
     //todo 멀티테스트
     private void IncreaseLocalPlayerItems()
     {

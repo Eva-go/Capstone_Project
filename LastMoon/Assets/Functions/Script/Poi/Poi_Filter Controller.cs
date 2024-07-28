@@ -12,8 +12,8 @@ public class Poi_FilterController : MonoBehaviour
     public int nodeItme = 0;
     public int mixItme = 0;
     public int nodeCount = 0;
-    private int mixoldItem = 0;
-    private int DriftwoodNumber = 2;
+    public int mixoldItem = 0;
+    public int nodeNumber = 2;
     public string nodeName = "Driftwood";
     private string playerName = " ";
     private bool processing = false;
@@ -21,22 +21,17 @@ public class Poi_FilterController : MonoBehaviour
     {
         pv = GetComponent<PhotonView>();
         nodeName = "Driftwood";
+        nodeNumber = 2;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     [PunRPC]
     public void ReceiveData(int nodeItemCount, string nodenames, string playerNickName)
     {
         if (nodeName.Equals(nodenames))
         {
-            if (playerName == " " && nodeItemCount > 0)
+            if (playerName == " " && nodeItemCount >= 0)
             {
                 nodeCount = nodeItemCount;
-                // 수신한 값을 설정합니다
                 nodeItme++;
                 playerName = playerNickName;
             }
@@ -45,7 +40,6 @@ public class Poi_FilterController : MonoBehaviour
                 nodeItme++;
             }
 
-            // Start processing only if not already processing
             if (!processing)
             {
                 Debug.Log("아이템 갯수" + nodeCount);
@@ -53,32 +47,23 @@ public class Poi_FilterController : MonoBehaviour
             }
         }
     }
+
     private IEnumerator ProcessItems()
     {
-        processing = true; // Start processing
+        processing = true;
         while (nodeItme > 0)
         {
-           
-            nodeItme--; // Decrease node item count
-            if (nodeCount>=0)
-            {
-                nodeCount--;
-                // PlayerController의 nodeItiems[i] 값을 업데이트
-                if (pv.IsMine)
-                {
-                    pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, DriftwoodNumber, nodeCount);
-                }
-                animator.SetBool("isActvie", true);
-                yield return new WaitForSeconds(5f); // Wait for 5 seconds
-                mixItme++; // Increase mix item count
-                
-                Debug.Log("아이템 제작");
-            }
+            nodeItme--;
+            animator.SetBool("isActvie", true);
+            yield return new WaitForSeconds(5f);
+            mixItme++;
+            Debug.Log("아이템 제작");
         }
         nodeCount = 0;
-        processing = false; // Stop processing
+        processing = false;
         animator.SetBool("isActvie", false);
     }
+
     [PunRPC]
     public void UpdatePlayerNodeItem(int index, int newCount)
     {
@@ -88,6 +73,7 @@ public class Poi_FilterController : MonoBehaviour
             localPlayer.UpdateNodeItem(index, newCount);
         }
     }
+
     [PunRPC]
     public int GetMixItem()
     {
