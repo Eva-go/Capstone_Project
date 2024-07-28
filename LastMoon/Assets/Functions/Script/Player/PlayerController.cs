@@ -655,122 +655,126 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Node"))
+        if (Physics.Raycast(ray, out hit, 5f))
         {
-            NodeController nodeController = hit.collider.GetComponent<NodeController>();
-            if (nodeController != null)
+            if (hit.collider.CompareTag("Node"))
             {
-                nodeController.TakeDamage(10f);
-                for (int i = 0; i < 6; i++)
+                NodeController nodeController = hit.collider.GetComponent<NodeController>();
+                if (nodeController != null)
                 {
-                    if (nodeController.nodeName.Equals("node_" + nodeName[i] + "(Clone)"))
+                    nodeController.TakeDamage(10f);
+                    for (int i = 0; i < 6; i++)
                     {
-                        nodeItiems[i] += nodeController.nodeCount;
-                    }
-                }
-
-            }
-        }
-        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
-        {
-            // 플레이어 공격 처리
-            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10f);
-        }
-        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Poi"))
-        {
-            if (hit.transform.gameObject.name == "Poi_Distiller(Clone)")
-            {
-                Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
-                if (distillerController != null)
-                {
-                    for (int i = 0; i < nodeName.Length; i++)
-                    {
-                        if (nodeName[i] == distillerController.nodeName)
+                        if (nodeController.nodeName.Equals("node_" + nodeName[i] + "(Clone)"))
                         {
-                            int mixItemCount = distillerController.mixItme;
+                            nodeItiems[i] += nodeController.nodeCount;
+                        }
+                    }
 
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                }
+            }
+            else if (hit.collider.CompareTag("Player"))
+            {
+                // 플레이어 공격 처리
+                if (isCrouching || isRunning || !isGrounded) pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 1zf);
+                else pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10f);
+            }
+            else if (hit.collider.CompareTag("Poi"))
+            {
+                if (hit.transform.gameObject.name == "Poi_Distiller(Clone)")
+                {
+                    Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
+                    if (distillerController != null)
+                    {
+                        for (int i = 0; i < nodeName.Length; i++)
+                        {
+                            if (nodeName[i] == distillerController.nodeName)
+                            {
+                                int mixItemCount = distillerController.mixItme;
 
+                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                            }
                         }
                     }
                 }
-            }
-            else if (hit.transform.gameObject.name == "Poi_Dryer(Clone)")
-            {
-                Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
-                if (distillerController != null)
+                else if (hit.transform.gameObject.name == "Poi_Dryer(Clone)")
                 {
-                    for (int i = 0; i < nodeName.Length; i++)
+                    Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
+                    if (distillerController != null)
                     {
-                        if (nodeName[i] == distillerController.nodeName)
+                        for (int i = 0; i < nodeName.Length; i++)
                         {
-                            int mixItemCount = distillerController.mixItme;
+                            if (nodeName[i] == distillerController.nodeName)
+                            {
+                                int mixItemCount = distillerController.mixItme;
 
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                            }
                         }
                     }
                 }
-            }
-            else if (hit.transform.gameObject.name == "Poi_Filter(Clone)")
-            {
-                Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
-                if (distillerController != null)
+                else if (hit.transform.gameObject.name == "Poi_Filter(Clone)")
                 {
-                    for (int i = 0; i < nodeName.Length; i++)
+                    Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
+                    if (distillerController != null)
                     {
-                        if (nodeName[i] == distillerController.nodeName)
+                        for (int i = 0; i < nodeName.Length; i++)
                         {
-                            int mixItemCount = distillerController.mixItme;
+                            if (nodeName[i] == distillerController.nodeName)
+                            {
+                                int mixItemCount = distillerController.mixItme;
 
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                            }
                         }
                     }
                 }
-            }
-            else if (hit.transform.gameObject.name == "Poi_Grinder(Clone)")
-            {
-                Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
-                if (distillerController != null)
+                else if (hit.transform.gameObject.name == "Poi_Grinder(Clone)")
                 {
-                    for (int i = 0; i < nodeName.Length; i++)
+                    Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
+                    if (distillerController != null)
                     {
-                        if (nodeName[i] == distillerController.nodeName)
+                        for (int i = 0; i < nodeName.Length; i++)
                         {
-                            int mixItemCount = distillerController.mixItme;
+                            if (nodeName[i] == distillerController.nodeName)
+                            {
+                                int mixItemCount = distillerController.mixItme;
 
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                            }
                         }
                     }
                 }
-            }
-            else if (hit.transform.gameObject.name == "Poi_Heater(Clone)")
-            {
-                Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
-                if (distillerController != null)
+                else if (hit.transform.gameObject.name == "Poi_Heater(Clone)")
                 {
-                    for (int i = 0; i < nodeName.Length; i++)
+                    Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
+                    if (distillerController != null)
                     {
-                        if (nodeName[i] == distillerController.nodeName)
+                        for (int i = 0; i < nodeName.Length; i++)
                         {
-                            int mixItemCount = distillerController.mixItme;
+                            if (nodeName[i] == distillerController.nodeName)
+                            {
+                                int mixItemCount = distillerController.mixItme;
 
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                            }
                         }
                     }
                 }
-            }
-            else if (hit.transform.gameObject.name == "Poi_Smelter(Clone)")
-            {
-                Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
-                if (distillerController != null)
+                else if (hit.transform.gameObject.name == "Poi_Smelter(Clone)")
                 {
-                    for (int i = 0; i < nodeName.Length; i++)
+                    Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
+                    if (distillerController != null)
                     {
-                        if (nodeName[i] == distillerController.nodeName)
+                        for (int i = 0; i < nodeName.Length; i++)
                         {
-                            int mixItemCount = distillerController.mixItme;
+                            if (nodeName[i] == distillerController.nodeName)
+                            {
+                                int mixItemCount = distillerController.mixItme;
 
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                            }
                         }
                     }
                 }
