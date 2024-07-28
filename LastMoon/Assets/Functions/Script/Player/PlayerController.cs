@@ -676,7 +676,7 @@ public class PlayerController : MonoBehaviour
             else if (hit.collider.CompareTag("Player"))
             {
                 // 플레이어 공격 처리
-                if (isCrouching || isRunning || !isGrounded) pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 1zf);
+                if (isCrouching || isRunning || !isGrounded) pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 15f);
                 else pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10f);
             }
             else if (hit.collider.CompareTag("Poi"))
