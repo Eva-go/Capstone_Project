@@ -78,6 +78,10 @@ public class PlayerController : MonoBehaviour
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
 
+    //돈 치환 변수
+    public static int[] nodeSell = new int[6];
+    public static int[] mixSell = new int[6];
+
     //이벤트 처리
     public event Action OnInventoryChanged;
 
@@ -127,6 +131,9 @@ public class PlayerController : MonoBehaviour
         //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
         live = true;
+
+        //돈 활성화
+        GameValue.setMoney();
     }
 
     void Update()
@@ -150,6 +157,7 @@ public class PlayerController : MonoBehaviour
             Attack();
             Switching();
             WaveTic();
+            Sell();
             if (Input.GetKey("escape"))
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
@@ -196,6 +204,16 @@ public class PlayerController : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * positionLerpSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * rotationLerpSpeed);
         }
+    }
+
+    public void Sell()
+    {
+        for(int i=0;i<6;i++)
+        {
+            nodeSell[i] = nodeItiems[i];
+            mixSell[i] = mixItiems[i];
+        }
+        GameValue.getItem();
     }
     public void Items()
     {

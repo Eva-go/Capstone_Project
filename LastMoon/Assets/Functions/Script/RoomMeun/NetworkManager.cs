@@ -6,6 +6,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using ExitGames.Client.Photon;
 
+
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
     public InputField m_inputField_Nickname; // 닉네임 입력받는 곳.

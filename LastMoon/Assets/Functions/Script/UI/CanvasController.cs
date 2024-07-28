@@ -18,9 +18,16 @@ public class CanvasController : MonoBehaviour
     public GameObject[] nodes;
     public Text[] nodesCount;
     public Text[] mixCount;
+    public Text[] nodePrice;
+    public Text[] mixPrice;
+    
+
+
     public int[] count = new int[6]; // 배열 크기 초기화
     public int[] SellCount = new int[6]; // 배열 크기 초기화
     public int[] salePrice = new int[6]; // 배열 크기 초기화
+    public int[] nodePriceCount = new int[6];
+    public int[] mixPriceCount = new int[6];
     private PlayerController playerController;
 
     private bool localplayerck = false;
@@ -71,7 +78,17 @@ public class CanvasController : MonoBehaviour
             mixCount[i].text = "0";
             count[i] = 0;
             SellCount[i] = 0;
+            nodePriceCount[i] +=10+ i * 10;
+            mixPriceCount[i] += 100 + i * 10;
+            nodePrice[i].text = nodePriceCount[i].ToString();
+            mixPrice[i].text = mixPriceCount[i].ToString();
         }
+
+        for(int i=0;i<6;i++)
+        {
+            GameValue.getPrice(i, nodePriceCount[i], mixPriceCount[i]);
+        }
+        
     }
 
     void Update()
