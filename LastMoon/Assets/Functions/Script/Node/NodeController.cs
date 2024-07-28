@@ -6,6 +6,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     public float maxHealth = 30f;
     [HideInInspector]
     public float currentHealth;
+    public int Node_Type;
     public Animator animator;
     public string nodeName;
 
@@ -22,7 +23,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         nodeCount = 0;
     }
 
-    public void TakeDamage(float Damage)
+    public void TakeDamage(float Damage,bool Effective)
     {
 
         float R_sfx = Random.value;
@@ -31,6 +32,17 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         else if (R_sfx > 0.5) sfx_NodeHit.clip = sfx_NodeHit2;
         else if (R_sfx > 0.25) sfx_NodeHit.clip = sfx_NodeHit3;
         else sfx_NodeHit.clip = sfx_NodeHit4;
+        
+        if (Effective)
+        {
+            sfx_NodeHit.pitch = 1;
+            sfx_NodeHit.volume = 1;
+        }
+        else
+        {
+            sfx_NodeHit.pitch = 0.5f;
+            sfx_NodeHit.volume = 0.5f;
+        }
         sfx_NodeHit.Play();
 
         currentHealth -= Damage;
@@ -41,13 +53,20 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         }
         else if (currentHealth <= 0)
         {
-            currentHealth = 0;
-            gameObject.GetComponent<BoxCollider>().enabled = false;
-            //GameValue.GetMomey(PlayerController.getMoney);
-            photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest");
-            // 애니메이션 끝날 때 오브젝트 삭제
-            nodeName = gameObject.name;
-            nodeCount++;
+            if (Effective)
+            {
+                currentHealth = 0;
+                gameObject.GetComponent<BoxCollider>().enabled = false;
+                //GameValue.GetMomey(PlayerController.getMoney);
+                photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest");
+                // 애니메이션 끝날 때 오브젝트 삭제
+                nodeName = gameObject.name;
+                nodeCount++;
+            }
+            else
+            {
+                photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Destroy");
+            }
         }
 
         // 포톤 네트워크를 통해 HP 동기화
