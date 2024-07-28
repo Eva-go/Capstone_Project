@@ -76,7 +76,16 @@ public class PlayerController : MonoBehaviour
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
 
+    //이벤트 처리
     public event Action OnInventoryChanged;
+
+    //멀티플레이 보간
+    public float positionLerpSpeed = 8f; // 위치 보간 속도
+    public float rotationLerpSpeed = 8f; // 회전 보간 속도
+
+    private Vector3 networkPosition;
+    private Quaternion networkRotation;
+
 
     void Start()
     {
@@ -139,7 +148,6 @@ public class PlayerController : MonoBehaviour
             Attack();
             Switching();
             WaveTic();
-            nodeCountck();
             if (Input.GetKey("escape"))
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
@@ -174,12 +182,17 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("믹스 아이템 " + mixItiems[i]);
                 }
             }
-
             // Check if the player is dead
             if (Hp <= 0)
             {
                 Die();
             }
+        }
+        else
+        {
+            // 다른 플레이어의 위치와 회전을 보간하여 부드럽게 처리
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * positionLerpSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * rotationLerpSpeed);
         }
     }
     public void Items()
@@ -275,6 +288,11 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isMove", false);
                 Localanimator.SetBool("isMove", false);
             }
+            if (pv.IsMine)
+            {
+                // 네트워크 위치와 회전을 업데이트
+                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+            }
         }
     }
 
@@ -352,6 +370,11 @@ public class PlayerController : MonoBehaviour
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isRuns", false);
                 Localanimator.SetBool("isMove", false);
+            }
+            if (pv.IsMine)
+            {
+                // 네트워크 위치와 회전을 업데이트
+                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
     }
@@ -732,6 +755,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+    [PunRPC]
+    private void RPC_UpdatePositionAndRotation(Vector3 position, Quaternion rotation)
+    {
+        networkPosition = position;
+        networkRotation = rotation;
+    }
+
     [PunRPC]
     private void RPC_TakeDamage(int viewID, float damage)
     {
@@ -891,14 +922,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void nodeCountck()
-    {
-        for(int i=0; i<nodeCounts.Length;i++)
-        {
-            nodeCounts[i] = nodeItiems[i];
-        }
-    }
     //todo 멀티테스트
     private void IncreaseLocalPlayerItems()
     {
