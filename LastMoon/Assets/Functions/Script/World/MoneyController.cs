@@ -28,7 +28,7 @@ public class MoneyController : MonoBehaviour
     public Button AxeBT;
     public Button PickaxeBT;
     public Button ShoveltBT;
-
+        
     public Sprite[] ToolIcons;
     public Image AxeIcon, PickaxeIcon, ShovelIcon;
 
@@ -51,8 +51,6 @@ public class MoneyController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKey("escape"))
-            Application.Quit();
         if (Input.GetKeyDown(KeyCode.F5))
         {
             GameValue.GetMomey(1000);

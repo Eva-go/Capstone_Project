@@ -161,8 +161,6 @@ public class PlayerController : MonoBehaviour
             Switching();
             WaveTic();
             Sell();
-            if (Input.GetKey("escape"))
-                Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Hp = 100;

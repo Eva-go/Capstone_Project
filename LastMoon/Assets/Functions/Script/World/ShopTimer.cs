@@ -83,7 +83,7 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
                 RBTime += Time.deltaTime;
                 if (ReadyProgress < 100)
                 {
-                    ReadyProgress += RBTime / 100;
+                    ReadyProgress += RBTime * 25 / 100;
                 }
                 else
                 {
