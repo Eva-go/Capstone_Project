@@ -12,8 +12,8 @@ public class Poi_HeaterController : MonoBehaviour
     public int nodeItme = 0;
     public int mixItme = 0;
     public int nodeCount = 0;
-    private int mixoldItem = 0;
-    private int PlanksNumber = 4;
+    public int mixoldItem = 0;
+    public int nodeNumber = 4;
     public string nodeName = "Planks";
     private string playerName = " ";
     private bool processing = false;
@@ -21,22 +21,17 @@ public class Poi_HeaterController : MonoBehaviour
     {
         pv = GetComponent<PhotonView>();
         nodeName = "Planks";
+        nodeNumber = 4;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     [PunRPC]
     public void ReceiveData(int nodeItemCount, string nodenames, string playerNickName)
     {
         if (nodeName.Equals(nodenames))
         {
-            if (playerName == " " && nodeItemCount > 0)
+            if (playerName == " " && nodeItemCount >= 0)
             {
                 nodeCount = nodeItemCount;
-                // 수신한 값을 설정합니다
                 nodeItme++;
                 playerName = playerNickName;
             }
@@ -45,7 +40,6 @@ public class Poi_HeaterController : MonoBehaviour
                 nodeItme++;
             }
 
-            // Start processing only if not already processing
             if (!processing)
             {
                 Debug.Log("아이템 갯수" + nodeCount);
@@ -53,33 +47,23 @@ public class Poi_HeaterController : MonoBehaviour
             }
         }
     }
+
     private IEnumerator ProcessItems()
     {
-        processing = true; // Start processing
+        processing = true;
         while (nodeItme > 0)
         {
-           
-            nodeItme--; // Decrease node item count
-            if (nodeCount>=0)
-            {
-                nodeCount--;
-                // PlayerController의 nodeItiems[i] 값을 업데이트
-                if (pv.IsMine)
-                {
-                    pv.RPC("UpdatePlayerNodeItem", RpcTarget.AllBuffered, PlanksNumber, nodeCount);
-                }
-                animator.SetBool("isActvie", true);
-                yield return new WaitForSeconds(5f); // Wait for 5 seconds
-
-                mixItme++; // Increase mix item count
-               
-            }
+            nodeItme--;
+            animator.SetBool("isActvie", true);
+            yield return new WaitForSeconds(5f);
+            mixItme++;
+            Debug.Log("아이템 제작");
         }
         nodeCount = 0;
-        processing = false; // Stop processing
+        processing = false;
         animator.SetBool("isActvie", false);
-
     }
+
     [PunRPC]
     public void UpdatePlayerNodeItem(int index, int newCount)
     {

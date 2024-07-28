@@ -484,14 +484,105 @@ public class PlayerController : MonoBehaviour
             PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
             if (targetPv != null)
             {
-                for (int i = 0; i < 6; i++)
+                if (Physics.Raycast(ray, out hitInfo, 5f) && hitInfo.collider.CompareTag("Poi"))
                 {
-                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName);
+                    if (hitInfo.transform.gameObject.name == "Poi_Distiller(Clone)")
+                    {
+                        Poi_DistillerController distillerController = hitInfo.collider.GetComponent<Poi_DistillerController>();
+                        if (distillerController != null)
+                        {
+                            int nodeIndex = distillerController.nodeNumber;
+                            if (nodeItiems[nodeIndex] >0)
+                            {
+                                nodeItiems[nodeIndex]--;
+                                targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Dryer(Clone)")
+                    {
+                        Poi_DryerController distillerController = hitInfo.collider.GetComponent<Poi_DryerController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Filter(Clone)")
+                    {
+                        Poi_FilterController distillerController = hitInfo.collider.GetComponent<Poi_FilterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Grinder(Clone)")
+                    {
+                        Poi_GrinderController distillerController = hitInfo.collider.GetComponent<Poi_GrinderController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Heater(Clone)")
+                    {
+                        Poi_HeaterController distillerController = hitInfo.collider.GetComponent<Poi_HeaterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Smelter(Clone)")
+                    {
+                        Poi_SmelterController distillerController = hitInfo.collider.GetComponent<Poi_SmelterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
                 }
             }
-        }
+        }   
     }
-
     public void Attack_Time()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
