@@ -184,11 +184,14 @@ public class CanvasController : MonoBehaviour
 
     public void nodeCountUpdate()
     {
-        for (int i = 0; i < 6; i++)
+        if (playerController != null)
         {
-            Debug.Log("아이템 UI " + playerController.nodeItiems[i] + "플레이어 이름 " + playerController.name);
-            count[i] = playerController.nodeItiems[i];
-            nodesCount[i].text = count[i].ToString();
+            for (int i = 0; i < 6; i++)
+            {
+                Debug.Log("아이템 UI " + playerController.nodeItiems[i] + "플레이어 이름 " + playerController.name);
+                count[i] = playerController.nodeItiems[i];
+                nodesCount[i].text = count[i].ToString();
+            }
         }
     }
 
