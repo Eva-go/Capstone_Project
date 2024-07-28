@@ -32,6 +32,14 @@ public class CanvasController : MonoBehaviour
 
     private bool localplayerck = false;
 
+    public Sprite[] UI_ToolIconSprites;
+    public Image[] UI_ToolIcons;
+    public Color[] UI_ToolDurabilityColor;
+    public Image[] UI_ToolDurabilities;
+
+    private int selectedToolIndex = 0;
+
+
     //아이템 획득 여부
     private bool isItme = false;
 
@@ -54,6 +62,9 @@ public class CanvasController : MonoBehaviour
 
     void Start()
     {
+        ToolIconUpdate();
+        ToolColorUpdate();
+
         inside.SetActive(false);
         inventory.SetActive(false);
         Tab.SetActive(false);
@@ -82,6 +93,8 @@ public class CanvasController : MonoBehaviour
 
     void Update()
     {
+        ToolIconSwitching();
+
         UpdateInsideActive();
         UpdateInventoryActive();
         UpdateInventoryTabActive();
@@ -96,6 +109,61 @@ public class CanvasController : MonoBehaviour
             mixCountUpdate();
         }
     }
+    private void ToolIconSwitching()
+    {
+        int previousSelectedWeaponIndex = selectedToolIndex;
+
+        // 무기 번호 키로 무기 교체
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            selectedToolIndex = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            selectedToolIndex = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            selectedToolIndex = 2;
+        }
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0f)
+        {
+            selectedToolIndex = (selectedToolIndex + 1) % 3;
+        }
+        else if (scroll < 0f)
+        {
+            selectedToolIndex = (selectedToolIndex + 2) % 3;
+        }
+
+        // 무기 교체가 필요하면 새로운 무기를 장착
+        if (previousSelectedWeaponIndex != selectedToolIndex)
+        {
+            UI_ToolIcons[0].sprite = UI_ToolIcons[selectedToolIndex + 1].sprite;
+            ToolColorUpdate();
+        }
+    }
+
+    public void ToolIconUpdate()
+    {
+        UI_ToolIcons[1].sprite = UI_ToolIconSprites[GameValue.Axe * 3];
+        UI_ToolIcons[2].sprite = UI_ToolIconSprites[GameValue.Pickaxe * 3 + 1];
+        UI_ToolIcons[3].sprite = UI_ToolIconSprites[GameValue.Shovel * 3 + 2];
+
+        UI_ToolIcons[0].sprite = UI_ToolIcons[selectedToolIndex + 1].sprite;
+    }
+
+    public void ToolColorUpdate()
+    {
+        UI_ToolDurabilities[1].color = UI_ToolDurabilityColor[GameValue.Axe + 1];
+        UI_ToolDurabilities[2].color = UI_ToolDurabilityColor[GameValue.Pickaxe + 1];
+        UI_ToolDurabilities[3].color = UI_ToolDurabilityColor[GameValue.Shovel + 1];
+
+        UI_ToolDurabilities[0].color = UI_ToolDurabilities[selectedToolIndex + 1].color;
+        UI_ToolDurabilities[selectedToolIndex + 1].color = UI_ToolDurabilityColor[0];
+    }
+
 
     public void RegisterPlayerController(PlayerController player)
     {
@@ -116,11 +184,14 @@ public class CanvasController : MonoBehaviour
 
     public void nodeCountUpdate()
     {
-        for (int i = 0; i < 6; i++)
+        if (playerController != null)
         {
-            Debug.Log("아이템 UI " + playerController.nodeItiems[i] + "플레이어 이름 " + playerController.name);
-            count[i] = playerController.nodeItiems[i];
-            nodesCount[i].text = count[i].ToString();
+            for (int i = 0; i < 6; i++)
+            {
+                Debug.Log("아이템 UI " + playerController.nodeItiems[i] + "플레이어 이름 " + playerController.name);
+                count[i] = playerController.nodeItiems[i];
+                nodesCount[i].text = count[i].ToString();
+            }
         }
     }
 

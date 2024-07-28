@@ -25,7 +25,7 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
     private float ReadyProgress;
     private float RBTime = 0.0f;
 
-    public GameObject ReadyClockBar;
+    public GameObject ReadyClockBar, CompleteClockBar;
     public Image ReadyClockBarImg;
     public RectTransform ReadyClockBar_End, ReadyClockBar_End_Mask;
 
@@ -36,6 +36,7 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
         RoundText.text = GameValue.Round.ToString();
         isReady = false;
         ReadyButton.GetComponent<Button>().interactable = true;
+        CompleteClockBar.SetActive(false);
 
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
         Cursor.lockState = CursorLockMode.Confined;
@@ -68,36 +69,41 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
             photonView.RPC("RPC_DecreaseTime", RpcTarget.AllBuffered);
         }
 
-        RBPressing = ReadyButton.GetComponent<ButtonPressed>().isButtonPressed;
-        if (RBPressing)
+        if (!isReady)
         {
-            if (ReadyProgress == 0) ReadyClockBar.SetActive(true);
-            RBTime += Time.deltaTime;
-            if (ReadyProgress < 100)
+            RBPressing = ReadyButton.GetComponent<ButtonPressed>().isButtonPressed;
+            if (RBPressing)
             {
-                ReadyProgress += RBTime / 100;
+                if (ReadyProgress == 0) ReadyClockBar.SetActive(true);
+                RBTime += Time.deltaTime;
+                if (ReadyProgress < 100)
+                {
+                    ReadyProgress += RBTime / 100;
+                }
+                else
+                {
+                    ReadyProgress = 100;
+                    isReady = true;
+                    ReadyButton.GetComponent<Button>().interactable = false;
+                    ReadyClockBar.SetActive(false);
+                    CompleteClockBar.SetActive(true);
+                }
             }
-            else
+            else if (ReadyProgress < 100)
             {
-                ReadyProgress = 100;
-                isReady = true;
-                ReadyButton.GetComponent<Button>().interactable = false;
+                RBTime += Time.deltaTime;
+                if (ReadyProgress > 0)
+                {
+                    ReadyProgress -= RBTime / 100;
+                }
+                else
+                {
+                    ReadyProgress = 0;
+                    ReadyClockBar.SetActive(false);
+                }
             }
+            UIBarClockValue(ReadyProgress, ReadyClockBarImg, ReadyClockBar_End, ReadyClockBar_End_Mask);
         }
-        else if (ReadyProgress < 100)
-        {
-            RBTime += Time.deltaTime;
-            if (ReadyProgress > 0)
-            {
-                ReadyProgress -= RBTime / 100;
-            }
-            else
-            {
-                ReadyProgress = 0;
-                ReadyClockBar.SetActive(false);
-            }
-        }
-        UIBarClockValue(ReadyProgress, ReadyClockBarImg, ReadyClockBar_End, ReadyClockBar_End_Mask);
     }
 
     public void UIBarClockValue(float value, Image ClockBar, RectTransform ClockBar_End, RectTransform ClockBar_End_Mask)

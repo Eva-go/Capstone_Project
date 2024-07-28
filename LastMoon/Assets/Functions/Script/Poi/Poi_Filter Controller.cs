@@ -13,15 +13,15 @@ public class Poi_FilterController : MonoBehaviour
     public int mixItme = 0;
     public int nodeCount = 0;
     public int mixoldItem = 0;
-    public int nodeNumber = 2;
-    public string nodeName = "Driftwood";
+    public int nodeNumber = 0;
+    public string nodeName = "Dirt";
     private string playerName = " ";
     private bool processing = false;
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        nodeName = "Driftwood";
-        nodeNumber = 2;
+        nodeName = "Dirt";
+        nodeNumber = 0;
     }
 
     [PunRPC]

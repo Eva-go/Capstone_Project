@@ -332,6 +332,11 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
+
+        if (Input.GetKey(KeyCode.Space) && isSwimming)
+        {
+            myRigid.AddForce(Vector3.up, ForceMode.Impulse);
+        }
         if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming || isSwimming))
         {
             if (!sfx_PlayerJump.isPlaying)
@@ -352,6 +357,10 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isGrounded", false);
             Jumpforgived = false;
         }
+
+
+
+        myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
 
         if (Jumpforgived)
         {

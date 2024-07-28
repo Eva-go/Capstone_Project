@@ -14,16 +14,16 @@ public class Poi_GrinderController : MonoBehaviour
     public int mixoldItem = 0;
 
     // 각각의 Poi 컨트롤러에 맞는 SandNumber 설정
-    public int nodeNumber = 3;
-    public string nodeName = "Sand";
+    public int nodeNumber = 1;
+    public string nodeName = "Concrete";
     private string playerName = " ";
     private bool processing = false;
 
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        nodeName = "Sand";
-        nodeNumber = 3;
+        nodeName = "Concrete";
+        nodeNumber = 1;
     }
 
     [PunRPC]
