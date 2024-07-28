@@ -23,7 +23,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         nodeCount = 0;
     }
 
-    public void TakeDamage(float Damage,bool Effective)
+    public void TakeDamage(float Damage, bool Effective)
     {
 
         float R_sfx = Random.value;
@@ -32,7 +32,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         else if (R_sfx > 0.5) sfx_NodeHit.clip = sfx_NodeHit2;
         else if (R_sfx > 0.25) sfx_NodeHit.clip = sfx_NodeHit3;
         else sfx_NodeHit.clip = sfx_NodeHit4;
-        
+
         if (Effective)
         {
             sfx_NodeHit.pitch = 1;
@@ -43,6 +43,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
             sfx_NodeHit.pitch = 0.5f;
             sfx_NodeHit.volume = 0.5f;
         }
+
         sfx_NodeHit.Play();
 
         currentHealth -= Damage;
@@ -67,6 +68,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
             {
                 photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Destroy");
             }
+
         }
 
         // 포톤 네트워크를 통해 HP 동기화
