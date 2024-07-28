@@ -44,6 +44,14 @@ public class GameValue : MonoBehaviourPunCallbacks
 
     public int userNumber;
 
+    public static int[] usernodeItem = new int[6];
+    public static int[] usermixItem = new int[6];
+
+    public static int [] nodePrice = new int[6];
+    public static int [] mixPrice = new int[6];
+
+    public static int nodeMoney;
+    public static int mixMoney;
 
 
 
@@ -54,6 +62,8 @@ public class GameValue : MonoBehaviourPunCallbacks
         MaxUser = 8;
         insideUser = 0;
         inside = false;
+        nodeMoney = 0;
+        mixMoney = 0;
     }
 
 
@@ -63,6 +73,33 @@ public class GameValue : MonoBehaviourPunCallbacks
         Pickaxe = MoneyController.Bt_Pickaxe;
         Shovel = MoneyController.Bt_Shovel;
     }
+
+    public static void getPrice(int i,int nodeCount, int mixCount)
+    {
+        nodePrice[i] = nodeCount;
+        mixPrice[i] = mixCount;
+    }
+
+    public static void getItem()
+    {
+        for(int i=0;i<6;i++)
+        {
+            usernodeItem[i] = PlayerController.nodeSell[i];
+            usermixItem[i] = PlayerController.mixSell[i];
+        }
+      
+    }
+
+    public static void Sell()
+    {
+        for(int i=0;i<nodePrice.Length;i++)
+        {
+            nodeMoney += usernodeItem[i] * nodePrice[i];
+            mixMoney += usermixItem[i] * mixPrice[i];
+        }
+        Money_total = nodeMoney + mixMoney;
+    }
+
 
     public static void setMoney()
     {

@@ -31,6 +31,10 @@ public class MoneyController : MonoBehaviour
 
     private void Start()
     {
+        GameValue.Sell();
+        Debug.Log("µ·" + GameValue.Money_total);
+        GameValue.setMoney();
+       
         total_Money = GameValue.Money_total;
         Money.text = total_Money.ToString();
         AxeMoney.text = "1000";
@@ -41,8 +45,6 @@ public class MoneyController : MonoBehaviour
         int_ShovelMoney = int.Parse(ShovelMoney.text);
         GameValue.toolSwitching = true;
         GameValue.insideUser = 0;
-        GameValue.setMoney();
-
     }
     private void Update()
     {
