@@ -51,10 +51,11 @@ public class Poi_FilterController : MonoBehaviour
     private IEnumerator ProcessItems()
     {
         processing = true;
+        animator.SetBool("isActvie", true);
         while (nodeItme > 0)
         {
             nodeItme--;
-            animator.SetBool("isActvie", true);
+            
             yield return new WaitForSeconds(5f);
             mixItme++;
             Debug.Log("아이템 제작");

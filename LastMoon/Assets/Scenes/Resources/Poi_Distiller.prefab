@@ -81,6 +81,7 @@ MonoBehaviour:
   mixoldItem: 0
   nodeNumber: 0
   nodeName: clayware
+  Flame: {fileID: 6975962169922731435}
 --- !u!65 &5958132885881257880
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -143,6 +144,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 1
     Name: isActvie
+  - Type: 9
+    SynchronizeType: 0
+    Name: isHit
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -390,6 +394,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LastLuna_Model_Station_Flame
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
       propertyPath: m_Controller
       value: 
@@ -399,6 +407,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
+--- !u!1 &6975962169922731435 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
+  m_PrefabInstance: {fileID: 7786426285294846202}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7747396487079716625 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}

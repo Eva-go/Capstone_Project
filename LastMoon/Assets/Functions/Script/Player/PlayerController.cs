@@ -674,6 +674,7 @@ public class PlayerController : MonoBehaviour
                 Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
                 if (distillerController != null)
                 {
+                    distillerController.animator.SetTrigger("isHit");
                     for (int i = 0; i < nodeName.Length; i++)
                     {
                         if (nodeName[i] == distillerController.nodeName)
@@ -691,6 +692,7 @@ public class PlayerController : MonoBehaviour
                 Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
                 if (distillerController != null)
                 {
+                    distillerController.animator.SetTrigger("isHit");
                     for (int i = 0; i < nodeName.Length; i++)
                     {
                         if (nodeName[i] == distillerController.nodeName)
@@ -707,6 +709,7 @@ public class PlayerController : MonoBehaviour
                 Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
                 if (distillerController != null)
                 {
+                    distillerController.animator.SetTrigger("isHit");
                     for (int i = 0; i < nodeName.Length; i++)
                     {
                         if (nodeName[i] == distillerController.nodeName)
@@ -723,6 +726,7 @@ public class PlayerController : MonoBehaviour
                 Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
                 if (distillerController != null)
                 {
+                    distillerController.animator.SetTrigger("isHit");
                     for (int i = 0; i < nodeName.Length; i++)
                     {
                         if (nodeName[i] == distillerController.nodeName)
@@ -739,6 +743,7 @@ public class PlayerController : MonoBehaviour
                 Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
                 if (distillerController != null)
                 {
+                    distillerController.animator.SetTrigger("isHit");
                     for (int i = 0; i < nodeName.Length; i++)
                     {
                         if (nodeName[i] == distillerController.nodeName)
@@ -755,6 +760,7 @@ public class PlayerController : MonoBehaviour
                 Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
                 if (distillerController != null)
                 {
+                    distillerController.animator.SetTrigger("isHit");
                     for (int i = 0; i < nodeName.Length; i++)
                     {
                         if (nodeName[i] == distillerController.nodeName)

@@ -17,11 +17,14 @@ public class Poi_DistillerController : MonoBehaviour
     public string nodeName = "Dirt";
     private string playerName= " ";
     private bool processing = false;
+
+    public GameObject Flame;
     void Start()
     {
         pv = GetComponent<PhotonView>();
         nodeName = "Dirt";
         nodeNumber = 0;
+        Flame.SetActive(false);
     }
 
     [PunRPC]
@@ -51,10 +54,13 @@ public class Poi_DistillerController : MonoBehaviour
     private IEnumerator ProcessItems()
     {
         processing = true;
+        Flame.SetActive(true);
+        animator.SetBool("isActvie", true);
         while (nodeItme > 0)
         {
             nodeItme--;
-            animator.SetBool("isActvie", true);
+           
+            
             yield return new WaitForSeconds(5f);
             mixItme++;
             Debug.Log("아이템 제작");
@@ -62,6 +68,7 @@ public class Poi_DistillerController : MonoBehaviour
         nodeCount = 0;
         processing = false;
         animator.SetBool("isActvie", false);
+        Flame.SetActive(false);
     }
 
     [PunRPC]
