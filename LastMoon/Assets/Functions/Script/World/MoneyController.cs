@@ -29,6 +29,9 @@ public class MoneyController : MonoBehaviour
     public Button PickaxeBT;
     public Button ShoveltBT;
 
+    public Sprite[] ToolIcons;
+    public Image AxeIcon, PickaxeIcon, ShovelIcon;
+
     private void Start()
     {
         total_Money = GameValue.Money_total;
@@ -83,6 +86,7 @@ public class MoneyController : MonoBehaviour
             AxeMoney.text = "2000";
             int_AxeMoney = int.Parse(AxeMoney.text);
             Axetxt.text = "±Ý µµ³¢";
+            AxeIcon.sprite = ToolIcons[6];
         }
         else if(Bt_Axe ==2)
         {
@@ -90,12 +94,14 @@ public class MoneyController : MonoBehaviour
             int_AxeMoney = int.Parse(AxeMoney.text);
             Axetxt.text = "SOLD OUT";
             AxeBT.interactable = false;
-         }
+            AxeIcon.sprite = ToolIcons[9];
+        }
         if (Bt_Pickaxe == 1)
         {
             PickaxeMoney.text = "2100";
             int_PickaxeMoney = int.Parse(PickaxeMoney.text);
             Pickaxetxt.text = "±Ý °î±ªÀÌ";
+            PickaxeIcon.sprite = ToolIcons[7];
         }
         else if (Bt_Pickaxe == 2)
         {
@@ -103,12 +109,14 @@ public class MoneyController : MonoBehaviour
             int_AxeMoney = int.Parse(AxeMoney.text);
             Pickaxetxt.text = "SOLD OUT";
             PickaxeBT.interactable = false;
+            PickaxeIcon.sprite = ToolIcons[10];
         }
         if (Bt_Shovel == 1)
         {
             ShovelMoney.text = "2200";
             int_ShovelMoney = int.Parse(ShovelMoney.text);
             Shoveltext.text = "±Ý »ð";
+            ShovelIcon.sprite = ToolIcons[8];
         }
         else if (Bt_Shovel == 2)
         {
@@ -116,6 +124,7 @@ public class MoneyController : MonoBehaviour
             int_AxeMoney = int.Parse(AxeMoney.text);
             Shoveltext.text = "SOLD OUT";
             ShoveltBT.interactable = false;
+            ShovelIcon.sprite = ToolIcons[11];
         }
     }
 

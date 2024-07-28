@@ -12,15 +12,15 @@ public class Poi_DryerController : MonoBehaviour
     public int mixItme = 0;
     public int nodeCount = 0;
     public int mixoldItem = 0;
-    public int nodeNumber = 1;
-    public string nodeName = "Concrete";
+    public int nodeNumber = 2;
+    public string nodeName = "Driftwood";
     private string playerName = " ";
     private bool processing = false;
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        nodeName = "Concrete";
-        nodeNumber = 1;
+        nodeName = "Driftwood";
+        nodeNumber = 2;
     }
 
     [PunRPC]

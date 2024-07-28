@@ -26,7 +26,6 @@ public class ToolController : MonoBehaviour
     }
     private void Switching()
     {
-
         int previousSelectedWeaponIndex = selectedToolIndex;
         if (GameValue.Axe == 1)
         {

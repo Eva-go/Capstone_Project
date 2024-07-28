@@ -13,15 +13,15 @@ public class Poi_DistillerController : MonoBehaviour
     public int mixItme = 0;
     public int nodeCount = 0;
     public int mixoldItem = 0;
-    public int nodeNumber = 0;
-    public string nodeName = "Dirt";
+    public int nodeNumber = 4;
+    public string nodeName = "Planks";
     private string playerName= " ";
     private bool processing = false;
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        nodeName = "Dirt";
-        nodeNumber = 0;
+        nodeName = "Planks";
+        nodeNumber = 4;
     }
 
     [PunRPC]

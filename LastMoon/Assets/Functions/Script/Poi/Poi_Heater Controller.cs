@@ -13,15 +13,15 @@ public class Poi_HeaterController : MonoBehaviour
     public int mixItme = 0;
     public int nodeCount = 0;
     public int mixoldItem = 0;
-    public int nodeNumber = 4;
-    public string nodeName = "Planks";
+    public int nodeNumber = 3;
+    public string nodeName = "Sand";
     private string playerName = " ";
     private bool processing = false;
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        nodeName = "Planks";
-        nodeNumber = 4;
+        nodeName = "Sand";
+        nodeNumber = 3;
     }
 
     [PunRPC]
