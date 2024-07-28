@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+
 public class ShopTimerController : MonoBehaviourPunCallbacks
 {
     public RectTransform timerImage;
@@ -11,12 +12,7 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
     private float initialPosX = 234f;
     private float finalPosX = -234f;
 
-    private int seed1;
-    private int seed2;
-    private bool LocalClient = true;
-    private GameValue gameValue;
-
-    public bool isReady;
+    private bool isReady;
 
     public Text RoundText;
     public GameObject ReadyButton;
@@ -29,10 +25,11 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
     public Image ReadyClockBarImg;
     public RectTransform ReadyClockBar_End, ReadyClockBar_End_Mask;
 
+    private bool[] roundEnd = new bool[GameValue.MaxPlayer + 1];
+
     void Start()
     {
         currentTime = totalTime;
-
         RoundText.text = GameValue.Round.ToString();
         isReady = false;
         ReadyButton.GetComponent<Button>().interactable = true;
@@ -41,6 +38,10 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
         Cursor.lockState = CursorLockMode.Confined;
         PhotonNetwork.AutomaticallySyncScene = true;
+        for (int i = 0; i < GameValue.MaxPlayer + 1; i++)
+        {
+            roundEnd[i] = false;
+        }
     }
 
     void Update()
@@ -62,7 +63,6 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
                 PhotonNetwork.LoadLevel("Map");
             }
             GameValue.RoundEnd = false;
-           
         }
         if (Input.GetKeyDown(KeyCode.F1))
         {
@@ -87,6 +87,7 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
                     ReadyButton.GetComponent<Button>().interactable = false;
                     ReadyClockBar.SetActive(false);
                     CompleteClockBar.SetActive(true);
+                    RoundEnd();
                 }
             }
             else if (ReadyProgress < 100)
@@ -114,17 +115,76 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
         ClockBar.fillAmount = ClockProgress;
         ClockBar_End.localEulerAngles = new Vector3(0, 0, angle);
         ClockBar_End_Mask.localEulerAngles = new Vector3(0, 0, -angle);
-
     }
 
     [PunRPC]
     void RPC_DecreaseTime()
     {
         currentTime -= decreaseTime;
-        // 타이머가 음수가 되지 않도록 보정
         if (currentTime < 0)
         {
             currentTime = 0;
         }
+    }
+
+    [PunRPC]
+    void RPC_RoundEnd()
+    {
+        currentTime = 0;
+        if (currentTime < 0)
+        {
+            currentTime = 0;
+        }
+    }
+
+    [PunRPC]
+    void RPC_Ready(int playerId)
+    {
+        roundEnd[playerId] = true;
+        CheckAllPlayersReady();  // 모든 플레이어가 준비되었는지 확인
+    }
+
+    public void RoundEnd()
+    {
+        roundEnd[GameValue.PlayerID] = true;
+        photonView.RPC("RPC_Ready", RpcTarget.OthersBuffered, GameValue.PlayerID);
+        CheckAllPlayersReady();  // 자신의 상태도 확인
+    }
+
+    void CheckAllPlayersReady()
+    {
+        bool allPlayersReady = true;
+        for (int i = 0; i < GameValue.MaxPlayer; i++)
+        {
+            if (!roundEnd[i])
+            {
+                allPlayersReady = false;
+                break;
+            }
+        }
+
+        if (allPlayersReady)
+        {
+            // 이 부분에서 마지막 플레이어가 확인한 후에만 RPC_RoundEnd를 호출합니다.
+            if (PhotonNetwork.LocalPlayer.ActorNumber == GetLastReadyPlayer())
+            {
+                Debug.Log("모든 플레이어가 준비되었습니다. 작업을 수행합니다.");
+                photonView.RPC("RPC_RoundEnd", RpcTarget.AllBuffered);
+            }
+        }
+    }
+
+    int GetLastReadyPlayer()
+    {
+        // 모든 플레이어 중에서 마지막으로 준비된 플레이어의 ID를 반환하는 메서드입니다.
+        // 이 방법은 플레이어 ID를 사용하여 마지막 플레이어를 식별하는 데 사용됩니다.
+        for (int i = GameValue.MaxPlayer; i >= 0; i--)
+        {
+            if (roundEnd[i])
+            {
+                return i;
+            }
+        }
+        return -1; // 예외 처리: 준비된 플레이어가 없는 경우
     }
 }

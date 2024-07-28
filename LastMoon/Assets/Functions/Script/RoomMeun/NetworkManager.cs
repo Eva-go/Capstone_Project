@@ -23,7 +23,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     Player[] sortedPlayers;
     public static int PlayerID = -1; //플레이어 번호
-
     // 게임 시간
     private const byte StartTimeEventCode = 1;
 
@@ -126,6 +125,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             if (sortedPlayers[i].ActorNumber == actorNumber)
             {
                 PlayerID = i;
+                GameValue.MaxPlayer = m_dropdown_RoomMaxPlayers.value;
+                GameValue.PlayerID = PlayerID;
                 break;
             }
         }
