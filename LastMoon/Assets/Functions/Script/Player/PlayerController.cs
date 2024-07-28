@@ -629,7 +629,7 @@ public class PlayerController : MonoBehaviour
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
         {
             // 플레이어 공격 처리
-            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
+            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10f);
         }
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Poi"))
         {
