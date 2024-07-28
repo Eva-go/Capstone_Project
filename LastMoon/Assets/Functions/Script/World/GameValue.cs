@@ -42,7 +42,9 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static float WaveTimer;
     public static float WaveTimerMax;
 
-    public int userNumber;
+    public static int MaxPlayer;
+    public static int PlayerID;
+
 
     public static int[] usernodeItem = new int[6];
     public static int[] usermixItem = new int[6];

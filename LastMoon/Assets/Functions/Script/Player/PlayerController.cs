@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public PhotonView pv;
     public string nickName;
     public static float Hp = 100f;
-    private GameObject cam;
+    public GameObject cam;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -104,8 +104,11 @@ public class PlayerController : MonoBehaviour
         //컴포넌트 설정
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
-        cam = GameObject.Find("Camera");
-        cam.SetActive(false);
+
+        if(pv.IsMine)
+        {
+            cam.SetActive(true);
+        }
 
         //플레이어 이름
         nickName = this.gameObject.name;
@@ -208,7 +211,7 @@ public class PlayerController : MonoBehaviour
 
     public void Sell()
     {
-        for(int i=0;i<6;i++)
+        for (int i = 0; i < 6; i++)
         {
             nodeSell[i] = nodeItiems[i];
             mixSell[i] = mixItiems[i];
@@ -257,24 +260,24 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             Debug.Log("Player died, starting respawn process.");
-            if(live)
+            if (live)
             {
                 PhotonNetwork.Destroy(gameObject);
                 live = false;
                 reSpwan();
             }
-           
+
         }
     }
-    
+
     private void reSpwan()
     {
-        if(pv.IsMine&&!live)
+        if (pv.IsMine && !live)
         {
             Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
             RespawnManager.Instance.RespawnPlayer(spawnPoints);
         }
-      
+
     }
 
     private void OnDestroy()
@@ -561,7 +564,7 @@ public class PlayerController : MonoBehaviour
                         if (distillerController != null)
                         {
                             int nodeIndex = distillerController.nodeNumber;
-                            if (nodeItiems[nodeIndex] >0)
+                            if (nodeItiems[nodeIndex] > 0)
                             {
                                 nodeItiems[nodeIndex]--;
                                 targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
@@ -650,7 +653,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-        }   
+        }
     }
     public void Attack_Time()
     {
@@ -1015,7 +1018,7 @@ public class PlayerController : MonoBehaviour
     private void IncreaseLocalPlayerItems()
     {
         // 로컬 플레이어의 아이템 갯수만 증가시킵니다.
-       
+
         for (int i = 0; i < nodeItiems.Length; i++)
         {
             nodeItiems[i] += 10;

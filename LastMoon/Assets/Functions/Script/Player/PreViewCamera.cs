@@ -49,7 +49,7 @@ public class PreViewCamera : MonoBehaviour
             // Activate the camera for the current player
             if (currentPlayerIndex >= 0 && currentPlayerIndex < playersToView.Length)
             {
-                ActivatePlayerCamera(playersToView[currentPlayerIndex]);
+                //ActivatePlayerCamera(playersToView[currentPlayerIndex]);
             }
         }
         else
