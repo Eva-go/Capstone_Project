@@ -15,9 +15,28 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
     private int seed2;
     private bool LocalClient = true;
     private GameValue gameValue;
+
+    public bool isReady;
+
+    public Text RoundText;
+    public GameObject ReadyButton;
+
+    private bool RBPressing;
+    private float ReadyProgress;
+    private float RBTime = 0.0f;
+
+    public GameObject ReadyClockBar;
+    public Image ReadyClockBarImg;
+    public RectTransform ReadyClockBar_End, ReadyClockBar_End_Mask;
+
     void Start()
     {
         currentTime = totalTime;
+
+        RoundText.text = GameValue.Round.ToString();
+        isReady = false;
+        ReadyButton.GetComponent<Button>().interactable = true;
+
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
         Cursor.lockState = CursorLockMode.Confined;
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -48,6 +67,48 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
         {
             photonView.RPC("RPC_DecreaseTime", RpcTarget.AllBuffered);
         }
+
+        RBPressing = ReadyButton.GetComponent<ButtonPressed>().isButtonPressed;
+        if (RBPressing)
+        {
+            if (ReadyProgress == 0) ReadyClockBar.SetActive(true);
+            RBTime += Time.deltaTime;
+            if (ReadyProgress < 100)
+            {
+                ReadyProgress += RBTime / 100;
+            }
+            else
+            {
+                ReadyProgress = 100;
+                isReady = true;
+                ReadyButton.GetComponent<Button>().interactable = false;
+            }
+        }
+        else if (ReadyProgress < 100)
+        {
+            RBTime += Time.deltaTime;
+            if (ReadyProgress > 0)
+            {
+                ReadyProgress -= RBTime / 100;
+            }
+            else
+            {
+                ReadyProgress = 0;
+                ReadyClockBar.SetActive(false);
+            }
+        }
+        UIBarClockValue(ReadyProgress, ReadyClockBarImg, ReadyClockBar_End, ReadyClockBar_End_Mask);
+    }
+
+    public void UIBarClockValue(float value, Image ClockBar, RectTransform ClockBar_End, RectTransform ClockBar_End_Mask)
+    {
+        float ClockProgress = (value / 100.0f);
+        if (ClockProgress > 1) ClockProgress = 1;
+        float angle = ClockProgress * 360;
+        ClockBar.fillAmount = ClockProgress;
+        ClockBar_End.localEulerAngles = new Vector3(0, 0, angle);
+        ClockBar_End_Mask.localEulerAngles = new Vector3(0, 0, -angle);
+
     }
 
     [PunRPC]

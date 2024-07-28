@@ -28,6 +28,7 @@ public class MoneyController : MonoBehaviour
     public Button AxeBT;
     public Button PickaxeBT;
     public Button ShoveltBT;
+
     private void Start()
     {
         total_Money = GameValue.Money_total;

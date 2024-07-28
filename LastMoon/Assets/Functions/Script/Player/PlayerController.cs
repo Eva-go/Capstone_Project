@@ -198,8 +198,8 @@ public class PlayerController : MonoBehaviour
         waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.waveStrength);
         WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
 
-        if (WaterDepth > 1.8f) RenderSettings.fog = true;
-        else RenderSettings.fog = false;
+        //if (WaterDepth > 1.8f) RenderSettings.fog = true;
+        //else RenderSettings.fog = false;
 
         if (WaterDepth > 0.25f)
         {
@@ -267,6 +267,7 @@ public class PlayerController : MonoBehaviour
 
                 animator.SetBool("isMove", true);
                 Localanimator.SetBool("isMove", true);
+                Localanimator.SetFloat("MoveSpeed", 1);
 
                 float moveDirY = myRigid.velocity.y;
 
@@ -347,6 +348,7 @@ public class PlayerController : MonoBehaviour
 
                 animator.SetBool("isRuns", true);
                 Localanimator.SetBool("isMove", true);
+                Localanimator.SetFloat("MoveSpeed", 1.5f);
                 float moveDirY = myRigid.velocity.y;
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
@@ -388,6 +390,7 @@ public class PlayerController : MonoBehaviour
 
                 animator.SetBool("isCrouchWalk", true);
                 Localanimator.SetBool("isMove", true);
+                Localanimator.SetFloat("MoveSpeed", 0.5f);
                 float moveDirY = myRigid.velocity.y;
 
                 Vector3 moveHorizontal = transform.right * moveDirX;
