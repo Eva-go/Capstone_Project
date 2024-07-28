@@ -100,8 +100,9 @@ MonoBehaviour:
   mixItme: 0
   nodeCount: 0
   mixoldItem: 0
-  nodeNumber: 3
-  nodeName: Sand
+  nodeNumber: 4
+  nodeName: Planks
+  Flame: {fileID: 6799002064394363967}
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,6 +144,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 1
     Name: isActvie
+  - Type: 9
+    SynchronizeType: 0
+    Name: isHit
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -402,6 +406,11 @@ PrefabInstance:
 --- !u!4 &6129743198147313285 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
+  m_PrefabInstance: {fileID: 5952493767563057518}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6799002064394363967 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
   m_PrefabInstance: {fileID: 5952493767563057518}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6016501313618674049

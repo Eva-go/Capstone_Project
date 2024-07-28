@@ -13,15 +13,18 @@ public class Poi_HeaterController : MonoBehaviour
     public int mixItme = 0;
     public int nodeCount = 0;
     public int mixoldItem = 0;
-    public int nodeNumber = 3;
-    public string nodeName = "Sand";
+    public int nodeNumber = 4;
+    public string nodeName = "Planks";
     private string playerName = " ";
     private bool processing = false;
+
+    public GameObject Flame;
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        nodeName = "Sand";
-        nodeNumber = 3;
+        nodeName = "Planks";
+        nodeNumber = 4;
+        Flame.SetActive(false);
     }
 
     [PunRPC]
@@ -51,10 +54,12 @@ public class Poi_HeaterController : MonoBehaviour
     private IEnumerator ProcessItems()
     {
         processing = true;
+        animator.SetBool("isActvie", true);
         while (nodeItme > 0)
         {
             nodeItme--;
-            animator.SetBool("isActvie", true);
+
+            Flame.SetActive(true);
             yield return new WaitForSeconds(5f);
             mixItme++;
             Debug.Log("아이템 제작");
@@ -62,6 +67,7 @@ public class Poi_HeaterController : MonoBehaviour
         nodeCount = 0;
         processing = false;
         animator.SetBool("isActvie", false);
+        Flame.SetActive(false);
     }
 
     [PunRPC]
