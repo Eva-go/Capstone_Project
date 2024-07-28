@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public PhotonView pv;
     public string nickName;
     public static float Hp = 100f;
-    private GameObject cam;
+    public GameObject cam;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -104,12 +104,15 @@ public class PlayerController : MonoBehaviour
         //컴포넌트 설정
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
-        cam = GameObject.Find("Camera");
-        cam.SetActive(false);
-
+        //cam = GameObject.Find("Camera");
+        //cam.SetActive(false);
         //플레이어 이름
         nickName = this.gameObject.name;
-
+        
+        if(pv.IsMine)
+        {
+            cam.SetActive(true);
+        }
 
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
@@ -140,7 +143,7 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            cam.SetActive(true);
+            
             Move();
             if (!isRunning)
             {
@@ -272,6 +275,7 @@ public class PlayerController : MonoBehaviour
         {
             Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
             RespawnManager.Instance.RespawnPlayer(spawnPoints);
+            live=true;
         }
       
     }

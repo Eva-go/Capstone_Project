@@ -575,7 +575,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5929526203501882957
 Transform:
   m_ObjectHideFlags: 0
@@ -980,6 +980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pv: {fileID: 0}
   nickName: 
+  cam: {fileID: 2425928368607806541}
   walkSpeed: 6
   runSpeed: 9
   crouchSpeed: 3
@@ -1016,8 +1017,8 @@ MonoBehaviour:
   nodeItiems: 000000000000000000000000000000000000000000000000
   mixItiems: 000000000000000000000000000000000000000000000000
   nodeCounts: 000000000000000000000000000000000000000000000000
-  positionLerpSpeed: 10
-  rotationLerpSpeed: 10
+  positionLerpSpeed: 8
+  rotationLerpSpeed: 8
 --- !u!114 &4093038744633329122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1088,36 +1089,36 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: isMove
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Swing
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Hit
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: isCrouch
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: isCrouchWalk
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: isRuns
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: isGrounded
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: Combat_Swing
   - Type: 1
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: MoveAniModifire
   m_SynchronizeLayers:
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 0
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
