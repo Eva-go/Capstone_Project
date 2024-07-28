@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 UpCenter;
     private Vector3 DownCenter;
 
-    public AudioSource sfx_PlayerHit, sfx_PlayerJump, sfx_PlayerWalk, sfx_PlayerSwing;
+    public AudioSource sfx_PlayerHit, sfx_PlayerJump, sfx_PlayerWalk, sfx_PlayerSwing, sfx_PlayerDrown;
 
     // ray
     private RaycastHit hitInfo;
@@ -241,6 +241,7 @@ public class PlayerController : MonoBehaviour
 
             if (Time.time >= lastDamageTime + damageInterval)
             {
+                if (!sfx_PlayerDrown.isPlaying) sfx_PlayerDrown.Play();
                 pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.waveStrength + WaterDepth * WaterDepth / 10);
                 lastDamageTime = Time.time;
             }

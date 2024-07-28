@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class GameTimer : MonoBehaviourPunCallbacks
 {
     public RectTransform timerImage;
+    public Image timerImageFill;
+
     private float totalTime;
     public float decreaseTime = 180f; // f1 누를 때 감소시킬 시간 (3분)
 
@@ -19,6 +21,8 @@ public class GameTimer : MonoBehaviourPunCallbacks
         totalTime = 0.5f * (GameValue.Round - 1)*60f / GameValue.MaxRound*60f + (GameValue.setMaxtime * 60f);
         currentTime = totalTime;
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
+        timerImageFill.fillAmount = 1;
+
         PhotonNetwork.AutomaticallySyncScene = true;
         GameValue.WaveTimer = currentTime;
         GameValue.WaveTimerMax = totalTime;
@@ -37,6 +41,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
             float ratio = currentTime / totalTime;
             float posX = Mathf.Lerp(finalPosX, initialPosX, ratio);
             timerImage.localPosition = new Vector3(posX, timerImage.localPosition.y, timerImage.localPosition.z);
+            timerImageFill.fillAmount = ratio;
 
             // 타이머 텍스트 업데이트
             int minutes = Mathf.FloorToInt(currentTime / 60f);

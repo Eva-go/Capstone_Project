@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class ShopTimerController : MonoBehaviourPunCallbacks
 {
     public RectTransform timerImage;
+    public Image timerImageFill;
+
     private float totalTime = 180f; // 3분을 초 단위로 표시
     public float decreaseTime = 60f;
     private float currentTime;
@@ -39,6 +41,8 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
         CompleteClockBar.SetActive(false);
 
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
+        timerImageFill.fillAmount = 1;
+
         Cursor.lockState = CursorLockMode.Confined;
         PhotonNetwork.AutomaticallySyncScene = true;
     }
@@ -50,6 +54,7 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
         float ratio = currentTime / totalTime;
         float posX = Mathf.Lerp(finalPosX, initialPosX, ratio);
         timerImage.localPosition = new Vector3(posX, timerImage.localPosition.y, timerImage.localPosition.z);
+        timerImageFill.fillAmount = ratio;
 
         // 타이머 텍스트 업데이트
         int minutes = Mathf.FloorToInt(currentTime / 60f);
