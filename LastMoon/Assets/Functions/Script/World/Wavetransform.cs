@@ -6,18 +6,18 @@ public class Wavetransform : MonoBehaviour
 {
     private float downwave = -10f;
     public float waveY;
-    private Vector3 wave;
 
+    //매테리얼 인스턴스 값 변경
     private MaterialPropertyBlock propertyBlock;
 
-    public float currentTime = 0;
+    public float waveHeightTime = 0;
+    public float waveStrength = 0;
     public float normalizedTime;
 
     void Start()
     {
-        downwave = -30 / GameValue.MaxRound;
-        wave = new Vector3(gameObject.transform.position.x, -15f+(GameValue.Round * downwave), gameObject.transform.position.z);
-        waveY = -15f + (GameValue.Round * downwave);
+        downwave = -17.5f / (GameValue.MaxRound - 1);
+        waveY = -22.5f + ((GameValue.Round - 1) * downwave);
 
         propertyBlock = new MaterialPropertyBlock();
        
@@ -29,16 +29,34 @@ public class Wavetransform : MonoBehaviour
         Vector3 currentPosition = gameObject.transform.position;
         currentPosition.y = waveY;
         transform.position = currentPosition;
+        waveHeightTime += Time.deltaTime;
 
         //정규화
-        normalizedTime = 1.0f - (GameValue.WaveTimer / 600.0f);
+        normalizedTime = 1.0f - (GameValue.WaveTimer / GameValue.WaveTimerMax);
         //보간
-        currentTime = Mathf.Lerp(0.0f, 3.0f, normalizedTime);
+        waveStrength = Mathf.Lerp(0.0f, 2.0f + GameValue.Round, normalizedTime);
 
-        propertyBlock.SetFloat("_Strength", currentTime);
+        //매테리얼 인스턴스 값 변경
+        propertyBlock.SetFloat("_Strength", waveStrength);
+        propertyBlock.SetFloat("_waveHeightTime", waveHeightTime);
         gameObject.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+        //
 
         if (RenderSettings.skybox.HasProperty("_Strength"))
-            RenderSettings.skybox.SetFloat("_Strength", currentTime);
+            RenderSettings.skybox.SetFloat("_Strength", waveStrength);
+    }
+
+    public float GetWaveHeight(float _x, float _z, float _strength, float _time_scale = 0.1f)
+    {
+        float Wavelength;
+        if (_strength > 1) Wavelength = 1 / _strength;
+        else Wavelength = 1;
+    
+        float WaveTime = waveHeightTime * _time_scale * _strength;
+        float _tx, _tz;
+        _tx = (_x + WaveTime) * Mathf.PI * 2;
+        _tz = (_z + (WaveTime * 0.25f)) * Mathf.PI * -2;
+
+        return (Mathf.Sin((_tx - _tz + 1) * 0.5f * Wavelength) * _strength) + (Mathf.Sin(_tz * 0.25f * Wavelength) * _strength);
     }
 }

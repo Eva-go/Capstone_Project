@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3795354787717390030}
   - component: {fileID: 7083005281114047668}
-  - component: {fileID: 4520471005287044353}
+  - component: {fileID: 8591853647128780747}
   - component: {fileID: 5958132885881257880}
   - component: {fileID: 3053376901832024074}
   - component: {fileID: 8162647296820205431}
@@ -61,7 +61,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4520471005287044353
+--- !u!114 &8591853647128780747
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -70,12 +70,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 4602713722304676980}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
+  m_Script: {fileID: 11500000, guid: 47eb5b8c39deade44b84888b45160ceb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pv: {fileID: 0}
   animator: {fileID: 7083005281114047668}
-  sfx_Station_Start: {fileID: -1948325961606883014}
-  sfx_Station_Loop: {fileID: -4352816645513060272}
+  nodeItme: 0
+  mixItme: 0
+  nodeCount: 0
+  mixoldItem: 0
+  nodeNumber: 0
+  nodeName: clayware
 --- !u!65 &5958132885881257880
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -83,7 +88,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4602713722304676980}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 99b9dd6b15f26324bbc4492698960cb4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

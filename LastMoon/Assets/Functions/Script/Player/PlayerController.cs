@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
+
 public class PlayerController : MonoBehaviour
 {
     public PhotonView pv;
-    public static float Hp = 100;
+    public string nickName;
+    public static float Hp = 100f;
     private GameObject cam;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
@@ -26,13 +29,13 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
-
+    private bool live;
 
     private Vector3 velocity;
     private Vector3 UpCenter;
     private Vector3 DownCenter;
 
-    public AudioSource sfx_PlayerHit, sfx_PlayerWalk, sfx_PlayerSwing;
+    public AudioSource sfx_PlayerHit, sfx_PlayerJump, sfx_PlayerWalk, sfx_PlayerSwing;
 
     // ray
     private RaycastHit hitInfo;
@@ -44,23 +47,63 @@ public class PlayerController : MonoBehaviour
     public Transform weaponHoldPoint; // 무기를 장착할 손 위치
     public GameObject[] weaponsSwitching;
     private int selectedWeaponIndex = 0;
+    private int selectedWeaponStrength = 1;
 
     public static int getMoney;
     public GameObject insidegameObject;
     public static bool insideActive;
     public static bool PreViewCam;
-    public static bool Poi;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
 
+    //파도 y축 위치
+    private Wavetransform wavetransform;
+    private float damageInterval = 1.0f; // interval between damage ticks
+    private float tickDamage = 5.0f;     // damage per tick
+    private float lastDamageTime = 0;    // time of the last tick damage
+
+    private bool Jumpforgived = false;
+    private bool isWallCliming = false;
+
+    private float JumpforgivenessTime = 0;
+
+    public float speeed = 0;
+
+    //인벤토리 아이템 갯수
+    private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
+    public int[] nodeItiems = new int[6];
+    public int[] mixItiems = new int[6];
+    public int[] nodeCounts = new int[6];
+
+    //이벤트 처리
+    public event Action OnInventoryChanged;
+
+    //멀티플레이 보간
+    public float positionLerpSpeed = 8f; // 위치 보간 속도
+    public float rotationLerpSpeed = 8f; // 회전 보간 속도
+
+    private Vector3 networkPosition;
+    private Quaternion networkRotation;
+
+
     void Start()
     {
+        //포톤 네트워크 연결
         pv = GetComponent<PhotonView>();
+        //로컬플레이어 설정 및 로컬캔버스 설정
+        LocalPlayerManger.Instance.RegisterLocalPlayer(this);
+        CanvasController.Instance.RegisterPlayerController(this);
+
+        //컴포넌트 설정
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
         cam = GameObject.Find("Camera");
         cam.SetActive(false);
+
+        //플레이어 이름
+        nickName = this.gameObject.name;
+
 
         // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
@@ -76,6 +119,12 @@ public class PlayerController : MonoBehaviour
         //콜라이더 크기 조절
         UpCenter = new Vector3(0f, 1f, 0f);
         DownCenter = new Vector3(0f, 0.5f, 0f);
+
+        //아이템 초기화
+        Items();
+        //파도 찾기
+        wavetransform = FindObjectOfType<Wavetransform>();
+        live = true;
     }
 
     void Update()
@@ -92,26 +141,18 @@ public class PlayerController : MonoBehaviour
             {
                 Run();
             }
-
-            if (!Poi)
-            {
-                CameraRotation();
-                CharacterRotation();
-            }
+            CameraRotation();
+            CharacterRotation();
             Jump();
             Interaction();
             Attack();
             Switching();
-
+            WaveTic();
             if (Input.GetKey("escape"))
                 Application.Quit();
             if (Input.GetKeyDown(KeyCode.F2))
             {
-                walkSpeed = 100;
-            }
-            if (Input.GetKeyDown(KeyCode.F3))
-            {
-                walkSpeed = 2.5f;
+                Hp = 100;
             }
             if (Input.GetKeyDown(KeyCode.F4))
             {
@@ -129,26 +170,77 @@ public class PlayerController : MonoBehaviour
             {
                 GameValue.Round = 0;
             }
-
+            if (Input.GetKeyDown(KeyCode.F8))
+            {
+                IncreaseLocalPlayerItems();
+            }
+            if (Input.GetKeyDown(KeyCode.F9))
+            {
+                for (int i = 0; i < 6; i++)
+                {
+                    Debug.Log("노드 아이템 " + nodeItiems[i]);
+                    Debug.Log("믹스 아이템 " + mixItiems[i]);
+                }
+            }
             // Check if the player is dead
             if (Hp <= 0)
             {
                 Die();
             }
         }
+        else
+        {
+            // 다른 플레이어의 위치와 회전을 보간하여 부드럽게 처리
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * positionLerpSpeed);
+            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * rotationLerpSpeed);
+        }
     }
+    public void Items()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            nodeItiems[i] = 0;
+            mixItiems[i] = 0;
+        }
+    }
+    public void WaveTic()
+    {
+        float waveHeight, WaterDepth;
+        waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.waveStrength);
+        WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
 
+        if (WaterDepth > 0)
+        {
+            if (Time.time >= lastDamageTime + damageInterval)
+            {
+                pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.waveStrength + WaterDepth * WaterDepth / 10);
+                lastDamageTime = Time.time;
+            }
+        }
+    }
     private void Die()
     {
         if (pv.IsMine)
         {
             Debug.Log("Player died, starting respawn process.");
-            PhotonNetwork.Destroy(gameObject);
-
-            // 플레이어 리스폰 요청
+            if(live)
+            {
+                PhotonNetwork.Destroy(gameObject);
+                live = false;
+                reSpwan();
+            }
+           
+        }
+    }
+    
+    private void reSpwan()
+    {
+        if(pv.IsMine&&!live)
+        {
             Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
             RespawnManager.Instance.RespawnPlayer(spawnPoints);
         }
+      
     }
 
     private void OnDestroy()
@@ -158,56 +250,85 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        sfx_PlayerWalk.Play();
+
         if (!isRunning)
         {
             animator.SetBool("isRuns", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-            Vector3 moveHorizontal = transform.right * moveDirX;
-            Vector3 moveVertical = transform.forward * moveDirZ;
-            velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-        }
+            if (moveDirX != 0 || moveDirZ != 0)
+            {
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / walkSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
 
-        if (isCrouching && !isRunning)
-        {
-            animator.SetBool("isMove", false);
-            if (velocity != Vector3.zero)
-            {
-                animator.SetBool("isCrouchWalk", true);
-            }
-            else
-            {
-                animator.SetBool("isCrouchWalk", false);
-            }
-        }
-        else if (!isCrouching && !isRunning)
-        {
-            animator.SetBool("isCrouchWalk", false);
+                animator.SetBool("isMove", true);
+                Localanimator.SetBool("isMove", true);
 
-            if (!isRunning)
-            {
-                if (velocity != Vector3.zero)
+                float moveDirY = myRigid.velocity.y;
+
+                Vector3 moveHorizontal = transform.right * moveDirX;
+                Vector3 moveVertical = transform.forward * moveDirZ;
+                if (isGrounded)
                 {
-                    animator.SetBool("isMove", true);
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
                 }
                 else
                 {
-                    animator.SetBool("isMove", false);
+                    velocity = (moveHorizontal + moveVertical).normalized * walkSpeed * 0.5f;
                 }
+
+                velocity.y = moveDirY;
+                myRigid.velocity = velocity;
+            }
+            else
+            {
+                sfx_PlayerWalk.mute = true;
+                animator.SetBool("isMove", false);
+                Localanimator.SetBool("isMove", false);
+            }
+            if (pv.IsMine)
+            {
+                // 네트워크 위치와 회전을 업데이트
+                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
     }
 
     private void Jump()
     {
-        if (Input.GetKey(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
         {
-
+            if (!sfx_PlayerJump.isPlaying)
+            {
+                sfx_PlayerJump.Play();
+            }
+            if (myRigid.velocity.y > 0)
+            {
+                float moveDirX = myRigid.velocity.x;
+                float moveDirZ = myRigid.velocity.z;
+                velocity = new Vector3(moveDirX, 0, moveDirZ);
+                myRigid.velocity = velocity;
+            }
             myRigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
             isGrounded = false;
+            myRigid.drag = 1;
+            animator.SetBool("isGrounded", false);
+            Jumpforgived = false;
+        }
+
+        if (Jumpforgived)
+        {
+            if (Time.time >= JumpforgivenessTime + 0.25f)
+            {
+                isGrounded = false;
+                myRigid.drag = 1;
+                animator.SetBool("isGrounded", false);
+                Jumpforgived = false;
+                isWallCliming = false;
+            }
         }
     }
 
@@ -218,23 +339,42 @@ public class PlayerController : MonoBehaviour
 
         if (isRunning && !isCrouching)
         {
-            animator.SetBool("isMove", false);
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-            Vector3 moveHorizontal = transform.right * moveDirX;
-            Vector3 moveVertical = transform.forward * moveDirZ;
-            velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
-        }
-        if (isRunning)
-        {
-            if (velocity != Vector3.zero)
+            if (moveDirX != 0 || moveDirZ != 0)
             {
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / runSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
+
                 animator.SetBool("isRuns", true);
+                Localanimator.SetBool("isMove", true);
+                float moveDirY = myRigid.velocity.y;
+                Vector3 moveHorizontal = transform.right * moveDirX;
+                Vector3 moveVertical = transform.forward * moveDirZ;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * runSpeed * 0.5f;
+                }
+
+                velocity.y = moveDirY;
+                myRigid.velocity = velocity;
             }
             else
             {
+                sfx_PlayerWalk.mute = true;
                 animator.SetBool("isRuns", false);
+                Localanimator.SetBool("isMove", false);
+            }
+            if (pv.IsMine)
+            {
+                // 네트워크 위치와 회전을 업데이트
+                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
     }
@@ -247,10 +387,37 @@ public class PlayerController : MonoBehaviour
         {
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
-            Vector3 moveHorizontal = transform.right * moveDirX;
-            Vector3 moveVertical = transform.forward * moveDirZ;
-            velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
-            myRigid.MovePosition(transform.position + velocity * Time.deltaTime);
+            if (moveDirX != 0 || moveDirZ != 0)
+            {
+                float movespeed = myRigid.velocity.magnitude;
+                animator.SetFloat("MoveAniModifire", movespeed / crouchSpeed);
+                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                else sfx_PlayerWalk.mute = true;
+
+                animator.SetBool("isCrouchWalk", true);
+                Localanimator.SetBool("isMove", true);
+                float moveDirY = myRigid.velocity.y;
+
+                Vector3 moveHorizontal = transform.right * moveDirX;
+                Vector3 moveVertical = transform.forward * moveDirZ;
+                if (isGrounded)
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed;
+                }
+                else
+                {
+                    velocity = (moveHorizontal + moveVertical).normalized * crouchSpeed * 0.5f;
+                }
+
+                velocity.y = moveDirY;
+                myRigid.velocity = velocity;
+            }
+            else
+            {
+                sfx_PlayerWalk.mute = true;
+                animator.SetBool("isCrouchWalk", false);
+                Localanimator.SetBool("isMove", false);
+            }
         }
 
         if (isCrouching)
@@ -278,14 +445,30 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.tag == "PLANE")
         {
             isGrounded = true;
+            myRigid.drag = 5;
+            animator.SetBool("isGrounded", true);
+            Jumpforgived = false;
+            isWallCliming = true;
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "PLANE")
         {
-            isGrounded = false;
+            if (Jumpforgived)
+            {
+                isGrounded = false;
+                myRigid.drag = 1;
+                animator.SetBool("isGrounded", false);
+                Jumpforgived = false;
+            }
+            else
+            {
+                Jumpforgived = true;
+                JumpforgivenessTime = Time.time;
+            }
+            isWallCliming = false;
         }
     }
 
@@ -321,10 +504,108 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            Poi = true;
-        }
+            PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
+            if (targetPv != null)
+            {
+                if (Physics.Raycast(ray, out hitInfo, 5f) && hitInfo.collider.CompareTag("Poi"))
+                {
+                    if (hitInfo.transform.gameObject.name == "Poi_Distiller(Clone)")
+                    {
+                        Poi_DistillerController distillerController = hitInfo.collider.GetComponent<Poi_DistillerController>();
+                        if (distillerController != null)
+                        {
+                            int nodeIndex = distillerController.nodeNumber;
+                            if (nodeItiems[nodeIndex] >0)
+                            {
+                                nodeItiems[nodeIndex]--;
+                                targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Dryer(Clone)")
+                    {
+                        Poi_DryerController distillerController = hitInfo.collider.GetComponent<Poi_DryerController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Filter(Clone)")
+                    {
+                        Poi_FilterController distillerController = hitInfo.collider.GetComponent<Poi_FilterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Grinder(Clone)")
+                    {
+                        Poi_GrinderController distillerController = hitInfo.collider.GetComponent<Poi_GrinderController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Heater(Clone)")
+                    {
+                        Poi_HeaterController distillerController = hitInfo.collider.GetComponent<Poi_HeaterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                    else if (hitInfo.transform.gameObject.name == "Poi_Smelter(Clone)")
+                    {
+                        Poi_SmelterController distillerController = hitInfo.collider.GetComponent<Poi_SmelterController>();
+                        if (distillerController != null)
+                        {
+                            if (distillerController != null)
+                            {
+                                int nodeIndex = distillerController.nodeNumber;
+                                if (nodeItiems[nodeIndex] > 0)
+                                {
+                                    nodeItiems[nodeIndex]--;
+                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }   
     }
-
     public void Attack_Time()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
@@ -332,40 +613,158 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Node"))
         {
             NodeController nodeController = hit.collider.GetComponent<NodeController>();
-            Debug.DrawRay(ray.origin, ray.direction, Color.red, 5);
             if (nodeController != null)
             {
-                Debug.DrawRay(ray.origin, ray.direction, Color.green, 5f);
-                nodeController.TakeDamage(10);
+                nodeController.TakeDamage(10f);
+                for (int i = 0; i < 6; i++)
+                {
+                    if (nodeController.nodeName.Equals("node_" + nodeName[i] + "(Clone)"))
+                    {
+                        nodeItiems[i] += nodeController.nodeCount;
+                    }
+                }
+
             }
         }
         else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Player"))
         {
             // 플레이어 공격 처리
-            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10);
+            pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10f);
+        }
+        else if (Physics.Raycast(ray, out hit, 5f) && hit.collider.CompareTag("Poi"))
+        {
+            if (hit.transform.gameObject.name == "Poi_Distiller(Clone)")
+            {
+                Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Dryer(Clone)")
+            {
+                Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Filter(Clone)")
+            {
+                Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Grinder(Clone)")
+            {
+                Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Heater(Clone)")
+            {
+                Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
+            else if (hit.transform.gameObject.name == "Poi_Smelter(Clone)")
+            {
+                Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
+                if (distillerController != null)
+                {
+                    for (int i = 0; i < nodeName.Length; i++)
+                    {
+                        if (nodeName[i] == distillerController.nodeName)
+                        {
+                            int mixItemCount = distillerController.mixItme;
+
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                        }
+                    }
+                }
+            }
         }
     }
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0) && !Poi)
+        if (Input.GetMouseButton(0))
         {
-            sfx_PlayerSwing.Play();
-            if (isCrouching)
+            if (!sfx_PlayerSwing.isPlaying)
             {
-                animator.SetTrigger("Crouch_Swing");
-                Localanimator.SetTrigger("Crouch_Swing");
-            }
-            else
-            {
-                animator.SetTrigger("Swing");
-                Localanimator.SetTrigger("Swing");
+                sfx_PlayerSwing.Play();
+
+                if (isCrouching || isRunning || !isGrounded)
+                {
+                    animator.SetTrigger("Combat_Swing");
+                    Localanimator.SetTrigger("Combat_Swing");
+                }
+                else
+                {
+                    animator.SetTrigger("Swing");
+                    Localanimator.SetTrigger("Swing");
+                }
             }
         }
     }
 
+
     [PunRPC]
-    private void RPC_TakeDamage(int viewID, int damage)
+    private void RPC_UpdatePositionAndRotation(Vector3 position, Quaternion rotation)
+    {
+        networkPosition = position;
+        networkRotation = rotation;
+    }
+
+    [PunRPC]
+    private void RPC_TakeDamage(int viewID, float damage)
     {
         PhotonView targetPv = PhotonView.Find(viewID);
         if (targetPv != null)
@@ -378,9 +777,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
-        sfx_PlayerHit.Play();
+        if (!sfx_PlayerHit.isPlaying)
+        {
+            sfx_PlayerHit.Play();
+        }
         if (pv.IsMine)
         {
             animator.SetTrigger("Hit");
@@ -473,7 +875,18 @@ public class PlayerController : MonoBehaviour
             selectedWeaponIndex = 2;
         }
 
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll > 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex + 1) % 3;
+        }
+        else if (scroll < 0f)
+        {
+            selectedWeaponIndex = (selectedWeaponIndex + 2) % 3;
+        }
+
         // 무기 교체가 필요하면 새로운 무기를 장착
+
         if (previousSelectedWeaponIndex != selectedWeaponIndex)
         {
             pv.RPC("RPC_EquipWeapon", RpcTarget.AllBuffered, selectedWeaponIndex);
@@ -494,6 +907,35 @@ public class PlayerController : MonoBehaviour
     {
         EquipWeapon(index);
     }
+
+    [PunRPC]
+    public void UpdateMixItem(int index, int mixItemCount)
+    {
+        mixItiems[index] = mixItemCount;
+    }
+    public void UpdateNodeItem(int index, int newCount)
+    {
+        if (index >= 0 && index < nodeItiems.Length)
+        {
+            nodeItiems[index] = newCount;
+            OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
+        }
+    }
+
+    //todo 멀티테스트
+    private void IncreaseLocalPlayerItems()
+    {
+        // 로컬 플레이어의 아이템 갯수만 증가시킵니다.
+       
+        for (int i = 0; i < nodeItiems.Length; i++)
+        {
+            nodeItiems[i] += 10;
+            Debug.Log("아이템 증가" + nodeItiems[i]);
+        }
+        // 아이템 변경을 UI에 알립니다.
+        OnInventoryChanged?.Invoke();
+    }
+
 
     private void EquipWeapon(int index)
     {

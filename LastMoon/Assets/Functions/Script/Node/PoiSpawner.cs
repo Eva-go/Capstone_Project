@@ -23,10 +23,6 @@ public class PoiSpawner : MonoBehaviourPun
 
     void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            SpawnItems();
-        }
     }
 
     void SpawnItems()

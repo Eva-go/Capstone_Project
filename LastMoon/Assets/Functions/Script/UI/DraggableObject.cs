@@ -12,6 +12,7 @@ public class DraggableObject : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public int count;
     private void Awake()
     {
+        Text_count.text = "0";
         canvasGroup = GetComponent<CanvasGroup>();
 
         if (canvasGroup == null)

@@ -1,45 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CanvasController : MonoBehaviour
 {
-    public GameObject poi;
+    public static CanvasController Instance;
+
     public GameObject inside;
     public GameObject inventory;
     public GameObject money;
     public GameObject Tab;
 
-
-    private int keyTabCode = 0;
+    private int keyTabCode = 2;
     private bool inventory_ck;
-    private int TotalSell=0;
+    private int TotalSell = 0;
     private int Amount = 0;
-    //노드
+    // 노드
     public GameObject[] nodes;
     public Text[] nodesCount;
-    public int[] count;
-    public int[] SellCount;
-    public int[] salePrice;
+    public Text[] mixCount;
+    public int[] count = new int[6]; // 배열 크기 초기화
+    public int[] SellCount = new int[6]; // 배열 크기 초기화
+    public int[] salePrice = new int[6]; // 배열 크기 초기화
+    private PlayerController playerController;
 
+    private bool localplayerck = false;
+
+    //아이템 획득 여부
+    private bool isItme = false;
 
     private Transform inventoryTransform;
+
+    void Awake()
+    {
+        isItme = false;
+        localplayerck = false;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+    }
 
     void Start()
     {
         inside.SetActive(false);
-        poi.SetActive(false);
         inventory.SetActive(false);
         Tab.SetActive(false);
         money.SetActive(true);
 
-
         inventoryTransform = inventory.transform;
 
-        for (int i = 0; i < nodesCount.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
             nodesCount[i].text = "0";
+            mixCount[i].text = "0";
             count[i] = 0;
             SellCount[i] = 0;
         }
@@ -48,38 +66,60 @@ public class CanvasController : MonoBehaviour
     void Update()
     {
         UpdateInsideActive();
-        UpdatePoiActive();
         UpdateInventoryActive();
         UpdateInventoryTabActive();
         UpdateMoneyActive();
-
-
-        //노드 관련 함수
-        nodeCountUpdate();
+        // 노드 관련 함수
         Sell();
         Die();
+        //아이템 업데이트
+        if (isItme)
+        {
+            nodeCountUpdate();
+            mixCountUpdate();
+        }
+    }
+
+    public void RegisterPlayerController(PlayerController player)
+    {
+        if (!localplayerck)
+        {
+            playerController = player;
+            Debug.Log("플레이어 연동 " + playerController);
+            if (playerController != null)
+            {
+                playerController.OnInventoryChanged += nodeCountUpdate;
+                nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
+                isItme = true;
+            }
+            localplayerck = true;
+        }
+
     }
 
     public void nodeCountUpdate()
     {
-        
-
-        for (int i = 0; i < nodesCount.Length; i++)
+        for (int i = 0; i < 6; i++)
         {
-            
-            if (nodes[i].name + "(Clone)" == GameValue.NodeName)
-            {
-                count[i]++;
-                SellCount[i] = count[i];
-                nodesCount[i].text = count[i].ToString();
-                GameValue.GetNode("");
-            }
+            Debug.Log("아이템 UI " + playerController.nodeItiems[i] + "플레이어 이름 " + playerController.name);
+            count[i] = playerController.nodeItiems[i];
+            nodesCount[i].text = count[i].ToString();
+        }
+    }
+
+    public void mixCountUpdate()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            Debug.Log("아이템 UI" + playerController.mixItiems[i]);
+            count[i] = playerController.mixItiems[i];
+            mixCount[i].text = count[i].ToString();
         }
     }
 
     private void Sell()
     {
-        if(GameValue.lived)
+        if (GameValue.lived)
         {
             money.SetActive(true);
             GameValue.setMoney();
@@ -102,13 +142,14 @@ public class CanvasController : MonoBehaviour
 
     private void Die()
     {
-        if(PlayerController.Hp==0)
+        if (PlayerController.Hp == 0)
         {
             for (int i = 0; i < nodesCount.Length; i++)
             {
                 nodesCount[i].text = "0";
+                mixCount[i].text = "0";
             }
-        }     
+        }
     }
 
     void UpdateMoneyActive()
@@ -124,35 +165,13 @@ public class CanvasController : MonoBehaviour
 
     void UpdateInsideActive()
     {
-        if(GameValue.insideUser<GameValue.MaxUser)
+        if (GameValue.insideUser < GameValue.MaxUser)
         {
-            inside.SetActive(PlayerController.insideActive && !PlayerController.PreViewCam);   
+            inside.SetActive(PlayerController.insideActive && !PlayerController.PreViewCam);
 
         }
     }
 
-    void UpdatePoiActive()
-    {
-        bool isPoiActive = PlayerController.Poi;
-        poi.SetActive(isPoiActive);
-
-        if (isPoiActive)
-        {
-            inventory.SetActive(true);
-            Tab.SetActive(true);
-            money.SetActive(false);
-            Cursor.lockState = CursorLockMode.Confined;
-        }
-    }
-
-    public void Bt_poiExt()
-    {
-        poi.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
-        PlayerController.Poi = false;
-        inventory.SetActive(false);
-        Tab.SetActive(false);
-    }
 
     void UpdateInventoryActive()
     {
@@ -161,7 +180,6 @@ public class CanvasController : MonoBehaviour
             inventory_ck = !inventory_ck;
             inventory.SetActive(inventory_ck);
             Tab.SetActive(inventory_ck);
-            //money.SetActive(!inventory_ck);
         }
     }
 
@@ -169,12 +187,16 @@ public class CanvasController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            keyTabCode = (keyTabCode + 1) % 3;
-            bool isCraftManualActive = CraftMaunal.isActivated && !CraftMaunal.isPreViewActivated;
+            if (inventory_ck)
+            {
+                keyTabCode = (keyTabCode + 1) % 3;
+                bool isCraftManualActive = CraftMaunal.isActivated && !CraftMaunal.isPreViewActivated;
 
-            SetInventoryTabActive(keyTabCode);
+                SetInventoryTabActive(keyTabCode);
 
-            SetTabActive(keyTabCode);
+                SetTabActive(keyTabCode);
+            }
+
         }
     }
 

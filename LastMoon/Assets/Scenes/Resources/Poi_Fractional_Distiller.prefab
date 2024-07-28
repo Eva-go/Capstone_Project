@@ -73,9 +73,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poiItem: 0
+  nodeItem: 
   animator: {fileID: 7105125737143260221}
   sfx_Station_Start: {fileID: -6060658159203649531}
   sfx_Station_Loop: {fileID: 1808737481051242986}
+  increaseInterval: 5
 --- !u!65 &5094086931020389506
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -83,7 +86,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4553568369980560637}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 99b9dd6b15f26324bbc4492698960cb4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

@@ -33,7 +33,7 @@ public class CircleFillHandler : MonoBehaviour
                 StartCoroutine(SmoothFill(PlayerController.Hp));
             }
         }
-        HP.text = PlayerController.Hp.ToString();
+        HP.text = PlayerController.Hp.ToString("F0");
 
         if (PlayerController.PreViewCam)
         {

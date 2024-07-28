@@ -25,6 +25,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _ALPHATEST_ON
   - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   - _SURFACE_TYPE_TRANSPARENT
@@ -159,7 +160,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaClip: 0
+    - _AlphaClip: 1
     - _AlphaToMask: 0
     - _Ambient_Strength: 0.5
     - _Blend: 0
@@ -224,10 +225,10 @@ Material:
     - _Specular_Strength: 0
     - _SrcBlend: 5
     - _SrcBlendAlpha: 1
-    - _Strength: 1
+    - _Strength: 2.21
     - _Surface: 1
     - _Texture_Specular: 0
-    - _Time_Scale: 1
+    - _Time_Scale: 0.1
     - _Transparency: 1
     - _Use_Base_Texture: 1
     - _Use_LU_Specular: 1
@@ -239,6 +240,7 @@ Material:
     - _ZWrite: 0
     - _ZWriteControl: 0
     - _transparency: 1
+    - _waveHeightTime: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

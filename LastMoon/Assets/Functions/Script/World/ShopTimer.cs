@@ -11,7 +11,6 @@ public class ShopTimerController : MonoBehaviourPunCallbacks
     private float initialPosX = 234f;
     private float finalPosX = -234f;
 
-
     private int seed1;
     private int seed2;
     private bool LocalClient = true;

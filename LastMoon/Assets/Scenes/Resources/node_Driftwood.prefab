@@ -45,7 +45,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4760096997482513493}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 99b9dd6b15f26324bbc4492698960cb4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -97,10 +97,11 @@ MonoBehaviour:
   animator: {fileID: 6697003303638985365}
   nodeName: 
   sfx_NodeHit: {fileID: 903683581663507151}
-  sfx_NodeHit1: {fileID: 8300000, guid: 8384ed9692ab1224883588a89ced120a, type: 3}
-  sfx_NodeHit2: {fileID: 8300000, guid: 84b444d35dbe2004586e56470d3618d7, type: 3}
-  sfx_NodeHit3: {fileID: 8300000, guid: 5d7ec5ad947e8344db9869eda052b8b3, type: 3}
-  sfx_NodeHit4: {fileID: 8300000, guid: 9fb9bbe9567b0144d91ce4d207b88398, type: 3}
+  sfx_NodeHit1: {fileID: 8300000, guid: 17412700728abff47be5a42cce556688, type: 3}
+  sfx_NodeHit2: {fileID: 8300000, guid: 464dab82248fbe5428972085ac8054f1, type: 3}
+  sfx_NodeHit3: {fileID: 8300000, guid: 92fe40e8eb9cae94fbc8b80c930b8667, type: 3}
+  sfx_NodeHit4: {fileID: 8300000, guid: 770010ea2daf3ce4eb0a31604d765986, type: 3}
+  nodeCount: 0
 --- !u!114 &-3118514890833341624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +209,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
