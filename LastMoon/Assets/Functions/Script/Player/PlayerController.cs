@@ -137,6 +137,7 @@ public class PlayerController : MonoBehaviour
 
         //µ· È°¼ºÈ­
         GameValue.setMoney();
+        Hp = 100;
     }
 
     void Update()
