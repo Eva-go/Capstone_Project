@@ -109,7 +109,15 @@ AudioMixerController:
   m_SuspendThreshold: 20
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: 285550e2c5b4c0645a82e6aa2464a2a4
+    name: GamePlay
+  - guid: 945cfd78dfb2375419a609b19b09aa79
+    name: Interface
+  - guid: 0c0fcade2decb8b42b37393a8b5c9a82
+    name: Master
+  - guid: f6504cfd2e8e38a4dacae5309212d399
+    name: Music
   m_AudioMixerGroupViews:
   - guids:
     - c6e91dd2c5389c644bd2574f95047bf6
@@ -175,7 +183,7 @@ AudioMixerSnapshotController:
     945cfd78dfb2375419a609b19b09aa79: 0
     4e7ab91b849cecf4ea3cea681031807f: 0
     f6504cfd2e8e38a4dacae5309212d399: 0
-    0c0fcade2decb8b42b37393a8b5c9a82: 0
+    0c0fcade2decb8b42b37393a8b5c9a82: -0.002441872
   m_TransitionOverrides: {}
 --- !u!243 &1490029987958073078
 AudioMixerGroupController:

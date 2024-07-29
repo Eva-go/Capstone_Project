@@ -521,20 +521,26 @@ public class PlayerController : MonoBehaviour
 
     private void CameraRotation()
     {
-        float xRotation = Input.GetAxisRaw("Mouse Y");
-        float cameraRotationX = xRotation * lookSensitivity;
-        currentCameraRotationX -= cameraRotationX;
-        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            float xRotation = Input.GetAxisRaw("Mouse Y");
+            float cameraRotationX = xRotation * lookSensitivity;
+            currentCameraRotationX -= cameraRotationX;
+            currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
-        theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
-        toolCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+            theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+            toolCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
+        }
     }
 
     private void CharacterRotation()
     {
-        float yRotation = Input.GetAxisRaw("Mouse X");
-        Vector3 characterRotationY = new Vector3(0f, yRotation, 0f) * lookSensitivity;
-        myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(characterRotationY));
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            float yRotation = Input.GetAxisRaw("Mouse X");
+            Vector3 characterRotationY = new Vector3(0f, yRotation, 0f) * lookSensitivity;
+            myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(characterRotationY));
+        }
     }
 
     private void Interaction()
@@ -825,21 +831,24 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButton(0))
+        if (Cursor.lockState == CursorLockMode.Locked)
         {
-            if (!sfx_PlayerSwing.isPlaying)
+            if (Input.GetMouseButton(0))
             {
-                sfx_PlayerSwing.Play();
+                if (!sfx_PlayerSwing.isPlaying)
+                {
+                    sfx_PlayerSwing.Play();
 
-                if (isCrouching || isRunning || !isGrounded)
-                {
-                    animator.SetTrigger("Combat_Swing");
-                    Localanimator.SetTrigger("Combat_Swing");
-                }
-                else
-                {
-                    animator.SetTrigger("Swing");
-                    Localanimator.SetTrigger("Swing");
+                    if (isCrouching || isRunning || !isGrounded)
+                    {
+                        animator.SetTrigger("Combat_Swing");
+                        Localanimator.SetTrigger("Combat_Swing");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("Swing");
+                        Localanimator.SetTrigger("Swing");
+                    }
                 }
             }
         }

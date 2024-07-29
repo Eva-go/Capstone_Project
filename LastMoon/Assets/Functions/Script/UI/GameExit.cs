@@ -10,13 +10,6 @@ public class GameExit : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKey("escape"))
-            Application.Quit();
-    }
-
     public void BT_Exit()
     {
         Application.Quit();
