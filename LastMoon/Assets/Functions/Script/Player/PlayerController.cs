@@ -97,10 +97,7 @@ public class PlayerController : MonoBehaviour
     {
         //포톤 네트워크 연결
         pv = GetComponent<PhotonView>();
-        //로컬플레이어 설정 및 로컬캔버스 설정
-        LocalPlayerManger.Instance.RegisterLocalPlayer(this);
-        CanvasController.Instance.RegisterPlayerController(this);
-
+       
         //컴포넌트 설정
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
@@ -108,6 +105,9 @@ public class PlayerController : MonoBehaviour
         if(pv.IsMine)
         {
             cam.SetActive(true);
+            //로컬플레이어 설정 및 로컬캔버스 설정
+            LocalPlayerManger.Instance.RegisterLocalPlayer(this);
+            CanvasController.Instance.RegisterPlayerController(this);
         }
 
         //플레이어 이름
@@ -140,6 +140,15 @@ public class PlayerController : MonoBehaviour
         Hp = 100;
     }
 
+    void OnEnable()
+    {
+        if (pv.IsMine)
+        {
+            LocalPlayerManger.Instance.RegisterLocalPlayer(this);
+            CanvasController.Instance.RegisterPlayerController(this);
+        }
+    }
+
     void Update()
     {
         if (pv.IsMine)
@@ -162,13 +171,14 @@ public class PlayerController : MonoBehaviour
             Switching();
             WaveTic();
             Sell();
+
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Hp = 100;
             }
-            if (Input.GetKeyDown(KeyCode.F4))
+            if (Input.GetKeyDown(KeyCode.F3))
             {
-                transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
+                Hp = 1;
             }
             if (Input.GetKeyDown(KeyCode.F5))
             {
@@ -176,7 +186,7 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.F6))
             {
-                Hp = 0;
+                transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
             }
             if (Input.GetKeyDown(KeyCode.F7))
             {
@@ -258,6 +268,15 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
+            for(int i=0; i<nodeItiems.Length;i++)
+            {
+                if (i >= 0 && i < nodeItiems.Length)
+                {
+                    nodeItiems[i] = 0;
+                    OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
+                }
+            }
+            
             Debug.Log("Player died, starting respawn process.");
             if (live)
             {
@@ -275,8 +294,9 @@ public class PlayerController : MonoBehaviour
         {
             Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
             RespawnManager.Instance.RespawnPlayer(spawnPoints);
+            LocalPlayerManger.Instance.RegisterLocalPlayer(this);
+            CanvasController.Instance.RegisterPlayerController(this);
         }
-
     }
 
     private void OnDestroy()
@@ -1015,10 +1035,13 @@ public class PlayerController : MonoBehaviour
     }
     public void UpdateNodeItem(int index, int newCount)
     {
-        if (index >= 0 && index < nodeItiems.Length)
+        if(pv.IsMine)
         {
-            nodeItiems[index] = newCount;
-            OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
+            if (index >= 0 && index < nodeItiems.Length)
+            {
+                nodeItiems[index] = newCount;
+                OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
+            }
         }
     }
 
@@ -1027,13 +1050,16 @@ public class PlayerController : MonoBehaviour
     {
         // 로컬 플레이어의 아이템 갯수만 증가시킵니다.
 
-        for (int i = 0; i < nodeItiems.Length; i++)
+        if(pv.IsMine)
         {
-            nodeItiems[i] += 10;
-            Debug.Log("아이템 증가" + nodeItiems[i]);
+            for (int i = 0; i < nodeItiems.Length; i++)
+            {
+                nodeItiems[i] += 10;
+                Debug.Log("아이템 증가" + nodeItiems[i]);
+            }
+            // 아이템 변경을 UI에 알립니다.
+            OnInventoryChanged?.Invoke();
         }
-        // 아이템 변경을 UI에 알립니다.
-        OnInventoryChanged?.Invoke();
     }
 
 

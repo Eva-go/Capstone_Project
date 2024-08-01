@@ -167,18 +167,23 @@ public class CanvasController : MonoBehaviour
 
     public void RegisterPlayerController(PlayerController player)
     {
-        if (!localplayerck)
+        if (playerController != null)
         {
-            playerController = player;
-            if (playerController != null)
-            {
-                playerController.OnInventoryChanged += nodeCountUpdate;
-                nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
-                isItme = true;
-            }
-            localplayerck = true;
+            // 기존 이벤트 리스너 제거
+            playerController.OnInventoryChanged -= nodeCountUpdate;
         }
 
+        playerController = player;
+
+        if (playerController != null)
+        {
+            // 새로운 이벤트 리스너 등록
+            playerController.OnInventoryChanged += nodeCountUpdate;
+            nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
+            isItme = true;
+        }
+
+        localplayerck = true;
     }
 
     public void nodeCountUpdate()
