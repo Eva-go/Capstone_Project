@@ -4,7 +4,6 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-
 public class PlayerController : MonoBehaviour
 {
     public PhotonView pv;
@@ -21,7 +20,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera toolCamera;
     private Rigidbody myRigid;
     private CapsuleCollider myCollider;
-    // Jump and Crouch
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float crouchHeight = 0.5f;
     private float originalCameraY;
@@ -37,14 +35,13 @@ public class PlayerController : MonoBehaviour
 
     public AudioSource sfx_PlayerHit, sfx_PlayerJump, sfx_PlayerWalk, sfx_PlayerSwing, sfx_PlayerDrown;
 
-    // ray
     private RaycastHit hitInfo;
 
     [SerializeField] private Animator animator;
-    [SerializeField] private Animator Localanimator; // 로컬 플레이어 무기 애니메이션
+    [SerializeField] private Animator Localanimator;
 
-    public GameObject[] weapons; // 무기 오브젝트 배열
-    public Transform weaponHoldPoint; // 무기를 장착할 손 위치
+    public GameObject[] weapons;
+    public Transform weaponHoldPoint;
     public GameObject[] weaponsSwitching;
     private int selectedWeaponIndex = 0;
     private int selectedWeaponStrength = 1;
@@ -57,11 +54,10 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
 
-    //파도 y축 위치
     private Wavetransform wavetransform;
-    private float damageInterval = 1.0f; // interval between damage ticks
-    private float tickDamage = 5.0f;     // damage per tick
-    private float lastDamageTime = 0;    // time of the last tick damage
+    private float damageInterval = 1.0f;
+    private float tickDamage = 5.0f;
+    private float lastDamageTime = 0;
 
     private bool Jumpforgived = false;
     private bool isWallCliming = false;
@@ -72,70 +68,59 @@ public class PlayerController : MonoBehaviour
 
     public float speeed = 0;
 
-    //인벤토리 아이템 갯수
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
 
-    //돈 치환 변수
     public static int[] nodeSell = new int[6];
     public static int[] mixSell = new int[6];
 
-    //이벤트 처리
     public event Action OnInventoryChanged;
 
-    //멀티플레이 보간
-    public float positionLerpSpeed = 8f; // 위치 보간 속도
-    public float rotationLerpSpeed = 8f; // 회전 보간 속도
+    public float positionLerpSpeed = 8f;
+    public float rotationLerpSpeed = 8f;
 
     private Vector3 networkPosition;
     private Quaternion networkRotation;
 
+    public void InvokeInventoryChanged()
+    {
+        OnInventoryChanged?.Invoke();
+    }
 
     void Start()
     {
-        //포톤 네트워크 연결
         pv = GetComponent<PhotonView>();
-       
-        //컴포넌트 설정
+
         myRigid = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
 
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             cam.SetActive(true);
-            //로컬플레이어 설정 및 로컬캔버스 설정
             LocalPlayerManger.Instance.RegisterLocalPlayer(this);
             CanvasController.Instance.RegisterPlayerController(this);
         }
 
-        //플레이어 이름
         nickName = this.gameObject.name;
 
-
-        // 초기 무기 장착
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
 
         PreViewCam = false;
         GameValue.setMoney();
 
-        // 카메라의 초기 y축 위치 저장
         originalCameraY = theCamera.transform.localPosition.y;
         originalToolCameraY = toolCamera.transform.localPosition.y;
 
-        //콜라이더 크기 조절
         UpCenter = new Vector3(0f, 1f, 0f);
         DownCenter = new Vector3(0f, 0.5f, 0f);
 
-        //아이템 초기화
         Items();
-        //파도 찾기
         wavetransform = FindObjectOfType<Wavetransform>();
         live = true;
 
-        //돈 활성화
         GameValue.setMoney();
         Hp = 100;
     }
@@ -178,7 +163,7 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.F3))
             {
-                Hp = 1;
+                Hp = -1;
             }
             if (Input.GetKeyDown(KeyCode.F5))
             {
@@ -204,7 +189,6 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("믹스 아이템 " + mixItiems[i]);
                 }
             }
-            // Check if the player is dead
             if (Hp <= 0)
             {
                 Die();
@@ -212,7 +196,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // 다른 플레이어의 위치와 회전을 보간하여 부드럽게 처리
             transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * positionLerpSpeed);
             transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * rotationLerpSpeed);
         }
@@ -227,6 +210,7 @@ public class PlayerController : MonoBehaviour
         }
         GameValue.getItem();
     }
+
     public void Items()
     {
         for (int i = 0; i < 6; i++)
@@ -235,14 +219,12 @@ public class PlayerController : MonoBehaviour
             mixItiems[i] = 0;
         }
     }
+
     public void WaveTic()
     {
         float waveHeight, WaterDepth;
         waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.waveStrength);
         WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
-
-        //if (WaterDepth > 1.8f) RenderSettings.fog = true;
-        //else RenderSettings.fog = false;
 
         if (WaterDepth > 0.25f)
         {
@@ -264,30 +246,40 @@ public class PlayerController : MonoBehaviour
             if (isSwimming) isSwimming = false;
         }
     }
+
     private void Die()
     {
         if (pv.IsMine)
         {
-            for(int i=0; i<nodeItiems.Length;i++)
+            if (pv.IsMine && live)
             {
-                if (i >= 0 && i < nodeItiems.Length)
+                // Bag 생성
+                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
+                BagController bagScript = bag.GetComponent<BagController>();
+                if (bagScript != null)
+                {
+                    // 아이템 데이터 전송
+                    for (int i = 0; i < nodeItiems.Length; i++)
+                    {
+                        bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
+                    }
+                }
+
+                // 아이템 초기화
+                for (int i = 0; i < nodeItiems.Length; i++)
                 {
                     nodeItiems[i] = 0;
-                    OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
                 }
-            }
-            
-            Debug.Log("Player died, starting respawn process.");
-            if (live)
-            {
+                InvokeInventoryChanged();
+
+                // 게임 오브젝트 파괴
                 PhotonNetwork.Destroy(gameObject);
+
                 live = false;
                 reSpwan();
             }
-
         }
     }
-
     private void reSpwan()
     {
         if (pv.IsMine && !live)
@@ -306,7 +298,6 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-
         if (!isRunning)
         {
             animator.SetBool("isRuns", false);
@@ -347,7 +338,6 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                // 네트워크 위치와 회전을 업데이트
                 pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
@@ -355,7 +345,6 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-
         if (Input.GetKey(KeyCode.Space) && isSwimming)
         {
             myRigid.AddForce(Vector3.up, ForceMode.Impulse);
@@ -380,8 +369,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isGrounded", false);
             Jumpforgived = false;
         }
-
-
 
         myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
 
@@ -440,7 +427,6 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                // 네트워크 위치와 회전을 업데이트
                 pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
@@ -490,19 +476,13 @@ public class PlayerController : MonoBehaviour
 
         if (isCrouching)
         {
-            //myCollider.height = 1;
-            //myCollider.center = DownCenter;
             animator.SetBool("isCrouch", true);
-            // 카메라의 y축 위치를 crouchHeight 만큼 낮춤
             theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY * crouchHeight, theCamera.transform.localPosition.z);
             toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY * crouchHeight, toolCamera.transform.localPosition.z);
         }
         else
         {
-            //myCollider.height = 2;
-            //myCollider.center = UpCenter;
             animator.SetBool("isCrouch", false);
-            // 카메라의 y축 위치를 원래대로 되돌림
             theCamera.transform.localPosition = new Vector3(theCamera.transform.localPosition.x, originalCameraY, theCamera.transform.localPosition.z);
             toolCamera.transform.localPosition = new Vector3(toolCamera.transform.localPosition.x, originalToolCameraY, toolCamera.transform.localPosition.z);
         }
@@ -680,6 +660,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     public void Attack_Time()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
@@ -732,9 +713,17 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Player"))
             {
-                // 플레이어 공격 처리
                 if (isCrouching || isRunning || !isGrounded) pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 15f);
                 else pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, hit.collider.GetComponent<PhotonView>().ViewID, 10f);
+            }
+            else if (hit.collider.CompareTag("Bag"))
+            {
+                PhotonView bagPhotonView = hit.collider.GetComponent<PhotonView>();
+                if (bagPhotonView != null)
+                {
+                    float damage = 10f;
+                    bagPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, pv.ViewID);
+                }
             }
             else if (hit.collider.CompareTag("Poi"))
             {
@@ -751,7 +740,6 @@ public class PlayerController : MonoBehaviour
                                 int mixItemCount = distillerController.mixItme;
 
                                 pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-
                             }
                         }
                     }
@@ -843,11 +831,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-
-
-
-
     }
 
     private void Attack()
@@ -874,7 +857,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
 
     [PunRPC]
     private void RPC_UpdatePositionAndRotation(Vector3 position, Quaternion rotation)
@@ -981,7 +963,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 무기 번호 키로 무기 교체
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             selectedWeaponIndex = 0;
@@ -1004,8 +985,6 @@ public class PlayerController : MonoBehaviour
         {
             selectedWeaponIndex = (selectedWeaponIndex + 2) % 3;
         }
-
-        // 무기 교체가 필요하면 새로운 무기를 장착
 
         if (previousSelectedWeaponIndex != selectedWeaponIndex)
         {
@@ -1033,45 +1012,39 @@ public class PlayerController : MonoBehaviour
     {
         mixItiems[index] = mixItemCount;
     }
+
     public void UpdateNodeItem(int index, int newCount)
     {
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             if (index >= 0 && index < nodeItiems.Length)
             {
                 nodeItiems[index] = newCount;
-                OnInventoryChanged?.Invoke(); // 아이템 변경 시 이벤트 발생
+                OnInventoryChanged?.Invoke();
             }
         }
     }
 
-    //todo 멀티테스트
     private void IncreaseLocalPlayerItems()
     {
-        // 로컬 플레이어의 아이템 갯수만 증가시킵니다.
-
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             for (int i = 0; i < nodeItiems.Length; i++)
             {
                 nodeItiems[i] += 10;
-                Debug.Log("아이템 증가" + nodeItiems[i]);
+              
             }
-            // 아이템 변경을 UI에 알립니다.
             OnInventoryChanged?.Invoke();
         }
     }
 
-
     private void EquipWeapon(int index)
     {
-        // 기존에 장착된 무기 비활성화
         foreach (Transform child in weaponHoldPoint)
         {
             Destroy(child.gameObject);
         }
 
-        // 새로운 무기 인스턴스 생성 및 장착
         GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
         weaponInstance.transform.SetParent(weaponHoldPoint);
     }
