@@ -527,6 +527,7 @@ public class MapGenerator : MonoBehaviour
             {
                 float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
                 PlaceBuildings(irregularNoiseMap);
+                PlayerSpawn.OnBuildingCreated();
             }
             else
             {
