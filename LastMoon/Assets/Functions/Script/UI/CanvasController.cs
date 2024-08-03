@@ -9,11 +9,14 @@ public class CanvasController : MonoBehaviour
     public GameObject inventory;
     public GameObject money;
     public GameObject Tab;
+    public GameObject Poi;
 
     private int keyTabCode = 2;
     private bool inventory_ck;
     private int TotalSell = 0;
     private int Amount = 0;
+    public bool SetPoi = false;
+
     // 노드
     public GameObject[] nodes;
     public Text[] nodesCount;
@@ -69,6 +72,7 @@ public class CanvasController : MonoBehaviour
         inventory.SetActive(false);
         Tab.SetActive(false);
         money.SetActive(true);
+        Poi.SetActive(false);
 
         inventoryTransform = inventory.transform;
 
@@ -94,11 +98,11 @@ public class CanvasController : MonoBehaviour
     void Update()
     {
         ToolIconSwitching();
-
         UpdateInsideActive();
         UpdateInventoryActive();
         UpdateInventoryTabActive();
         UpdateMoneyActive();
+        PoiActive();
         // 노드 관련 함수
         Sell();
         Die();
@@ -107,6 +111,24 @@ public class CanvasController : MonoBehaviour
         {
             nodeCountUpdate();
             mixCountUpdate();
+        }
+    }
+
+    public void PoiActive()
+    {
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            SetPoi = !SetPoi;
+            if(SetPoi)
+            {
+                Poi.SetActive(true);
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+            else
+            {
+                Poi.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
     }
     private void ToolIconSwitching()

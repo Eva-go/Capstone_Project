@@ -81,11 +81,6 @@ public class CraftMaunal : MonoBehaviour
   
         if (Input.GetButtonDown("Fire1"))
             Build(slotNumber);
- 
-       
-            
-
-           
     }
 
     public void Build(int _slotNumber)
