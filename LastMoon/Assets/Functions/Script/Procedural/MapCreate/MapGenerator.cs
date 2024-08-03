@@ -374,7 +374,7 @@ public class MapGenerator : MonoBehaviour
             }
             else
             {
-                return 239;
+                return 479;
             }
         }
     }
