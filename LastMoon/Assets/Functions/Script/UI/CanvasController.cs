@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class CanvasController : MonoBehaviour
+public class CanvasController : MonoBehaviourPunCallbacks
 {
     public static CanvasController Instance;
 
@@ -23,8 +24,6 @@ public class CanvasController : MonoBehaviour
     public Text[] mixCount;
     public Text[] nodePrice;
     public Text[] mixPrice;
-    
-
 
     public int[] count = new int[6]; // 배열 크기 초기화
     public int[] SellCount = new int[6]; // 배열 크기 초기화
@@ -34,6 +33,7 @@ public class CanvasController : MonoBehaviour
     private PlayerController playerController;
 
     private bool localplayerck = false;
+    private bool pricesInitialized = false; // 랜덤 가격이 초기화되었는지 여부
 
     public Sprite[] UI_ToolIconSprites;
     public Image[] UI_ToolIcons;
@@ -41,7 +41,6 @@ public class CanvasController : MonoBehaviour
     public Image[] UI_ToolDurabilities;
 
     private int selectedToolIndex = 0;
-
 
     //아이템 획득 여부
     private bool isItme = false;
@@ -60,7 +59,6 @@ public class CanvasController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
     }
 
     void Start()
@@ -76,23 +74,81 @@ public class CanvasController : MonoBehaviour
 
         inventoryTransform = inventory.transform;
 
+        // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
+        if (PhotonNetwork.IsMasterClient)
+        {
+            InitializeAndSendRandomPrices();
+        }
+        else
+        {
+            // Non-master clients will request random prices from master
+            RequestRandomPricesFromMaster();
+        }
+    }
+
+    void InitializeAndSendRandomPrices()
+    {
+        int[] tempNodePriceCount = new int[6];
+        int[] tempMixPriceCount = new int[6];
+
         for (int i = 0; i < 6; i++)
         {
-            nodesCount[i].text = "0";
-            mixCount[i].text = "0";
-            count[i] = 0;
-            SellCount[i] = 0;
-            nodePriceCount[i] +=10+ i * 10;
-            mixPriceCount[i] += 100 + i * 10;
-            nodePrice[i].text = nodePriceCount[i].ToString();
-            mixPrice[i].text = mixPriceCount[i].ToString();
+            // Generate random values
+            tempNodePriceCount[i] = Random.Range(10, 51); // 10~50 사이의 랜덤값
+            tempMixPriceCount[i] = Random.Range(100, 151); // 100~150 사이의 랜덤값
+
+            // Update UI elements with random values
+            nodePrice[i].text = tempNodePriceCount[i].ToString();
+            mixPrice[i].text = tempMixPriceCount[i].ToString();
         }
 
-        for(int i=0;i<6;i++)
+        // Send random values to all clients
+        PhotonView.Get(this).RPC("UpdatePriceCounts", RpcTarget.AllBuffered, tempNodePriceCount, tempMixPriceCount);
+
+        for (int i = 0; i < 6; i++)
         {
             GameValue.getPrice(i, nodePriceCount[i], mixPriceCount[i]);
         }
-        
+    }
+
+    [PunRPC]
+    void UpdatePriceCounts(int[] nodePrices, int[] mixPrices)
+    {
+        if (nodePrices.Length != 6 || mixPrices.Length != 6)
+        {
+            Debug.LogError("Invalid array length received in RPC.");
+            return;
+        }
+
+        for (int i = 0; i < 6; i++)
+        {
+            nodePriceCount[i] = nodePrices[i];
+            mixPriceCount[i] = mixPrices[i];
+
+            nodePrice[i].text = nodePriceCount[i].ToString();
+            mixPrice[i].text = mixPriceCount[i].ToString();
+            GameValue.getPrice(i, nodePriceCount[i], mixPriceCount[i]);
+        }
+
+        // 랜덤 값이 초기화된 것으로 플래그 설정
+        pricesInitialized = true;
+    }
+
+    void RequestRandomPricesFromMaster()
+    {
+        if (!pricesInitialized)
+        {
+            PhotonView.Get(this).RPC("RequestRandomPrices", RpcTarget.MasterClient);
+        }
+    }
+
+    [PunRPC]
+    void RequestRandomPrices()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            InitializeAndSendRandomPrices();
+        }
     }
 
     void Update()
@@ -112,14 +168,17 @@ public class CanvasController : MonoBehaviour
             nodeCountUpdate();
             mixCountUpdate();
         }
+
+        // 랜덤 가격이 아직 초기화되지 않았다면, 요청
+        RequestRandomPricesFromMaster();
     }
 
     public void PoiActive()
     {
-        if(Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             SetPoi = !SetPoi;
-            if(SetPoi)
+            if (SetPoi)
             {
                 Poi.SetActive(true);
                 Cursor.lockState = CursorLockMode.Confined;
@@ -131,6 +190,7 @@ public class CanvasController : MonoBehaviour
             }
         }
     }
+
     private void ToolIconSwitching()
     {
         int previousSelectedWeaponIndex = selectedToolIndex;
@@ -185,7 +245,6 @@ public class CanvasController : MonoBehaviour
         UI_ToolDurabilities[0].color = UI_ToolDurabilities[selectedToolIndex + 1].color;
         UI_ToolDurabilities[selectedToolIndex + 1].color = UI_ToolDurabilityColor[0];
     }
-
 
     public void RegisterPlayerController(PlayerController player)
     {
@@ -280,10 +339,8 @@ public class CanvasController : MonoBehaviour
         if (GameValue.insideUser < GameValue.MaxUser)
         {
             inside.SetActive(PlayerController.insideActive && !PlayerController.PreViewCam);
-
         }
     }
-
 
     void UpdateInventoryActive()
     {
@@ -308,7 +365,6 @@ public class CanvasController : MonoBehaviour
 
                 SetTabActive(keyTabCode);
             }
-
         }
     }
 
