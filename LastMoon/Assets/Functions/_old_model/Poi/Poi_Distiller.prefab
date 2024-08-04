@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3795354787717390030}
   - component: {fileID: 7083005281114047668}
-  - component: {fileID: 5958132885881257880}
   m_Layer: 0
   m_Name: Poi_Distiller
   m_TagString: Poi
@@ -27,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 4602713722304676980}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -7.676222, y: -7.4087553, z: 7.956112}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -55,27 +54,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &5958132885881257880
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4602713722304676980}
-  m_Material: {fileID: 13400000, guid: 99b9dd6b15f26324bbc4492698960cb4, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 1
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3, y: 3, z: 3}
-  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!1001 &9116951132251038147
 PrefabInstance:
   m_ObjectHideFlags: 0
