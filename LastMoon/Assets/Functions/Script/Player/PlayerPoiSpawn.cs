@@ -13,7 +13,7 @@ public class PlayerPoiSpawn : MonoBehaviour
     // 플레이어 관련 변수
     private PlayerController playerController; // 플레이어 컨트롤러
     private Transform tf_player; // 플레이어 카메라 트랜스폼
-
+    public PhotonView pv;
     // 오브젝트 관련 변수
     public GameObject canvas;
     public CanvasController canvasController;
@@ -30,30 +30,37 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     void Start()
     {
-        playerController = gameObject.GetComponent<PlayerController>(); // 플레이어 컨트롤러 가져오기
-        GameObject poiLists = GameObject.FindWithTag("PoiList").transform.Find("PoiListBG").gameObject;
-        canvas = GameObject.FindWithTag("Canvas").transform.Find("CanvasController").gameObject;
-        canvasController = canvas.gameObject.GetComponent<CanvasController>();
-
-        for (int i = 0; i < PoiTab.Length; i++)
+        pv = GetComponent<PhotonView>();
+        if(pv.IsMine)
         {
-            PoiTab[i] = poiLists.transform.GetChild(i).gameObject; // PoiTab 배열 초기화
-            Poi_BT[i] = PoiTab[i].GetComponent<Button>(); // Poi_BT 배열 초기화
-            int index = i; // 인덱스를 로컬 변수로 복사
-            Poi_BT[i].onClick.AddListener(() => SlotClick(index)); // 버튼 클릭 리스너 추가
+            playerController = GetComponent<PlayerController>(); // 플레이어 컨트롤러 가져오기
+            GameObject poiLists = GameObject.FindWithTag("PoiList").transform.Find("PoiListBG").gameObject;
+            canvas = GameObject.FindWithTag("Canvas").transform.Find("CanvasController").gameObject;
+            canvasController = canvas.GetComponent<CanvasController>();
+
+            for (int i = 0; i < PoiTab.Length; i++)
+            {
+                PoiTab[i] = poiLists.transform.GetChild(i).gameObject; // PoiTab 배열 초기화
+                Poi_BT[i] = PoiTab[i].GetComponent<Button>(); // Poi_BT 배열 초기화
+                int index = i; // 인덱스를 로컬 변수로 복사
+                Poi_BT[i].onClick.AddListener(() => SlotClick(index)); // 버튼 클릭 리스너 추가
+            }
         }
     }
 
     void Update()
     {
-        if (isPreViewActivated)
+        if(pv.IsMine)
         {
-            previewPositionUpdate(); // Update preview position
-        }
+            if (isPreViewActivated)
+            {
+                previewPositionUpdate(); // Update preview position
+            }
 
-        if (Input.GetButtonDown("Fire1") && isPreViewActivated)
-        {
-            Build(slotNumber); // Build the object at the preview position
+            if (Input.GetButtonDown("Fire1") && isPreViewActivated)
+            {
+                Build(slotNumber); // Build the object at the preview position
+            }
         }
     }
 
@@ -61,13 +68,18 @@ public class PlayerPoiSpawn : MonoBehaviour
     {
         if (isPreViewActivated)
         {
-            PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, hitInfo.point, Quaternion.identity);
-            if (previewObjectInstance != null)
+            // Ensure hitInfo.point is valid
+            if (hitInfo.collider != null)
             {
-                Destroy(previewObjectInstance); // Destroy the preview object
+                // Instantiate the object using Photon Network for actual objects
+                PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, hitInfo.point, Quaternion.identity);
+                if (previewObjectInstance != null)
+                {
+                    Destroy(previewObjectInstance); // Destroy the preview object
+                }
+                isPreViewActivated = false; // Deactivate preview
+                previewObjectInstance = null;
             }
-            isPreViewActivated = false; // Deactivate preview
-            previewObjectInstance = null;
         }
     }
 
@@ -76,13 +88,11 @@ public class PlayerPoiSpawn : MonoBehaviour
         Ray ray = playerController.theCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hitInfo, 5f)) // Set max distance for raycast
         {
-            if (hitInfo.transform != null)
+            if (previewObjectInstance != null)
             {
                 Vector3 _location = hitInfo.point;
-                if (previewObjectInstance != null)
-                {
-                    previewObjectInstance.transform.position = _location; // Move preview object to raycast hit point
-                }
+                _location.y = Mathf.Round(_location.y); // Round Y position to the nearest integer
+                previewObjectInstance.transform.position = _location; // Move preview object to raycast hit point
             }
         }
     }
@@ -96,7 +106,13 @@ public class PlayerPoiSpawn : MonoBehaviour
     public void onClickStart()
     {
         tf_player = playerController.theCamera.transform; // Get the player camera transform
-        previewObjectInstance = Instantiate(PreviewPoi[slotNumber], tf_player.position + tf_player.forward * 5f, Quaternion.identity); // Instantiate the preview object
+        // Ensure only the local player sees their preview object
+        if (previewObjectInstance != null)
+        {
+            Destroy(previewObjectInstance); // Ensure previous preview object is destroyed
+        }
+        // Instantiate the preview object locally
+        previewObjectInstance = Instantiate(PreviewPoi[slotNumber], tf_player.position + tf_player.forward * 5f, Quaternion.identity);
         isPreViewActivated = true; // Activate preview
         canvasController.SetPoi = false;
         canvasController.Poi.SetActive(canvasController.SetPoi);
