@@ -371,8 +371,6 @@ public class PlayerController : MonoBehaviour
             Jumpforgived = false;
         }
 
-        myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
-
         if (Jumpforgived)
         {
             if (Time.time >= JumpforgivenessTime + 0.25f)
