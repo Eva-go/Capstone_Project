@@ -22,6 +22,7 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
                     points.Add(child);
                 }
             }
+
         }
 
         if (points.Count > 0)

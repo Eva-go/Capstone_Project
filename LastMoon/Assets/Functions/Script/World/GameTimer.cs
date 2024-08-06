@@ -47,11 +47,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
             int minutes = Mathf.FloorToInt(currentTime / 60f);
             int seconds = Mathf.FloorToInt(currentTime % 60f);
         }
-        if(GameValue.inside)
-        {
-            photonView.RPC("RPC_All_Inside_Time", RpcTarget.AllBuffered);
-            GameValue.inside = false;
-        }
+
         // f1 키를 누르면 시간 감소
         if (Input.GetKeyDown(KeyCode.F1))
         {

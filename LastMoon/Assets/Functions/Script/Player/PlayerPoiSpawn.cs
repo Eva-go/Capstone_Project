@@ -31,7 +31,7 @@ public class PlayerPoiSpawn : MonoBehaviour
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             playerController = GetComponent<PlayerController>(); // 플레이어 컨트롤러 가져오기
             GameObject poiLists = GameObject.FindWithTag("PoiList").transform.Find("PoiListBG").gameObject;
@@ -50,11 +50,21 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     void Update()
     {
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             if (isPreViewActivated)
             {
                 previewPositionUpdate(); // Update preview position
+
+                // Rotate the preview object
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    RotatePreview(90f); // Rotate 90 degrees clockwise
+                }
+                else if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    RotatePreview(-90f); // Rotate 90 degrees counterclockwise
+                }
             }
 
             if (Input.GetButtonDown("Fire1") && isPreViewActivated)
@@ -71,8 +81,13 @@ public class PlayerPoiSpawn : MonoBehaviour
             // Ensure hitInfo.point is valid
             if (hitInfo.collider != null)
             {
+                Vector3 roundedPosition = new Vector3(
+                    Mathf.Round(hitInfo.point.x),
+                    Mathf.Round(hitInfo.point.y),
+                    Mathf.Round(hitInfo.point.z)
+                );
                 // Instantiate the object using Photon Network for actual objects
-                PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, hitInfo.point, Quaternion.identity);
+                PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, roundedPosition, previewObjectInstance.transform.rotation);
                 if (previewObjectInstance != null)
                 {
                     Destroy(previewObjectInstance); // Destroy the preview object
@@ -91,9 +106,21 @@ public class PlayerPoiSpawn : MonoBehaviour
             if (previewObjectInstance != null)
             {
                 Vector3 _location = hitInfo.point;
-                _location.y = Mathf.Round(_location.y); // Round Y position to the nearest integer
+                // Round x, y, z positions to the nearest integer
+                _location.x = Mathf.Round(_location.x);
+                _location.y = Mathf.Round(_location.y);
+                _location.z = Mathf.Round(_location.z);
+
                 previewObjectInstance.transform.position = _location; // Move preview object to raycast hit point
             }
+        }
+    }
+
+    private void RotatePreview(float angle)
+    {
+        if (previewObjectInstance != null)
+        {
+            previewObjectInstance.transform.Rotate(Vector3.up, angle); // Rotate the preview object around the Y-axis
         }
     }
 

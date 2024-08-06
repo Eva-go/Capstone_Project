@@ -330,16 +330,12 @@ public class CanvasController : MonoBehaviourPunCallbacks
             money.SetActive(true);
             inventory.SetActive(false);
             Tab.SetActive(false);
-            GameValue.inside = true;
         }
     }
 
     void UpdateInsideActive()
     {
-        if (GameValue.insideUser < GameValue.MaxUser)
-        {
-            inside.SetActive(PlayerController.insideActive && !PlayerController.PreViewCam);
-        }
+        inside.SetActive(PlayerController.insideActive);
     }
 
     void UpdateInventoryActive()

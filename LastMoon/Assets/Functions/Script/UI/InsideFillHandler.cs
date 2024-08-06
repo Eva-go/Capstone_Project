@@ -31,8 +31,8 @@ public class InsideFillHandler : MonoBehaviour
             {
                 fillValue = 100;
                 PlayerController.Hp = 100;
-                PlayerController.PreViewCam = true;
-                GameValue.lived = true;
+                //GameValue.lived = true;
+                GameValue.inside = true;
             }
             FillCircleValue(fillValue);
         }
