@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4738343760245702194}
+  - component: {fileID: 876080383295585203}
   - component: {fileID: 1666849040754533448}
-  - component: {fileID: 5007695648083074423}
-  - component: {fileID: 2624699810752718684}
+  - component: {fileID: -7799797810209526418}
   - component: {fileID: 6562338014563016698}
   - component: {fileID: 8978934352491796153}
   - component: {fileID: 6955859011504677635}
@@ -40,6 +40,27 @@ Transform:
   - {fileID: 6129743198147313285}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &876080383295585203
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5371151852980298888}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2, z: 2}
+  m_Center: {x: 0, y: 1, z: 0.5}
 --- !u!95 &1666849040754533448
 Animator:
   serializedVersion: 5
@@ -61,28 +82,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &5007695648083074423
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5371151852980298888}
-  m_Material: {fileID: 13400000, guid: 99b9dd6b15f26324bbc4492698960cb4, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 1
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 2}
-  m_Center: {x: 0, y: 1, z: 0.5}
---- !u!114 &2624699810752718684
+--- !u!114 &-7799797810209526418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,18 +91,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 5371151852980298888}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 424c2af00fface845bd079ddfac69426, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pv: {fileID: 0}
+  itemData:
+    nodeName: []
+    nodeItemCount: 
+    mixName: []
+    mixItemCount: 
+  poiName: 
+  SetnodeCount: 0
   animator: {fileID: 1666849040754533448}
-  nodeItme: 0
-  mixItme: 0
-  nodeCount: 0
-  mixoldItem: 0
-  nodeNumber: 4
-  nodeName: Planks
-  Flame: {fileID: 6799002064394363967}
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,11 +406,6 @@ PrefabInstance:
 --- !u!4 &6129743198147313285 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
-  m_PrefabInstance: {fileID: 5952493767563057518}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6799002064394363967 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
   m_PrefabInstance: {fileID: 5952493767563057518}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6016501313618674049

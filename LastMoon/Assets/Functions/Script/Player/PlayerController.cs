@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     public float speeed = 0;
 
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
+    private string[] poiName = { "Poi_Distiller", "Poi_Dryer", "Poi_Filter", "Poi_Grinder", "Poi_Heater", "Poi_Smelter" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
@@ -558,100 +559,17 @@ public class PlayerController : MonoBehaviour
             PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
             if (targetPv != null)
             {
-                if (Physics.Raycast(ray, out hitInfo, 5f) && hitInfo.collider.CompareTag("Poi"))
+                PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
+                if (poiController != null)
                 {
-                    if (hitInfo.transform.gameObject.name == "Poi_Distiller(Clone)")
+                    for(int i=0; i<nodeItiems.Length;i++)
                     {
-                        Poi_DistillerController distillerController = hitInfo.collider.GetComponent<Poi_DistillerController>();
-                        if (distillerController != null)
+                        if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
                         {
-                            int nodeIndex = distillerController.nodeNumber;
-                            if (nodeItiems[nodeIndex] > 0)
-                            {
-                                nodeItiems[nodeIndex]--;
-                                targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
-                            }
+                            nodeItiems[i]--;
+                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName,i);
                         }
-                    }
-                    else if (hitInfo.transform.gameObject.name == "Poi_Dryer(Clone)")
-                    {
-                        Poi_DryerController distillerController = hitInfo.collider.GetComponent<Poi_DryerController>();
-                        if (distillerController != null)
-                        {
-                            if (distillerController != null)
-                            {
-                                int nodeIndex = distillerController.nodeNumber;
-                                if (nodeItiems[nodeIndex] > 0)
-                                {
-                                    nodeItiems[nodeIndex]--;
-                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
-                                }
-                            }
-                        }
-                    }
-                    else if (hitInfo.transform.gameObject.name == "Poi_Filter(Clone)")
-                    {
-                        Poi_FilterController distillerController = hitInfo.collider.GetComponent<Poi_FilterController>();
-                        if (distillerController != null)
-                        {
-                            if (distillerController != null)
-                            {
-                                int nodeIndex = distillerController.nodeNumber;
-                                if (nodeItiems[nodeIndex] > 0)
-                                {
-                                    nodeItiems[nodeIndex]--;
-                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
-                                }
-                            }
-                        }
-                    }
-                    else if (hitInfo.transform.gameObject.name == "Poi_Grinder(Clone)")
-                    {
-                        Poi_GrinderController distillerController = hitInfo.collider.GetComponent<Poi_GrinderController>();
-                        if (distillerController != null)
-                        {
-                            if (distillerController != null)
-                            {
-                                int nodeIndex = distillerController.nodeNumber;
-                                if (nodeItiems[nodeIndex] > 0)
-                                {
-                                    nodeItiems[nodeIndex]--;
-                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
-                                }
-                            }
-                        }
-                    }
-                    else if (hitInfo.transform.gameObject.name == "Poi_Heater(Clone)")
-                    {
-                        Poi_HeaterController distillerController = hitInfo.collider.GetComponent<Poi_HeaterController>();
-                        if (distillerController != null)
-                        {
-                            if (distillerController != null)
-                            {
-                                int nodeIndex = distillerController.nodeNumber;
-                                if (nodeItiems[nodeIndex] > 0)
-                                {
-                                    nodeItiems[nodeIndex]--;
-                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
-                                }
-                            }
-                        }
-                    }
-                    else if (hitInfo.transform.gameObject.name == "Poi_Smelter(Clone)")
-                    {
-                        Poi_SmelterController distillerController = hitInfo.collider.GetComponent<Poi_SmelterController>();
-                        if (distillerController != null)
-                        {
-                            if (distillerController != null)
-                            {
-                                int nodeIndex = distillerController.nodeNumber;
-                                if (nodeItiems[nodeIndex] > 0)
-                                {
-                                    nodeItiems[nodeIndex]--;
-                                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[nodeIndex], nodeName[nodeIndex], nickName);
-                                }
-                            }
-                        }
+                            
                     }
                 }
             }
@@ -724,107 +642,20 @@ public class PlayerController : MonoBehaviour
             }
             else if (hit.collider.CompareTag("Poi"))
             {
-                if (hit.transform.gameObject.name == "Poi_Distiller(Clone)")
+                PoiController poiController = hit.collider.GetComponent<PoiController>();
+                if(poiController != null)
                 {
-                    Poi_DistillerController distillerController = hit.collider.GetComponent<Poi_DistillerController>();
-                    if (distillerController != null)
+                    for(int i=0;i<6;i++)
                     {
-                        distillerController.animator.SetTrigger("isHit");
-                        for (int i = 0; i < nodeName.Length; i++)
+                        if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
                         {
-                            if (nodeName[i] == distillerController.nodeName)
-                            {
-                                int mixItemCount = distillerController.mixItme;
-
-                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                            }
+                            Debug.Log("¿¡·¯" + poiController.name); ;
+                            int mixItemCount = poiController.itemData.mixItemCount[i];
+                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
                         }
+                            
                     }
-                }
-                else if (hit.transform.gameObject.name == "Poi_Dryer(Clone)")
-                {
-                    Poi_DryerController distillerController = hit.collider.GetComponent<Poi_DryerController>();
-                    if (distillerController != null)
-                    {
-                        distillerController.animator.SetTrigger("isHit");
-                        for (int i = 0; i < nodeName.Length; i++)
-                        {
-                            if (nodeName[i] == distillerController.nodeName)
-                            {
-                                int mixItemCount = distillerController.mixItme;
-
-                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                            }
-                        }
-                    }
-                }
-                else if (hit.transform.gameObject.name == "Poi_Filter(Clone)")
-                {
-                    Poi_FilterController distillerController = hit.collider.GetComponent<Poi_FilterController>();
-                    if (distillerController != null)
-                    {
-                        distillerController.animator.SetTrigger("isHit");
-                        for (int i = 0; i < nodeName.Length; i++)
-                        {
-                            if (nodeName[i] == distillerController.nodeName)
-                            {
-                                int mixItemCount = distillerController.mixItme;
-
-                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                            }
-                        }
-                    }
-                }
-                else if (hit.transform.gameObject.name == "Poi_Grinder(Clone)")
-                {
-                    Poi_GrinderController distillerController = hit.collider.GetComponent<Poi_GrinderController>();
-                    if (distillerController != null)
-                    {
-                        distillerController.animator.SetTrigger("isHit");
-                        for (int i = 0; i < nodeName.Length; i++)
-                        {
-                            if (nodeName[i] == distillerController.nodeName)
-                            {
-                                int mixItemCount = distillerController.mixItme;
-
-                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                            }
-                        }
-                    }
-                }
-                else if (hit.transform.gameObject.name == "Poi_Heater(Clone)")
-                {
-                    Poi_HeaterController distillerController = hit.collider.GetComponent<Poi_HeaterController>();
-                    if (distillerController != null)
-                    {
-                        distillerController.animator.SetTrigger("isHit");
-                        for (int i = 0; i < nodeName.Length; i++)
-                        {
-                            if (nodeName[i] == distillerController.nodeName)
-                            {
-                                int mixItemCount = distillerController.mixItme;
-
-                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                            }
-                        }
-                    }
-                }
-                else if (hit.transform.gameObject.name == "Poi_Smelter(Clone)")
-                {
-                    Poi_SmelterController distillerController = hit.collider.GetComponent<Poi_SmelterController>();
-                    if (distillerController != null)
-                    {
-                        distillerController.animator.SetTrigger("isHit");
-                        for (int i = 0; i < nodeName.Length; i++)
-                        {
-                            if (nodeName[i] == distillerController.nodeName)
-                            {
-                                int mixItemCount = distillerController.mixItme;
-
-                                pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                            }
-                        }
-                    }
+                  
                 }
             }
         }

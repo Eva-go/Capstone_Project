@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3795354787717390030}
   - component: {fileID: 7083005281114047668}
-  - component: {fileID: 8591853647128780747}
   - component: {fileID: 5958132885881257880}
+  - component: {fileID: 7145209873969324846}
   - component: {fileID: 3053376901832024074}
   - component: {fileID: 8162647296820205431}
   - component: {fileID: -1948325961606883014}
@@ -61,27 +61,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8591853647128780747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4602713722304676980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47eb5b8c39deade44b84888b45160ceb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pv: {fileID: 0}
-  animator: {fileID: 7083005281114047668}
-  nodeItme: 0
-  mixItme: 0
-  nodeCount: 0
-  mixoldItem: 0
-  nodeNumber: 0
-  nodeName: clayware
-  Flame: {fileID: 6975962169922731435}
 --- !u!65 &5958132885881257880
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -103,6 +82,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 3, z: 3}
   m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &7145209873969324846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4602713722304676980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: {fileID: 0}
+  itemData:
+    nodeName: []
+    nodeItemCount: 
+    mixName: []
+    mixItemCount: 
+  poiName: 
+  SetnodeCount: 0
+  animator: {fileID: 7083005281114047668}
 --- !u!114 &3053376901832024074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,11 +407,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
---- !u!1 &6975962169922731435 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
-  m_PrefabInstance: {fileID: 7786426285294846202}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7747396487079716625 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1c27e739d00762944968c34ead4e5b31, type: 3}
