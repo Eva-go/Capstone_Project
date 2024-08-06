@@ -34,11 +34,6 @@ public class CircleFillHandler : MonoBehaviour
             }
         }
         HP.text = PlayerController.Hp.ToString("F0");
-
-        if (PlayerController.PreViewCam)
-        {
-            Hp.SetActive(false);
-        }
     }
 
     IEnumerator SmoothFill(float targetHp)

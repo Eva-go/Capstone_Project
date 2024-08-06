@@ -5,17 +5,30 @@ using Photon.Pun;
 
 public class PlayerSpawn : MonoBehaviourPunCallbacks
 {
-    public static Transform[] points;
-    public static int idx;
-    private GameObject player;
+    public static List<Transform> points = new List<Transform>(); // Transform 리스트로 수정
+    private static GameObject player;
 
-    void Start()
+    public static void OnBuildingCreated()
     {
-        points = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>(); // 스폰 포인트 가져오기
-        if (points.Length > 1)
+        GameObject[] buildings = GameObject.FindGameObjectsWithTag("APT");
+
+        foreach (GameObject building in buildings)
         {
-            idx = Random.Range(1, points.Length); // 랜덤 스폰 포인트 선택
-            SpawnPlayer();
+            Transform[] childTransforms = building.GetComponentsInChildren<Transform>();
+            foreach (Transform child in childTransforms)
+            {
+                if (child.name.Equals("Point"))
+                {
+                    points.Add(child);
+                }
+            }
+
+        }
+
+        if (points.Count > 0)
+        {
+            int idx = Random.Range(0, points.Count);
+            SpawnPlayer(idx);
         }
         else
         {
@@ -23,10 +36,9 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
         }
     }
 
-    public void SpawnPlayer()
+    public static void SpawnPlayer(int idx)
     {
-        Debug.Log("Spawning player at point: " + idx);
-        player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation, 0); // 플레이어 인스턴스화
+        player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
         if (player != null)
         {
             player.name = PhotonNetwork.LocalPlayer.NickName;
@@ -34,13 +46,14 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
             Transform LocalPlayer = player.transform.Find("LocalPlayer");
             Transform Tool = player.transform.Find("Player001");
             Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
-            OtherPlayer.gameObject.SetActive(false);
-            LocalPlayer.gameObject.SetActive(true);
-            Tool.gameObject.SetActive(false);
-            T_LocalPlayerTool.gameObject.SetActive(true);
+
+            if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
+            if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
+            if (Tool != null) Tool.gameObject.SetActive(false);
+            if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
 
             PhotonView photonView = player.GetComponent<PhotonView>();
-            photonView.TransferOwnership(PhotonNetwork.LocalPlayer); // 플레이어 소유권 설정
+            photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             Debug.Log("Player spawned and ownership transferred.");
         }
         else

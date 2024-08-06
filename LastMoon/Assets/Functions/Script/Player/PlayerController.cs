@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
     public static int getMoney;
     public GameObject insidegameObject;
     public static bool insideActive;
-    public static bool PreViewCam;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
@@ -108,7 +107,6 @@ public class PlayerController : MonoBehaviour
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
 
-        PreViewCam = false;
         GameValue.setMoney();
 
         originalCameraY = theCamera.transform.localPosition.y;
