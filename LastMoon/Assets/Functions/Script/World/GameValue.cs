@@ -99,7 +99,7 @@ public class GameValue : MonoBehaviourPunCallbacks
             nodeMoney += usernodeItem[i] * nodePrice[i];
             mixMoney += usermixItem[i] * mixPrice[i];
         }
-        Money_total = nodeMoney + mixMoney;
+        Money_total += nodeMoney + mixMoney;
     }
 
 

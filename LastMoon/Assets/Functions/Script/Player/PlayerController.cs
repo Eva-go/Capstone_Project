@@ -229,7 +229,8 @@ public class PlayerController : MonoBehaviour
         if (WaterDepth > 0.25f)
         {
             isUnderWater = true;
-            if (!isGrounded) isSwimming = true;
+            if (!isSwimming && !isGrounded) isSwimming = true;
+
             if (!isCrouching) myRigid.AddForce(Vector3.up * 5 * WaterDepth, ForceMode.Impulse);
             else myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
 
@@ -349,7 +350,7 @@ public class PlayerController : MonoBehaviour
         {
             myRigid.AddForce(Vector3.up, ForceMode.Impulse);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming || isSwimming))
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
         {
             if (!sfx_PlayerJump.isPlaying)
             {
@@ -906,61 +907,69 @@ public class PlayerController : MonoBehaviour
         if (GameValue.Axe == 1)
         {
             weapons[0] = weaponsSwitching[0];
+            /*
             if (GameValue.toolSwitching)
             {
                 selectedWeaponIndex = 1;
                 GameValue.toolSwitching = false;
             }
+            */
 
         }
         else if (GameValue.Axe == 2)
         {
             weapons[0] = weaponsSwitching[3];
+            /*
             if (GameValue.toolSwitching)
             {
                 selectedWeaponIndex = 1;
                 GameValue.toolSwitching = false;
             }
-
+            */
         }
         if (GameValue.Pickaxe == 1)
         {
             weapons[1] = weaponsSwitching[1];
+            /*
             if (GameValue.toolSwitching)
             {
                 selectedWeaponIndex = 2;
                 GameValue.toolSwitching = false;
             }
-
+            */
         }
         else if (GameValue.Pickaxe == 2)
         {
             weapons[1] = weaponsSwitching[4];
+            /*
             if (GameValue.toolSwitching)
             {
                 selectedWeaponIndex = 2;
                 GameValue.toolSwitching = false;
             }
-
+            */
         }
         if (GameValue.Shovel == 1)
         {
             weapons[2] = weaponsSwitching[2];
+            /*
             if (GameValue.toolSwitching)
             {
                 selectedWeaponIndex = 0;
                 GameValue.toolSwitching = false;
             }
-
+            */
         }
         else if (GameValue.Shovel == 2)
         {
             weapons[2] = weaponsSwitching[5];
+            /*
             if (GameValue.toolSwitching)
             {
                 selectedWeaponIndex = 0;
                 GameValue.toolSwitching = false;
             }
+            */
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
