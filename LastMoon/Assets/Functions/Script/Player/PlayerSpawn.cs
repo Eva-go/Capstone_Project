@@ -36,6 +36,7 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
         }
     }
 
+
     public static void SpawnPlayer(int idx)
     {
         player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
