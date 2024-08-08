@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 public class GameTimer : MonoBehaviourPunCallbacks
 {
     public RectTransform timerImage;
-    public Image timerImageFill;
+    public Image timerImageFill_LT;
+    public Image timerlmageFill_HT;
 
     private float totalTime;
     public float decreaseTime = 180f; // f1 누를 때 감소시킬 시간 (3분)
@@ -21,7 +22,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
         totalTime = 0.5f * (GameValue.Round - 1)*60f / GameValue.MaxRound*60f + (GameValue.setMaxtime * 60f);
         currentTime = totalTime;
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
-        timerImageFill.fillAmount = 1;
+        timerImageFill_LT.fillAmount = 1;
 
         PhotonNetwork.AutomaticallySyncScene = true;
         GameValue.WaveTimer = currentTime;
@@ -41,7 +42,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
             float ratio = currentTime / totalTime;
             float posX = Mathf.Lerp(finalPosX, initialPosX, ratio);
             timerImage.localPosition = new Vector3(posX, timerImage.localPosition.y, timerImage.localPosition.z);
-            timerImageFill.fillAmount = ratio;
+            timerImageFill_LT.fillAmount = ratio;
 
             // 타이머 텍스트 업데이트
             int minutes = Mathf.FloorToInt(currentTime / 60f);
@@ -53,7 +54,6 @@ public class GameTimer : MonoBehaviourPunCallbacks
         {
             photonView.RPC("RPC_DecreaseTime", RpcTarget.AllBuffered);
         }
-        RoundEnd();
     }
     [PunRPC]
     void RPC_All_Inside_Time()
@@ -71,30 +71,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
         // 타이머가 음수가 되지 않도록 보정
         if (currentTime < 0)
         {
-            currentTime = 0;
-        }
-    }
-
-    private void RoundEnd()
-    {
-        if (currentTime <= 0 && SceneManager.GetActiveScene().name == "Map" && !GameValue.RoundEnd)
-        {
-            if (GameValue.Round < GameValue.MaxRound)
-            {
-                GameValue.Round += 1;
-                GameValue.RoundEnd = true;
-                if (PhotonNetwork.IsMasterClient)
-                    PhotonNetwork.LoadLevel("Shop");
-                totalTime = GameValue.setMaxtime * 60;
-                GameValue.insideUser = 0;
-            }
-            else
-            {
-                GameValue.RoundEnd = true;
-
-                if (PhotonNetwork.IsMasterClient)
-                    PhotonNetwork.LoadLevel("GameEnding");
-            }
+            currentTime = totalTime;
         }
     }
 }
