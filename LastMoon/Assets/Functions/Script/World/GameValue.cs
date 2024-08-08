@@ -55,8 +55,6 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static int nodeMoney;
     public static int mixMoney;
 
-
-
     private void Awake()
     {
         networkManager = FindObjectOfType<NetworkManager>();
