@@ -50,6 +50,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                 int index = i; // 인덱스를 로컬 변수로 복사
                 Poi_BT[i].onClick.AddListener(() => SlotClick(index)); // 버튼 클릭 리스너 추가
             }
+
         }
     }
 
@@ -81,8 +82,10 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     public void Build(int _slotNumber)
     {
-        if (isPreViewActivated)
+        if (isPreViewActivated && _slotNumber >= 0 && _slotNumber < SpawnPoi.Length)
         {
+            Debug.Log("슬롯 넘버 Building with slot number: " + _slotNumber);
+            Debug.Log("슬롯 넘버 SpawnPoi slot: " + (SpawnPoi.Length > _slotNumber ? SpawnPoi[_slotNumber].name : "Index out of range"));
             // Ensure hitInfo.point is valid
             if (hitInfo.collider != null)
             {
@@ -91,8 +94,10 @@ public class PlayerPoiSpawn : MonoBehaviour
                     Mathf.Round(hitInfo.point.y),
                     Mathf.Round(hitInfo.point.z)
                 );
+
                 // Instantiate the object using Photon Network for actual objects
                 PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, roundedPosition, previewObjectInstance.transform.rotation);
+
                 if (previewObjectInstance != null)
                 {
                     Destroy(previewObjectInstance); // Destroy the preview object
@@ -100,6 +105,10 @@ public class PlayerPoiSpawn : MonoBehaviour
                 isPreViewActivated = false; // Deactivate preview
                 previewObjectInstance = null;
             }
+        }
+        else
+        {
+            Debug.LogWarning("슬롯넘버 slot number: " + _slotNumber);
         }
     }
 
@@ -170,6 +179,7 @@ public class PlayerPoiSpawn : MonoBehaviour
         if (previewObjectInstance != null)
         {
             previewObjectInstance.transform.Rotate(Vector3.up, angle); // Rotate the preview object around the Y-axis
+
         }
     }
 

@@ -188,6 +188,11 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("πÕΩ∫ æ∆¿Ã≈€ " + mixItiems[i]);
                 }
             }
+            //test
+            if(Input.GetKeyDown(KeyCode.X))
+            {
+                GameValue.test = !GameValue.test;
+            }
             if (Hp <= 0)
             {
                 Die();

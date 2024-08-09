@@ -3,34 +3,45 @@ using System.Collections;
 
 public class PoolManager : MonoBehaviour
 {
-    public ObjectPool objectPool;
-    public Vector3 moveDirection = Vector3.right; // 이동 방향
-    public float moveDistance = 10f; // 이동 거리
+    public ObjectPool objectPool; // 물방울 풀
+    public Transform spawnPoint; // 물방울이 떨어질 위치
 
-    private void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.X))
+        if (objectPool == null)
         {
-            // 스페이스바를 누르면 풀에서 오브젝트를 가져옴
-            GameObject obj = objectPool.GetObject();
-            obj.transform.position = Vector3.zero; // 시작 위치 설정
-            StartCoroutine(MoveObject(obj));
+            Debug.LogError("objectPool is not assigned in the PoolManager script.");
+            return;
         }
+
+        // 주기적으로 물방울 떨어뜨리기
+        StartCoroutine(DropWaterDrops());
     }
 
-    private IEnumerator MoveObject(GameObject obj)
+    //private IEnumerator DropWaterDrops()
+    //{
+    //    while (true)
+    //    {
+    //        GameObject objectPools = objectPool.GetObject();
+    //        if (objectPools != null)
+    //        {
+    //            objectPools.transform.position = spawnPoint.position;
+    //            objectPools.transform.rotation = Quaternion.identity; // 기본 회전
+    //            objectPools.SetActive(true);
+    //
+    //            // 물방울이 떨어진 후 풀에 반환
+    //            yield return new WaitForSeconds(2f); // 물방울이 2초 동안 보이게 한다고 가정
+    //            objectPool.ReturnObject(objectPools);
+    //        }
+    //
+    //        yield return new WaitForSeconds(2f);
+    //    }
+    //}
+    private IEnumerator DropWaterDrops()
     {
-        Vector3 startPosition = obj.transform.position;
-        Vector3 endPosition = startPosition + moveDirection.normalized * moveDistance;
-
-        while (Vector3.Distance(obj.transform.position, endPosition) > 0.1f)
+        while (false) // 무한 루프를 잠시 비활성화
         {
-            obj.transform.position = Vector3.MoveTowards(obj.transform.position, endPosition, Time.deltaTime * 5f); // 5f는 이동 속도
             yield return null;
         }
-
-        // 오브젝트를 일정 시간 후에 반환
-        yield return new WaitForSeconds(2f);
-        objectPool.ReturnObject(obj);
     }
 }

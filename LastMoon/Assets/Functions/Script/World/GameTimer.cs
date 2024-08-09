@@ -95,10 +95,8 @@ public class GameTimer : MonoBehaviourPunCallbacks
         {
             tempImage = new GameObject("TempImage").AddComponent<Image>();
         }
-
         switchingTime = !switchingTime;
         currentTime = totalTime;
-
         if (switchingTime)
         {
             // Swap sprites
