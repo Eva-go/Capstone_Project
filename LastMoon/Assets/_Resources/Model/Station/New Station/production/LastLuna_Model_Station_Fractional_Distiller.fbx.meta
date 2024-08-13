@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8d01ad90fd1502a45b80a856fc223d20
+guid: 708b384fe64e6234397e0199f595b2f4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -32,12 +32,32 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Content003
+    second: {fileID: -876546973899608171, guid: b350ba62f1fb0a8489bc5f64d5a8796f, type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Content004
+    second: {fileID: -876546973899608171, guid: b350ba62f1fb0a8489bc5f64d5a8796f, type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Content005
+    second: {fileID: -876546973899608171, guid: b350ba62f1fb0a8489bc5f64d5a8796f, type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Content_Fuel001
-    second: {fileID: 2100000, guid: 64323063d7e5356428a8060f5872729a, type: 2}
+    second: {fileID: 2100000, guid: ae2efbc95f4ed1e4ba20558501fb5612, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Coolent001
+    second: {fileID: -876546973899608171, guid: b350ba62f1fb0a8489bc5f64d5a8796f, type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Coolent002
     second: {fileID: -876546973899608171, guid: b350ba62f1fb0a8489bc5f64d5a8796f, type: 3}
   - first:
       type: UnityEngine:Material
@@ -49,11 +69,6 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Mat_Base
     second: {fileID: 2100000, guid: 0fd23ace7f8edda49b14398d21d41235, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Mat_Base 5
-    second: {fileID: -1799695139444642488, guid: 13e89913f080f3b488796d6115135b55, type: 3}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -73,6 +88,11 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Mat_Const004
+    second: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Const005
     second: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
   - first:
       type: UnityEngine:Material
@@ -179,7 +199,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0

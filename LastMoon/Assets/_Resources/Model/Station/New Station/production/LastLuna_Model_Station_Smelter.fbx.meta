@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 06a0170bdb45fee4f98e6f3ee6ba0065
+guid: 934f170a720cf10408df7f106250697a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,8 +7,38 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Add_Flame
+    second: {fileID: 2100000, guid: c8fc6ed180714f24db62647d6c6f49d7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Add_Flame_Shell
+    second: {fileID: 2100000, guid: 27ba4c4e38fb8fa44b0f0dd81a76d6e0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Add_Wick
+    second: {fileID: 2100000, guid: b953cd7b773edd14cb335a06f8e486e5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Add_Wire
+    second: {fileID: 2100000, guid: 69e69d15803d52d498d4564a6a6f7c4a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Content001
     second: {fileID: -876546973899608171, guid: b350ba62f1fb0a8489bc5f64d5a8796f, type: 3}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Content_Fuel001
+    second: {fileID: 2100000, guid: ae2efbc95f4ed1e4ba20558501fb5612, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Aux
+    second: {fileID: 2100000, guid: 57063e1f94de6f2489946555b477fdbc, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -18,7 +48,22 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Mat_Const001
+    second: {fileID: 2100000, guid: 4e8cf0592f2721343a8a646873e3824c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Const002
     second: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Const003
+    second: {fileID: 2100000, guid: 4e8cf0592f2721343a8a646873e3824c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Mat_Fix
+    second: {fileID: 2100000, guid: 54800b56a11cf5c4697ad12143298ae8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -114,7 +159,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0

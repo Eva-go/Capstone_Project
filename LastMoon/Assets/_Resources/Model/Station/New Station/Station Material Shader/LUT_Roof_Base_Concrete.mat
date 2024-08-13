@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6323286995109914814
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -7,12 +20,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SkyBox
-  m_Shader: {fileID: -6465566751694194690, guid: 0d3f5f9512ef15b47a0f84a63d62fa9c, type: 3}
+  m_Name: LUT_Roof_Base_Concrete
+  m_Shader: {fileID: -6465566751694194690, guid: 8e12386977c632648b6fa24405b2fc40, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _MAIN_LIGHT_SHADOWS_CASCADE
+  - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -26,11 +40,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dffe77dd9a68c70489a1d3f39e96bab7, type: 3}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _Base_Texture:
+        m_Texture: {fileID: 2800000, guid: 8b6c897bb9495bf44bd376656b914ba1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 22958789b839b7c4b9f639ff91c25dd1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -49,7 +67,43 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Emission_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HOLS_Map:
+        m_Texture: {fileID: 2800000, guid: 23979fc71c4d27e428789fafb420eee4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _HOST_Map:
+        m_Texture: {fileID: 2800000, guid: 0755ca2cb8cc51741823adb01f4ae67f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Height_Map:
+        m_Texture: {fileID: 2800000, guid: fa55abff61030d14d8e723e1e2b21b8c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LUT_Mask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LU_Mask_Map:
+        m_Texture: {fileID: 2800000, guid: f6fa7e44d59b9974f9890f1a7abbd3b5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Look_up_Mask_Map:
+        m_Texture: {fileID: 2800000, guid: f6fa7e44d59b9974f9890f1a7abbd3b5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Look_up_Texture:
+        m_Texture: {fileID: 2800000, guid: 4fb2be00a6401984ea6b6db5428b928d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 2, y: 2}
+        m_Offset: {x: 0, y: 0}
+    - _Metalic_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -57,47 +111,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Moon:
-        m_Texture: {fileID: 2800000, guid: 5d397be192e32c04cb8257d23db7a501, type: 3}
+    - _Normal_Map:
+        m_Texture: {fileID: 2800000, guid: 0ca05b86b1fb98644aa09769451ccf38, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d6df5a53c33e9d945a7c1c5e04134820, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Ocean_Calm:
-        m_Texture: {fileID: 2800000, guid: 8d5f3caf2064a134ea3d8843a7cf625d, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Ocean_Dark:
-        m_Texture: {fileID: 2800000, guid: 4a035d68f84ea2d4bb3826eb3afa4ccf, type: 3}
+    - _Occlusion_Map:
+        m_Texture: {fileID: 2800000, guid: fa55abff61030d14d8e723e1e2b21b8c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: d6df5a53c33e9d945a7c1c5e04134820, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_3f4900087ff74187a57930e992757cac_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 1a32a4c47f9dc6d40959e1363e89e9e1, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_416d7ebe203444d0a38f33c820c092eb_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 94d2177bcb388d544bcca07251b80ca6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_a88a9741920e4556b3302fd1e553ea34_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: acd63a77c0681b843a67bdd3c7d70f4b, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Sky_Day:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Sky_Night:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Sky_Twilight:
+    - _Smoothness_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -105,35 +135,11 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Sun:
-        m_Texture: {fileID: 2800000, guid: 589cd4f4f27580a4f8600f24d6edc27c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _var3SOFragment_cab130399aa347b4978afacc5c5c8ba7_Caustics_1196019685_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 9e9a9159044cdf44187f07fabc7123d6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _var3SOFragment_cab130399aa347b4978afacc5c5c8ba7_LookupTexture_369091178_Texture2D:
+    - _Specular_Map:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _var3SOFragment_cab130399aa347b4978afacc5c5c8ba7_NormalMap_1914005274_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 3690d7d0a7f2f3b4888cf399d7855519, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _var3SOFragment_cab130399aa347b4978afacc5c5c8ba7_SubLUT_2086176201_Texture2D:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _var3SOFragment_d6bf4df19460413ab539eb97790437fc_Caustics_1196019685_Texture2D:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _var3SOFragment_d6bf4df19460413ab539eb97790437fc_NormalMap_1914005274_Texture2D:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _var3SOfNormalUnpacker_67a849c1eac04b998195d5df3a6e54e1_NormalMap_1914005274_Texture2D:
+    - _Sub_LUTA:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -153,81 +159,86 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _Ambient_Strength: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BumpScale: 1
+    - _Brghtness_Limit: 1
+    - _BumpScale: 0.5
     - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Cloud_Cutoff: 25
-    - _Cloud_Distance: 0.75
-    - _Cloud_Edge: 0.005
-    - _Cloud_Scale: 1
-    - _Cloud_Size: 0.375
-    - _Cloud_Transparency: 0.5
     - _Cull: 2
     - _Cutoff: 0.5
-    - _Day_Night: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _Emission_Map_Strength: 0
+    - _Emission_Strength: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Horizon: 0
+    - _Height_Steps: 8
+    - _Height_Strength: 0.02
+    - _Look_Up_Mask_Value: 1
     - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _Metalic_Strength: 0
     - _Metallic: 0
-    - _Moon_Orbit: 2
-    - _Moon_Scale: 12.5
-    - _OcclusionStrength: 1
-    - _Ocean_Multiply: 64
-    - _Ocean_Power: 1
-    - _Ocean_Step: 3
-    - _Ocean_Value: -0.25
-    - _Parallax: 0.005
+    - _Normal_Map_Strength: 1
+    - _Normal_Strength: 1
+    - _OcclusionStrength: 0.5
+    - _Occlusion_Emmision_Map_Strength: 1
+    - _Occlusion_Map_Strength: 1
+    - _Occlusion_Strength: 1
+    - _Parallax: 0.04
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _RL_Brightness: 0
+    - _RL_Limit: 0.5
+    - _RL_Power: 3
+    - _RL_Shadow_Power: 1
+    - _RL_Strength: 0
+    - _RL_Texture_Brightness: 1.5
+    - _RL_With_Texture: 1
     - _ReceiveShadows: 1
-    - _Sky_Multiply: 64
-    - _Sky_Power: 1
-    - _Sky_Step: 3
-    - _Sky_Value: -0.125
-    - _Smoothness: 0.5
+    - _SHADOWS_SOFT: 1
+    - _Shadow_Ambient_Strength: 4
+    - _Shadow_Power: 1.5
+    - _Shadow_Step: 4
+    - _Shadow_Strength: 1
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
+    - _Smoothness_Map_Strength: 0
+    - _Smoothness_Strength: 0
     - _SpecularHighlights: 1
+    - _Specular_Brightness: 1
+    - _Specular_Map_Strength: 1
+    - _Specular_Multiplier: 0
+    - _Specular_Power: 0.5
+    - _Specular_Step: 4
+    - _Specular_Strength: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Strength: 0.16234681
-    - _Sun_Scale: 12.5
     - _Surface: 0
-    - _WorkflowMode: 1
+    - _Texture_Specular: 0
+    - _Transparency: 1
+    - _Use_Base_Texture: 1
+    - _Use_LU_Specular: 1
+    - _Use_Look_up_Texture: 1
+    - _Use_Normal_Ambient: 1
+    - _WorkflowMode: 0
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
-    - _monorbit: 1
-    - _rotate: 0
+    - _transparency: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DirRGBTEST: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Moon_Position: {r: -1, g: 0.5, b: 0, a: 0}
-    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _Sun_Position: {r: -1, g: 0.5, b: 0, a: 0}
-    - _moontest: {r: 0, g: 0, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _RL_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Specular_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Tiling: {r: 30, g: 30, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &2695386227477551037
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 7
