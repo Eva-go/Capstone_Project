@@ -45,7 +45,6 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static int MaxPlayer;
     public static int PlayerID;
 
-
     public static int[] usernodeItem = new int[6];
     public static int[] usermixItem = new int[6];
 
@@ -54,6 +53,10 @@ public class GameValue : MonoBehaviourPunCallbacks
 
     public static int nodeMoney;
     public static int mixMoney;
+
+    //test
+    public static bool test;
+
 
     private void Awake()
     {
@@ -65,6 +68,7 @@ public class GameValue : MonoBehaviourPunCallbacks
         nodeMoney = 0;
         mixMoney = 0;
         Round = 1;
+        test = false;
     }
 
 

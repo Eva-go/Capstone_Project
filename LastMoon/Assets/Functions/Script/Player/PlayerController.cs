@@ -188,6 +188,12 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("πÕΩ∫ æ∆¿Ã≈€ " + mixItiems[i]);
                 }
             }
+            //objectpooler test keycode
+            if(Input.GetKeyDown(KeyCode.X))
+            {
+                GameObject testObjectPool = ObjectPooler.SpawnFromPool("Sphere", Vector2.zero);
+                testObjectPool.GetComponent<TestPooler>().Setup(Color.red);
+            }
             if (Hp <= 0)
             {
                 Die();
