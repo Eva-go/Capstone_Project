@@ -20,6 +20,7 @@ public class ScriptableObject_Station_Editor : Editor
         GUILayout.Label("Input");
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("InputCount"), true);
 
         Texture texture = null;
 
@@ -63,6 +64,7 @@ public class ScriptableObject_Station_Editor : Editor
         GUILayout.Label("Output");
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("OutputCount"), true);
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();

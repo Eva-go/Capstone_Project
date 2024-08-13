@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 DownCenter;
 
     public AudioSource sfx_PlayerHit, sfx_PlayerJump, sfx_PlayerWalk, sfx_PlayerSwing, sfx_PlayerDrown;
+    public GameObject UnderwaterPPSVolume, DeathPPSVolume;
+
 
     private RaycastHit hitInfo;
 
@@ -197,6 +199,11 @@ public class PlayerController : MonoBehaviour
             if (Hp <= 0)
             {
                 Die();
+                DeathPPSVolume.SetActive(true);
+            }
+            else if (DeathPPSVolume.activeSelf)
+            {
+                DeathPPSVolume.SetActive(false);
             }
         }
         else
@@ -230,6 +237,18 @@ public class PlayerController : MonoBehaviour
         float waveHeight, WaterDepth;
         waveHeight = wavetransform.GetWaveHeight(transform.position.x * 0.1f, transform.position.z * 0.1f, wavetransform.waveStrength);
         WaterDepth = waveHeight + wavetransform.waveY - transform.position.y;
+
+        if (WaterDepth > 1.8f)
+        {
+            if (!UnderwaterPPSVolume.activeSelf)
+            {
+                UnderwaterPPSVolume.SetActive(true);
+            }
+        }
+        else
+        {
+            UnderwaterPPSVolume.SetActive(false);
+        }
 
         if (WaterDepth > 0.25f)
         {
@@ -353,7 +372,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space) && isSwimming)
         {
-            myRigid.AddForce(Vector3.up, ForceMode.Impulse);
+            myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
         }
         if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
         {

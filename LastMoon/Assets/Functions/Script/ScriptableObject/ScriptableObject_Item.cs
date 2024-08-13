@@ -15,4 +15,5 @@ public class ScriptableObject_Item : ScriptableObject
     public GameObject ItemObject;
 
     public int Price;
+    public int MaxCount;
 }

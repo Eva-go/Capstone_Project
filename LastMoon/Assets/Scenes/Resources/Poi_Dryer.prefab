@@ -81,6 +81,24 @@ MonoBehaviour:
   poiName: 
   SetnodeCount: 0
   animator: {fileID: 590244116874518604}
+  StationBases:
+  - {fileID: 4395175976066511117}
+  StationFixes: []
+  StationAuxes: []
+  StationCons:
+  - Count:
+    - {fileID: 2428669234594302716}
+  StationBaseMat: {fileID: 0}
+  StationAuxMat: {fileID: 0}
+  StationFixMat: {fileID: 0}
+  StationConMat: []
+  InputSlot: []
+  OutputSlot: []
+  FuelSlot: []
+  FuelWick: []
+  Obj_Coolent: []
+  Obj_Temperture: []
+  SelectableRecipies: []
 --- !u!65 &4611769558836440013
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -399,8 +417,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 789bef70f6ea6a74682971ea80bd6e88, type: 3}
+--- !u!1 &2428669234594302716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1264378309008066208, guid: 789bef70f6ea6a74682971ea80bd6e88, type: 3}
+  m_PrefabInstance: {fileID: 3476678386989616220}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4014147558970895287 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 789bef70f6ea6a74682971ea80bd6e88, type: 3}
+  m_PrefabInstance: {fileID: 3476678386989616220}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4395175976066511117 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 789bef70f6ea6a74682971ea80bd6e88, type: 3}
   m_PrefabInstance: {fileID: 3476678386989616220}
   m_PrefabAsset: {fileID: 0}
