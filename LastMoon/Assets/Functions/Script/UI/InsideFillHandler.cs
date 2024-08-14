@@ -2,48 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+
 public class InsideFillHandler : MonoBehaviour
 {
     private float fillTime = 0.0f;
     private float fillDuration = 5.0f;
-    private float fillValue = 0;
+    public  static float fillValue = 0;
+    private bool hasFilled = false; // Added to track if fillValue reached 100
+
     public Image InsideFillImage;
-    public  RectTransform handlerEdgeImage;
-    public  RectTransform fillHandler;
+    public RectTransform handlerEdgeImage;
+    public RectTransform fillHandler;
     public GameObject insidegameObject;
 
-    // Start is called before the first frame update
+    public PlayerController player;
+    public PhotonView pv;
+
     void Start()
     {
+        pv = GetComponent<PhotonView>();
+        if (pv.IsMine)
+        {
+            player = GameObject.Find(GameValue.nickName).GetComponent<PlayerController>();
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(PlayerController.insideActive)
+        if (PlayerController.insideActive)
         {
             fillTime += Time.deltaTime;
             if (fillValue < 100)
             {
-                fillValue += fillTime / 100*25;
+                fillValue += fillTime / 100 * 25;
             }
-            else if(fillValue >=100)
+            else if (fillValue >= 100)
             {
-                fillValue = 100;
-                PlayerController.Hp = 100;
-                //GameValue.lived = true;
-                GameValue.inside = true;
+                if (!hasFilled && pv.IsMine)
+                {
+                    fillValue = 100;
+                    PlayerController.Hp = 100;
+                    //player.inside++;
+                    //player.inside = player.inside % 4;
+                    //player.oldpos = true;
+                    hasFilled = true; // Set flag to true to prevent multiple updates
+                }
             }
             FillCircleValue(fillValue);
         }
-        else if(!PlayerController.insideActive)
+        else
         {
             fillTime = 0;
             fillValue = 0;
+            hasFilled = false; // Reset flag when not inside
             FillCircleValue(fillValue);
         }
     }
-    public  void FillCircleValue(float value)
+
+    public void FillCircleValue(float value)
     {
         float fillAmount = (value / 100.0f);
         InsideFillImage.fillAmount = fillAmount;

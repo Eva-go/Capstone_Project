@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -84,6 +85,19 @@ public class PlayerController : MonoBehaviour
     private Vector3 networkPosition;
     private Quaternion networkRotation;
 
+
+    //리스폰 관련 변수
+    private static GameObject player;
+    public Transform oldTransform;
+    public Transform AptTransform;
+
+    //아파트 진입변수
+    public int inside;
+    public bool keydowns;
+    public PlayerAPTPlaneSpawn PlayerAPT;
+    private bool oldPosState = false; // 상태를 추적하기 위한 변수
+    private bool insideState = false; // 상태를 추적하기 위한 변수
+    Transform parentTransform;
     public void InvokeInventoryChanged()
     {
         OnInventoryChanged?.Invoke();
@@ -92,15 +106,18 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         pv = GetComponent<PhotonView>();
-
-        myRigid = GetComponent<Rigidbody>();
-        myCollider = GetComponent<CapsuleCollider>();
-
         if (pv.IsMine)
         {
+            myRigid = GetComponent<Rigidbody>();
+            myCollider = GetComponent<CapsuleCollider>();
+            PlayerAPT = GetComponent<PlayerAPTPlaneSpawn>();
             cam.SetActive(true);
             LocalPlayerManger.Instance.RegisterLocalPlayer(this);
             CanvasController.Instance.RegisterPlayerController(this);
+            oldTransform = gameObject.transform;
+            AptTransform = gameObject.transform;
+            inside = 0;
+            keydowns = false;
         }
 
         nickName = this.gameObject.name;
@@ -155,7 +172,6 @@ public class PlayerController : MonoBehaviour
             Switching();
             WaveTic();
             Sell();
-
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Hp = 100;
@@ -198,13 +214,42 @@ public class PlayerController : MonoBehaviour
             {
                 Die();
             }
-        }
-        else
-        {
-            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * positionLerpSpeed);
-            transform.rotation = Quaternion.Lerp(transform.rotation, networkRotation, Time.deltaTime * rotationLerpSpeed);
+            if (insideActive && InsideFillHandler.fillValue >= 100)
+            {
+                inside++;
+                inside = inside % 2;
+                InsideUpdate();
+                InsideFillHandler.fillValue = 0;
+            }
         }
     }
+
+    private void LateUpdate()
+    {
+       
+    }
+
+    public void InsideUpdate()
+    {
+        switch(inside)
+        {
+            case 0:
+                keydowns = true;
+                gameObject.transform.position = parentTransform.position;
+                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
+                Debug.Log("케이스 값0" + inside);
+                break;
+            case 1:
+                keydowns = true;
+                Debug.Log("케이스 값1" + PlayerAPT.playerPoint);
+                gameObject.transform.position = PlayerAPT.playerPoint;
+                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
+                Debug.Log("케이스 값1" + inside);
+                break;
+        }
+    }
+
+
 
     public void Sell()
     {
@@ -290,10 +335,48 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine && !live)
         {
-            Transform[] spawnPoints = GameObject.Find("SpawnPoint").GetComponentsInChildren<Transform>();
-            RespawnManager.Instance.RespawnPlayer(spawnPoints);
-            LocalPlayerManger.Instance.RegisterLocalPlayer(this);
-            CanvasController.Instance.RegisterPlayerController(this);
+            Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+            List<Transform> directChildren = new List<Transform>();
+
+            for (int i = 0; i < parentTransform.childCount; i++)
+            {
+                Transform child = parentTransform.GetChild(i);
+                directChildren.Add(child);
+            }
+
+            if (directChildren.Count > 0)
+            {
+                
+                int idx = UnityEngine.Random.Range(0, directChildren.Count);
+                Debug.Log("스폰포인트: " + idx);
+                SpawnPlayer(idx, directChildren.ToArray());
+            }
+            else
+            {
+                Debug.LogError("스폰 포인트가 없습니다.");
+            }
+        }
+    }
+
+    public void SpawnPlayer(int idx, Transform[] points)
+    {
+        player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
+        if (player != null)
+        {
+            player.name = PhotonNetwork.LocalPlayer.NickName;
+            Transform OtherPlayer = player.transform.Find("OtherPlayer");
+            Transform LocalPlayer = player.transform.Find("LocalPlayer");
+            Transform Tool = player.transform.Find("Player001");
+            Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
+
+            if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
+            if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
+            if (Tool != null) Tool.gameObject.SetActive(false);
+            if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
+
+            PhotonView photonView = player.GetComponent<PhotonView>();
+            photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+            Debug.Log("Player spawned and ownership transferred.");
         }
     }
 
@@ -551,14 +634,30 @@ public class PlayerController : MonoBehaviour
     private void Interaction()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-        if (Input.GetKey(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
+
+        if(Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
+        {
+            if (hitInfo.collider.CompareTag("APT"))
+            {
+                parentTransform = hitInfo.collider.transform.parent;
+            }
+
+        }
+        if (Input.GetKey(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT"&&!keydowns)
+        {
+            insideActive = true;
+        }
+        else if (Input.GetKey(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Door"&&!keydowns)
         {
             insideActive = true;
         }
         else
         {
             insideActive = false;
+            keydowns = false;
         }
+
+       
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
