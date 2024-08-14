@@ -1626,6 +1626,11 @@ MonoBehaviour:
   nodeCounts: 000000000000000000000000000000000000000000000000
   positionLerpSpeed: 8
   rotationLerpSpeed: 8
+  oldTransform: {fileID: 0}
+  AptTransform: {fileID: 0}
+  inside: 0
+  keydowns: 0
+  PlayerAPT: {fileID: 0}
 --- !u!114 &4323000284422157701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1708,7 +1713,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebabdc6c3967e654388ad3e567e57665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   APTPlane: {fileID: 6595283741257893453, guid: 80d431a8d5ca53e4b8a9604fbc67857c, type: 3}
+  playerPoint: {x: 0, y: 0, z: 0}
+  playerrotation: {x: 0, y: 0, z: 0}
 --- !u!114 &4093038744633329122
 MonoBehaviour:
   m_ObjectHideFlags: 0

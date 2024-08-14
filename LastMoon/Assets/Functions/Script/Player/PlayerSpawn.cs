@@ -5,13 +5,17 @@ using Photon.Pun;
 
 public class PlayerSpawn : MonoBehaviourPunCallbacks
 {
-    public static List<Transform> points = new List<Transform>(); // Transform 리스트로 수정
+    //public static List<Transform> points = new List<Transform>(); // Transform 리스트로 수정
     private static GameObject player;
 
-    public static void OnBuildingCreated()
+    private void Start()
     {
-        GameObject[] buildings = GameObject.FindGameObjectsWithTag("APT");
-
+        OnBuildingCreated();
+    }
+    public  void OnBuildingCreated()
+    {
+        /*GameObject[] buildings = GameObject.FindGameObjectsWithTag("APT");
+        
         foreach (GameObject building in buildings)
         {
             Transform[] childTransforms = building.GetComponentsInChildren<Transform>();
@@ -22,10 +26,9 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
                     points.Add(child);
                 }
             }
-
+        
         }
-
-        if (points.Count > 0)
+         if (points.Count > 0)
         {
             int idx = Random.Range(0, points.Count);
             SpawnPlayer(idx);
@@ -33,11 +36,30 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
         else
         {
             Debug.LogError("스폰 포인트가 없거나 충분하지 않습니다.");
+        }*/
+        Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+        List<Transform> directChildren = new List<Transform>();
+
+        for (int i = 0; i < parentTransform.childCount; i++)
+        {
+            Transform child = parentTransform.GetChild(i);
+            directChildren.Add(child);
+        }
+
+        if (directChildren.Count > 0)
+        {
+            int idx = Random.Range(0, directChildren.Count);
+            Debug.Log("스폰포인트: " + idx);
+            SpawnPlayer(idx, directChildren.ToArray());
+        }
+        else
+        {
+            Debug.LogError("스폰 포인트가 없습니다.");
         }
     }
 
 
-    public static void SpawnPlayer(int idx)
+    public void SpawnPlayer(int idx,Transform[] points)
     {
         player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
         if (player != null)
@@ -56,10 +78,6 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
             PhotonView photonView = player.GetComponent<PhotonView>();
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             Debug.Log("Player spawned and ownership transferred.");
-        }
-        else
-        {
-            Debug.LogError("Failed to instantiate player.");
         }
     }
 }
