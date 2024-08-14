@@ -34,7 +34,7 @@ public class Wavetransform : MonoBehaviour
         //정규화
         normalizedTime = 1.0f - (GameValue.WaveTimer / GameValue.WaveTimerMax);
         //보간
-        waveStrength = Mathf.Lerp(0.0f, 2.0f + GameValue.Round, normalizedTime);
+        waveStrength = Mathf.Lerp(GameValue.Round - 1.0f, 2.0f + GameValue.Round, normalizedTime);
 
         //매테리얼 인스턴스 값 변경
         propertyBlock.SetFloat("_Strength", waveStrength);
