@@ -43,9 +43,6 @@ public class InsideFillHandler : MonoBehaviour
                 {
                     fillValue = 100;
                     PlayerController.Hp = 100;
-                    //player.inside++;
-                    //player.inside = player.inside % 4;
-                    //player.oldpos = true;
                     hasFilled = true; // Set flag to true to prevent multiple updates
                 }
             }
