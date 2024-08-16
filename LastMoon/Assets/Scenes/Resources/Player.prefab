@@ -1440,6 +1440,7 @@ GameObject:
   - component: {fileID: 4093038744633329134}
   - component: {fileID: 4323000284422157701}
   - component: {fileID: 725141506427028762}
+  - component: {fileID: 3663701274648941274}
   - component: {fileID: 4093038744633329122}
   - component: {fileID: 4093038744633329123}
   - component: {fileID: 4093038744633329124}
@@ -1654,7 +1655,11 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Poi_BT:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1679,6 +1684,8 @@ MonoBehaviour:
   - {fileID: 6583875056677868264, guid: 68b009705a5ed154f94f640f4a3317e8, type: 3}
   - {fileID: 366367957362793796, guid: 945ebfa6b0be2fb44a5216aba940fbc3, type: 3}
   - {fileID: 7058263592653485094, guid: ba7ab096de0f27c48966fadc0df0475b, type: 3}
+  - {fileID: 7058263592653485094, guid: ba7ab096de0f27c48966fadc0df0475b, type: 3}
+  - {fileID: 7058263592653485094, guid: ba7ab096de0f27c48966fadc0df0475b, type: 3}
   PreviewPoi_red:
   - {fileID: 4602713722304676980, guid: 74b51c08a73e6a24b97342c33c567c42, type: 3}
   - {fileID: 6168536886686802060, guid: 339dda61583ba2041b28b977f0594784, type: 3}
@@ -1689,6 +1696,8 @@ MonoBehaviour:
   - {fileID: 7058263592653485094, guid: 3eddab1b6a2a2d141b6acace7849a8d5, type: 3}
   - {fileID: 6583875056677868264, guid: 6d91011f1f6da7041bdc4337a840c86e, type: 3}
   - {fileID: 366367957362793796, guid: b6e8001fc342d8a4a92ffb761c84528e, type: 3}
+  - {fileID: 3079423493778808962, guid: 149ab4d860507214692cd3cadaf3f042, type: 3}
+  - {fileID: 3079423493778808962, guid: 149ab4d860507214692cd3cadaf3f042, type: 3}
   - {fileID: 3079423493778808962, guid: 149ab4d860507214692cd3cadaf3f042, type: 3}
   SpawnPoi:
   - {fileID: 4602713722304676980, guid: a4e93a2ac38c7dd4b9a595842e46ba63, type: 3}
@@ -1701,6 +1710,8 @@ MonoBehaviour:
   - {fileID: 6583875056677868264, guid: 591800b85e760ed4796732a4207b3773, type: 3}
   - {fileID: 366367957362793796, guid: a60e9eae64ede5d4585237ec19d1c350, type: 3}
   - {fileID: 7058263592653485094, guid: d0c72ef28bd94fa4ebef548f9a64ee56, type: 3}
+  - {fileID: 8885146718095934298, guid: b2faf6319bb0e4645aa1d837fb03f669, type: 3}
+  - {fileID: 4036164873422094590, guid: d00b39124191fe5498ff3e29a7493851, type: 3}
 --- !u!114 &725141506427028762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1717,6 +1728,18 @@ MonoBehaviour:
   APTPlane: {fileID: 6595283741257893453, guid: 80d431a8d5ca53e4b8a9604fbc67857c, type: 3}
   playerPoint: {x: 0, y: 0, z: 0}
   playerrotation: {x: 0, y: 0, z: 0}
+--- !u!114 &3663701274648941274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750386731104008374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c6e72b72e64046459394a3dcb3f0113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4093038744633329122
 MonoBehaviour:
   m_ObjectHideFlags: 0

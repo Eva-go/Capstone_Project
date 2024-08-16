@@ -206,12 +206,6 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("믹스 아이템 " + mixItiems[i]);
                 }
             }
-            //objectpooler test keycode
-            if(Input.GetKeyDown(KeyCode.X))
-            {
-                GameObject testObjectPool = ObjectPooler.SpawnFromPool("Sphere", Vector2.zero);
-                testObjectPool.GetComponent<TestPooler>().Setup(Color.red);
-            }
             if (Hp <= 0)
             {
                 Die();
@@ -223,40 +217,36 @@ public class PlayerController : MonoBehaviour
             }
             if (insideActive && InsideFillHandler.fillValue >= 100)
             {
-                inside++;
-                inside = inside % 2;
+                Debug.Log("인사이드" + inside);
                 InsideUpdate();
+                keydowns = false;
                 InsideFillHandler.fillValue = 0;
+                myRigid.isKinematic = false;
             }
         }
     }
 
-    private void LateUpdate()
-    {
-       
-    }
-
     public void InsideUpdate()
     {
+        Debug.Log("위치1");
         switch(inside)
         {
             case 0:
-                keydowns = true;
+                Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
+                Debug.Log("스폰 위치" + parentTransform.position);
                 gameObject.transform.position = parentTransform.position;
                 gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                Debug.Log("케이스 값0" + inside);
                 break;
             case 1:
-                keydowns = true;
-                Debug.Log("케이스 값1" + PlayerAPT.playerPoint);
+                Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
+                Debug.Log("아파트 위치" + PlayerAPT.playerPoint);
+
                 gameObject.transform.position = PlayerAPT.playerPoint;
                 gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                Debug.Log("케이스 값1" + inside);
                 break;
         }
+        Debug.Log("위치4");
     }
-
-
 
     public void Sell()
     {
@@ -653,27 +643,35 @@ public class PlayerController : MonoBehaviour
     private void Interaction()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-
-        if(Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
+        keydowns = Input.GetKey(KeyCode.E);
+        //if(Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
+        //{
+        //    if (hitInfo.collider.CompareTag("APT"))
+        //    {
+        //        parentTransform = hitInfo.collider.transform.parent;
+        //    }
+        //
+        //}
+        if (keydowns && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
         {
             if (hitInfo.collider.CompareTag("APT"))
             {
                 parentTransform = hitInfo.collider.transform.parent;
             }
-
-        }
-        if (Input.GetKey(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT"&&!keydowns)
-        {
+            myRigid.isKinematic = true;
             insideActive = true;
+            inside = 1;
         }
-        else if (Input.GetKey(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Door"&&!keydowns)
+        else if (keydowns && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Door")
         {
+            myRigid.isKinematic = true;
             insideActive = true;
+            inside = 0;
         }
         else
         {
+            myRigid.isKinematic = false;
             insideActive = false;
-            keydowns = false;
         }
 
        

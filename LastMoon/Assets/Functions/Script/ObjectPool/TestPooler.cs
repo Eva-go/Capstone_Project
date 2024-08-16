@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestPooler : MonoBehaviour
@@ -7,33 +5,63 @@ public class TestPooler : MonoBehaviour
     [SerializeField] Rigidbody rbody;
     [SerializeField] Renderer render;
 
-    [SerializeField] float upFoce = 1f;
-    [SerializeField] float sideForce = 0.1f;
+    [SerializeField] bool shouldReturnToPool = true; // Default to true
+    [SerializeField] Vector3 force = new Vector3(1f, 0f, 0f);
+    [SerializeField] string targetObjectName = "Poi_EndPoint"; // 비교할 오브젝트 이름
+    [SerializeField] Vector3 pos = new Vector3();
+    private void Start()
+    {
+        pos = transform.parent.position;
+        pos.y = transform.parent.position.y + 1;
+        gameObject.transform.position = pos;
+        // 오브젝트를 특정 위치에 스폰
+        SpawnObjectAtLocation(gameObject.name, gameObject.transform.position);
+    }
 
+    void SpawnObjectAtLocation(string tag, Vector3 position)
+    {
+        // 풀에서 오브젝트를 스폰하고 위치를 설정
+        GameObject spawnedObject = ObjectPooler.SpawnFromPool(tag, position);
+        // 추가적인 설정이 필요하다면 여기서 처리
+    }
 
-    //매개변수와 관계없이 활성화시 초기화 로직
     private void OnEnable()
     {
-        float xForce = Random.Range(- sideForce, sideForce);
-        float yForce = Random.Range(upFoce *0.5f, upFoce);
-        float zForce = Random.Range(upFoce - sideForce, sideForce);
-        Vector3 force = new Vector3(xForce, yForce, zForce);
         rbody.velocity = force;
-        Invoke(nameof(DectiveDelay), 5);
-            
+
+        if (shouldReturnToPool)
+        {
+            Invoke(nameof(DectiveDelay), 5);
+        }
     }
 
-    //매개변수에 대하여 바꿔야 하는 로직
-    public void Setup(Color color)
+    public void Setup(bool returnToPool)
     {
-        render.material.color = color; 
+        shouldReturnToPool = returnToPool;
     }
 
-    void DectiveDelay() => gameObject.SetActive(false);
+    void DectiveDelay()
+    {
+        gameObject.SetActive(false);
+    }
 
     private void OnDisable()
     {
-        ObjectPooler.ReturnToPool(gameObject);
+        if (shouldReturnToPool)
+        {
+            ObjectPooler.ReturnToPool(gameObject);
+        }
         CancelInvoke();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // 충돌한 오브젝트의 이름이 targetObjectName과 일치하는지 확인
+        if (collision.gameObject.name == targetObjectName)
+        {
+            // 오브젝트 비활성화 및 풀에 반환
+            gameObject.SetActive(false);
+            ObjectPooler.ReturnToPool(gameObject);
+        }
     }
 }
