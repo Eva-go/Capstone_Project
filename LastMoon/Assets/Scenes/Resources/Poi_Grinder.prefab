@@ -89,18 +89,22 @@ MonoBehaviour:
   - Count:
     - {fileID: 8954694521056130001}
     - {fileID: 7100785231769997054}
+  Debug_Filler: {fileID: 0}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 0}
   StationFixMat: {fileID: 0}
   StationConMat:
   - {fileID: 11400000, guid: a17b4d554e5495e48b064ad1177255b9, type: 2}
-  InputSlot: []
+  InputSlot:
+  - Count:
+    - {fileID: 6198763507516053196}
   OutputSlot: []
   FuelSlot: []
   FuelWick: []
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipies: []
+  SelectableRecipes: []
+  SelectedRecipe: {fileID: 0}
 --- !u!65 &8967602037494354336
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -427,6 +431,11 @@ Transform:
 --- !u!1 &2245745955067079937 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c5a7e6a1529a8d64288709c1717474ea, type: 3}
+  m_PrefabInstance: {fileID: 1435267147818733648}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6198763507516053196 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -4184555109157435748, guid: c5a7e6a1529a8d64288709c1717474ea, type: 3}
   m_PrefabInstance: {fileID: 1435267147818733648}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &7100785231769997054 stripped

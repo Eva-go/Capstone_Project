@@ -16,4 +16,6 @@ public class ScriptableObject_Item : ScriptableObject
 
     public int Price;
     public int MaxCount;
+
+    public float Heating;
 }
