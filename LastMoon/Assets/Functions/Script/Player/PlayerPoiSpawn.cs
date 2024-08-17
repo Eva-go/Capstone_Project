@@ -77,15 +77,29 @@ public class PlayerPoiSpawn : MonoBehaviour
             {
                 Build(slotNumber); // Build the object at the preview position
             }
+            if (Input.GetButtonDown("Fire2"))
+            {
+                Cancel();
+
+            }
         }
+    }
+
+    public void Cancel()
+    {
+        if (previewObjectInstance != null)
+        {
+            Destroy(previewObjectInstance); // Destroy the preview object
+        }
+        isPreViewActivated = false; // Deactivate preview
+        previewObjectInstance = null;
     }
 
     public void Build(int _slotNumber)
     {
         if (isPreViewActivated && _slotNumber >= 0 && _slotNumber < SpawnPoi.Length)
         {
-            Debug.Log("슬롯 넘버 Building with slot number: " + _slotNumber);
-            Debug.Log("슬롯 넘버 SpawnPoi slot: " + (SpawnPoi.Length > _slotNumber ? SpawnPoi[_slotNumber].name : "Index out of range"));
+          
             // Ensure hitInfo.point is valid
             if (hitInfo.collider != null)
             {
@@ -108,7 +122,7 @@ public class PlayerPoiSpawn : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("슬롯넘버 slot number: " + _slotNumber);
+            
         }
     }
 
@@ -143,7 +157,7 @@ public class PlayerPoiSpawn : MonoBehaviour
             // Check for collision and update preview object
             if (hitInfo.collider != null)
             {
-                if (hitInfo.collider.CompareTag("Poi"))
+                if (hitInfo.collider.CompareTag("Poi")||hitInfo.collider.CompareTag("Pipe"))
                 {
                     if (!isColliding)
                     {

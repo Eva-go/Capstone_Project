@@ -64,13 +64,17 @@ public class PoiController : MonoBehaviour
     private float StationProgress;
 
     //tick  관련 변수
-    private int tick;
-    private int tickMax;
-    private bool isConstructing;
-
+    public int tick =0 ;
+    public int tickMax = 0;
+    public bool isConstructing;
 
     //레시피 관련 변수
     private int slotNumber; // 현재 슬롯 번호
+
+
+    //컨베이어 벨트 관련 변수
+    public GameObject testObject;
+    public Transform testObjectTransform;
 
     void Start()
     {
@@ -93,17 +97,50 @@ public class PoiController : MonoBehaviour
     }
 
 
-
     private void Update()
     {
-        //tick 테스트키
-        if (Input.GetKeyDown(KeyCode.K))
+        tick_ck(100);
+    }
+
+    public void tick_ck(int ticksToConstruct)
+    {
+        
+        if (!isConstructing)
         {
-            //괄호 값 = 틱 몇번 불렸냐?
-            tick_ck(5);
+            tickMax = ticksToConstruct;
+            isConstructing = true;
+            TickTimer.OnTick += TimeTickSystem_OnTick;
+        }
+
+    }
+
+    private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
+    {
+        if (isConstructing)
+        {
+            tick = e.tick% tickMax;
+            Debug.Log("E tIck" + tick+" : "+e.tick);
+            if (tick>=tickMax-1)
+            {
+                //CheckRecipe();
+                //HeatingManage();
+                if (testObject != null && testObjectTransform != null)
+                {
+                    Instantiate(testObject, testObjectTransform.position, Quaternion.identity);
+                }
+                isConstructing = false;
+            }
+            else
+            {
+              //매 틱마다 해야한다면 이곳
+            }
+           
         }
     }
 
+
+
+    //레시피
     public void SlotClick(int _slotNumber)
     {
         onClickStart(_slotNumber); // Call the start method for preview
@@ -111,34 +148,15 @@ public class PoiController : MonoBehaviour
 
     public void onClickStart(int _slotNumber)
     {
-        for(int i=0; i< SelectableRecipes.Length; i++)
+        for (int i = 0; i < SelectableRecipes.Length; i++)
         {
-            if(i == _slotNumber)
+            if (i == _slotNumber)
             {
                 SelectedRecipe = SelectableRecipes[i];
             }
         }
     }
 
-    private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
-    {
-        if(isConstructing)
-        {
-            tick += 1;
-            if(tick>=tickMax)
-            {
-                isConstructing = false;
-                Debug.Log("Tick tick false" + tick +":"+tickMax+" "+ PhotonNetwork.Time);
-                CheckRecipe();
-                HeatingManage();
-            }
-            else
-            {
-                Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
-            }
-           
-        }
-    }
 
     public Item AddItem(GameObject[] objects, Item item, ScriptableObject_Item Type, int Count)
     {
@@ -217,13 +235,6 @@ public class PoiController : MonoBehaviour
         MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
 
-    public void tick_ck(int ticksToConstruct)
-    {
-        tick = 0;
-        tickMax = ticksToConstruct;
-        isConstructing = true;
-        TickTimer.OnTick += TimeTickSystem_OnTick;
-    }
 
     public void CheckRecipe()
     {

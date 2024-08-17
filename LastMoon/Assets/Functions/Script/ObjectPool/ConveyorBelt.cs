@@ -2,52 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConveyorBelt : MonoBehaviour
+public class ConveyorBelt: MonoBehaviour
 {
     [SerializeField]
-    private float speed, conveyorSpeed;
-    [SerializeField]
-    private Vector3 direction;
-    [SerializeField]
-    private List<GameObject> onBelt;
+    private float speed;          // 벨트의 속도
 
-    private Material material;
+    [SerializeField]
+    private float conveyorSpeed; // 텍스처의 이동 속도
 
-    // Start is called before the first frame update
+    [SerializeField]
+    private Vector3 direction;   // 물체가 이동할 방향
+
+    [SerializeField]
+    private List<GameObject> onBelt; // 벨트 위의 물체들
+
     void Start()
     {
-        /* Create an instance of this texture
-         * This should only be necessary if the belts are using the same material and are moving different speeds
-         */
-        material = GetComponent<MeshRenderer>().material;
+        // 초기화가 필요하다면 여기에 작성
     }
 
-    // Update is called once per frame
-    private void Update()
+    void Update()
     {
-        // Move the conveyor belt texture to make it look like it's moving
-        material.mainTextureOffset += new Vector2(0, 1) * conveyorSpeed * Time.deltaTime;
+        // 텍스처의 이동 처리 (필요한 경우에만 사용)
+        // material.mainTextureOffset += new Vector2(0, 1) * conveyorSpeed * Time.deltaTime;
     }
 
-    // Fixed update for physics
     void FixedUpdate()
     {
-        // For every item on the belt, add force to it in the direction given
-        for (int i = 0; i <= onBelt.Count - 1; i++)
+        // 파괴된 객체를 리스트에서 제거
+        for (int i = onBelt.Count - 1; i >= 0; i--)
         {
-            onBelt[i].GetComponent<Rigidbody>().AddForce(speed * direction);
+            if (onBelt[i] == null)
+            {
+                onBelt.RemoveAt(i);
+            }
+            else
+            {
+                // 벨트 위의 각 물체에 힘을 추가
+                onBelt[i].GetComponent<Rigidbody>()?.AddForce(speed * direction);
+            }
         }
     }
 
-    // When something collides with the belt
+    // 물체가 벨트와 충돌했을 때
     private void OnCollisionEnter(Collision collision)
     {
-        onBelt.Add(collision.gameObject);
+        // 충돌한 객체가 null이 아니고 리스트에 포함되어 있지 않은 경우 추가
+        if (collision.gameObject != null && !onBelt.Contains(collision.gameObject))
+        {
+            onBelt.Add(collision.gameObject);
+        }
     }
 
-    // When something leaves the belt
+    // 물체가 벨트와의 충돌을 끝냈을 때
     private void OnCollisionExit(Collision collision)
     {
-        onBelt.Remove(collision.gameObject);
+        // 충돌이 끝난 객체가 null이 아니면 리스트에서 제거
+        if (collision.gameObject != null)
+        {
+            onBelt.Remove(collision.gameObject);
+        }
     }
 }

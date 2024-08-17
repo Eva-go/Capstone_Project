@@ -13,8 +13,8 @@ public class TickTimer : MonoBehaviourPun
     // 티크가 발생할 때 호출될 이벤트
     public static event EventHandler<OnTickEventArgs> OnTick;
 
-    // 티크 타이머의 최대 간격 (초 단위)
-    private const float TICK_TIMER_MAX = 20f;
+    // 티크 타이머의 최대 간격 (초 당 틱을 몇번 부를것인가?)
+    private const float TICK_TIMER_MAX = 0.05f;
 
     // 현재 티크 및 타이머 상태를 저장하는 변수
     private int tick;
@@ -41,7 +41,10 @@ public class TickTimer : MonoBehaviourPun
             // 남은 시간 계산 후 업데이트
             lastTickTime = currentTime - (elapsedTime % TICK_TIMER_MAX);
             tick++;
-
+            if(tick>=20000)
+            {
+                tick = 0;
+            }
             // OnTick 이벤트 호출
             OnTick?.Invoke(this, new OnTickEventArgs { tick = tick });
         }
