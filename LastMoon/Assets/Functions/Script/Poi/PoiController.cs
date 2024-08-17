@@ -196,7 +196,6 @@ public class PoiController : MonoBehaviour
             }
         }
     }
-    
     public void HeatingManage()
     {
         if (StationTemperture < SelectedRecipe.Temperture)
