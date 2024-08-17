@@ -63,6 +63,15 @@ public class PoiController : MonoBehaviour
     private float StationTemperture;
     private float StationProgress;
 
+    //tick  관련 변수
+    private int tick;
+    private int tickMax;
+    private bool isConstructing;
+
+
+    //레시피 관련 변수
+    private int slotNumber; // 현재 슬롯 번호
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -83,6 +92,53 @@ public class PoiController : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
     }
 
+
+
+    private void Update()
+    {
+        //tick 테스트키
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            //괄호 값 = 틱 몇번 불렸냐?
+            tick_ck(5);
+        }
+    }
+
+    public void SlotClick(int _slotNumber)
+    {
+        onClickStart(_slotNumber); // Call the start method for preview
+    }
+
+    public void onClickStart(int _slotNumber)
+    {
+        for(int i=0; i< SelectableRecipes.Length; i++)
+        {
+            if(i == _slotNumber)
+            {
+                SelectedRecipe = SelectableRecipes[i];
+            }
+        }
+    }
+
+    private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
+    {
+        if(isConstructing)
+        {
+            tick += 1;
+            if(tick>=tickMax)
+            {
+                isConstructing = false;
+                Debug.Log("Tick tick false" + tick +":"+tickMax+" "+ PhotonNetwork.Time);
+                CheckRecipe();
+                HeatingManage();
+            }
+            else
+            {
+                Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
+            }
+           
+        }
+    }
 
     public Item AddItem(GameObject[] objects, Item item, ScriptableObject_Item Type, int Count)
     {
@@ -161,76 +217,86 @@ public class PoiController : MonoBehaviour
         MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
 
+    public void tick_ck(int ticksToConstruct)
+    {
+        tick = 0;
+        tickMax = ticksToConstruct;
+        isConstructing = true;
+        TickTimer.OnTick += TimeTickSystem_OnTick;
+    }
+
     public void CheckRecipe()
     {
-        if (StationTemperture >= SelectedRecipe.Temperture && Inv_Coolent.Count >= SelectedRecipe.Coolent)
-        {
-            if (Inv_Input[0].ItemType == SelectedRecipe.Input001
-                && Inv_Input[1].ItemType == SelectedRecipe.Input002
-                && Inv_Input[2].ItemType == SelectedRecipe.Input003)
-            {
-                StationProgress++;
-            }
-            if (StationProgress > SelectedRecipe.ProgressTime)
-            {
-                StationProgress = 0;
-                for (int i = 0; i < SelectedRecipe.InputCount; i++)
-                {
-                    Inv_Input[i] = SubtractItem(InputSlot[i].Count, Inv_Input[i], 1);
-                }
-                switch (SelectedRecipe.OutputCount)
-                {
-                    case 1:
-                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
-                        break;
-                    case 2:
-                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
-                        Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
-                        break;
-                    case 3:
-                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
-                        Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
-                        Inv_Output[2] = AddItem(OutputSlot[2].Count, Inv_Output[2], SelectedRecipe.Output003, 1);
-                        break;
-                }
-            }
-        }
+        Debug.Log("Tick executed at CheckRecipe()");
+        //if (StationTemperture >= SelectedRecipe.Temperture && Inv_Coolent.Count >= SelectedRecipe.Coolent)
+        //{
+        //    if (Inv_Input[0].ItemType == SelectedRecipe.Input001
+        //        && Inv_Input[1].ItemType == SelectedRecipe.Input002
+        //        && Inv_Input[2].ItemType == SelectedRecipe.Input003)
+        //    {
+        //        StationProgress++;
+        //    }
+        //    if (StationProgress > SelectedRecipe.ProgressTime)
+        //    {
+        //        StationProgress = 0;
+        //        for (int i = 0; i < SelectedRecipe.InputCount; i++)
+        //        {
+        //            Inv_Input[i] = SubtractItem(InputSlot[i].Count, Inv_Input[i], 1);
+        //        }
+        //        switch (SelectedRecipe.OutputCount)
+        //        {
+        //            case 1:
+        //                Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+        //                break;
+        //            case 2:
+        //                Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+        //                Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
+        //                break;
+        //            case 3:
+        //                Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+        //                Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
+        //                Inv_Output[2] = AddItem(OutputSlot[2].Count, Inv_Output[2], SelectedRecipe.Output003, 1);
+        //                break;
+        //        }
+        //    }
+        //}
     }
     public void HeatingManage()
     {
-        if (StationTemperture < SelectedRecipe.Temperture)
-        {
-            if (Inv_Fuel.Count > 0)
-            {
-                StationTemperture += Inv_Fuel.ItemType.Heating;
-                Inv_Fuel.SubtractItem(1);
-                for (int i = 0; i < FuelSlot.Length; i++)
-                {
-                    UpdateMatFill(FuelSlot[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
-                    UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
-                }
-            }
-        }
-        if (StationTemperture > 25)
-        {
-            if (StationTemperture > 100 && Inv_Coolent.Count > 0)
-            {
-                StationTemperture -= 2;
-                Inv_Coolent.SubtractItem(1);
-                for (int i = 0; i < Obj_Coolent.Length; i++)
-                {
-                    UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
-                }
-            }
-            else
-            {
-                StationTemperture--;
-            }
-        }
-        for (int i = 0; i < Obj_Temperture.Length; i++)
-        {
-            UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
-        }
+        Debug.Log("Tick executed at HeatingManage()");
+        //if (StationTemperture < SelectedRecipe.Temperture)
+        //{
+        //    if (Inv_Fuel.Count > 0)
+        //    {
+        //        StationTemperture += Inv_Fuel.ItemType.Heating;
+        //        Inv_Fuel.SubtractItem(1);
+        //        for (int i = 0; i < FuelSlot.Length; i++)
+        //        {
+        //            UpdateMatFill(FuelSlot[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+        //            UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+        //        }
+        //    }
+        //}
+        //if (StationTemperture > 25)
+        //{
+        //    if (StationTemperture > 100 && Inv_Coolent.Count > 0)
+        //    {
+        //        StationTemperture -= 2;
+        //        Inv_Coolent.SubtractItem(1);
+        //        for (int i = 0; i < Obj_Coolent.Length; i++)
+        //        {
+        //            UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        StationTemperture--;
+        //    }
+        //}
+        //for (int i = 0; i < Obj_Temperture.Length; i++)
+        //{
+        //    UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
+        //}
     }
 
 

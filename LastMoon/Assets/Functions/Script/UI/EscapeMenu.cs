@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using Photon.Pun;
 
 public class EscapeMenu : MonoBehaviour
 {
@@ -75,6 +76,7 @@ public class EscapeMenu : MonoBehaviour
 
     public void EscapeMenuQuit()
     {
-        Application.Quit();
+        // Application.Quit();
+        PhotonNetwork.LoadLevel("RoomMeun");
     }
 }
