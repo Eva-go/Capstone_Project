@@ -100,9 +100,26 @@ public class PlayerController : MonoBehaviour
     private bool oldPosState = false; // 상태를 추적하기 위한 변수
     private bool insideState = false; // 상태를 추적하기 위한 변수
     Transform parentTransform;
+
+    private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
+    private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
+    private string lastDoorEntered;
     public void InvokeInventoryChanged()
     {
         OnInventoryChanged?.Invoke();
+    }
+
+    public void EnterDoor(Transform doorTransform)
+    {
+        string doorName = doorTransform.name; // 문 이름을 사용하여 고유 식별자로 사용
+        lastDoorEntered = doorName;
+
+        // 문 위치와 회전 저장
+        if (!doorPositions.ContainsKey(doorName))
+        {
+            doorPositions[doorName] = doorTransform.position;
+            doorRotations[doorName] = doorTransform.rotation;
+        }
     }
 
     void Start()
@@ -244,6 +261,17 @@ public class PlayerController : MonoBehaviour
                 gameObject.transform.position = PlayerAPT.playerPoint;
                 gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
                 break;
+            case 2:
+                if (doorPositions.ContainsKey(lastDoorEntered))
+                {
+                    Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
+                    Debug.Log("스폰 위치" + doorPositions[lastDoorEntered]);
+
+                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                }
+                break;
+
         }
         Debug.Log("위치4");
     }
@@ -644,29 +672,29 @@ public class PlayerController : MonoBehaviour
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
         keydowns = Input.GetKey(KeyCode.E);
-        //if(Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
-        //{
-        //    if (hitInfo.collider.CompareTag("APT"))
-        //    {
-        //        parentTransform = hitInfo.collider.transform.parent;
-        //    }
-        //
-        //}
-        if (keydowns && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "APT")
+
+        if (keydowns && Physics.Raycast(ray, out hitInfo, 5))
         {
-            if (hitInfo.collider.CompareTag("APT"))
+            if (hitInfo.collider.CompareTag("Door"))
             {
-                parentTransform = hitInfo.collider.transform.parent;
+                myRigid.isKinematic = true;
+                insideActive = true;
+                // 문을 통과하여 아파트로 들어가는 경우
+                EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+                inside = 1;
             }
-            myRigid.isKinematic = true;
-            insideActive = true;
-            inside = 1;
-        }
-        else if (keydowns && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Door")
-        {
-            myRigid.isKinematic = true;
-            insideActive = true;
-            inside = 0;
+            else if (hitInfo.collider.CompareTag("ReturnDoor"))
+            {
+                myRigid.isKinematic = true;
+                insideActive = true;
+                // 이전에 저장된 문 위치로 되돌아가는 경우
+                inside = 2;
+            }
+            else
+            {
+                myRigid.isKinematic = false;
+                insideActive = false;
+            }
         }
         else
         {
@@ -674,7 +702,6 @@ public class PlayerController : MonoBehaviour
             insideActive = false;
         }
 
-       
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
