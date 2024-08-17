@@ -10,6 +10,13 @@ public class Wavetransform : MonoBehaviour
     //매테리얼 인스턴스 값 변경
     private MaterialPropertyBlock propertyBlock;
 
+    private bool LowTide;
+    private int TideCycle;
+    private float TideProgress;
+
+
+
+
     public float waveHeightTime = 0;
     public float waveStrength = 0;
     public float normalizedTime;

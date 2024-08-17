@@ -1617,7 +1617,6 @@ MonoBehaviour:
   - {fileID: 6438757288700106276, guid: bbe91e4f26c1f614494384f485c6c473, type: 3}
   - {fileID: 884030554955172031, guid: 9455b438aca141b4bb4e7cb1b2bd25f8, type: 3}
   insidegameObject: {fileID: 1048959158753274472, guid: bf7e3f11c6811344ca646c3de85bd43a, type: 3}
-  ShopActive: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -1626,8 +1625,16 @@ MonoBehaviour:
   nodeItiems: 000000000000000000000000000000000000000000000000
   mixItiems: 000000000000000000000000000000000000000000000000
   nodeCounts: 000000000000000000000000000000000000000000000000
+  InitalItems:
+  - {fileID: 11400000, guid: fa259c40698d76049a21547bf0bc5d54, type: 2}
+  - {fileID: 11400000, guid: c6cbcc82f2224644e96d108a738627f9, type: 2}
+  - {fileID: 11400000, guid: eba0a1bd10be48d4fa669a861ab2ca8e, type: 2}
+  - {fileID: 11400000, guid: 85f839ab0ba31ff4d9d3c031148573dc, type: 2}
+  - {fileID: 11400000, guid: 88f06c7edf76e864fb1ea95e4d076ba1, type: 2}
+  - {fileID: 11400000, guid: 85401f175740a5140933e305d4ab3a6b, type: 2}
   positionLerpSpeed: 8
   rotationLerpSpeed: 8
+  ShopActive: 0
   oldTransform: {fileID: 0}
   AptTransform: {fileID: 0}
   inside: 0

@@ -87,7 +87,12 @@ public class PlayerController : MonoBehaviour
 
     public event Action OnInventoryChanged;
 
-    public Inventory PlayerInventory;
+    public Inventory PlayerInventory = new Inventory { };
+
+    //[SerializeField] private UI_Inventory ui_Inventory;
+
+    [SerializeField] private ScriptableObject_Item[] InitalItems;
+
 
     public float positionLerpSpeed = 8f;
     public float rotationLerpSpeed = 8f;
@@ -175,6 +180,11 @@ public class PlayerController : MonoBehaviour
             GameValue.Axe = 0;
             GameValue.Pickaxe = 0;
             GameValue.Shovel = 0;
+
+            for (int i = 0; i < InitalItems.Length; i++)
+            {
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
+            }
         }
 
         nickName = this.gameObject.name;
