@@ -54,21 +54,25 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static int nodeMoney;
     public static int mixMoney;
 
-    //test
-    public static bool test;
+    //exit
+    public static bool exit;
 
 
     private void Awake()
     {
+        exit = false;
         networkManager = FindObjectOfType<NetworkManager>();
-        DontDestroyOnLoad(gameObject);
+        if(!exit)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
         MaxUser = 8;
         insideUser = 0;
         inside = false;
         nodeMoney = 0;
         mixMoney = 0;
         Round = 1;
-        test = false;
+       
     }
 
 
@@ -77,6 +81,10 @@ public class GameValue : MonoBehaviourPunCallbacks
         Axe = MoneyController.Bt_Axe;
         Pickaxe = MoneyController.Bt_Pickaxe;
         Shovel = MoneyController.Bt_Shovel;
+        if(exit)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public static void getPrice(int i,int nodeCount, int mixCount)
@@ -130,6 +138,11 @@ public class GameValue : MonoBehaviourPunCallbacks
     {
         nickName = name;
     }
+    public static int MoneyUpdate()
+    {
+        return Money_total;
+    }
+
     public void seed(int a, int b)
     {
         seed1 = a;

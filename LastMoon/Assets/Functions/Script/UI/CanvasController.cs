@@ -11,6 +11,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject money;
     public GameObject Tab;
     public GameObject Poi;
+    public GameObject Shop;
 
     private int keyTabCode = 2;
     private bool inventory_ck;
@@ -47,6 +48,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private Transform inventoryTransform;
 
+
     void Awake()
     {
         isItme = false;
@@ -71,7 +73,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
         Tab.SetActive(false);
         money.SetActive(true);
         Poi.SetActive(false);
-
         inventoryTransform = inventory.transform;
 
         // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
@@ -84,6 +85,48 @@ public class CanvasController : MonoBehaviourPunCallbacks
             // Non-master clients will request random prices from master
             RequestRandomPricesFromMaster();
         }
+    }
+    void Update()
+    {
+        ToolIconSwitching();
+        UpdateInsideActive();
+        UpdateInventoryActive();
+        UpdateInventoryTabActive();
+        UpdateMoneyActive();
+        PoiActive();
+        // 노드 관련 함수
+        Die();
+        Shoping();
+        //아이템 업데이트
+        if (isItme)
+        {
+            nodeCountUpdate();
+            mixCountUpdate();
+        }
+
+        // 랜덤 가격이 아직 초기화되지 않았다면, 요청
+        RequestRandomPricesFromMaster();
+    }
+
+
+    public void Shoping()
+    {
+        if(playerController!=null)
+        {
+            Shop.SetActive(playerController.ShopActive);
+            if(playerController.ShopActive)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                Debug.Log(playerController.ShopActive);
+            }
+        }
+    }
+
+    public void Shoping_Exit()
+    {
+        playerController.ShopActive = false;
+        Shop.SetActive(playerController.ShopActive);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void InitializeAndSendRandomPrices()
@@ -134,6 +177,33 @@ public class CanvasController : MonoBehaviourPunCallbacks
         pricesInitialized = true;
     }
 
+
+    public void Sell()
+    {
+        money.SetActive(true);
+        for (int i = 0; i < nodesCount.Length; i++)
+        {
+            Amount = nodePriceCount[i] * playerController.nodeItiems[i];
+            TotalSell += Amount;
+        }
+        for(int i=0; i< mixCount.Length; i++)
+        {
+            Amount = mixPriceCount[i] * playerController.mixItiems[i];
+            TotalSell += Amount;
+        }
+        for (int i = 0; i < nodesCount.Length; i++)
+        {
+            nodesCount[i].text = "0";
+            playerController.nodeItiems[i] = 0;
+        }
+        for(int i=0; i<mixCount.Length;i++)
+        {
+            mixCount[i].text = "0";
+            playerController.mixItiems[i] = 0;
+        }
+        GameValue.GetMomey(TotalSell);
+    }
+
     void RequestRandomPricesFromMaster()
     {
         if (!pricesInitialized)
@@ -149,28 +219,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             InitializeAndSendRandomPrices();
         }
-    }
-
-    void Update()
-    {
-        ToolIconSwitching();
-        UpdateInsideActive();
-        UpdateInventoryActive();
-        UpdateInventoryTabActive();
-        UpdateMoneyActive();
-        PoiActive();
-        // 노드 관련 함수
-        Sell();
-        Die();
-        //아이템 업데이트
-        if (isItme)
-        {
-            nodeCountUpdate();
-            mixCountUpdate();
-        }
-
-        // 랜덤 가격이 아직 초기화되지 않았다면, 요청
-        RequestRandomPricesFromMaster();
     }
 
     public void PoiActive()
@@ -285,29 +333,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             count[i] = playerController.mixItiems[i];
             mixCount[i].text = count[i].ToString();
-        }
-    }
-
-    private void Sell()
-    {
-        if (GameValue.lived)
-        {
-            money.SetActive(true);
-            GameValue.setMoney();
-            for (int i = 0; i < nodesCount.Length; i++)
-            {
-                Amount = SellCount[i] * salePrice[i];
-                TotalSell += Amount;
-            }
-            GameValue.GetMomey(TotalSell);
-            GameValue.lived = false;
-
-            for (int i = 0; i < nodesCount.Length; i++)
-            {
-                nodesCount[i].text = "0";
-                SellCount[i] = 0;
-                count[i] = 0;
-            }
         }
     }
 

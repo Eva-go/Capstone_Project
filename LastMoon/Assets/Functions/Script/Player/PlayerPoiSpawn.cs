@@ -45,6 +45,7 @@ public class PlayerPoiSpawn : MonoBehaviour
 
             for (int i = 0; i < PoiTab.Length; i++)
             {
+                Debug.Log("참조" + poiLists.transform.GetChild(0).gameObject.transform.GetChild(i).gameObject.name);
                 PoiTab[i] = poiLists.transform.GetChild(0).gameObject.transform.GetChild(i).gameObject; // PoiTab 배열 초기화
                 Poi_BT[i] = PoiTab[i].GetComponent<Button>(); // Poi_BT 배열 초기화
                 int index = i; // 인덱스를 로컬 변수로 복사
