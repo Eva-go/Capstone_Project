@@ -77,6 +77,11 @@ public class EscapeMenu : MonoBehaviour
     public void EscapeMenuQuit()
     {
         // Application.Quit();
+        if (PhotonNetwork.IsConnected)
+        {
+            PhotonNetwork.Disconnect(); // 서버와의 연결을 끊고 씬 전환
+        }
+        GameValue.exit = true;
         PhotonNetwork.LoadLevel("RoomMeun");
     }
 }

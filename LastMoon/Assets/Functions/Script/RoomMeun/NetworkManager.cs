@@ -50,7 +50,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         Screen.SetResolution(Screen.width, Screen.width * 9 / 16, false);
         print("서버 연결 시도.");
-        PhotonNetwork.ConnectUsingSettings();
+        PhotonNetwork.ConnectUsingSettings(); 
+        if(!PhotonNetwork.ConnectUsingSettings())
+        {
+            m_button_RadomMatching.interactable = false;
+            ReconnectToServer();
+        }
     }
     public int GetSeed1()
     {
@@ -160,6 +165,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             mbutton_Start.GetComponent<Button>().interactable = true;
             gameValue.seed(seed1, seed2);
             LocalClient = false;
+
         }
 
 
@@ -233,4 +239,47 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     }
 
     #endregion
+    // 서버 재연결 메서드
+    public void ReconnectToServer()
+    {
+        if (!PhotonNetwork.IsConnected)
+        {
+            // 서버에 연결되어 있지 않을 경우, 연결 시도
+            PhotonNetwork.ConnectUsingSettings();
+        }
+        else
+        {
+            // 이미 연결되어 있을 경우, 재연결 시도
+            PhotonNetwork.Reconnect();
+            if(!PhotonNetwork.Reconnect())
+            {
+                Debug.Log("재연결 실패");
+            }
+        }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        Debug.Log($"서버 연결 끊김: {cause}");
+
+        // 연결 실패 처리
+        if (cause != DisconnectCause.DisconnectByClientLogic)
+        {
+            // 재연결 시도
+            StartCoroutine(ReconnectCoroutine());
+        }
+    }
+
+    private IEnumerator ReconnectCoroutine()
+    {
+        // 일정 시간 대기 후 재연결 시도
+        yield return new WaitForSeconds(5f);
+
+        if (!PhotonNetwork.IsConnected)
+        {
+            // 재연결 시도
+            Debug.Log("서버 재연결 시도 중...");
+            PhotonNetwork.ConnectUsingSettings();
+        }
+    }
 }

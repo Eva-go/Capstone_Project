@@ -240,6 +240,10 @@ public class PlayerController : MonoBehaviour
                 InsideFillHandler.fillValue = 0;
                 myRigid.isKinematic = false;
             }
+            if(GameValue.exit)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
