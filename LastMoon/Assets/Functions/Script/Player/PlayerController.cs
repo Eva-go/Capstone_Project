@@ -95,6 +95,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 networkPosition;
     private Quaternion networkRotation;
 
+    public bool ShopActive;
 
     //리스폰 관련 변수
     private static GameObject player;
@@ -165,14 +166,21 @@ public class PlayerController : MonoBehaviour
             AptTransform = gameObject.transform;
             inside = 0;
             keydowns = false;
+
+            ShopActive = false;
+            live = true;
+            GameValue.Money_total = 0;
+            GameValue.setMoney();
+
+            GameValue.Axe = 0;
+            GameValue.Pickaxe = 0;
+            GameValue.Shovel = 0;
         }
 
         nickName = this.gameObject.name;
 
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-
-        GameValue.setMoney();
 
         originalCameraY = theCamera.transform.localPosition.y;
         originalToolCameraY = toolCamera.transform.localPosition.y;
@@ -182,9 +190,6 @@ public class PlayerController : MonoBehaviour
 
         Items();
         wavetransform = FindObjectOfType<Wavetransform>();
-        live = true;
-
-        GameValue.setMoney();
         Hp = 100;
     }
 
@@ -267,6 +272,10 @@ public class PlayerController : MonoBehaviour
                 InsideUpdate();
                 keydowns = false;
                 myRigid.isKinematic = false;
+            }
+            if (GameValue.exit)
+            {
+                Destroy(gameObject);
             }
         }
     }
@@ -730,6 +739,11 @@ public class PlayerController : MonoBehaviour
             insideActive = false;
         }
 
+
+        if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Portal")
+        {
+            ShopActive = true;
+        }
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {

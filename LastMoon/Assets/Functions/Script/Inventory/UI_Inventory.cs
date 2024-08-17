@@ -4,15 +4,34 @@ using UnityEngine;
 
 public class UI_Inventory : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Inventory UIinventory;
+    private Transform ItemSlot;
+    private Transform ItemSlotTemplate;
+
+
+    private void Awake()
     {
-        
+        ItemSlot = transform.Find("");
+        ItemSlotTemplate = ItemSlot.Find("");
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetInventory(Inventory inventory)
     {
-        
+        UIinventory = inventory;
+    }
+
+
+    private void RefreshUI()
+    {
+        int x = 0;
+        int y = 0;
+        float itemSlotSize = 30f;
+        foreach (Item item in UIinventory.GetItems())
+        {
+            RectTransform itemRectTransform = Instantiate(ItemSlotTemplate, ItemSlot).GetComponent<RectTransform>();
+            itemRectTransform.gameObject.SetActive(true);
+            itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+            y++;
+        }
     }
 }
