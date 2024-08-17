@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 
 public class PlayerSpawn : MonoBehaviourPunCallbacks
 {
@@ -64,6 +65,8 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
         player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
         if (player != null)
         {
+            GameObject playerprefab = Instantiate(player, transform.position, transform.rotation);
+            PlayerController.Instance.SetPlayer(playerprefab); // 생성된 플레이어를 PlayerManager에 등록
             player.name = PhotonNetwork.LocalPlayer.NickName;
             Transform OtherPlayer = player.transform.Find("OtherPlayer");
             Transform LocalPlayer = player.transform.Find("LocalPlayer");

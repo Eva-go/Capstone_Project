@@ -4,9 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Pun.Demo.PunBasics;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance { get; private set; }
+    public GameObject currentPlayer { get; private set; }
+
+
+
     public PhotonView pv;
     public string nickName;
     public static float Hp = 100f;
@@ -104,6 +110,26 @@ public class PlayerController : MonoBehaviour
     private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
     private string lastDoorEntered;
+
+    //InteractableObject를 위한 코드
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    public void SetPlayer(GameObject player)
+    {
+        currentPlayer = player;
+    }
+    //InteractableObject를 위한 코드 끝
+
     public void InvokeInventoryChanged()
     {
         OnInventoryChanged?.Invoke();
