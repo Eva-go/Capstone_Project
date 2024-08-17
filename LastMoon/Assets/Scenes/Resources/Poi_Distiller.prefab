@@ -134,8 +134,6 @@ MonoBehaviour:
   - Count:
     - {fileID: 0}
   Debug_Filler: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
-  Debug_Fuel: {fileID: 11400000, guid: 3cd8bfa6b525e5d4d898971bc6b76ae7, type: 2}
-  Debug_Coolent: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
@@ -160,12 +158,11 @@ MonoBehaviour:
   - {fileID: 6193490117003952813}
   SelectableRecipes:
   - {fileID: 11400000, guid: df891cc5d3cb92644bce9054add690c9, type: 2}
-  SelectedRecipe: {fileID: 11400000, guid: df891cc5d3cb92644bce9054add690c9, type: 2}
-  StationTemperture: 0
-  StationProgress: 0
-  tick: 0
-  tickMax: 0
-  isConstructing: 0
+  - {fileID: 11400000, guid: 94d7d4c2cea72cb4c969100ddc6e1b45, type: 2}
+  - {fileID: 11400000, guid: a999ab0058e84534f9eb57bd4e6a0c42, type: 2}
+  SelectedRecipe: {fileID: 0}
+  testObject: {fileID: 0}
+  testObjectTransform: {fileID: 0}
 --- !u!114 &3053376901832024074
 MonoBehaviour:
   m_ObjectHideFlags: 0

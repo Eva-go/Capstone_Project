@@ -37,6 +37,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5207251687743444039}
+  - {fileID: 4251807302551783536}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6614159032398034088
@@ -115,9 +116,13 @@ MonoBehaviour:
   FuelWick: []
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipes:
-  - {fileID: 11400000, guid: 94d7d4c2cea72cb4c969100ddc6e1b45, type: 2}
-  SelectedRecipe: {fileID: 11400000, guid: 94d7d4c2cea72cb4c969100ddc6e1b45, type: 2}
+  SelectableRecipes: []
+  SelectedRecipe: {fileID: 0}
+  tick: 0
+  tickMax: 0
+  isConstructing: 0
+  testObject: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
+  testObjectTransform: {fileID: 4251807302551783536}
 --- !u!65 &8337333612337844824
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -378,6 +383,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &3709382835562000770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4251807302551783536}
+  m_Layer: 0
+  m_Name: Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4251807302551783536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3709382835562000770}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.6, z: 1.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 948599586232692434}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5749239302709916588
 PrefabInstance:
   m_ObjectHideFlags: 0
