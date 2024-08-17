@@ -104,6 +104,7 @@ MonoBehaviour:
   animator: {fileID: 5223760760334705409}
   StationBases:
   - {fileID: 2537302229213875025}
+  - {fileID: 7160964510233662432}
   StationFixes:
   - {fileID: 8439094456729854360}
   StationAuxes:
@@ -117,10 +118,14 @@ MonoBehaviour:
     - {fileID: 6194822120746484907}
   - Count:
     - {fileID: 6401058852643314478}
+  Debug_Filler: {fileID: 0}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
-  StationConMat: []
+  StationConMat:
+  - {fileID: 11400000, guid: a17b4d554e5495e48b064ad1177255b9, type: 2}
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  - {fileID: 11400000, guid: 202a361bea591b744b0e7b876364dc91, type: 2}
   InputSlot: []
   OutputSlot:
   - Count:
@@ -131,7 +136,8 @@ MonoBehaviour:
   - {fileID: 4868576021829270635}
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipies: []
+  SelectableRecipes: []
+  SelectedRecipe: {fileID: 0}
 --- !u!114 &527718943812757758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,6 +491,11 @@ GameObject:
 --- !u!1 &7080415825632137046 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3623823676982478506, guid: 934f170a720cf10408df7f106250697a, type: 3}
+  m_PrefabInstance: {fileID: 3456274389628401152}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7160964510233662432 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5519157455620974048, guid: 934f170a720cf10408df7f106250697a, type: 3}
   m_PrefabInstance: {fileID: 3456274389628401152}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8439094456729854360 stripped

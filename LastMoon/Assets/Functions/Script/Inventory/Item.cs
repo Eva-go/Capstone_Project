@@ -24,6 +24,28 @@ public class Item
         else return 0;
     }
 
+    public int OverrideItem(ScriptableObject_Item AddType, int AddCount)
+    {
+        if (ItemType == AddType)
+        {
+            Count += AddCount;
+        }
+        else
+        {
+            ItemType = AddType;
+            Count = AddCount;
+            if (Count > AddType.MaxCount) Count = AddType.MaxCount;
+            return -1;
+        }
+        if (Count > AddType.MaxCount)
+        {
+            int RemainCount = Count - AddType.MaxCount;
+            Count = AddType.MaxCount;
+            return RemainCount;
+        }
+        else return 0;
+    }
+
     public void SubtractItem(int SubCount)
     {
         Count -= SubCount;

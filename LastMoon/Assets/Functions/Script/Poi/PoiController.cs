@@ -33,6 +33,8 @@ public class PoiController : MonoBehaviour
     public GameObject[] StationAuxes;
     public ObjArray[] StationCons;
 
+    public ScriptableObject_Item Debug_Filler;
+
     public ScriptableObject_Item StationBaseMat;
     public ScriptableObject_Item StationAuxMat;
     public ScriptableObject_Item StationFixMat;
@@ -48,10 +50,11 @@ public class PoiController : MonoBehaviour
     public GameObject[] Obj_Coolent;
     public GameObject[] Obj_Temperture;
 
-    public ScriptableObject_Station[] SelectableRecipies;
+    public ScriptableObject_Station[] SelectableRecipes;
+    public ScriptableObject_Station SelectedRecipe;
 
-    public Item[] Inv_Input;
-    public Item[] Inv_Output;
+    public Item[] Inv_Input = new Item[3];
+    public Item[] Inv_Output = new Item[3];
     public Item Inv_Fuel;
     public Item Inv_Coolent;
 
@@ -76,53 +79,89 @@ public class PoiController : MonoBehaviour
             itemData.mixItemCount[i] = 0;
         }
 
+        StationProgress = 0;
         propertyBlock = new MaterialPropertyBlock();
     }
 
-    public void UpdateMatStation()
-    {
-        for (int i = 0; i < StationBases.Length; i++)
-        {
-            StationBases[i].GetComponent<MeshRenderer>().material = StationBaseMat.ItemLUM;
-        }
-        for (int i = 0; i < StationFixes.Length; i++)
-        {
-            StationFixes[i].GetComponent<MeshRenderer>().material = StationFixMat.ItemLUM;
-        }
-        for (int i = 0; i < StationAuxes.Length; i++)
-        {
-            StationAuxes[i].GetComponent<MeshRenderer>().material = StationAuxMat.ItemLUM;
-        }
 
-        for (int i = 0; i< StationConMat.Length; i++)
+    public Item AddItem(GameObject[] objects, Item item, ScriptableObject_Item Type, int Count)
+    {
+        if (item == null)
         {
-            for (int j = 0; j < StationCons[i].Count.Length; j++)
+            item = new Item { ItemType = Type, Count = Count };
+            for (int i = 0; i < objects.Length; i++)
             {
-                StationCons[i].Count[j].GetComponent<MeshRenderer>().material = StationConMat[i].ItemLUM;
+                UpdateMatInventory(objects[i], item);
             }
         }
+        else
+        {
+            int Overflow = item.OverrideItem(Type, Count);
+            if (Overflow == -1)
+            {
+                for (int i = 0; i < objects.Length; i++)
+                {
+                    UpdateMatInventory(objects[i], item);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < objects.Length; i++)
+                {
+                    UpdateMatFill(objects[i], (float)item.Count / (float)item.ItemType.MaxCount);
+                }
+            }
+        }
+        return item;
     }
 
+    public Item SubtractItem(GameObject[] objects, Item item, int Count)
+    {
+        item.SubtractItem(Count);
+        for (int i = 0; i < objects.Length; i++)
+        {
+            UpdateMatFill(objects[i], (float)item.Count / (float)item.ItemType.MaxCount);
+        }
+        return item;
+    }
+
+
+    public void UpdateMatStation()
+    {
+        UpdateObjMat(StationBases, StationBaseMat);
+        UpdateObjMat(StationFixes, StationFixMat);
+        UpdateObjMat(StationAuxes, StationAuxMat);
+        for (int i = 0; i< StationConMat.Length; i++)
+        {
+            UpdateObjMat(StationCons[i].Count, StationConMat[i]);
+        }
+    }
+    public void UpdateObjMat(GameObject[] objects, ScriptableObject_Item item)
+    {
+        for (int i = 0; i < objects.Length; i++)
+        {
+            objects[i].GetComponent<MeshRenderer>().material = item.ItemLUM;
+        }
+    }
     public void UpdateMatInventory(GameObject MatObj, Item InvItem)
     {
         float InvAmount;
         Texture InvLU;
 
-        InvAmount = InvItem.Count / InvItem.ItemType.MaxCount;
+        InvAmount = (float)InvItem.Count / (float)InvItem.ItemType.MaxCount;
         InvLU = InvItem.ItemType.ItemLU;
 
         propertyBlock.SetFloat("_Fill", InvAmount);
         propertyBlock.SetTexture("_Look_Up_Texture", InvLU);
         MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
-
     public void UpdateMatFill(GameObject MatObj, float FillAmount)
     {
         propertyBlock.SetFloat("_Fill", FillAmount);
         MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
 
-    public void CheckRecipe(ScriptableObject_Station SelectedRecipe)
+    public void CheckRecipe()
     {
         if (StationTemperture >= SelectedRecipe.Temperture && Inv_Coolent.Count >= SelectedRecipe.Coolent)
         {
@@ -130,81 +169,78 @@ public class PoiController : MonoBehaviour
                 && Inv_Input[1].ItemType == SelectedRecipe.Input002
                 && Inv_Input[2].ItemType == SelectedRecipe.Input003)
             {
-
+                StationProgress++;
             }
-
             if (StationProgress > SelectedRecipe.ProgressTime)
             {
-                ProcessRecipe(SelectedRecipe);
+                StationProgress = 0;
+                for (int i = 0; i < SelectedRecipe.InputCount; i++)
+                {
+                    Inv_Input[i] = SubtractItem(InputSlot[i].Count, Inv_Input[i], 1);
+                }
+                switch (SelectedRecipe.OutputCount)
+                {
+                    case 1:
+                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+                        break;
+                    case 2:
+                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+                        Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
+                        break;
+                    case 3:
+                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+                        Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
+                        Inv_Output[2] = AddItem(OutputSlot[2].Count, Inv_Output[2], SelectedRecipe.Output003, 1);
+                        break;
+                }
             }
-        }
-    }
-
-    public void ProcessRecipe(ScriptableObject_Station SelectedRecipe)
-    {
-        for (int i = 0; i < SelectedRecipe.InputCount; i++)
-        {
-            Inv_Input[i].SubtractItem(1);
-        }
-        switch (SelectedRecipe.OutputCount)
-        {
-            case 1:
-                Inv_Output[0].AddItem(SelectedRecipe.Output001, 1);
-                break;
-            case 2:
-                Inv_Output[0].AddItem(SelectedRecipe.Output001, 1);
-                Inv_Output[1].AddItem(SelectedRecipe.Output002, 1);
-                break;
-            case 3:
-                Inv_Output[0].AddItem(SelectedRecipe.Output001, 1);
-                Inv_Output[1].AddItem(SelectedRecipe.Output002, 1);
-                Inv_Output[2].AddItem(SelectedRecipe.Output003, 1);
-                break;
         }
     }
     
-    public void HeatingManage(ScriptableObject_Station SelectedRecipe)
+    public void HeatingManage()
     {
         if (StationTemperture < SelectedRecipe.Temperture)
         {
-            if (Heating < 1)
+            if (Inv_Fuel.Count > 0)
             {
-                if (Inv_Fuel.Count > 0)
+                StationTemperture += Inv_Fuel.ItemType.Heating;
+                Inv_Fuel.SubtractItem(1);
+                for (int i = 0; i < FuelSlot.Length; i++)
                 {
-                    Heating++;
-                    Inv_Fuel.SubtractItem(1);
-                    for(int i = 0; i < FuelSlot.Length; i++)
-                    {
-                        UpdateMatFill(FuelSlot[i], Inv_Fuel.Count / Inv_Fuel.ItemType.MaxCount);
-                    }
+                    UpdateMatFill(FuelSlot[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+                    UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
                 }
-            }
-            if (Heating > 0)
-            {
-
-            }
-            for(int i = 0; i < Obj_Temperture.Length; i++)
-            {
-                UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
             }
         }
         if (StationTemperture > 25)
         {
-
-            for (int i = 0; i < Obj_Temperture.Length; i++)
+            if (StationTemperture > 100 && Inv_Coolent.Count > 0)
             {
-                UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
+                StationTemperture -= 2;
+                Inv_Coolent.SubtractItem(1);
+                for (int i = 0; i < Obj_Coolent.Length; i++)
+                {
+                    UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
+                }
+            }
+            else
+            {
+                StationTemperture--;
             }
         }
+        for (int i = 0; i < Obj_Temperture.Length; i++)
+        {
+            UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
+        }
     }
-
-
 
 
 
     [PunRPC]
     public void ReceiveData(int nodeItemCount, string nodeName, string playerNickName, int i)
     {
+        Inv_Input[0] = AddItem(InputSlot[0].Count, Inv_Input[0], Debug_Filler, 1);
+
         if (itemData.nodeName[i].Equals(nodeName) && nodeItemCount >= 0)
         {
             if (playerName == " ")

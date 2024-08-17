@@ -684,7 +684,7 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
-                    for(int i=0; i<nodeItiems.Length;i++)
+                    for (int i=0; i<nodeItiems.Length;i++)
                     {
                         if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
                         {

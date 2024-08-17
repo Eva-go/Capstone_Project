@@ -22,7 +22,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: LUT_Node_Clay
   m_Shader: {fileID: -6465566751694194690, guid: 8e12386977c632648b6fa24405b2fc40, type: 3}
-  m_Parent: {fileID: 2100000, guid: f759f503cc6d4864497664ab32755d56, type: 2}
+  m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _MAIN_LIGHT_SHADOWS_CASCADE
@@ -51,6 +51,30 @@ Material:
         m_Texture: {fileID: 2800000, guid: 7481a833e9941cb4fa73b674c0bcd99b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Bump_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Emission_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _HOLS_Map:
         m_Texture: {fileID: 2800000, guid: 242e0e42d2db76249b2562505829404f, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -75,6 +99,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0b32f7a99ce7c8748ba530c81af1e7a0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Normal_Map:
         m_Texture: {fileID: 2800000, guid: f543410e4c04a8a40aa6debb58fe3111, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -91,21 +123,119 @@ Material:
         m_Texture: {fileID: 2800000, guid: 4cb1cb622ad1c314c9166a78c7715d94, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2DLOD_93f2658618aa431492061a8520acea19_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 1f199df1877097f45aa1cc8cb3ecceb4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_199930e2c01b401990f626570c64b7be_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 1f199df1877097f45aa1cc8cb3ecceb4, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_29a99b15b45847748783996189c6cdb1_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 5c832dcbcd4d97e4ea08ac202af3680d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_eadeac3e2d104042a0ae5ea2defcfa02_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7b9ea78722aef9b41bb0f03ac2954bca, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Specular_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Sub_LUTA:
         m_Texture: {fileID: 18700000, guid: cdbb4ad831287e541953cf5c5fecbc3e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Ambient_Strength: 0
+    - _Blend: 0
+    - _BlendModePreserveSpecular: 1
     - _BumpScale: 0.75
+    - _CastShadows: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
+    - _Cull: 2
+    - _Cutoff: 0.5
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
+    - _Emission_Map_Strength: 0
+    - _EnvironmentReflections: 1
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _Height_Steps: 8
     - _Height_Strength: 0.045
+    - _Look_Up_Mask_Value: 1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _Metallic: 0
+    - _Normal_Map_Strength: 1
+    - _OcclusionStrength: 1
+    - _Occlusion_Emmision_Map_Strength: 1
+    - _Occlusion_Map_Strength: 1
     - _Parallax: 0.04
+    - _QueueControl: 0
+    - _QueueOffset: 0
     - _RL_Brightness: 1
+    - _RL_Limit: 0.5
+    - _RL_Power: 3
+    - _RL_Shadow_Power: 1
     - _RL_Strength: 0.75
+    - _RL_Texture_Brightness: 1.5
+    - _RL_With_Texture: 1
+    - _ReceiveShadows: 1
+    - _SHADOWS_SOFT: 1
     - _Shadow_Power: 1.5
+    - _Shadow_Step: 4
+    - _Shadow_Strength: 1
     - _Smoothness: 0.75
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _Specular_Brightness: 1
+    - _Specular_Map_Strength: 1
     - _Specular_Power: 2
+    - _Specular_Step: 4
     - _Specular_Strength: 1
+    - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
+    - _Texture_Specular: 0
+    - _Transparency: 1
+    - _Use_LU_Specular: 1
+    - _Use_Look_up_Texture: 1
     - _WorkflowMode: 0
-    m_Colors: []
+    - _ZTest: 4
+    - _ZWrite: 1
+    - _ZWriteControl: 0
+    - _transparency: 1
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _RL_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Specular_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
