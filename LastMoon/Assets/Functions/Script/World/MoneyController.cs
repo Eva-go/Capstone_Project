@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class MoneyController : MonoBehaviour
 {
-
     public Text Money;
     static public int total_Money;
     public int plus_Money;
@@ -34,12 +33,7 @@ public class MoneyController : MonoBehaviour
 
     private void Start()
     {
-        GameValue.Sell();
-        Debug.Log("µ·" + GameValue.Money_total);
-        GameValue.setMoney();
-       
-        total_Money = GameValue.Money_total;
-        Money.text = total_Money.ToString();
+        Money.text = GameValue.MoneyUpdate().ToString();
         AxeMoney.text = "1000";
         PickaxeMoney.text = "1100";
         ShovelMoney.text = "1200";
@@ -55,8 +49,10 @@ public class MoneyController : MonoBehaviour
         {
             GameValue.GetMomey(1000);
         }
+        Money.text = GameValue.MoneyUpdate().ToString();
+        Debug.Log("MoneyUpdate" + GameValue.MoneyUpdate());
 
-        if (int_AxeMoney > total_Money)
+        if (int_AxeMoney > GameValue.MoneyUpdate())
         {
             AxeBT.interactable = false;
         }
@@ -65,7 +61,7 @@ public class MoneyController : MonoBehaviour
 
 
 
-        if (int_PickaxeMoney > total_Money)
+        if (int_PickaxeMoney > GameValue.MoneyUpdate())
         {
             PickaxeBT.interactable = false;
         }
@@ -73,7 +69,7 @@ public class MoneyController : MonoBehaviour
             PickaxeBT.interactable = true;
 
 
-        if (int_ShovelMoney > total_Money)
+        if (int_ShovelMoney > GameValue.MoneyUpdate())
         {
             ShoveltBT.interactable = false;
         }
@@ -86,7 +82,7 @@ public class MoneyController : MonoBehaviour
             AxeMoney.text = "2000";
             int_AxeMoney = int.Parse(AxeMoney.text);
             Axetxt.text = "±Ý µµ³¢";
-            AxeIcon.sprite = ToolIcons[6];
+            AxeIcon.sprite = ToolIcons[0];
         }
         else if(Bt_Axe ==2)
         {
@@ -94,14 +90,14 @@ public class MoneyController : MonoBehaviour
             int_AxeMoney = int.Parse(AxeMoney.text);
             Axetxt.text = "SOLD OUT";
             AxeBT.interactable = false;
-            AxeIcon.sprite = ToolIcons[9];
+            //AxeIcon.sprite = ToolIcons[1];
         }
         if (Bt_Pickaxe == 1)
         {
             PickaxeMoney.text = "2100";
             int_PickaxeMoney = int.Parse(PickaxeMoney.text);
             Pickaxetxt.text = "±Ý °î±ªÀÌ";
-            PickaxeIcon.sprite = ToolIcons[7];
+            PickaxeIcon.sprite = ToolIcons[1];
         }
         else if (Bt_Pickaxe == 2)
         {
@@ -109,14 +105,14 @@ public class MoneyController : MonoBehaviour
             int_AxeMoney = int.Parse(AxeMoney.text);
             Pickaxetxt.text = "SOLD OUT";
             PickaxeBT.interactable = false;
-            PickaxeIcon.sprite = ToolIcons[10];
+            //PickaxeIcon.sprite = ToolIcons[10];
         }
         if (Bt_Shovel == 1)
         {
             ShovelMoney.text = "2200";
             int_ShovelMoney = int.Parse(ShovelMoney.text);
             Shoveltext.text = "±Ý »ð";
-            ShovelIcon.sprite = ToolIcons[8];
+            ShovelIcon.sprite = ToolIcons[2];
         }
         else if (Bt_Shovel == 2)
         {
@@ -124,7 +120,7 @@ public class MoneyController : MonoBehaviour
             int_AxeMoney = int.Parse(AxeMoney.text);
             Shoveltext.text = "SOLD OUT";
             ShoveltBT.interactable = false;
-            ShovelIcon.sprite = ToolIcons[11];
+            //ShovelIcon.sprite = ToolIcons[11];
         }
     }
 
@@ -133,7 +129,6 @@ public class MoneyController : MonoBehaviour
     {
         Bt_Axe += 1;
         total_Money -= int_AxeMoney;
-        Money.text = total_Money.ToString();
         GameValue.UseMoney(int_AxeMoney);
     }
 
@@ -141,7 +136,6 @@ public class MoneyController : MonoBehaviour
     {
         Bt_Pickaxe += 1;
         total_Money -= int_PickaxeMoney;
-        Money.text = total_Money.ToString();
         GameValue.UseMoney(int_PickaxeMoney);
     }
 
@@ -149,7 +143,6 @@ public class MoneyController : MonoBehaviour
     {
         Bt_Shovel += 1;
         total_Money -= int_ShovelMoney;
-        Money.text = total_Money.ToString();
         GameValue.UseMoney(int_ShovelMoney);
     }
 

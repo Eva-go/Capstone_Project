@@ -138,6 +138,11 @@ public class GameValue : MonoBehaviourPunCallbacks
     {
         nickName = name;
     }
+    public static int MoneyUpdate()
+    {
+        return Money_total;
+    }
+
     public void seed(int a, int b)
     {
         seed1 = a;

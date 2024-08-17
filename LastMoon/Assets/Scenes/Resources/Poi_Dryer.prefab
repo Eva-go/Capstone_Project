@@ -89,6 +89,8 @@ MonoBehaviour:
   - Count:
     - {fileID: 2428669234594302716}
   Debug_Filler: {fileID: 0}
+  Debug_Fuel: {fileID: 0}
+  Debug_Coolent: {fileID: 0}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 0}
   StationFixMat: {fileID: 0}
@@ -104,8 +106,11 @@ MonoBehaviour:
   Obj_Temperture: []
   SelectableRecipes: []
   SelectedRecipe: {fileID: 0}
-  testObject: {fileID: 0}
-  testObjectTransform: {fileID: 0}
+  StationTemperture: 0
+  StationProgress: 0
+  tick: 0
+  tickMax: 0
+  isConstructing: 0
 --- !u!65 &4611769558836440013
 BoxCollider:
   m_ObjectHideFlags: 0

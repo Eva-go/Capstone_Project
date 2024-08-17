@@ -49,9 +49,12 @@ public class PlayerController : MonoBehaviour
     private int selectedWeaponIndex = 0;
     private int selectedWeaponStrength = 1;
 
+
+    //UI 관련 변수
     public static int getMoney;
     public GameObject insidegameObject;
     public static bool insideActive;
+    public bool ShopActive;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
@@ -103,7 +106,9 @@ public class PlayerController : MonoBehaviour
 
     private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
+
     private string lastDoorEntered;
+
     public void InvokeInventoryChanged()
     {
         OnInventoryChanged?.Invoke();
@@ -137,15 +142,22 @@ public class PlayerController : MonoBehaviour
             AptTransform = gameObject.transform;
             inside = 0;
             keydowns = false;
-        }
+            ShopActive = false;
+            live = true;
+            GameValue.Money_total = 0;
+            GameValue.setMoney();
+
+
+            GameValue.Axe = 0;
+            GameValue.Pickaxe = 0;
+            GameValue.Shovel = 0;
+
+           }   
 
         nickName = this.gameObject.name;
 
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-
-        GameValue.setMoney();
-
         originalCameraY = theCamera.transform.localPosition.y;
         originalToolCameraY = toolCamera.transform.localPosition.y;
 
@@ -154,9 +166,7 @@ public class PlayerController : MonoBehaviour
 
         Items();
         wavetransform = FindObjectOfType<Wavetransform>();
-        live = true;
 
-        GameValue.setMoney();
         Hp = 100;
     }
 
@@ -705,7 +715,12 @@ public class PlayerController : MonoBehaviour
             myRigid.isKinematic = false;
             insideActive = false;
         }
-
+        if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Portal")
+        {
+            Debug.Log("포탈");
+            ShopActive = true;
+            
+        }
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
@@ -1021,6 +1036,7 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < nodeItiems.Length; i++)
             {
                 nodeItiems[i] += 10;
+                mixItiems[i] += 10;
               
             }
             OnInventoryChanged?.Invoke();
