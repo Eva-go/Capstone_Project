@@ -14,7 +14,16 @@ public class Inventory
 
     public void AddItem(Item item)
     {
-        itemList.Add(item);
+        foreach(Item inventoryItem in itemList)
+        {
+            bool AlreadyHas = false;
+            if (inventoryItem.ItemType == item.ItemType)
+            {
+                inventoryItem.Count += item.Count;
+                AlreadyHas = true;
+            }
+            if (!AlreadyHas) itemList.Add(item);
+        }
     }
     public List<Item> GetItems()
     {

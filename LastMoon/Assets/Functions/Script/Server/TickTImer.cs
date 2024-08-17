@@ -14,7 +14,7 @@ public class TickTimer : MonoBehaviourPun
     public static event EventHandler<OnTickEventArgs> OnTick;
 
     // 티크 타이머의 최대 간격 (초 단위)
-    private const float TICK_TIMER_MAX = 20f;
+    private const float TICK_TIMER_MAX = 0.05f;
 
     // 현재 티크 및 타이머 상태를 저장하는 변수
     private int tick;

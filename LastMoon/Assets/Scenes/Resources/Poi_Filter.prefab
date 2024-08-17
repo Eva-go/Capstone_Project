@@ -115,8 +115,9 @@ MonoBehaviour:
   FuelWick: []
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipes: []
-  SelectedRecipe: {fileID: 0}
+  SelectableRecipes:
+  - {fileID: 11400000, guid: 94d7d4c2cea72cb4c969100ddc6e1b45, type: 2}
+  SelectedRecipe: {fileID: 11400000, guid: 94d7d4c2cea72cb4c969100ddc6e1b45, type: 2}
 --- !u!65 &8337333612337844824
 BoxCollider:
   m_ObjectHideFlags: 0

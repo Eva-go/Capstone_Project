@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/ScriptableObject_Item")]
 public class ScriptableObject_Item : ScriptableObject
 {
-    public string ItemName;
+    public string ItemName = "Empty";
     public Sprite ItemSprite;
 
     public Texture ItemLU;

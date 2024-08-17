@@ -119,6 +119,8 @@ MonoBehaviour:
   - Count:
     - {fileID: 6401058852643314478}
   Debug_Filler: {fileID: 0}
+  Debug_Fuel: {fileID: 0}
+  Debug_Coolent: {fileID: 0}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
@@ -136,8 +138,19 @@ MonoBehaviour:
   - {fileID: 4868576021829270635}
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipes: []
-  SelectedRecipe: {fileID: 0}
+  SelectableRecipes:
+  - {fileID: 11400000, guid: e319e8df19835214cb1db1ef731cd530, type: 2}
+  - {fileID: 11400000, guid: 3bd243934ea36b946ac865497b7eccae, type: 2}
+  - {fileID: 11400000, guid: e3ecf7a7885d6a14f9221cbcf6fa9abb, type: 2}
+  - {fileID: 11400000, guid: 993146a4849474048b66b87f3c6b2410, type: 2}
+  - {fileID: 11400000, guid: 5a5c5957c8f6fe04fb072a1743fb1eb6, type: 2}
+  - {fileID: 11400000, guid: 0ed14c4ef38f65f4c9d96bdc962ee163, type: 2}
+  - {fileID: 11400000, guid: 4f103a49adbb4ce4b8ab7a42ec1bf15e, type: 2}
+  SelectedRecipe: {fileID: 11400000, guid: e319e8df19835214cb1db1ef731cd530, type: 2}
+  StationTemperture: 0
+  StationProgress: 0
+  tick: 0
+  tickMax: 0
 --- !u!114 &527718943812757758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +398,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2206388233697376635}
     m_Modifications:
+    - target: {fileID: -1286255684148888066, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 54800b56a11cf5c4697ad12143298ae8, type: 2}
+    - target: {fileID: 2472559231161016880, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
     - target: {fileID: -8679921383154817045, guid: 934f170a720cf10408df7f106250697a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -425,14 +446,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -1286255684148888066, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 54800b56a11cf5c4697ad12143298ae8, type: 2}
-    - target: {fileID: 2472559231161016880, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

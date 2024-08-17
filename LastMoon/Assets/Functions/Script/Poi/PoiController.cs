@@ -34,6 +34,8 @@ public class PoiController : MonoBehaviour
     public ObjArray[] StationCons;
 
     public ScriptableObject_Item Debug_Filler;
+    public ScriptableObject_Item Debug_Fuel;
+    public ScriptableObject_Item Debug_Coolent;
 
     public ScriptableObject_Item StationBaseMat;
     public ScriptableObject_Item StationAuxMat;
@@ -58,15 +60,13 @@ public class PoiController : MonoBehaviour
     public Item Inv_Fuel;
     public Item Inv_Coolent;
 
-    private float Heating;
-
-    private float StationTemperture;
-    private float StationProgress;
+    public float StationTemperture;
+    public float StationProgress;
 
     //tick  관련 변수
-    private int tick;
-    private int tickMax;
-    private bool isConstructing;
+    public int tick;
+    public int tickMax;
+    public bool isConstructing;
 
 
     //레시피 관련 변수
@@ -89,20 +89,17 @@ public class PoiController : MonoBehaviour
         }
 
         StationProgress = 0;
-        propertyBlock = new MaterialPropertyBlock();
+        Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
+        Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
     }
 
 
 
     private void Update()
     {
-        //tick 테스트키
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            //괄호 값 = 틱 몇번 불렸냐?
-            tick_ck(5);
-        }
+        tick_ck(5);
     }
+
 
     public void SlotClick(int _slotNumber)
     {
@@ -122,21 +119,23 @@ public class PoiController : MonoBehaviour
 
     private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
     {
-        if(isConstructing)
+        if (isConstructing)
         {
-            tick += 1;
-            if(tick>=tickMax)
+            tick = e.tick % tickMax;
+            Debug.Log("E tIck" + tick + " : " + e.tick);
+            if (tick >= tickMax - 1)
             {
-                isConstructing = false;
-                Debug.Log("Tick tick false" + tick +":"+tickMax+" "+ PhotonNetwork.Time);
                 CheckRecipe();
                 HeatingManage();
+                Debug.Log("tick" + tick + " : " + tickMax + " : " + PhotonNetwork.Time);
+                isConstructing = false;
             }
             else
             {
-                Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
+
+                //Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
             }
-           
+
         }
     }
 
@@ -145,28 +144,14 @@ public class PoiController : MonoBehaviour
         if (item == null)
         {
             item = new Item { ItemType = Type, Count = Count };
-            for (int i = 0; i < objects.Length; i++)
-            {
-                UpdateMatInventory(objects[i], item);
-            }
         }
         else
         {
-            int Overflow = item.OverrideItem(Type, Count);
-            if (Overflow == -1)
-            {
-                for (int i = 0; i < objects.Length; i++)
-                {
-                    UpdateMatInventory(objects[i], item);
-                }
-            }
-            else
-            {
-                for (int i = 0; i < objects.Length; i++)
-                {
-                    UpdateMatFill(objects[i], (float)item.Count / (float)item.ItemType.MaxCount);
-                }
-            }
+            item.OverrideItem(Type, Count);
+        }
+        for (int i = 0; i < objects.Length; i++)
+        {
+            UpdateMatInventory(objects[i], item);
         }
         return item;
     }
@@ -207,96 +192,119 @@ public class PoiController : MonoBehaviour
         InvAmount = (float)InvItem.Count / (float)InvItem.ItemType.MaxCount;
         InvLU = InvItem.ItemType.ItemLU;
 
+        propertyBlock = new MaterialPropertyBlock();
         propertyBlock.SetFloat("_Fill", InvAmount);
         propertyBlock.SetTexture("_Look_Up_Texture", InvLU);
         MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
     public void UpdateMatFill(GameObject MatObj, float FillAmount)
     {
+        propertyBlock = new MaterialPropertyBlock();
         propertyBlock.SetFloat("_Fill", FillAmount);
         MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
 
     public void tick_ck(int ticksToConstruct)
     {
-        tick = 0;
-        tickMax = ticksToConstruct;
-        isConstructing = true;
-        TickTimer.OnTick += TimeTickSystem_OnTick;
+
+        if (!isConstructing)
+        {
+            tickMax = ticksToConstruct;
+            isConstructing = true;
+            TickTimer.OnTick += TimeTickSystem_OnTick;
+        }
+
     }
 
     public void CheckRecipe()
     {
         Debug.Log("Tick executed at CheckRecipe()");
-        //if (StationTemperture >= SelectedRecipe.Temperture && Inv_Coolent.Count >= SelectedRecipe.Coolent)
-        //{
-        //    if (Inv_Input[0].ItemType == SelectedRecipe.Input001
-        //        && Inv_Input[1].ItemType == SelectedRecipe.Input002
-        //        && Inv_Input[2].ItemType == SelectedRecipe.Input003)
-        //    {
-        //        StationProgress++;
-        //    }
-        //    if (StationProgress > SelectedRecipe.ProgressTime)
-        //    {
-        //        StationProgress = 0;
-        //        for (int i = 0; i < SelectedRecipe.InputCount; i++)
-        //        {
-        //            Inv_Input[i] = SubtractItem(InputSlot[i].Count, Inv_Input[i], 1);
-        //        }
-        //        switch (SelectedRecipe.OutputCount)
-        //        {
-        //            case 1:
-        //                Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
-        //                break;
-        //            case 2:
-        //                Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
-        //                Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
-        //                break;
-        //            case 3:
-        //                Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
-        //                Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
-        //                Inv_Output[2] = AddItem(OutputSlot[2].Count, Inv_Output[2], SelectedRecipe.Output003, 1);
-        //                break;
-        //        }
-        //    }
-        //}
+        if (StationTemperture >= SelectedRecipe.Temperture && Inv_Coolent.Count >= SelectedRecipe.Coolent)
+        {
+            switch (SelectedRecipe.InputCount)
+            {
+                case 1:
+                    if (Inv_Input[0].ItemType == SelectedRecipe.Input001)
+                    {
+                        StationProgress++;
+                    }
+                    break;
+                case 2:
+                    if (Inv_Input[0].ItemType == SelectedRecipe.Input001
+                        && Inv_Input[1].ItemType == SelectedRecipe.Input002)
+                    {
+                        StationProgress++;
+                    }
+                    break;
+                case 3:
+                    if (Inv_Input[0].ItemType == SelectedRecipe.Input001
+                        && Inv_Input[1].ItemType == SelectedRecipe.Input002
+                        && Inv_Input[2].ItemType == SelectedRecipe.Input003)
+                    {
+                        StationProgress++;
+                    }
+                    break;
+            }    
+            if (StationProgress > SelectedRecipe.ProgressTime)
+            {
+                StationProgress = 0;
+                for (int i = 0; i < SelectedRecipe.InputCount; i++)
+                {
+                    Inv_Input[i] = SubtractItem(InputSlot[i].Count, Inv_Input[i], 1);
+                }
+                switch (SelectedRecipe.OutputCount)
+                {
+                    case 1:
+                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+                        break;
+                    case 2:
+                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+                        Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
+                        break;
+                    case 3:
+                        Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output001, 1);
+                        Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output002, 1);
+                        Inv_Output[2] = AddItem(OutputSlot[2].Count, Inv_Output[2], SelectedRecipe.Output003, 1);
+                        break;
+                }
+            }
+        }
     }
     public void HeatingManage()
     {
         Debug.Log("Tick executed at HeatingManage()");
-        //if (StationTemperture < SelectedRecipe.Temperture)
-        //{
-        //    if (Inv_Fuel.Count > 0)
-        //    {
-        //        StationTemperture += Inv_Fuel.ItemType.Heating;
-        //        Inv_Fuel.SubtractItem(1);
-        //        for (int i = 0; i < FuelSlot.Length; i++)
-        //        {
-        //            UpdateMatFill(FuelSlot[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
-        //            UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
-        //        }
-        //    }
-        //}
-        //if (StationTemperture > 25)
-        //{
-        //    if (StationTemperture > 100 && Inv_Coolent.Count > 0)
-        //    {
-        //        StationTemperture -= 2;
-        //        Inv_Coolent.SubtractItem(1);
-        //        for (int i = 0; i < Obj_Coolent.Length; i++)
-        //        {
-        //            UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        StationTemperture--;
-        //    }
-        //}
-        //for (int i = 0; i < Obj_Temperture.Length; i++)
-        //{
-        //    UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
-        //}
+        if (StationTemperture < SelectedRecipe.Temperture)
+        {
+            if (Inv_Fuel.Count > 0)
+            {
+                StationTemperture += Inv_Fuel.ItemType.Heating;
+                Inv_Fuel.SubtractItem(1);
+                for (int i = 0; i < FuelSlot.Length; i++)
+                {
+                    UpdateMatInventory(FuelSlot[i], Inv_Fuel);
+                    UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+                }
+            }
+        }
+        if (StationTemperture > 25)
+        {
+            if (StationTemperture > SelectedRecipe.Temperture && Inv_Coolent.Count > 0)
+            {
+                Inv_Coolent.SubtractItem(1);
+                for (int i = 0; i < Obj_Coolent.Length; i++)
+                {
+                    UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
+                }
+            }
+            else
+            {
+                StationTemperture--;
+            }
+        }
+        for (int i = 0; i < Obj_Temperture.Length; i++)
+        {
+            UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
+        }
     }
 
 
@@ -304,7 +312,24 @@ public class PoiController : MonoBehaviour
     [PunRPC]
     public void ReceiveData(int nodeItemCount, string nodeName, string playerNickName, int i)
     {
-        Inv_Input[0] = AddItem(InputSlot[0].Count, Inv_Input[0], Debug_Filler, 1);
+        switch (SelectedRecipe.InputCount)
+        {
+            case 1:
+                Inv_Input[0] = AddItem(InputSlot[0].Count, Inv_Input[0], SelectedRecipe.Input001, 1);
+                break;
+            case 2:
+                Inv_Input[0] = AddItem(InputSlot[0].Count, Inv_Input[0], SelectedRecipe.Input001, 1);
+                Inv_Input[1] = AddItem(InputSlot[1].Count, Inv_Input[1], SelectedRecipe.Input002, 1);
+                break;
+            case 3:
+                Inv_Input[0] = AddItem(InputSlot[0].Count, Inv_Input[0], SelectedRecipe.Input001, 1);
+                Inv_Input[1] = AddItem(InputSlot[1].Count, Inv_Input[1], SelectedRecipe.Input002, 1);
+                Inv_Input[2] = AddItem(InputSlot[2].Count, Inv_Input[2], SelectedRecipe.Input003, 1);
+                break;
+        }
+
+        Inv_Fuel = AddItem(FuelSlot, Inv_Fuel, Debug_Fuel, 10);
+        Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 10);
 
         if (itemData.nodeName[i].Equals(nodeName) && nodeItemCount >= 0)
         {
