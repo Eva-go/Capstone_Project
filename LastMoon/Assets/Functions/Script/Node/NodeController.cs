@@ -15,6 +15,8 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
 
     public int nodeCount;
 
+    public ScriptableObject_Item NodeItemType;
+
     //private int giveMoney = 50;
 
     private void Start()

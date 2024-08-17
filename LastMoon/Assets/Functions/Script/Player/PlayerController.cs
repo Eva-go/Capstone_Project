@@ -81,6 +81,8 @@ public class PlayerController : MonoBehaviour
 
     public event Action OnInventoryChanged;
 
+    public Inventory PlayerInventory;
+
     public float positionLerpSpeed = 8f;
     public float rotationLerpSpeed = 8f;
 
@@ -235,9 +237,9 @@ public class PlayerController : MonoBehaviour
             if (insideActive && InsideFillHandler.fillValue >= 100)
             {
                 Debug.Log("인사이드" + inside);
+                InsideFillHandler.fillValue = 0;
                 InsideUpdate();
                 keydowns = false;
-                InsideFillHandler.fillValue = 0;
                 myRigid.isKinematic = false;
             }
         }
@@ -711,6 +713,8 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
+                    //stationinteration
+
                     for (int i=0; i<nodeItiems.Length;i++)
                     {
                         if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
@@ -764,6 +768,7 @@ public class PlayerController : MonoBehaviour
                     {
                         nodeController.TakeDamage(5f * selectedWeaponStrength * CombatSwingMult, false);
                     }
+                    PlayerInventory.AddItem(new Item { ItemType = nodeController.NodeItemType, Count = nodeController.nodeCount });
 
                     for (int i = 0; i < 6; i++)
                     {
