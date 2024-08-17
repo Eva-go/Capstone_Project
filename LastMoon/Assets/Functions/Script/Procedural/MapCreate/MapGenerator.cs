@@ -7,13 +7,19 @@ using Unity.Mathematics;
 using Photon.Pun;
 using UnityEngine.UIElements;
 using Unity.Burst.CompilerServices;
+using System.Threading.Tasks;
+using Unity.Collections;
+using static UnityEngine.Mesh;
 
 public class MapGenerator : MonoBehaviour
 {
+    [ReadOnly]
+    public static bool useFlatShading = false;
+
     public enum DrawMode { NoiseMap, Mesh, FalloffMap };
     public DrawMode drawMode;
 
-    public TerrainData terrainData;
+    public MapTerrainData terrainData;
     public NoiseData noiseData;
     //public TextureData textureData;
 
@@ -87,6 +93,10 @@ public class MapGenerator : MonoBehaviour
     [Range(0, 1)]
     public float POIThreshold6 = 0.1f;
 
+    float nodeSpawnHeight = 0.5f;
+    float buildingSpawnHeight = 0.7f;
+    float POISpawnHeight = 0.9f;
+
     public GameObject[] lowNoisePrefabs; // 낮은 높이 프리팹 배열
     public GameObject[] mediumNoisePrefabs; // 중간 높이 프리팹 배열
     public GameObject[] highNoisePrefabs; // 높은 높이 프리팹 배열
@@ -110,7 +120,17 @@ public class MapGenerator : MonoBehaviour
 
     public float groundThreshold = 10.0f;
 
-    void PlaceBuildings(float[,] noiseMap)
+    public int chunks = 9;
+    public int chunkSize = 10;
+    public GameObject chunkPrefab;
+    public GameObject player;
+
+    private Vector3 spawnPoint;
+    private Queue<MeshData> meshDataQueue = new Queue<MeshData>();
+
+    private Dictionary<Vector2Int, GameObject> chunksDictionary = new Dictionary<Vector2Int, GameObject>();
+
+    void PlaceBuildings(float[,] noiseMap, MeshData meshData, GameObject[] highNoisePrefabs, GameObject[] mediumNoisePrefabs, GameObject[] lowNoisePrefabs)
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
@@ -122,7 +142,7 @@ public class MapGenerator : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    GameObject prefabToPlace = null;
+                    GameObject[] prefabsToUse = null;
                     float height = hit.point.y;
                     if (height > BuildingYMin)
                     {
@@ -131,30 +151,37 @@ public class MapGenerator : MonoBehaviour
                             position = new Vector3(x - 120, height, y - 120);
                             if (noiseMap[x, y] > BuildingThreshold1)
                             {
-                                prefabToPlace = highNoisePrefabs[prng.Next(highNoisePrefabs.Length)];
+                                prefabsToUse = highNoisePrefabs;
                             }
                             else if (noiseMap[x, y] > BuildingThreshold2)
                             {
-                                prefabToPlace = mediumNoisePrefabs[prng.Next(mediumNoisePrefabs.Length)];
+                                prefabsToUse = mediumNoisePrefabs;
                             }
                             else if (noiseMap[x, y] > BuildingThreshold3)
                             {
-                                prefabToPlace = lowNoisePrefabs[prng.Next(lowNoisePrefabs.Length)];
+                                prefabsToUse = lowNoisePrefabs;
                             }
                         }
                     }
 
-                    if (prefabToPlace != null)
+                    if (prefabsToUse != null)
                     {
-                        GameObject newBliding = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        newBliding.transform.SetParent(parentTransform);
+                        // Add the selected prefabs to the MeshData
+                        meshData.AddObjectToSpawn(prefabsToUse, position);
+
+                        // Instantiate and place each prefab
+                        foreach (var prefab in prefabsToUse)
+                        {
+                            GameObject newBuilding = PhotonNetwork.Instantiate(prefab.name, position, Quaternion.identity);
+                            newBuilding.transform.SetParent(parentTransform);
+                        }
                     }
                 }
             }
         }
     }
 
-    void PlaceDirtNodes(float[,] noiseMap)
+    void PlaceDirtNodes(float[,] noiseMap, MeshData meshData, GameObject[] dirtlowNodePrefabs, GameObject[] dirtmediumNodePrefabs, GameObject[] dirthighNodePrefabs)
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
@@ -167,7 +194,7 @@ public class MapGenerator : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    GameObject prefabToPlace = null;
+                    GameObject[] prefabsToUse = null;
                     float height = hit.point.y;
                     if (height > NodedirtYMin)
                     {
@@ -177,31 +204,39 @@ public class MapGenerator : MonoBehaviour
                             // heightThreshold에 따라 다른 프리팹 배열 선택
                             if (noiseMap[x, y] > NodedirtThreshold1)
                             {
-                                prefabToPlace = dirtlowNodePrefabs[prng.Next(dirtlowNodePrefabs.Length)];
+                                prefabsToUse = dirtlowNodePrefabs;
                             }
                             else if (noiseMap[x, y] > NodedirtThreshold2)
                             {
-                                prefabToPlace = dirtmediumNodePrefabs[prng.Next(dirtmediumNodePrefabs.Length)];
+                                prefabsToUse = dirtmediumNodePrefabs;
                             }
                             else if (noiseMap[x, y] > NodedirtThreshold3)
                             {
-                                prefabToPlace = dirthighNodePrefabs[prng.Next(dirthighNodePrefabs.Length)];
+                                prefabsToUse = dirthighNodePrefabs;
                             }
                         }
                     }
-                            
 
-                    if (prefabToPlace != null)
+
+                    if (prefabsToUse != null)
                     {
-                        GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        newNode.transform.SetParent(parentTransform);
+                        // Add the selected prefabs to the MeshData
+                        meshData.AddObjectToSpawn(prefabsToUse, position);
+
+                        // Instantiate and place each prefab
+                        foreach (var prefab in prefabsToUse)
+                        {
+                            GameObject newBuilding = PhotonNetwork.Instantiate(prefab.name, position, Quaternion.identity);
+                            newBuilding.transform.SetParent(parentTransform);
+                        }
                     }
+
                 }
             }
         }
     }
 
-    void PlaceSandNodes(float[,] noiseMap)
+    void PlaceSandNodes(float[,] noiseMap, MeshData meshData, GameObject[] sandlowNodePrefabs, GameObject[] sandmediumNodePrefabs, GameObject[] sandhighNodePrefabs)
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
@@ -214,7 +249,7 @@ public class MapGenerator : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    GameObject prefabToPlace = null;
+                    GameObject[] prefabsToUse = null;
                     float height = hit.point.y;
                     if (height > NodesandYMin)
                     {
@@ -224,30 +259,37 @@ public class MapGenerator : MonoBehaviour
                             // heightThreshold에 따라 다른 프리팹 배열 선택
                             if (noiseMap[x, y] > NodedirtThreshold1)
                             {
-                                prefabToPlace = sandlowNodePrefabs[prng.Next(sandlowNodePrefabs.Length)];
+                                prefabsToUse = sandlowNodePrefabs;
                             }
                             else if (noiseMap[x, y] > NodedirtThreshold2)
                             {
-                                prefabToPlace = sandmediumNodePrefabs[prng.Next(sandmediumNodePrefabs.Length)];
+                                prefabsToUse = sandmediumNodePrefabs;
                             }
                             else if (noiseMap[x, y] > NodedirtThreshold3)
                             {
-                                prefabToPlace = sandhighNodePrefabs[prng.Next(sandhighNodePrefabs.Length)];
+                                prefabsToUse = sandhighNodePrefabs;
                             }
                         }
                     }
 
-                    if (prefabToPlace != null)
+                    if (prefabsToUse != null)
                     {
-                        GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        newNode.transform.SetParent(parentTransform);
+                        // Add the selected prefabs to the MeshData
+                        meshData.AddObjectToSpawn(prefabsToUse, position);
+
+                        // Instantiate and place each prefab
+                        foreach (var prefab in prefabsToUse)
+                        {
+                            GameObject newBuilding = PhotonNetwork.Instantiate(prefab.name, position, Quaternion.identity);
+                            newBuilding.transform.SetParent(parentTransform);
+                        }
                     }
                 }
             }
         }
     }
 
-    void PlacePOIs(float[,] noiseMap)
+    void PlacePOIs(float[,] noiseMap, MeshData meshData, GameObject[] POIPrefabs1, GameObject[] POIPrefabs2, GameObject[] POIPrefabs3, GameObject[] POIPrefabs4, GameObject[] POIPrefabs5, GameObject[] POIPrefabs6)
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
@@ -260,7 +302,7 @@ public class MapGenerator : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    GameObject prefabToPlace = null;
+                    GameObject[] prefabsToUse = null;
                     float height = hit.point.y;
                     position = new Vector3(x - 120, height, y - 120);
                     if (height > POIYMin)
@@ -270,66 +312,46 @@ public class MapGenerator : MonoBehaviour
 
                             if (noiseMap[x, y] > POIThreshold1)
                             {
-                                prefabToPlace = POIPrefabs1[prng.Next(POIPrefabs1.Length)];
+                                prefabsToUse = POIPrefabs1;
                             }
                             else if (noiseMap[x, y] > POIThreshold2)
                             {
-                                prefabToPlace = POIPrefabs2[prng.Next(POIPrefabs2.Length)];
+                                prefabsToUse = POIPrefabs2;
                             }
                             else if (noiseMap[x, y] > POIThreshold3)
                             {
-                                prefabToPlace = POIPrefabs3[prng.Next(POIPrefabs3.Length)];
+                                prefabsToUse = POIPrefabs3;
                             }
                             else if (noiseMap[x, y] > POIThreshold4)
                             {
-                                prefabToPlace = POIPrefabs4[prng.Next(POIPrefabs4.Length)];
+                                prefabsToUse = POIPrefabs4;
                             }
                             else if (noiseMap[x, y] > POIThreshold5)
                             {
-                                prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
+                                prefabsToUse = POIPrefabs5;
                             }
                             else if (noiseMap[x, y] > POIThreshold6)
                             {
-                                prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
+                                prefabsToUse = POIPrefabs6;
                             }
                         }
                     }
 
-                    if (prefabToPlace != null)
+                    if (prefabsToUse != null)
                     {
-                        GameObject newPOI = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        newPOI.transform.SetParent(parentTransform);
+                        // Add the selected prefabs to the MeshData
+                        meshData.AddObjectToSpawn(prefabsToUse, position);
+
+                        // Instantiate and place each prefab
+                        foreach (var prefab in prefabsToUse)
+                        {
+                            GameObject newBuilding = PhotonNetwork.Instantiate(prefab.name, position, Quaternion.identity);
+                            newBuilding.transform.SetParent(parentTransform);
+                        }
                     }
                 }
             }
         }
-    }
-    // 건물을 지면에 붙이는 메서드
-    private bool PositionBuildingOnGround(GameObject building, float minY, float maxY)
-    {
-        // 건물의 위치에서 아래로 Raycast를 사용하여 지면 찾기
-        RaycastHit hit;
-        if (Physics.Raycast(building.transform.position, Vector3.down, out hit, Mathf.Infinity))
-        {
-            // 지면을 찾으면 건물의 위치를 해당 지점으로 이동
-            if (hit.point.y > minY)
-            {
-                if (hit.point.y <= maxY)
-                {
-                    building.transform.position = hit.point;
-                    return true;
-                }
-            }
-            else
-            {
-                Debug.LogWarning("지면이 범위 내에 있지 않습니다. 건물을 초기 위치에 남겨둡니다.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("지면을 찾을 수 없습니다. 건물을 초기 위치에 남겨둡니다.");
-        }
-        return false;
     }
 
     public void DrawMapInEditor()
@@ -346,14 +368,6 @@ public class MapGenerator : MonoBehaviour
             display.DrawMesh(MeshGenerator.GenerateTerrainMesh(mapData.heightMap, terrainData.meshHeightMultiplier, terrainData.meshHeightCurve, editorPreviewLOD, terrainData.useFlatShading));
         }
 
-    }
-
-    void Awake()
-    {
-        seed1 = GameValue.seed1;
-        seed2 = GameValue.seed2;
-        Debug.Log("Map: " + seed1);
-        Debug.Log("Map: " + seed2);
     }
 
     void OnValuesUpdated()
@@ -436,6 +450,102 @@ public class MapGenerator : MonoBehaviour
                 threadInfo.callback(threadInfo.parameter);
             }
         }
+        if (meshDataQueue.Count > 0)
+        {
+            MeshData meshData = meshDataQueue.Dequeue();
+            CreateChunk(meshData.position, meshData);
+        }
+    }
+
+    void GenerateChunks(Vector2Int centerChunk)
+    {
+        for (int z = -chunks / 2; z < chunks / 2; z++)
+        {
+            for (int x = -chunks / 2; x < chunks / 2; x++)
+            {
+                Vector2Int chunkCoord = new Vector2Int(x, z) + centerChunk;
+                GenerateChunk(chunkCoord);
+            }
+        }
+    }
+
+    void GenerateChunk(Vector2Int chunkCoord)
+    {
+        if (!chunksDictionary.ContainsKey(chunkCoord))
+        {
+            Vector3 chunkPosition = new Vector3(chunkCoord.x * chunkSize, 0, chunkCoord.y * chunkSize);
+            Task.Run(() =>
+            {
+                MeshData meshData = TerrainGenerator.GenerateTerrainMesh(chunkPosition, chunkSize, noiseData.noiseScale1, seed1, mapChunkSize, nodeSpawnHeight, buildingSpawnHeight, POISpawnHeight, nodePrefabs, buildingPrefabs, POIPrefabs);
+                meshDataQueue.Enqueue(meshData);
+            });
+        }
+    }
+
+    void CreateChunk(Vector2Int chunkCoord, MeshData meshData)
+    {
+        if (!chunksDictionary.ContainsKey(chunkCoord))
+        {
+            GameObject chunk = Instantiate(chunkPrefab, new Vector3(chunkCoord.x * chunkSize, 0, chunkCoord.y * chunkSize), Quaternion.identity);
+            MeshFilter meshFilter = chunk.GetComponent<MeshFilter>();
+            meshFilter.mesh = meshData.CreateMesh();
+            chunk.transform.SetParent(transform);
+            chunksDictionary.Add(chunkCoord, chunk);
+        }
+    }
+
+    public class TerrainGenerator
+    {
+        public static MeshData GenerateTerrainMesh(Vector3 position, int chunkSize, float noiseScale, int seed, int mapSize, float nodeHeight, float buildingHeight, float POIHeight, GameObject[] nodePrefabs, GameObject[] buildingPrefabs, GameObject[] POIPrefabs)
+        {
+            MeshData meshData = new MeshData(chunkSize, useFlatShading);
+            System.Random random = new System.Random(seed);
+
+            for (int y = 0; y <= chunkSize; y++)
+            {
+                for (int x = 0; x <= chunkSize; x++)
+                {
+                    float worldX = position.x + x;
+                    float worldZ = position.z + y;
+                    float noiseValue = Mathf.PerlinNoise(worldX * noiseScale, worldZ * noiseScale) * 20;
+                    float height = noiseValue;
+                    int vertexIndex = y * (chunkSize + 1) + x;
+                    meshData.SetVertex(vertexIndex, new Vector3(worldX, height, worldZ));
+
+                    GameObject[] prefabsToUse = null;
+
+                    if (height >= nodeHeight && height < buildingHeight)
+                    {
+                        prefabsToUse = nodePrefabs;
+                    }
+                    else if (height >= buildingHeight && height < POIHeight)
+                    {
+                        prefabsToUse = buildingPrefabs;
+                    }
+                    else if (height >= POIHeight)
+                    {
+                        prefabsToUse = POIPrefabs;
+                    }
+
+                    if (prefabsToUse != null)
+                    {
+                        meshData.AddObjectToSpawn(prefabsToUse, new Vector3(worldX, height, worldZ));
+                    }
+                }
+            }
+
+            for (int y = 0; y < chunkSize; y++)
+            {
+                for (int x = 0; x < chunkSize; x++)
+                {
+                    int vertexIndex = y * (chunkSize + 1) + x;
+                    meshData.AddTriangle(vertexIndex, vertexIndex + chunkSize + 1, vertexIndex + 1);
+                    meshData.AddTriangle(vertexIndex + chunkSize + 1, vertexIndex + chunkSize + 2, vertexIndex + 1);
+                }
+            }
+
+            return meshData;
+        }
     }
 
     MapData GenerateMapData(Vector2 center)
@@ -502,11 +612,14 @@ public class MapGenerator : MonoBehaviour
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            Vector2Int centerChunk = new Vector2Int(Mathf.RoundToInt(spawnPoint.x / chunkSize), Mathf.RoundToInt(spawnPoint.z / chunkSize));
+            GenerateChunks(centerChunk);
+            MeshData meshData = new MeshData(chunkSize, useFlatShading);
             if (placementArea != null && nodePrefabs.Length > 0)
             {
                 float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
-                PlaceDirtNodes(irregularNoiseMap);
-                PlaceSandNodes(irregularNoiseMap);
+                PlaceDirtNodes(irregularNoiseMap, meshData, highNoisePrefabs, mediumNoisePrefabs, lowNoisePrefabs);
+                PlaceSandNodes(irregularNoiseMap, meshData, highNoisePrefabs, mediumNoisePrefabs, lowNoisePrefabs);
             }
             else
             {
@@ -516,7 +629,7 @@ public class MapGenerator : MonoBehaviour
             if (placementArea != null && POIPrefabs.Length > 0)
             {
                 float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
-                PlacePOIs(irregularNoiseMap);
+                PlacePOIs(irregularNoiseMap, meshData, POIPrefabs1, POIPrefabs2, POIPrefabs3, POIPrefabs4, POIPrefabs5, POIPrefabs6);
             }
             else
             {
@@ -526,7 +639,8 @@ public class MapGenerator : MonoBehaviour
             if (placementArea != null && buildingPrefabs.Length > 0)
             {
                 float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(mapChunkSize, mapChunkSize, seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
-                PlaceBuildings(irregularNoiseMap);
+
+                PlaceBuildings(irregularNoiseMap, meshData, highNoisePrefabs, mediumNoisePrefabs, lowNoisePrefabs);
                 PlayerSpawn.OnBuildingCreated();
             }
             else
