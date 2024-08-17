@@ -106,17 +106,19 @@ public class PoiController : MonoBehaviour
 
     public void SlotClick(int _slotNumber)
     {
-        slotNumber = _slotNumber; // Set the slot number
-        onClickStart(); // Call the start method for preview
-        Debug.Log("버튼 클릭" + _slotNumber);
+        onClickStart(_slotNumber); // Call the start method for preview
     }
 
-    public void onClickStart()
+    public void onClickStart(int _slotNumber)
     {
-        Cursor.lockState = CursorLockMode.Locked;
-
+        for(int i=0; i< SelectableRecipes.Length; i++)
+        {
+            if(i == _slotNumber)
+            {
+                SelectedRecipe = SelectableRecipes[i];
+            }
+        }
     }
-
 
     private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
     {
