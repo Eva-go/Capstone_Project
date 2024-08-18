@@ -57,7 +57,7 @@ public class GameValue : MonoBehaviourPunCallbacks
     //exit
     public static bool exit;
 
-    //public static float DNCycle;
+    public static float DNCycle;
     public static bool LowTide = true;
     public static int TideCycle = 1;
 
