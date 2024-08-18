@@ -125,6 +125,8 @@ public class PlayerController : MonoBehaviour
 
     public bool Godmode = false;
 
+    PoiController UISelectedPOIController;
+
     //InteractableObject를 위한 코드
     private void Awake()
     {
@@ -193,7 +195,7 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < InitalItems.Length; i++)
             {
-                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 0 });
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
             }
             RespawnCamera.SetActive(false);
             Hp = 100;
@@ -409,11 +411,9 @@ public class PlayerController : MonoBehaviour
                 if (bagScript != null)
                 {
                     // 아이템 데이터 전송
-                    for (int i = 0; i < nodeItiems.Length; i++)
-                    {
-                        bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
-                    }
+                    bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, PlayerInventory);
                 }
+                PlayerInventory.ClearInventory();
                 RespawnAcive = false;
                 RespawnCamera.SetActive(false);
                 RespawnFillHandler.fillValue = 0;
@@ -823,17 +823,11 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
-                    //stationinteration
+                    //Store information for UI;
+                    UISelectedPOIController = poiController;
 
-                    for (int i=0; i<nodeItiems.Length;i++)
-                    {
-                        if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
-                        {
-                            nodeItiems[i]--;
-                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName,i);
-                        }
-                            
-                    }
+                    //stationinteration
+                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
                 }
             }
         }

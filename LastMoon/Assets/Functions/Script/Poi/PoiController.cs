@@ -60,7 +60,7 @@ public class PoiController : MonoBehaviour
     public Item Inv_Fuel;
     public Item Inv_Coolent;
 
-    public float StationTemperture;
+    public float StationTemperture = 25;
     public float StationProgress;
 
     public AudioSource sfx_Station_Start, sfx_Station_Activation;
@@ -149,18 +149,24 @@ public class PoiController : MonoBehaviour
         {
             item.OverrideItem(Type, Count);
         }
-        for (int i = 0; i < objects.Length; i++)
+        if (objects != null)
         {
-            UpdateMatInventory(objects[i], item);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                UpdateMatInventory(objects[i], item);
+            }
         }
         return item;
     }
     public Item SubtractItem(GameObject[] objects, Item item, int Count)
     {
         item.SubtractItem(Count);
-        for (int i = 0; i < objects.Length; i++)
+        if (objects != null)
         {
-            UpdateMatInventory(objects[i], item);
+            for (int i = 0; i < objects.Length; i++)
+            {
+                UpdateMatInventory(objects[i], item);
+            }
         }
         return item;
     }
@@ -355,7 +361,7 @@ public class PoiController : MonoBehaviour
 
 
     [PunRPC]
-    public void ReceiveData(int nodeItemCount, string nodeName, string playerNickName, int i)
+    public void ReceiveData()
     {
         switch (SelectedRecipe.InputCount)
         {
@@ -377,7 +383,7 @@ public class PoiController : MonoBehaviour
         Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 10);
 
         //=== Old Recipe -V
-
+        /*
         if (itemData.nodeName[i].Equals(nodeName) && nodeItemCount >= 0)
         {
             if (playerName == " ")
@@ -396,6 +402,7 @@ public class PoiController : MonoBehaviour
                 StartCoroutine(ProcessItems(i));
             }
         }
+         */
     }
 
     private IEnumerator ProcessItems(int i)

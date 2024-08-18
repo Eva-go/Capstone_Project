@@ -5,18 +5,16 @@ public class BagController : MonoBehaviourPunCallbacks
 {
     public int[] nodeItems = new int[6];
     public int[] mixItems = new int[6];
+    
     public float health = 30f;
+    public Inventory BagInventory;
 
     private int lastAttackerViewID;
 
     [PunRPC]
-    public void GetItme(int node, int mix, int index)
+    public void GetItem(Inventory inventory)
     {
-        if (index >= 0 && index < nodeItems.Length)
-        {
-            nodeItems[index] = node;
-            mixItems[index] = mix;
-        }
+        inventory.OverrideInventory(inventory);
     }
 
     [PunRPC]
@@ -39,6 +37,11 @@ public class BagController : MonoBehaviourPunCallbacks
             PlayerController playerController = attackerPhotonView.GetComponent<PlayerController>();
             if (playerController != null)
             {
+                foreach (Item item in BagInventory.GetItems())
+                {
+                    playerController.PlayerInventory.AddItem(item);
+                }
+                /*
                 for (int i = 0; i < nodeItems.Length; i++)
                 {
                     playerController.nodeItiems[i] += nodeItems[i];
@@ -47,6 +50,7 @@ public class BagController : MonoBehaviourPunCallbacks
                 {
                     playerController.mixItiems[i] += mixItems[i];
                 }
+                 */
 
                 // 인벤토리 변경 이벤트 호출
                 playerController.InvokeInventoryChanged();

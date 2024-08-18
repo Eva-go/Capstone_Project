@@ -70,6 +70,16 @@ public class Inventory
         return ItemCount;
     }
 
+    public void ClearInventory()
+    {
+        itemList.Clear();
+    }
+    public void OverrideInventory(Inventory inventory)
+    {
+        itemList = inventory.GetItems();
+    }
+
+
     public int SellAllItem()
     {
         int ItemCount = 0;
