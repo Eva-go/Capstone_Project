@@ -5,6 +5,7 @@ using Photon.Pun;
 public class CanvasController : MonoBehaviourPunCallbacks
 {
     public static CanvasController Instance;
+    public PhotonView pv;
 
     public GameObject inside;
     public GameObject inventory;
@@ -60,75 +61,87 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        isItme = false;
-        localplayerck = false;
-        if (Instance == null)
+        pv = GetComponent<PhotonView>();
+        if (pv.IsMine)
         {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+            isItme = false;
+            localplayerck = false;
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
 
-        ItemTab = inventory_Tab.Find("Misc_Tab");
-        ItemScroll = ItemTab.GetChild(0).GetChild(0);
-        ItemSlot = ItemScroll.GetChild(0);
+            ItemTab = inventory_Tab.Find("Misc_Tab");
+            ItemScroll = ItemTab.GetChild(0).GetChild(0);
+            ItemSlot = ItemScroll.GetChild(0);
+        }
+        
     }
 
     void Start()
     {
-        ToolIconUpdate();
-        ToolColorUpdate();
-
-        inventory.SetActive(true);
-        inside.SetActive(false);
-        Tab.SetActive(false);
-        money.SetActive(true);
-        Poi.SetActive(false);
-        inventoryTransform = inventory.transform;
-
-        // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
-        if (PhotonNetwork.IsMasterClient)
+        if(pv.IsMine)
         {
-            InitializeAndSendRandomPrices();
+            ToolIconUpdate();
+            ToolColorUpdate();
+
+            inventory.SetActive(true);
+            inside.SetActive(false);
+            Tab.SetActive(false);
+            money.SetActive(true);
+            Poi.SetActive(false);
+            inventory.SetActive(false);
+            inventoryTransform = inventory.transform;
+
+            // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
+            if (PhotonNetwork.IsMasterClient)
+            {
+                InitializeAndSendRandomPrices();
+            }
+            else
+            {
+                // Non-master clients will request random prices from master
+                RequestRandomPricesFromMaster();
+            }
+            RefreshInventory();
         }
-        else
-        {
-            // Non-master clients will request random prices from master
-            RequestRandomPricesFromMaster();
-        }
-        RefreshInventory();
-        inventory.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
     }
     void Update()
     {
-        ToolIconSwitching();
-        UpdateInsideActive();
-        UpdateInventoryActive();
-        UpdateInventoryTabActive();
-        UpdateMoneyActive();
-        PoiActive();
-        // 노드 관련 함수
-        Die();
-        Shoping();
-        RespawnSet();
-        //아이템 업데이트
-        if (isItme)
+        if(pv.IsMine)
         {
-            nodeCountUpdate();
-            mixCountUpdate();
-        }
-        if(Input.GetKeyDown(KeyCode.F9))
-        {
-            foreach (Item item in UIinventory.GetItems())
+            ToolIconSwitching();
+            UpdateInsideActive();
+            UpdateInventoryActive();
+            UpdateInventoryTabActive();
+            UpdateMoneyActive();
+            PoiActive();
+            // 노드 관련 함수
+            Die();
+            Shoping();
+            RespawnSet();
+            //아이템 업데이트
+            if (isItme)
             {
-                Debug.Log("CanvasController" + item.ItemType+" : "+item.Count);
+                nodeCountUpdate();
+                mixCountUpdate();
             }
-                
+            if (Input.GetKeyDown(KeyCode.F9))
+            {
+                foreach (Item item in UIinventory.GetItems())
+                {
+                    Debug.Log("CanvasController" + item.ItemType + " : " + item.Count);
+                }
+
+            }
+            // 랜덤 가격이 아직 초기화되지 않았다면, 요청
+            RequestRandomPricesFromMaster();
         }
-        // 랜덤 가격이 아직 초기화되지 않았다면, 요청
-        RequestRandomPricesFromMaster();
     }
 
 
@@ -171,7 +184,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
             if(playerController.ShopActive)
             {
                 Cursor.lockState = CursorLockMode.Confined;
-                Debug.Log(playerController.ShopActive);
             }
         }
     }
@@ -180,15 +192,19 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         if(playerController !=null)
         {
+            Debug.Log("RespawnAcive" + PlayerController.RespawnAcive);
             Respawn.SetActive(PlayerController.RespawnAcive);
         }
     }
 
     public void Shoping_Exit()
     {
-        playerController.ShopActive = false;
-        Shop.SetActive(playerController.ShopActive);
-        Cursor.lockState = CursorLockMode.Locked;
+        if(pv.IsMine)
+        {
+            playerController.ShopActive = false;
+            Shop.SetActive(playerController.ShopActive);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     void InitializeAndSendRandomPrices()
@@ -242,31 +258,34 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void Sell()
     {
-        money.SetActive(true);
-        /*
-        for (int i = 0; i < nodesCount.Length; i++)
+        if(pv.IsMine)
         {
-            Amount = nodePriceCount[i] * playerController.nodeItiems[i];
-            TotalSell += Amount;
+            money.SetActive(true);
+            /*
+            for (int i = 0; i < nodesCount.Length; i++)
+            {
+                Amount = nodePriceCount[i] * playerController.nodeItiems[i];
+                TotalSell += Amount;
+            }
+            for(int i=0; i< mixCount.Length; i++)
+            {
+                Amount = mixPriceCount[i] * playerController.mixItiems[i];
+                TotalSell += Amount;
+            }
+            for (int i = 0; i < nodesCount.Length; i++)
+            {
+                nodesCount[i].text = "0";
+                playerController.nodeItiems[i] = 0;
+            }
+            for(int i=0; i<mixCount.Length;i++)
+            {
+                mixCount[i].text = "0";
+                playerController.mixItiems[i] = 0;
+            }
+             */
+            TotalSell = playerController.Sell();
+            GameValue.GetMomey(TotalSell);
         }
-        for(int i=0; i< mixCount.Length; i++)
-        {
-            Amount = mixPriceCount[i] * playerController.mixItiems[i];
-            TotalSell += Amount;
-        }
-        for (int i = 0; i < nodesCount.Length; i++)
-        {
-            nodesCount[i].text = "0";
-            playerController.nodeItiems[i] = 0;
-        }
-        for(int i=0; i<mixCount.Length;i++)
-        {
-            mixCount[i].text = "0";
-            playerController.mixItiems[i] = 0;
-        }
-         */
-        TotalSell=playerController.Sell();
-        GameValue.GetMomey(TotalSell);
     }
 
     void RequestRandomPricesFromMaster()

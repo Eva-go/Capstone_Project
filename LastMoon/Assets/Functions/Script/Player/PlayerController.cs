@@ -35,7 +35,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
-    private bool live;
+    public bool live;
+    public bool respawnTick;
 
     private Vector3 velocity;
     private Vector3 UpCenter;
@@ -184,6 +185,7 @@ public class PlayerController : MonoBehaviour
 
             ShopActive = false;
             live = true;
+            respawnTick = false;
             GameValue.Money_total = 0;
             GameValue.setMoney();
 
@@ -387,6 +389,7 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
+            respawnTick = true;
             // 아이템 초기화
             //for (int i = 0; i < nodeItiems.Length; i++)
             //{
@@ -406,6 +409,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (RespawnFillHandler.fillValue >= 100)
             {
+                respawnTick = false;
                 // Bag 생성
                 GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
                 BagController bagScript = bag.GetComponent<BagController>();

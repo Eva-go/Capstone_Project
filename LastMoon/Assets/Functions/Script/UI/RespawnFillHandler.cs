@@ -83,9 +83,7 @@ public class RespawnFillHandler : MonoBehaviour
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
-            player = player = GameObject.Find(GameValue.nickName).GetComponent<PlayerController>();
-            Debug.Log("player" + player.name);
-            
+            player = GameObject.Find(GameValue.nickName).GetComponent<PlayerController>();
         }
     }
 
@@ -93,7 +91,7 @@ public class RespawnFillHandler : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            if (gameObject.activeSelf == true)
+            if (gameObject.activeSelf == true&&player.respawnTick)
             {
                 tick_ck(10);
             }
