@@ -101,7 +101,8 @@ public class PoiController : MonoBehaviour
 
     private void Update()
     {
-        tick_ck(5);
+        if(gameObject.activeSelf == true)
+            tick_ck(5);
     }
 
     public void SlotClick(int _slotNumber)

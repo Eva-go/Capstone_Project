@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1567392682813323383}
   - component: {fileID: 5283373152138394763}
-  - component: {fileID: 5969222934419130592}
   - component: {fileID: 1952749262266944361}
+  - component: {fileID: 5969222934419130592}
   m_Layer: 10
   m_Name: Pipe
   m_TagString: Pipe
@@ -56,6 +56,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &1952749262266944361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3079423493778808962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbbe9d78d588e214dbd8ae409df1d729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  conveyorSpeed: 0
+  direction: {x: 0, y: 0, z: 0}
+  onBelt: []
 --- !u!114 &5969222934419130592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,22 +94,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &1952749262266944361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3079423493778808962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbbe9d78d588e214dbd8ae409df1d729, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  conveyorSpeed: 0
-  direction: {x: 0, y: 0, z: 0}
-  onBelt: []
 --- !u!1001 &7064108821576197692
 PrefabInstance:
   m_ObjectHideFlags: 0

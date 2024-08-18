@@ -84,14 +84,18 @@ public class RespawnFillHandler : MonoBehaviour
         if (pv.IsMine)
         {
             player = GameObject.Find(GameValue.nickName).GetComponent<PlayerController>();
+            
         }
     }
 
     void Update()
     {
-        tick_ck(10);
-       
+        if(gameObject.activeSelf == true)
+        {
+            tick_ck(10);
+        }
     }
+        
 
     public void FillCircleValue(float value)
     {
