@@ -139,6 +139,12 @@ public class CanvasController : MonoBehaviourPunCallbacks
     }
     private void RefreshInventory()
     {
+        foreach (Transform child in ItemScroll)
+        {
+            if (child == ItemSlot) continue;
+            Destroy(child.gameObject);
+        }
+
         if (playerController != null) SetInventory(playerController.PlayerInventory);
         int x = 0;
         int y = 6;
