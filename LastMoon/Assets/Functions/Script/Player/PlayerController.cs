@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public string nickName;
     public static float Hp = 100f;
     public GameObject cam;
-    public GameObject RespawnCamera;
+    //public GameObject RespawnCamera;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     private bool isCrouching;
     private bool isRunning;
     public bool live;
-    public bool respawnTick;
+
 
     private Vector3 velocity;
     private Vector3 UpCenter;
@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour
     public static int getMoney;
     public GameObject insidegameObject;
     public static bool insideActive;
-    public static bool RespawnAcive;
     public bool PoiPopUp;
 
     public LayerMask groundLayer;
@@ -177,7 +176,6 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             idx = 0;
-            RespawnAcive = false;
             myRigid = GetComponent<Rigidbody>();
             myCollider = GetComponent<CapsuleCollider>();
             PlayerAPT = GetComponent<PlayerAPTPlaneSpawn>();
@@ -191,7 +189,6 @@ public class PlayerController : MonoBehaviour
             PoiPopUp = false;
             ShopActive = false;
             live = true;
-            respawnTick = false;
             Extract = false;
             GameValue.Money_total = 0;
             GameValue.setMoney();
@@ -207,7 +204,6 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
             }
-            RespawnCamera.SetActive(false);
             Hp = 100;
         }
 
@@ -396,7 +392,6 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            respawnTick = true;
             // 아이템 초기화
             //for (int i = 0; i < nodeItiems.Length; i++)
             //{
@@ -433,26 +428,28 @@ public class PlayerController : MonoBehaviour
              */
             InvokeInventoryChanged();
             Hp = 0;
-            RespawnAcive = true;
-            if (live)
-            {
-                RespawnCamera.SetActive(true);
-                gameObject.transform.GetChild(1).gameObject.SetActive(false);
-                gameObject.transform.GetChild(3).gameObject.SetActive(false);
-                gameObject.transform.GetChild(4).gameObject.SetActive(false);
-                gameObject.transform.GetChild(5).gameObject.SetActive(false);
-                live = false;
-            }
-            else if (RespawnFillHandler.fillValue >= 100)
-            {
-                Bagdrop = false;
-                respawnTick = false;
-                RespawnAcive = false;
-                RespawnCamera.SetActive(false);
-                RespawnFillHandler.fillValue = 0;
-                PhotonNetwork.Destroy(gameObject);
-                reSpwan();
-            }
+            //RespawnAcive = true;
+            //if (live)
+            //{
+            //    RespawnCamera.SetActive(true);
+            //    gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            //    gameObject.transform.GetChild(3).gameObject.SetActive(false);
+            //    gameObject.transform.GetChild(4).gameObject.SetActive(false);
+            //    gameObject.transform.GetChild(5).gameObject.SetActive(false);
+            //    live = false;
+            //}
+            //else if (RespawnFillHandler.fillValue >= 100)
+            //{
+            //    Bagdrop = false;
+            //    respawnTick = false;
+            //    RespawnAcive = false;
+            //    RespawnCamera.SetActive(false);
+            //    RespawnFillHandler.fillValue = 0; 
+            //}
+
+            live = false;
+            PhotonNetwork.Destroy(gameObject);
+            reSpwan();
         }
     }
 
@@ -485,24 +482,34 @@ public class PlayerController : MonoBehaviour
 
     public void SpawnPlayer(int idx, Transform points)
     {
-        player = PhotonNetwork.Instantiate("Player", PlayerAPT.playerPoint, Quaternion.Euler(PlayerAPT.playerrotation));
-        if (player != null)
+        if(pv.IsMine)
         {
-            player.name = PhotonNetwork.LocalPlayer.NickName;
-            Transform OtherPlayer = player.transform.Find("OtherPlayer");
-            Transform LocalPlayer = player.transform.Find("LocalPlayer");
-            Transform Tool = player.transform.Find("Player001");
-            Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
-        
-            if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
-            if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
-            if (Tool != null) Tool.gameObject.SetActive(false);
-            if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
-        
-            PhotonView photonView = player.GetComponent<PhotonView>();
-            photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            Debug.Log("Player spawned and ownership transferred.");
+            player = PhotonNetwork.Instantiate("Player", PlayerAPT.playerPoint, Quaternion.Euler(PlayerAPT.playerrotation));
+            if (player != null)
+            {
+                player.name = PhotonNetwork.LocalPlayer.NickName;
+                Transform OtherPlayer = player.transform.Find("OtherPlayer");
+                Transform LocalPlayer = player.transform.Find("LocalPlayer");
+                Transform Tool = player.transform.Find("Player001");
+                Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
+
+                if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
+                if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
+                if (Tool != null) Tool.gameObject.SetActive(false);
+                if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
+
+                PhotonView photonView = player.GetComponent<PhotonView>();
+                photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+                Debug.Log("Player spawned and ownership transferred.");
+            }
+            Debug.Log("플레이어 확인" + GameObject.Find(player.name));
+            if(PhotonNetwork.LocalPlayer.NickName != GameObject.Find(player.name).ToString())
+            {
+                Debug.Log("플레이어 없음");
+                reSpwan();
+            }
         }
+       
     }
 
     private void OnDestroy()
