@@ -183,6 +183,8 @@ public class PlayerController : MonoBehaviour
             GameValue.Pickaxe = 0;
             GameValue.Shovel = 0;
 
+            //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
+
             for (int i = 0; i < InitalItems.Length; i++)
             {
                 PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
