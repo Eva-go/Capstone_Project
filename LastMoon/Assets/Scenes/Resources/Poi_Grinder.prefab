@@ -82,6 +82,9 @@ MonoBehaviour:
   poiName: 
   SetnodeCount: 0
   animator: {fileID: 5273659194352868418}
+  ConstructionProgress: 0
+  StationConstructionMesh: {fileID: 0}
+  StationConstructionParts: {fileID: 0}
   StationBases:
   - {fileID: 2245745955067079937}
   StationFixes: []
@@ -106,7 +109,8 @@ MonoBehaviour:
   FuelWick: []
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipes: []
+  SelectableRecipes:
+  - {fileID: 11400000, guid: 4603b9e4b58a5a441b02216372cfc3de, type: 2}
   SelectedRecipe: {fileID: 0}
   StationTemperture: 0
   StationProgress: 0

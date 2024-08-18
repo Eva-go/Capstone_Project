@@ -15,6 +15,9 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject Shop;
     public GameObject Respawn;
 
+    public GameObject StationUI;
+
+    public Color EmptyColor;
     public Transform inventory_Tab;
     private Inventory UIinventory;
     private Transform ItemTab;
@@ -130,6 +133,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             // 노드 관련 함수
             Die();
             Shoping();
+            Station_Manageing();
             RespawnSet();
             //아이템 업데이트
             if (isItme)
@@ -192,22 +196,30 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private void RecipeSelect(ScriptableObject_Station[] SelectableRecipes)
     {
+        foreach (Transform child in Recipe_Tab)
+        {
+            if (child == Recipe_Slot) continue;
+            Destroy(child.gameObject);
+        }
+
         int x = -1;
         int y = 1;
         float itemSlotSize = 300f;
-
         for (int i = 0; i< SelectableRecipes.Length; i++)
         {
             RectTransform RecipeRectTransform = Instantiate(Recipe_Slot, Recipe_Tab).GetComponent<RectTransform>();
             RecipeRectTransform.gameObject.SetActive(true);
 
-            RecipeRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+            RecipeRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize - 150f);
 
             Image image = RecipeRectTransform.Find("Icon").GetComponent<Image>();
             image.sprite = SelectableRecipes[i].Output001.ItemSprite;
 
-            Text text = RecipeRectTransform.Find("Text").GetComponent<Text>();
-            text.text = SelectableRecipes[i].OutputCount.ToString();
+            if (SelectableRecipes[i].OutputCount > 1)
+            {
+                Text text = RecipeRectTransform.Find("Text").GetComponent<Text>();
+                text.text = ("+" + SelectableRecipes[i].OutputCount.ToString());
+            }
 
             x++;
             if (x >= 3)
@@ -217,36 +229,112 @@ public class CanvasController : MonoBehaviourPunCallbacks
             }
         }
     }
-
     private void SelectedRecipeInfo(ScriptableObject_Station SelectedRecipe)
     {
+        Image image;
+        
         switch (SelectedRecipe.InputCount)
         {
             case 1:
+                image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Input001.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                image.color = EmptyColor;
+                image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                image.color = EmptyColor;
+                break;
+            case 2:
+                image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Input001.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Input002.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                image.color = EmptyColor;
+                break;
+            case 3:
+                image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Input001.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Input002.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Input003.ItemSprite;
                 break;
         }
-
-
-        Image image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
-        image.sprite = SelectedRecipe.Input001.ItemSprite;
-        image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
-        image.sprite = SelectedRecipe.Input002.ItemSprite;
-        image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
-        image.sprite = SelectedRecipe.Input003.ItemSprite;
-
-        image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
-        image.sprite = SelectedRecipe.Output001.ItemSprite;
-        image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
-        image.sprite = SelectedRecipe.Output002.ItemSprite;
-        image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
-        image.sprite = SelectedRecipe.Output003.ItemSprite;
-
+        switch (SelectedRecipe.OutputCount)
+        {
+            case 1:
+                image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Output001.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                image.color = EmptyColor;
+                image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                image.color = EmptyColor;
+                break;
+            case 2:
+                image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Output001.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Output002.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                image.color = EmptyColor;
+                break;
+            case 3:
+                image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Output001.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Output002.ItemSprite;
+                image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedRecipe.Output003.ItemSprite;
+                break;
+        }
         Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
         text.text = SelectedRecipe.Temperture.ToString();
         text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(0).GetComponent<Text>();
         text.text = SelectedRecipe.ProgressTime.ToString();
         text = Recipe_Info.Find("Recipe_Coolent").GetChild(0).GetComponent<Text>();
         text.text = SelectedRecipe.Coolent.ToString();
+    }
+
+    private void Station_Input()
+    {
+
+    }
+
+    private void Station_Output()
+    {
+        playerController.PlayerInventory.AddItem(playerController.UISelectedPOIController.Inv_Output[0]);
+
+
+    }
+
+    private void SelectingRecipe()
+    {
+
+    }
+
+    public void Station_Manageing()
+    {
+        if (playerController != null)
+        {
+            StationUI.SetActive(playerController.StationActive);
+
+            SelectedRecipeInfo(playerController.UISelectedPOIController.SelectedRecipe);
+            RecipeSelect(playerController.UISelectedPOIController.SelectableRecipes);
+
+            if (playerController.StationActive)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+        }
+    }
+    public void Station_Exit()
+    {
+        if (pv.IsMine)
+        {
+            playerController.StationActive = false;
+            StationUI.SetActive(playerController.StationActive);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
 

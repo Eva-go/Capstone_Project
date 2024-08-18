@@ -97,6 +97,7 @@ public class PlayerController : MonoBehaviour
 
     //[SerializeField] private UI_Inventory ui_Inventory;
     public PoiController UISelectedPOIController;
+    public bool StationActive;
 
     [SerializeField] private ScriptableObject_Item[] InitalItems;
 
@@ -195,6 +196,7 @@ public class PlayerController : MonoBehaviour
             GameValue.Pickaxe = 0;
             GameValue.Shovel = 0;
 
+            StationActive = false;
             
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
 
@@ -883,6 +885,8 @@ public class PlayerController : MonoBehaviour
 
                     //stationinteration
                     targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
+
+                    StationActive = true;
                 }
             }
         }

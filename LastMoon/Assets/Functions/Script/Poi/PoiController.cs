@@ -383,8 +383,7 @@ public class PoiController : MonoBehaviour
     }
 
 
-    [PunRPC]
-    public void ReceiveData()
+    public void InputItem()
     {
         switch (SelectedRecipe.InputCount)
         {
@@ -401,9 +400,15 @@ public class PoiController : MonoBehaviour
                 Inv_Input[2] = AddItem(InputSlot[2].Count, Inv_Input[2], SelectedRecipe.Input003, 1);
                 break;
         }
-
         Inv_Fuel = AddItem(FuelSlot, Inv_Fuel, Debug_Fuel, 10);
         Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 10);
+    }
+
+
+    [PunRPC]
+    public void ReceiveData()
+    {
+        InputItem();
 
         //=== Old Recipe -V
         /*

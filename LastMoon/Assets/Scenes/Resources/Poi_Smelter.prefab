@@ -104,6 +104,9 @@ MonoBehaviour:
   poiName: 
   SetnodeCount: 0
   animator: {fileID: 5223760760334705409}
+  ConstructionProgress: 0
+  StationConstructionMesh: {fileID: 0}
+  StationConstructionParts: {fileID: 0}
   StationBases:
   - {fileID: 2537302229213875025}
   - {fileID: 7160964510233662432}
@@ -140,8 +143,14 @@ MonoBehaviour:
   - {fileID: 4868576021829270635}
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipes: []
-  SelectedRecipe: {fileID: 0}
+  SelectableRecipes:
+  - {fileID: 11400000, guid: 3bd243934ea36b946ac865497b7eccae, type: 2}
+  - {fileID: 11400000, guid: 5a5c5957c8f6fe04fb072a1743fb1eb6, type: 2}
+  - {fileID: 11400000, guid: 0ed14c4ef38f65f4c9d96bdc962ee163, type: 2}
+  - {fileID: 11400000, guid: 5a5c5957c8f6fe04fb072a1743fb1eb6, type: 2}
+  - {fileID: 11400000, guid: 993146a4849474048b66b87f3c6b2410, type: 2}
+  - {fileID: 11400000, guid: 4f103a49adbb4ce4b8ab7a42ec1bf15e, type: 2}
+  SelectedRecipe: {fileID: 11400000, guid: e3ecf7a7885d6a14f9221cbcf6fa9abb, type: 2}
   StationTemperture: 0
   StationProgress: 0
   sfx_Station_Start: {fileID: -935872782112775922}
@@ -430,6 +439,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2206388233697376635}
     m_Modifications:
+    - target: {fileID: -1286255684148888066, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 54800b56a11cf5c4697ad12143298ae8, type: 2}
+    - target: {fileID: 2472559231161016880, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
     - target: {fileID: -8679921383154817045, guid: 934f170a720cf10408df7f106250697a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -470,14 +487,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -1286255684148888066, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 54800b56a11cf5c4697ad12143298ae8, type: 2}
-    - target: {fileID: 2472559231161016880, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
