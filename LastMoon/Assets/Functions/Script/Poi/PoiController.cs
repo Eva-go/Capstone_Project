@@ -72,6 +72,10 @@ public class PoiController : MonoBehaviour
     //레시피 관련 변수
     private int slotNumber; // 현재 슬롯 번호
 
+
+    //아이템 출력 관련 변수
+    public GameObject node_Item;
+    public Transform Poi_transform;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -91,13 +95,14 @@ public class PoiController : MonoBehaviour
         StationProgress = 0;
         Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
+
     }
 
 
 
     private void Update()
     {
-        tick_ck(5);
+        tick_ck(200);
     }
 
 
@@ -122,12 +127,14 @@ public class PoiController : MonoBehaviour
         if (isConstructing)
         {
             tick = e.tick % tickMax;
-            Debug.Log("E tIck" + tick + " : " + e.tick);
             if (tick >= tickMax - 1)
             {
-                CheckRecipe();
-                HeatingManage();
-                Debug.Log("tick" + tick + " : " + tickMax + " : " + PhotonNetwork.Time);
+                //CheckRecipe();
+                //HeatingManage();
+                if(node_Item!=null&&Poi_transform != null)
+                {
+                    Instantiate(node_Item, Poi_transform.position, Quaternion.identity);
+                }
                 isConstructing = false;
             }
             else

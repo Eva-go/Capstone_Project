@@ -90,9 +90,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbe9d78d588e214dbd8ae409df1d729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  conveyorSpeed: 0.1
-  direction: {x: 1, y: 0, z: 0}
+  speed: 5
+  conveyorSpeed: 0
+  direction: {x: 0, y: 0, z: 0}
   onBelt: []
 --- !u!1001 &7064108821576197692
 PrefabInstance:
@@ -185,7 +185,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 0.26, z: 0.045}
   m_Center: {x: 0, y: 0.56, z: -0.125}
@@ -206,7 +206,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 0.26, z: 0.045}
   m_Center: {x: 0, y: 0.56, z: 0.125}
@@ -254,6 +254,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  conveyorSpeed: 0.25
-  direction: {x: 1, y: 0, z: 0}
+  conveyorSpeed: 0
+  direction: {x: 0, y: 0, z: 0}
   onBelt: []

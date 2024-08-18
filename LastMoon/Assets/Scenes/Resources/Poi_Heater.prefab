@@ -119,6 +119,8 @@ MonoBehaviour:
   - Count:
     - {fileID: 2986347016880042794}
   Debug_Filler: {fileID: 0}
+  Debug_Fuel: {fileID: 0}
+  Debug_Coolent: {fileID: 0}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
@@ -137,8 +139,13 @@ MonoBehaviour:
   Obj_Temperture: []
   SelectableRecipes: []
   SelectedRecipe: {fileID: 0}
-  testObject: {fileID: 0}
-  testObjectTransform: {fileID: 0}
+  StationTemperture: 0
+  StationProgress: 0
+  tick: 0
+  tickMax: 0
+  isConstructing: 0
+  node_Item: {fileID: 0}
+  Poi_transform: {fileID: 0}
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0
