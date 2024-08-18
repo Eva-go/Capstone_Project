@@ -46,7 +46,6 @@ public class ConveyorBelt: MonoBehaviour
         }
         else
         {
-            Debug.Log("Start dir" + eulerAngles.x + eulerAngles.y);
             direction = Vector3.zero; // 기본값
         }
         
@@ -87,7 +86,6 @@ public class ConveyorBelt: MonoBehaviour
             {
                 // 벨트 위의 각 물체에 힘을 추가
                 onBelt[i].GetComponent<Rigidbody>()?.AddForce(speed * direction);
-                Debug.Log("dir"+ direction);
             }
         }
     }
