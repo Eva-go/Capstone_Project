@@ -76,6 +76,8 @@ public class PoiController : MonoBehaviour
     //레시피 관련 변수
     private int slotNumber; // 현재 슬롯 번호
 
+    //파괴 변수
+    public int hp = 3;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -91,7 +93,7 @@ public class PoiController : MonoBehaviour
             itemData.nodeItemCount[i] = 0;
             itemData.mixItemCount[i] = 0;
         }
-
+        hp = 3;
         StationProgress = 0;
         Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
@@ -121,13 +123,11 @@ public class PoiController : MonoBehaviour
         if (isConstructing)
         {
             tick = e.tick % tickMax;
-            Debug.Log("E tIck" + tick + " : " + e.tick);
             if (tick >= tickMax - 1)
             {
                 CheckRecipe();
                 HeatingManage();
                 ActivationEffect();
-                Debug.Log("tick" + tick + " : " + tickMax + " : " + PhotonNetwork.Time);
                 isConstructing = false;
             }
             else

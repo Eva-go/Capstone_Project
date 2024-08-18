@@ -255,6 +255,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             playerController.mixItiems[i] = 0;
         }
          */
+        TotalSell=playerController.Sell();
         GameValue.GetMomey(TotalSell);
     }
 

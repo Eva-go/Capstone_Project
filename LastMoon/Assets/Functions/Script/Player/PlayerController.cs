@@ -239,7 +239,6 @@ public class PlayerController : MonoBehaviour
             Attack();
             Switching();
             WaveTic();
-            Sell();
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Hp = 100;
@@ -319,14 +318,9 @@ public class PlayerController : MonoBehaviour
         }
     }*/
 
-    public void Sell()
+    public int Sell()
     {
-        for (int i = 0; i < 6; i++)
-        {
-            nodeSell[i] = nodeItiems[i];
-            mixSell[i] = mixItiems[i];
-        }
-        GameValue.getItem();
+        return PlayerInventory.SellAllItem();
     }
 
     public void Items()
@@ -897,17 +891,13 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hit.collider.GetComponent<PoiController>();
                 if(poiController != null)
                 {
-                    for(int i=0;i<6;i++)
+                    poiController.hp -= 1;
+                    poiController.animator.SetTrigger("isHit");
+                    if (poiController.hp < 0)
                     {
-                        if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
-                        {
-                            Debug.Log("¿¡·¯" + poiController.name); ;
-                            int mixItemCount = poiController.itemData.mixItemCount[i];
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
-                        }
-                            
+                        Destroy(poiController.gameObject);
                     }
-                  
+
                 }
             }
         }
