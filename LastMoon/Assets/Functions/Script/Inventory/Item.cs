@@ -23,7 +23,6 @@ public class Item
         }
         else return 0;
     }
-
     public int OverrideItem(ScriptableObject_Item AddType, int AddCount)
     {
         if (ItemType == AddType)

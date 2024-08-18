@@ -54,6 +54,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private Transform inventoryTransform;
 
+    //인벤토리
+    public Inventory PlayerInventory;
 
     void Awake()
     {
@@ -78,8 +80,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
         ToolIconUpdate();
         ToolColorUpdate();
 
+        inventory.SetActive(true);
         inside.SetActive(false);
-        inventory.SetActive(false);
         Tab.SetActive(false);
         money.SetActive(true);
         Poi.SetActive(false);
@@ -96,6 +98,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             RequestRandomPricesFromMaster();
         }
         RefreshInventory();
+        inventory.SetActive(false);
     }
     void Update()
     {
@@ -114,10 +117,16 @@ public class CanvasController : MonoBehaviourPunCallbacks
             nodeCountUpdate();
             mixCountUpdate();
         }
-
+        if(Input.GetKeyDown(KeyCode.F9))
+        {
+            foreach (Item item in UIinventory.GetItems())
+            {
+                Debug.Log("CanvasController" + item.ItemType+" : "+item.Count);
+            }
+                
+        }
         // 랜덤 가격이 아직 초기화되지 않았다면, 요청
         RequestRandomPricesFromMaster();
-
     }
 
 
@@ -144,7 +153,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
             Text text = itemRectTransform.Find("Count").GetComponent<Text>();
 
             text.text = item.Count.ToString();
-            text.text = "a";
 
             text = itemRectTransform.Find("Price").GetComponent<Text>();
             text.text = item.ItemType.Price.ToString();
@@ -152,11 +160,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
             y--;
         }
     }
-
-
-
-
-
 
     public void Shoping()
     {
@@ -427,7 +430,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
                 Cursor.lockState = CursorLockMode.Confined;
             }
             else
-                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.lockState = CursorLockMode.Locked;
             inventory.SetActive(inventory_ck);
             Tab.SetActive(inventory_ck);
         }

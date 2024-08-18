@@ -129,12 +129,12 @@ public class PlayerController : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
+            //DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        //else
+        //{
+        //    Destroy(gameObject);
+        //}
     }
     public void SetPlayer(GameObject player)
     {
@@ -187,7 +187,7 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < InitalItems.Length; i++)
             {
-                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 0 });
             }
         }
 
@@ -268,11 +268,7 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.F9))
             {
-                for (int i = 0; i < 6; i++)
-                {
-                    Debug.Log("노드 아이템 " + nodeItiems[i]);
-                    Debug.Log("믹스 아이템 " + mixItiems[i]);
-                }
+                Debug.Log("PlayerController" + PlayerInventory.GetItems());
             }
             if (Hp <= 0)
             {
@@ -463,6 +459,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
+        Instance = null;
         Debug.Log("Player object destroyed.");
     }
 
