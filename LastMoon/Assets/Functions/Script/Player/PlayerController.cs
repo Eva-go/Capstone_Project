@@ -35,7 +35,8 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool isCrouching;
     private bool isRunning;
-    private bool live;
+    public bool live;
+    public bool respawnTick;
 
     private Vector3 velocity;
     private Vector3 UpCenter;
@@ -126,9 +127,6 @@ public class PlayerController : MonoBehaviour
     private string lastDoorEntered;
 
     public bool Godmode = false;
-    private bool Bagdrop = false;
-
-    PoiController UISelectedPOIController;
 
     //InteractableObject를 위한 코드
     private void Awake()
@@ -187,6 +185,7 @@ public class PlayerController : MonoBehaviour
 
             ShopActive = false;
             live = true;
+            respawnTick = false;
             GameValue.Money_total = 0;
             GameValue.setMoney();
 
@@ -199,7 +198,7 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < InitalItems.Length; i++)
             {
-                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 0 });
             }
             RespawnCamera.SetActive(false);
             Hp = 100;
@@ -390,31 +389,12 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
+            respawnTick = true;
             // 아이템 초기화
             //for (int i = 0; i < nodeItiems.Length; i++)
             //{
             //    nodeItiems[i] = 0;
             //}
-            if (!Bagdrop)
-            {
-                // Bag 생성
-                Bagdrop = true;
-
-                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
-                BagController bagScript = bag.GetComponent<BagController>();
-                if (bagScript != null)
-                {
-                    // 아이템 데이터 전송
-                    //
-                    foreach (Item item in PlayerInventory.GetItems())
-                    {
-                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item);
-                    }
-                }
-                PlayerInventory.ClearInventory();
-            }
-
-
             InvokeInventoryChanged();
             Hp = 0;
             RespawnAcive = true;
@@ -429,7 +409,18 @@ public class PlayerController : MonoBehaviour
             }
             else if (RespawnFillHandler.fillValue >= 100)
             {
-                Bagdrop = false;
+                respawnTick = false;
+                // Bag 생성
+                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
+                BagController bagScript = bag.GetComponent<BagController>();
+                if (bagScript != null)
+                {
+                    // 아이템 데이터 전송
+                    for (int i = 0; i < nodeItiems.Length; i++)
+                    {
+                        bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
+                    }
+                }
                 RespawnAcive = false;
                 RespawnCamera.SetActive(false);
                 RespawnFillHandler.fillValue = 0;
@@ -864,11 +855,17 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
-                    //Store information for UI;
-                    UISelectedPOIController = poiController;
-
                     //stationinteration
-                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
+
+                    for (int i=0; i<nodeItiems.Length;i++)
+                    {
+                        if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
+                        {
+                            nodeItiems[i]--;
+                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName,i);
+                        }
+                            
+                    }
                 }
             }
         }

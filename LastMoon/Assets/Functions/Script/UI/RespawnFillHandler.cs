@@ -84,16 +84,20 @@ public class RespawnFillHandler : MonoBehaviour
         if (pv.IsMine)
         {
             player = GameObject.Find(GameValue.nickName).GetComponent<PlayerController>();
-            
         }
     }
 
     void Update()
     {
-        if(gameObject.activeSelf == true)
+        if (pv.IsMine)
         {
-            tick_ck(10);
+            if (gameObject.activeSelf == true&&player.respawnTick)
+            {
+                tick_ck(10);
+            }
+
         }
+        
     }
         
 
