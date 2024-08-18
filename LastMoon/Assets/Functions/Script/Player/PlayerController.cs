@@ -78,6 +78,8 @@ public class PlayerController : MonoBehaviour
 
     public float speeed = 0;
 
+    public int idx = 0;
+
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
     private string[] poiName = { "Poi_Distiller", "Poi_Dryer", "Poi_Filter", "Poi_Grinder", "Poi_Heater", "Poi_Smelter" };
     public int[] nodeItiems = new int[6];
@@ -167,6 +169,7 @@ public class PlayerController : MonoBehaviour
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
+            idx = 0;
             RespawnAcive = false;
             myRigid = GetComponent<Rigidbody>();
             myCollider = GetComponent<CapsuleCollider>();
@@ -434,14 +437,12 @@ public class PlayerController : MonoBehaviour
             {
                 Transform child = parentTransform.GetChild(i);
                 directChildren.Add(child);
-                Debug.Log("스폰포인트: " + i + " : " + directChildren[i]);
             }
 
             if (directChildren.Count > 0)
             {
                 
                 int idx = UnityEngine.Random.Range(0, directChildren.Count);
-                Debug.Log("스폰포인트: " + idx+" : "+directChildren.ToArray());
                 SpawnPlayer(idx, directChildren[idx]);
                 
             }
@@ -748,7 +749,6 @@ public class PlayerController : MonoBehaviour
                     insideActive = false;
                     //InsideUpdate();
                     gameObject.transform.position = PlayerAPT.playerPoint;
-                    Debug.Log("pos2" + gameObject.transform.position);
                     gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
                     myRigid.isKinematic = false;
                     isInside = true;
@@ -760,7 +760,6 @@ public class PlayerController : MonoBehaviour
                     if (gameObject.transform.position != PlayerAPT.playerPoint)
                     {
                         gameObject.transform.position = PlayerAPT.playerPoint;
-                        Debug.Log("pos1" + gameObject.transform.position);
                         isInside = false;
                     }
                 }
@@ -768,6 +767,19 @@ public class PlayerController : MonoBehaviour
             }
             else if (hitInfo.collider.CompareTag("ReturnDoor"))
             {
+                Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+                List<Transform> directChildren = new List<Transform>();
+
+                for (int i = 0; i < parentTransform.childCount; i++)
+                {
+                    Transform child = parentTransform.GetChild(i);
+                    directChildren.Add(child);
+                }
+
+                if (directChildren.Count > 0)
+                {
+                     idx = UnityEngine.Random.Range(0, directChildren.Count);
+                }
                 isOutside = false;
                 myRigid.isKinematic = true;
                 insideActive = true;
@@ -778,9 +790,17 @@ public class PlayerController : MonoBehaviour
                     inside = 2;
                     keydowns = false;
                     insideActive = false;
-                    //InsideUpdate();    
-                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                    //InsideUpdate();
+                    if (lastDoorEntered != null)
+                    {
+                        gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                        gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                    }
+                    else
+                    {
+                        gameObject.transform.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
+                        gameObject.transform.rotation = directChildren[idx].rotation; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                    }
                     myRigid.isKinematic = false;
                     isOutside = true;
                     InsideFillHandler.fillValue = 0;
@@ -788,12 +808,20 @@ public class PlayerController : MonoBehaviour
                 if (isOutside)
                 {
                     InsideFillHandler.fillValue = 0;
-                    if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                    if(lastDoorEntered != null)
+                    {
+                        gameObject.transform.position = directChildren[idx].position;
+                        Debug.Log("pos1" + gameObject.transform.position);
+                        isOutside = false;
+                    }
+                    else
                     {
                         gameObject.transform.position = doorPositions[lastDoorEntered];
                         Debug.Log("pos1" + gameObject.transform.position);
                         isOutside = false;
+
                     }
+                    
                 }
                
             }
@@ -913,6 +941,7 @@ public class PlayerController : MonoBehaviour
                     poiController.animator.SetTrigger("isHit");
                     if (poiController.hp < 0)
                     {
+                        poiController.stop = true;
                         Destroy(poiController.gameObject);
                     }
 
