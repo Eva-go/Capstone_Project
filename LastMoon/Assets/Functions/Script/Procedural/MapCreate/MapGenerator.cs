@@ -114,9 +114,10 @@ public class MapGenerator : MonoBehaviour
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
-        for (int y = 12; y < mapChunkSize; y += 24)
+        int stepSize = 24; // 필요에 따라 조정
+        for (int y = stepSize / 2; y < mapChunkSize; y += stepSize)
         {
-            for (int x = 12; x < mapChunkSize; x += 24)
+            for (int x = stepSize / 2; x < mapChunkSize; x += stepSize)
             {
                 Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed\
                 RaycastHit hit;
@@ -158,9 +159,9 @@ public class MapGenerator : MonoBehaviour
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
-        for (int y = 0; y < mapChunkSize; y += 1)
+        for (int y = 0; y < mapChunkSize; y++)
         {
-            for (int x = 0; x < mapChunkSize; x += 1)
+            for (int x = 0; x < mapChunkSize; x++)
             {
                 Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
 
@@ -205,9 +206,9 @@ public class MapGenerator : MonoBehaviour
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
-        for (int y = 0; y < mapChunkSize; y += 1)
+        for (int y = 0; y < mapChunkSize; y++)
         {
-            for (int x = 0; x < mapChunkSize; x += 1)
+            for (int x = 0; x < mapChunkSize; x++)
             {
                 Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
 
@@ -251,9 +252,10 @@ public class MapGenerator : MonoBehaviour
     {
         System.Random prng = new System.Random(seed1); // Initialize random number generator with the same seed
 
-        for (int y = 0; y < mapChunkSize; y += 10)
+        int stepSize = 10; // 필요에 따라 조정
+        for (int y = stepSize / 2; y < mapChunkSize; y += stepSize)
         {
-            for (int x = 0; x < mapChunkSize; x += 10)
+            for (int x = stepSize / 2; x < mapChunkSize; x += stepSize)
             {
                 Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
 
@@ -345,7 +347,7 @@ public class MapGenerator : MonoBehaviour
             }
             else
             {
-                return 479;
+                return 959;
             }
         }
     }
@@ -436,7 +438,6 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (terrainData.useFalloff)
                     {
-                        //noiseMap[x, y] = Mathf.Lerp(noiseMap[x, y], falloffMap[x, y], 0.5f);
                         noiseMap[x, y] = Mathf.Lerp(noiseMap[x, y], falloffMap[x, y], 0.5f) * falloffMap[x, y];
                     }
                 }

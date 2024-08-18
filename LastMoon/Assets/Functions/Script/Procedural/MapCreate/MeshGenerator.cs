@@ -7,10 +7,12 @@ public static class MeshGenerator
     public static MeshData GenerateTerrainMesh(float[,] heightMap, float heightMultiplier, AnimationCurve _heightCurve, int levelOfDetail, bool useFlatShading)
     {
         AnimationCurve heightCurve = new AnimationCurve(_heightCurve.keys);
+
+        // meshSimplificationIncrement를 levelOfDetail에 따라 설정
         int meshSimplificationIncrement = (levelOfDetail == 0) ? 1 : levelOfDetail * 2;
 
-        int borderedSize = heightMap.GetLength(0);
-        int meshSize = borderedSize - 2 * meshSimplificationIncrement;
+        int borderedSize = heightMap.GetLength(0); // heightMap의 크기
+        int meshSize = borderedSize - 2 * meshSimplificationIncrement; // 실제 메시 크기
         int meshSizeUnsimplified = borderedSize - 2;
 
         float topLeftX = (meshSizeUnsimplified - 1) / -2f;
@@ -23,6 +25,8 @@ public static class MeshGenerator
         int[,] vertexIndicesMap = new int[borderedSize, borderedSize];
         int meshVertexIndex = 0;
         int borderedVertexIndex = -1;
+
+        // 경계 처리 및 인덱스 계산
         for (int y = 0; y < borderedSize; y += meshSimplificationIncrement)
         {
             for (int x = 0; x < borderedSize; x += meshSimplificationIncrement)
@@ -41,6 +45,8 @@ public static class MeshGenerator
                 }
             }
         }
+
+        // 정점 및 삼각형 추가
         for (int y = 0; y < borderedSize; y += meshSimplificationIncrement)
         {
             for (int x = 0; x < borderedSize; x += meshSimplificationIncrement)
@@ -52,6 +58,7 @@ public static class MeshGenerator
 
                 meshData.AddVertex(vertexPosition, percent, vertexIndex);
 
+                // 삼각형 추가
                 if (x < borderedSize - 1 && y < borderedSize - 1)
                 {
                     int a = vertexIndicesMap[x, y];
@@ -64,12 +71,13 @@ public static class MeshGenerator
                 }
             }
         }
+        // 메시 데이터 마무리
         meshData.Finalize();
         return meshData;
     }
 }
 
-public class MeshData
+    public class MeshData
 {
     Vector3[] vertices;
     int[] triangles;
@@ -90,7 +98,7 @@ public class MeshData
 
         vertices = new Vector3[verticesPerLine * verticesPerLine];
         uvs = new Vector2[verticesPerLine * verticesPerLine];
-        triangles = new int[(verticesPerLine - 1) * (verticesPerLine - 1) * 6];
+        triangles = new int[(verticesPerLine * verticesPerLine - verticesPerLine) * (verticesPerLine * verticesPerLine - verticesPerLine) * 6];
 
         borderVertices = new Vector3[verticesPerLine * 4 + 4];
         borderTriangles = new int[24 * verticesPerLine];
@@ -105,10 +113,12 @@ public class MeshData
         else
         {
             vertices[vertexIndex] = vertexPosition;
-            uvs[vertexIndex] = uv;
 
+            // UV 좌표 계산: uv.x, uv.y가 0에서 1사이의 값을 갖도록 함
+            uvs[vertexIndex] = uv;
         }
     }
+
 
     public void AddTriangle(int a, int b, int c)
     {
@@ -132,6 +142,7 @@ public class MeshData
     {
         Vector3[] vertexNormals = new Vector3[vertices.Length];
         int triangleCount = triangles.Length / 3;
+
         for (int i = 0; i < triangleCount; i++)
         {
             int normalTriangleIndex = i * 3;
@@ -154,20 +165,12 @@ public class MeshData
             int vertexIndexC = borderTriangles[normalTriangleIndex + 2];
 
             Vector3 triangleNormal = SurfaceNormalFromIndices(vertexIndexA, vertexIndexB, vertexIndexC);
-            if (vertexIndexA >= 0)
-            {
-                vertexNormals[vertexIndexA] += triangleNormal;
-            }
-            if (vertexIndexB >= 0)
-            {
-                vertexNormals[vertexIndexB] += triangleNormal;
-            }
-            if (vertexIndexC >= 0)
-            {
-                vertexNormals[vertexIndexC] += triangleNormal;
-            }
+            if (vertexIndexA >= 0) vertexNormals[vertexIndexA] += triangleNormal;
+            if (vertexIndexB >= 0) vertexNormals[vertexIndexB] += triangleNormal;
+            if (vertexIndexC >= 0) vertexNormals[vertexIndexC] += triangleNormal;
         }
 
+        // 노멀을 정규화하여 방향을 일관되게 함
         for (int i = 0; i < vertexNormals.Length; i++)
         {
             vertexNormals[i].Normalize();
@@ -175,7 +178,6 @@ public class MeshData
 
         return vertexNormals;
     }
-
     Vector3 SurfaceNormalFromIndices(int indexA, int indexB, int indexC)
     {
         Vector3 PointA = (indexA < 0) ? borderVertices[-indexA - 1] : vertices[indexA];
@@ -225,14 +227,17 @@ public class MeshData
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uvs;
+
         if (useFlatShading)
         {
+            // 플랫 쉐이딩을 사용할 경우, 노멀을 재계산함
             mesh.RecalculateNormals();
         }
         else
         {
             mesh.normals = bakedNormals;
         }
+
         return mesh;
     }
 }
