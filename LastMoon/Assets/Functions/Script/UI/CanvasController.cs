@@ -17,6 +17,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     private Inventory UIinventory;
     private Transform ItemTab;
     private Transform ItemSlot;
+    private Transform ItemScroll;
 
     private int keyTabCode = 2;
     private bool inventory_ck;
@@ -68,7 +69,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
         }
 
         ItemTab = inventory_Tab.Find("Misc_Tab");
-        ItemSlot = ItemTab.Find("Item_Slot");
+        ItemScroll = ItemTab.GetChild(0).GetChild(0);
+        ItemSlot = ItemScroll.GetChild(0);
     }
 
     void Start()
@@ -128,13 +130,13 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         SetInventory(playerController.PlayerInventory);
         int x = 0;
-        int y = 0;
+        int y = 6;
         float itemSlotSize = 150f;
         foreach (Item item in UIinventory.GetItems())
         {
-            RectTransform itemRectTransform = Instantiate(ItemSlot, ItemTab).GetComponent<RectTransform>();
+            RectTransform itemRectTransform = Instantiate(ItemSlot, ItemScroll).GetComponent<RectTransform>();
             itemRectTransform.gameObject.SetActive(true);
-            itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize + 500);
+            itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
 
             Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
             image.sprite = item.ItemType.ItemSprite;
@@ -420,6 +422,12 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             RefreshInventory();
             inventory_ck = !inventory_ck;
+            if(inventory_ck)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+            else
+                Cursor.lockState = CursorLockMode.Confined;
             inventory.SetActive(inventory_ck);
             Tab.SetActive(inventory_ck);
         }
