@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
+          
         }
         else
         {
@@ -189,7 +189,7 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < InitalItems.Length; i++)
             {
-                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 0 });
             }
         }
 
@@ -270,11 +270,7 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.F9))
             {
-                for (int i = 0; i < 6; i++)
-                {
-                    Debug.Log("노드 아이템 " + nodeItiems[i]);
-                    Debug.Log("믹스 아이템 " + mixItiems[i]);
-                }
+                Debug.Log("PlayerController" + PlayerInventory.GetItems());
             }
             if (Hp <= 0)
             {
@@ -408,7 +404,6 @@ public class PlayerController : MonoBehaviour
 
                 // 게임 오브젝트 파괴
                 PhotonNetwork.Destroy(gameObject);
-
                 live = false;
                 reSpwan();
             }
@@ -425,14 +420,16 @@ public class PlayerController : MonoBehaviour
             {
                 Transform child = parentTransform.GetChild(i);
                 directChildren.Add(child);
+                Debug.Log("스폰포인트: " + i + " : " + directChildren[i]);
             }
 
             if (directChildren.Count > 0)
             {
                 
                 int idx = UnityEngine.Random.Range(0, directChildren.Count);
-                Debug.Log("스폰포인트: " + idx);
-                SpawnPlayer(idx, directChildren.ToArray());
+                Debug.Log("스폰포인트: " + idx+" : "+directChildren.ToArray());
+                SpawnPlayer(idx, directChildren[idx]);
+                
             }
             else
             {
@@ -441,9 +438,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SpawnPlayer(int idx, Transform[] points)
+    public void SpawnPlayer(int idx, Transform points)
     {
-        player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
+        //GameObject playerSpawn = GameObject.Find("PlayerSpawn");
+        //playerSpawn.GetComponent<PlayerSpawn>().SpawnPlayer(idx,points);
+        player = PhotonNetwork.Instantiate("Player", points.position, points.rotation);
         if (player != null)
         {
             player.name = PhotonNetwork.LocalPlayer.NickName;
@@ -451,12 +450,12 @@ public class PlayerController : MonoBehaviour
             Transform LocalPlayer = player.transform.Find("LocalPlayer");
             Transform Tool = player.transform.Find("Player001");
             Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
-
+        
             if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
             if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
             if (Tool != null) Tool.gameObject.SetActive(false);
             if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
-
+        
             PhotonView photonView = player.GetComponent<PhotonView>();
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             Debug.Log("Player spawned and ownership transferred.");
@@ -465,6 +464,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
+        Instance = null;
         Debug.Log("Player object destroyed.");
     }
 

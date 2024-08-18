@@ -39,8 +39,6 @@ public class GameTimer : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
         GameValue.WaveTimer = currentTime;
         GameValue.WaveTimerMax = totalTime;
-        Debug.Log("토탈 타이머: " + totalTime + " 현재 라운드: " + GameValue.Round + " 최대 라운드: " + GameValue.MaxRound + " 세팅 시간: " + GameValue.setMaxtime);
-
         GameValue.LowTide = true;
         GameValue.TideCycle = 1;
         GameValue.TideChange = false;
