@@ -23,6 +23,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public Transform Recipe_Info;
     public Transform Recipe_Tab;
+    private Transform Recipe_Slot;
 
     private int keyTabCode = 2;
     private bool inventory_ck;
@@ -81,6 +82,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
             ItemTab = inventory_Tab.Find("Misc_Tab");
             ItemScroll = ItemTab.GetChild(0).GetChild(0);
             ItemSlot = ItemScroll.GetChild(0);
+
+            Recipe_Slot = Recipe_Tab.GetChild(0);
         }
         
     }
@@ -195,7 +198,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
         for (int i = 0; i< SelectableRecipes.Length; i++)
         {
-            RectTransform RecipeRectTransform = Instantiate(ItemSlot, ItemScroll).GetComponent<RectTransform>();
+            RectTransform RecipeRectTransform = Instantiate(Recipe_Slot, Recipe_Tab).GetComponent<RectTransform>();
             RecipeRectTransform.gameObject.SetActive(true);
 
             RecipeRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
