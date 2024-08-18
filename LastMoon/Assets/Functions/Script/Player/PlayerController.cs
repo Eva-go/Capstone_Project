@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
     public GameObject insidegameObject;
     public static bool insideActive;
     public static bool RespawnAcive;
+    public bool PoiPopUp;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
@@ -108,6 +109,9 @@ public class PlayerController : MonoBehaviour
     private Quaternion networkRotation;
 
     public bool ShopActive;
+
+    //추출 변수
+    public bool Extract;
 
     //리스폰 관련 변수
     private static GameObject player;
@@ -184,10 +188,11 @@ public class PlayerController : MonoBehaviour
             AptTransform = gameObject.transform;
             inside = 0;
             keydowns = false;
-
+            PoiPopUp = false;
             ShopActive = false;
             live = true;
             respawnTick = false;
+            Extract = false;
             GameValue.Money_total = 0;
             GameValue.setMoney();
 
@@ -876,8 +881,9 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
+                    PoiPopUp = true;
+                    poiController.Ountput_stop = Extract;
                     UISelectedPOIController = poiController;
-
                     //stationinteration
                     targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
                 }
@@ -960,6 +966,7 @@ public class PlayerController : MonoBehaviour
                     if (poiController.hp < 0)
                     {
                         poiController.stop = true;
+                        poiController.Ountput_stop = true;
                         Destroy(poiController.gameObject);
                     }
 

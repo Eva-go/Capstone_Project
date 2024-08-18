@@ -14,6 +14,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject Poi;
     public GameObject Shop;
     public GameObject Respawn;
+    public GameObject PoiPopup;
 
     public Transform inventory_Tab;
     private Inventory UIinventory;
@@ -101,6 +102,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             money.SetActive(true);
             Poi.SetActive(false);
             inventory.SetActive(false);
+            PoiPopup.SetActive(false);
             inventoryTransform = inventory.transform;
 
             // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
@@ -127,6 +129,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             UpdateInventoryTabActive();
             UpdateMoneyActive();
             PoiActive();
+            PoiPopupActive();
             // 노드 관련 함수
             Die();
             Shoping();
@@ -188,6 +191,23 @@ public class CanvasController : MonoBehaviourPunCallbacks
             y--;
         }
     }
+
+    public void PoiPopupActive()
+    {
+        PoiPopup.SetActive(playerController.PoiPopUp);
+    }
+     
+    public void PoiPopupActive_BT()
+    {
+        playerController.PoiPopUp = false;
+        PoiPopup.SetActive(playerController.PoiPopUp);
+    }
+
+    public void Extract_BT()
+    {
+        playerController.Extract = !playerController.Extract;
+    }
+
 
 
     private void RecipeSelect(ScriptableObject_Station[] SelectableRecipes)
