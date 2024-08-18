@@ -1,26 +1,48 @@
-using Photon.Pun.Demo.PunBasics;
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
 {
-    public ScriptableObject_Item itemData;
-    public int itemCount = 1;
+    public int count = 0; // 카운트 변수
+    private PhotonView photonView; // PhotonView 컴포넌트
 
-    private void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if (other.CompareTag("Player"))
+        photonView = GetComponent<PhotonView>();
+    }
+
+    [PunRPC]
+    public void SetAcitve(bool index)
+    {
+        gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(index);
+    }
+
+    [PunRPC]
+    public void IncreaseCount()
+    {
+        count++;
+        Debug.Log($"Count increased to: {count}"); // 카운트 증가 시 디버그 메시지 출력
+    }
+
+    [PunRPC]
+    public void SetActiveState(int instanceID, bool state)
+    {
+        GameObject obj = PhotonView.Find(instanceID)?.gameObject;
+        if (obj != null)
         {
-            PlayerRPOIInventory playerInventory = other.GetComponent<PlayerRPOIInventory>();
+            obj.SetActive(state);
+        }
+    }
 
-            // 만약 플레이어에 PlayerInventory가 없다면 추가
-            if (playerInventory == null)
-            {
-                playerInventory = other.gameObject.AddComponent<PlayerRPOIInventory>();
-            }
 
-            playerInventory.AddItem(itemData, itemCount);
+    public void Interact()
+    {
+        if (photonView.IsMine)
+        {
+            // 카운트를 증가시키기 위해 RPC 호출
+            photonView.RPC("IncreaseCount", RpcTarget.AllBuffered);
         }
     }
 }

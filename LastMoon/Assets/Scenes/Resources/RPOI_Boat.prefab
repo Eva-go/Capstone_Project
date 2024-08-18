@@ -9,9 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2871609621159087222}
+  - component: {fileID: 1982232497614519371}
+  - component: {fileID: 3560058962032142594}
+  - component: {fileID: 5884505233991520542}
+  - component: {fileID: 4148366618015037217}
   m_Layer: 0
   m_Name: RPOI_Boat
-  m_TagString: Untagged
+  m_TagString: RPoi
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +36,107 @@ Transform:
   - {fileID: 1509487380024004085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1982232497614519371
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Material: {fileID: 13400000, guid: 99b9dd6b15f26324bbc4492698960cb4, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 9.703611, y: 13.5170355, z: 17.687172}
+  m_Center: {x: 1.2982101, y: 1.2657857, z: -1.8623314}
+--- !u!114 &3560058962032142594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5e4d8aa7bef8314ea456857f1e3b505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  count: 0
+--- !u!114 &5884505233991520542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: {fileID: 0}
+  itemData:
+    nodeName: []
+    nodeItemCount: 
+    mixName: []
+    mixItemCount: 
+  poiName: 
+  SetnodeCount: 0
+  animator: {fileID: 0}
+  StationBases: []
+  StationFixes: []
+  StationAuxes: []
+  StationCons: []
+  Debug_Filler: {fileID: 0}
+  Debug_Fuel: {fileID: 0}
+  Debug_Coolent: {fileID: 0}
+  StationBaseMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
+  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
+  StationFixMat: {fileID: 11400000, guid: 45fd8d5bfd605c74ca53ac36ac43a59e, type: 2}
+  StationConMat: []
+  InputSlot: []
+  OutputSlot: []
+  FuelSlot: []
+  FuelWick: []
+  Obj_Coolent: []
+  Obj_Temperture: []
+  SelectableRecipes: []
+  SelectedRecipe: {fileID: 0}
+  StationTemperture: 0
+  StationProgress: 0
+  tick: 0
+  tickMax: 0
+  isConstructing: 0
+--- !u!114 &4148366618015037217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &1403011726034168350
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80,9 +185,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -30
       objectReference: {fileID: 0}
+    - target: {fileID: -1401502698246452131, guid: be51a71578fb4c245b925d69326aaa34, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1401502698246452131, guid: be51a71578fb4c245b925d69326aaa34, type: 3}
+      propertyPath: m_TagString
+      value: Link
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: be51a71578fb4c245b925d69326aaa34, type: 3}
       propertyPath: m_Name
       value: LastLuna_Model_Object_Fishing_Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: be51a71578fb4c245b925d69326aaa34, type: 3}
+      propertyPath: m_TagString
+      value: Poi
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

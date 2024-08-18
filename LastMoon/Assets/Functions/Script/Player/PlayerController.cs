@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.Demo.PunBasics;
+using Unity.Burst.CompilerServices;
 
 public class PlayerController : MonoBehaviour
 {
@@ -77,7 +78,7 @@ public class PlayerController : MonoBehaviour
     public float speeed = 0;
 
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
-    private string[] poiName = { "Poi_Distiller", "Poi_Dryer", "Poi_Filter", "Poi_Grinder", "Poi_Heater", "Poi_Smelter" };
+    private string[] poiName = { "RPOI_Boat", "RPOI_Car", "RPOI_Container", "RPOI_Wooden_Boat" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
@@ -113,19 +114,23 @@ public class PlayerController : MonoBehaviour
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
     private string lastDoorEntered;
 
-    //InteractableObject를 위한 코드
-    private void Awake()
+    private void ActivateLinkChildObjects(Transform parentTransform)
     {
-        if (Instance == null)
+        // 부모 Transform의 모든 자식 Transform을 순회 (비활성화된 자식도 포함)
+        foreach (Transform child in parentTransform.GetComponentsInChildren<Transform>(true))
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // 씬 전환 시 파괴되지 않도록 설정
-        }
-        else
-        {
-            Destroy(gameObject);
+            // 자식 GameObject의 태그가 'Link'인지 확인
+            if (child.CompareTag("Link"))
+            {
+                // 비활성화된 경우만 활성화
+                if (!child.gameObject.activeSelf)
+                {
+                    child.gameObject.SetActive(true);
+                }
+            }
         }
     }
+
     public void SetPlayer(GameObject player)
     {
         currentPlayer = player;
@@ -699,29 +704,52 @@ public class PlayerController : MonoBehaviour
     private void Interaction()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-        keydowns = Input.GetKey(KeyCode.E);
+        bool keydowns = Input.GetKey(KeyCode.E);
 
-        if (keydowns && Physics.Raycast(ray, out hitInfo, 5))
+        if (keydowns && Physics.Raycast(ray, out RaycastHit hitInfo, 5))
         {
-            if (hitInfo.collider.CompareTag("Door"))
+            switch (hitInfo.collider.tag)
             {
-                myRigid.isKinematic = true;
-                insideActive = true;
-                // 문을 통과하여 아파트로 들어가는 경우
-                EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
-                inside = 1;
-            }
-            else if (hitInfo.collider.CompareTag("ReturnDoor"))
-            {
-                myRigid.isKinematic = true;
-                insideActive = true;
-                // 이전에 저장된 문 위치로 되돌아가는 경우
-                inside = 2;
-            }
-            else
-            {
-                myRigid.isKinematic = false;
-                insideActive = false;
+                case "Door":
+                    myRigid.isKinematic = true;
+                    insideActive = true;
+                    EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+                    inside = 1;
+                    break;
+
+                case "ReturnDoor":
+                    myRigid.isKinematic = true;
+                    insideActive = true;
+                    inside = 2;
+                    break;
+
+                case "RPoi":
+                    myRigid.isKinematic = false;
+                    // 'Link' 태그를 가진 자식만 활성화
+                    PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
+                    ActivateLinkChildObjects(hitInfo.collider.transform);
+                    InteractableObject interactableObject = hitInfo.collider.GetComponent<InteractableObject>();
+                    if(targetPv !=null)
+                    {
+                        if (interactableObject != null)
+                        {
+                            // 상호작용을 수행합니다.
+                            //Debug.Log($"Interacting with object: {hitInfo.collider.gameObject.name}"); // 상호작용하는 오브젝트 이름 출력
+                            //interactableObject.Interact();
+                            targetPv.RPC("SetAcitve", RpcTarget.AllBuffered,true);
+                        }
+                        else
+                        {
+                            Debug.Log("No InteractableObject found.");
+                        }
+                    }
+                    
+                    break;
+
+                default:
+                    myRigid.isKinematic = false;
+                    insideActive = false;
+                    break;
             }
         }
         else
@@ -729,7 +757,6 @@ public class PlayerController : MonoBehaviour
             myRigid.isKinematic = false;
             insideActive = false;
         }
-
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
@@ -739,16 +766,23 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
-                    //stationinteration
-
-                    for (int i=0; i<nodeItiems.Length;i++)
+                    // station interaction logic
+                    for (int i = 0; i < nodeItiems.Length; i++)
                     {
-                        if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
+                        if (poiController.name.Equals(poiName[i] + "(Clone)") && nodeItiems[i] > 0)
                         {
                             nodeItiems[i]--;
-                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName,i);
+                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName, i);
+
+                            // Activate child objects with the "Link" tag
+                            foreach (Transform child in hitInfo.collider.GetComponentsInChildren<Transform>())
+                            {
+                                if (child.CompareTag("Link"))
+                                {
+                                    child.gameObject.SetActive(true);
+                                }
+                            }
                         }
-                            
                     }
                 }
             }

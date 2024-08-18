@@ -267,7 +267,6 @@ public class MapGenerator : MonoBehaviour
                     {
                         if (height <= POIYMax)
                         {
-
                             if (noiseMap[x, y] > POIThreshold1)
                             {
                                 prefabToPlace = POIPrefabs1[prng.Next(POIPrefabs1.Length)];
@@ -284,14 +283,14 @@ public class MapGenerator : MonoBehaviour
                             {
                                 prefabToPlace = POIPrefabs4[prng.Next(POIPrefabs4.Length)];
                             }
-                            else if (noiseMap[x, y] > POIThreshold5)
-                            {
-                                prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
-                            }
-                            else if (noiseMap[x, y] > POIThreshold6)
-                            {
-                                prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
-                            }
+                            //else if (noiseMap[x, y] > POIThreshold5)
+                            //{
+                            //    prefabToPlace = POIPrefabs5[prng.Next(POIPrefabs5.Length)];
+                            //}
+                            //else if (noiseMap[x, y] > POIThreshold6)
+                            //{
+                            //    prefabToPlace = POIPrefabs6[prng.Next(POIPrefabs6.Length)];
+                            //}
                         }
                     }
 
@@ -304,34 +303,6 @@ public class MapGenerator : MonoBehaviour
             }
         }
     }
-    // 건물을 지면에 붙이는 메서드
-    private bool PositionBuildingOnGround(GameObject building, float minY, float maxY)
-    {
-        // 건물의 위치에서 아래로 Raycast를 사용하여 지면 찾기
-        RaycastHit hit;
-        if (Physics.Raycast(building.transform.position, Vector3.down, out hit, Mathf.Infinity))
-        {
-            // 지면을 찾으면 건물의 위치를 해당 지점으로 이동
-            if (hit.point.y > minY)
-            {
-                if (hit.point.y <= maxY)
-                {
-                    building.transform.position = hit.point;
-                    return true;
-                }
-            }
-            else
-            {
-                Debug.LogWarning("지면이 범위 내에 있지 않습니다. 건물을 초기 위치에 남겨둡니다.");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("지면을 찾을 수 없습니다. 건물을 초기 위치에 남겨둡니다.");
-        }
-        return false;
-    }
-
     public void DrawMapInEditor()
     {
         MapData mapData = GenerateMapData(Vector2.zero);

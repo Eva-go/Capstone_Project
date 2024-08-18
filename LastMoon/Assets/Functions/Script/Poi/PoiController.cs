@@ -122,12 +122,10 @@ public class PoiController : MonoBehaviour
         if (isConstructing)
         {
             tick = e.tick % tickMax;
-            Debug.Log("E tIck" + tick + " : " + e.tick);
             if (tick >= tickMax - 1)
             {
                 CheckRecipe();
                 HeatingManage();
-                Debug.Log("tick" + tick + " : " + tickMax + " : " + PhotonNetwork.Time);
                 isConstructing = false;
             }
             else
