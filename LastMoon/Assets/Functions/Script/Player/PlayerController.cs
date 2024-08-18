@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public string nickName;
     public static float Hp = 100f;
     public GameObject cam;
+    public GameObject RespawnCamera;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -58,6 +59,7 @@ public class PlayerController : MonoBehaviour
     public static int getMoney;
     public GameObject insidegameObject;
     public static bool insideActive;
+    public static bool RespawnAcive;
 
     public LayerMask groundLayer;
     public float groundCheckDistance = 0.1f;
@@ -165,6 +167,7 @@ public class PlayerController : MonoBehaviour
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
+            RespawnAcive = false;
             myRigid = GetComponent<Rigidbody>();
             myCollider = GetComponent<CapsuleCollider>();
             PlayerAPT = GetComponent<PlayerAPTPlaneSpawn>();
@@ -185,12 +188,15 @@ public class PlayerController : MonoBehaviour
             GameValue.Pickaxe = 0;
             GameValue.Shovel = 0;
 
+            
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
 
             for (int i = 0; i < InitalItems.Length; i++)
             {
                 PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 0 });
             }
+            RespawnCamera.SetActive(false);
+            Hp = 100;
         }
 
         nickName = this.gameObject.name;
@@ -206,7 +212,7 @@ public class PlayerController : MonoBehaviour
 
         Items();
         wavetransform = FindObjectOfType<Wavetransform>();
-        Hp = 100;
+       
     }
 
     void OnEnable()
@@ -222,23 +228,26 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            cam.SetActive(true);
-            Move();
-            if (!isRunning)
+            if(live)
             {
-                Crouch();
+                Move();
+                if (!isRunning)
+                {
+                    Crouch();
+                }
+                if (!isCrouching)
+                {
+                    Run();
+                }
+                CameraRotation();
+                CharacterRotation();
+                Jump();
+                Interaction();
+                Attack();
+                Switching();
+                WaveTic();
             }
-            if (!isCrouching)
-            {
-                Run();
-            }
-            CameraRotation();
-            CharacterRotation();
-            Jump();
-            Interaction();
-            Attack();
-            Switching();
-            WaveTic();
+           
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Hp = 100;
@@ -375,7 +384,24 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            if (pv.IsMine && live)
+            // 아이템 초기화
+            //for (int i = 0; i < nodeItiems.Length; i++)
+            //{
+            //    nodeItiems[i] = 0;
+            //}
+            InvokeInventoryChanged();
+            Hp = 0;
+            RespawnAcive = true;
+            if (live)
+            {
+                RespawnCamera.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                gameObject.transform.GetChild(3).gameObject.SetActive(false);
+                gameObject.transform.GetChild(4).gameObject.SetActive(false);
+                gameObject.transform.GetChild(5).gameObject.SetActive(false);
+                live = false;
+            }
+            else if (RespawnFillHandler.fillValue >= 100)
             {
                 // Bag 생성
                 GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
@@ -388,21 +414,14 @@ public class PlayerController : MonoBehaviour
                         bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
                     }
                 }
-
-                // 아이템 초기화
-                for (int i = 0; i < nodeItiems.Length; i++)
-                {
-                    nodeItiems[i] = 0;
-                }
-                InvokeInventoryChanged();
-
-                // 게임 오브젝트 파괴
+                RespawnCamera.SetActive(false);
+                RespawnFillHandler.fillValue = 0;
                 PhotonNetwork.Destroy(gameObject);
-                live = false;
                 reSpwan();
             }
         }
     }
+
     private void reSpwan()
     {
         if (pv.IsMine && !live)
@@ -434,9 +453,7 @@ public class PlayerController : MonoBehaviour
 
     public void SpawnPlayer(int idx, Transform points)
     {
-        //GameObject playerSpawn = GameObject.Find("PlayerSpawn");
-        //playerSpawn.GetComponent<PlayerSpawn>().SpawnPlayer(idx,points);
-        player = PhotonNetwork.Instantiate("Player", points.position, points.rotation);
+        player = PhotonNetwork.Instantiate("Player", PlayerAPT.playerPoint, Quaternion.Euler(PlayerAPT.playerrotation));
         if (player != null)
         {
             player.name = PhotonNetwork.LocalPlayer.NickName;

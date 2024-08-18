@@ -12,6 +12,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject Tab;
     public GameObject Poi;
     public GameObject Shop;
+    public GameObject Respawn;
 
     public Transform inventory_Tab;
     private Inventory UIinventory;
@@ -111,6 +112,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
         // 노드 관련 함수
         Die();
         Shoping();
+        RespawnSet();
         //아이템 업데이트
         if (isItme)
         {
@@ -171,6 +173,14 @@ public class CanvasController : MonoBehaviourPunCallbacks
                 Cursor.lockState = CursorLockMode.Confined;
                 Debug.Log(playerController.ShopActive);
             }
+        }
+    }
+
+    public void RespawnSet()
+    {
+        if(playerController !=null)
+        {
+            Respawn.SetActive(PlayerController.RespawnAcive);
         }
     }
 
