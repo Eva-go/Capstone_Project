@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
     public Item[] RPOI_PortalInventory = new Item[4];
 
     //[SerializeField] private UI_Inventory ui_Inventory;
-    PoiController UISelectedPOIController;
+    public PoiController UISelectedPOIController;
 
     [SerializeField] private ScriptableObject_Item[] InitalItems;
 

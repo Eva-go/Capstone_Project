@@ -220,6 +220,13 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private void SelectedRecipeInfo(ScriptableObject_Station SelectedRecipe)
     {
+        switch (SelectedRecipe.InputCount)
+        {
+            case 1:
+                break;
+        }
+
+
         Image image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
         image.sprite = SelectedRecipe.Input001.ItemSprite;
         image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
