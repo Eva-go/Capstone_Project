@@ -119,8 +119,8 @@ MonoBehaviour:
   - Count:
     - {fileID: 6401058852643314478}
   Debug_Filler: {fileID: 0}
-  Debug_Fuel: {fileID: 0}
-  Debug_Coolent: {fileID: 0}
+  Debug_Fuel: {fileID: 11400000, guid: 3cd8bfa6b525e5d4d898971bc6b76ae7, type: 2}
+  Debug_Coolent: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
@@ -142,11 +142,11 @@ MonoBehaviour:
   SelectedRecipe: {fileID: 0}
   StationTemperture: 0
   StationProgress: 0
+  sfx_Station_Start: {fileID: -935872782112775922}
+  sfx_Station_Activation: {fileID: 2306740109581733371}
   tick: 0
   tickMax: 0
   isConstructing: 0
-  node_Item: {fileID: 0}
-  Poi_transform: {fileID: 0}
 --- !u!114 &527718943812757758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +204,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8840630211801972984, guid: 7e17712ba7a5f0e46a7a2ebe94ff2161, type: 2}
-  m_audioClip: {fileID: 8300000, guid: a606822c8a0f7e64184cc37388f38e12, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c3aa73ebe7372ff429d78c48d4260e88, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -300,7 +300,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8840630211801972984, guid: 7e17712ba7a5f0e46a7a2ebe94ff2161, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 59ba245bda2946c488bf7618694fbf63, type: 3}
+  m_audioClip: {fileID: 8300000, guid: aafd2d76242f77d43a3c8ad2d44362de, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -394,14 +394,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2206388233697376635}
     m_Modifications:
-    - target: {fileID: -1286255684148888066, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 54800b56a11cf5c4697ad12143298ae8, type: 2}
-    - target: {fileID: 2472559231161016880, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
     - target: {fileID: -8679921383154817045, guid: 934f170a720cf10408df7f106250697a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -442,6 +434,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1286255684148888066, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 54800b56a11cf5c4697ad12143298ae8, type: 2}
+    - target: {fileID: 2472559231161016880, guid: 11274e8321bb1b44a8463d9d34206a96, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a190ebd49fe42934488b8902aeecbf38, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
