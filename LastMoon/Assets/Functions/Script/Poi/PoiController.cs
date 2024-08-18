@@ -28,6 +28,11 @@ public class PoiController : MonoBehaviour
     private string playerName = " ";
     private bool processing = false;
 
+    public float ConstructionProgress; 
+
+    public GameObject StationConstructionMesh;
+    public GameObject StationConstructionParts;
+
     public GameObject[] StationBases;
     public GameObject[] StationFixes;
     public GameObject[] StationAuxes;
@@ -109,6 +114,20 @@ public class PoiController : MonoBehaviour
         }
         
     }
+
+    public void ConstructionAnimation()
+    {
+
+        ConstructionProgress++;
+
+        StationConstructionParts.SetActive(false);
+        StationConstructionMesh.SetActive(true);
+
+        propertyBlock = new MaterialPropertyBlock();
+        propertyBlock.SetFloat("_Construction_Progress", ConstructionProgress);
+        StationConstructionMesh.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+    }
+
 
     public void SlotClick(int _slotNumber)
     {
