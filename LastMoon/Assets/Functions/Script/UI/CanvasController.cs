@@ -137,7 +137,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     }
     private void RefreshInventory()
     {
-        SetInventory(playerController.PlayerInventory);
+        if (playerController != null) SetInventory(playerController.PlayerInventory);
         int x = 0;
         int y = 6;
         float itemSlotSize = 150f;
