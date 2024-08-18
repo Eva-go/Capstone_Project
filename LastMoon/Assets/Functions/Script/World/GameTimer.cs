@@ -45,6 +45,9 @@ public class GameTimer : MonoBehaviourPunCallbacks
         GameValue.TideCycle = 1;
         GameValue.TideChange = false;
         GameValue.TideChangeProgress = 0;
+        
+        GameValue.DNCycle = 0;
+
         TideChangeProgress = 0;
     }
 
@@ -53,6 +56,14 @@ public class GameTimer : MonoBehaviourPunCallbacks
         // 타이머 감소 및 이미지 위치 조정
         if (SceneManager.GetActiveScene().name == "Map")
         {
+
+            GameValue.DNCycle += Time.deltaTime;
+
+            if (GameValue.DNCycle > 720.0f)
+            {
+                GameValue.DNCycle = 0.0f;
+            }
+
             if (!GameValue.TideChange)
             {
                 currentTime -= Time.deltaTime;

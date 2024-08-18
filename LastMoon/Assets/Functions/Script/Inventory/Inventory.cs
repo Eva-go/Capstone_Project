@@ -13,7 +13,6 @@ public class Inventory
 
     public void AddItem(Item item)
     {
-        /*
         foreach(Item inventoryItem in itemList)
         {
             bool AlreadyHas = false;
@@ -24,9 +23,7 @@ public class Inventory
             }
             if (!AlreadyHas) itemList.Add(item);
         }
-         */
-
-        itemList.Add(item);
+        //itemList.Add(item);
     }
     public List<Item> GetItems()
     {
