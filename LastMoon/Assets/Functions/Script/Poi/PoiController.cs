@@ -71,7 +71,7 @@ public class PoiController : MonoBehaviour
     public int tick;
     public int tickMax;
     public bool isConstructing;
-
+    public bool stop;
 
     //레시피 관련 변수
     private int slotNumber; // 현재 슬롯 번호
@@ -101,8 +101,11 @@ public class PoiController : MonoBehaviour
 
     private void Update()
     {
-        if(gameObject.activeSelf == true)
+        if(gameObject.activeSelf == true&&!stop)
+        {
             tick_ck(5);
+        }
+        
     }
 
     public void SlotClick(int _slotNumber)
@@ -121,7 +124,7 @@ public class PoiController : MonoBehaviour
     }
     private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
     {
-        if (isConstructing)
+        if (isConstructing&&!stop)
         {
             tick = e.tick % tickMax;
             if (tick >= tickMax - 1)
@@ -209,7 +212,6 @@ public class PoiController : MonoBehaviour
 
     public void tick_ck(int ticksToConstruct)
     {
-
         if (!isConstructing)
         {
             tickMax = ticksToConstruct;
