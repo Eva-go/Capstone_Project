@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Inventory
 {
-
     private List<Item> itemList;
 
     public Inventory()
@@ -14,17 +13,74 @@ public class Inventory
 
     public void AddItem(Item item)
     {
-        foreach(Item inventoryItem in itemList)
+        if (item.Count > 0)
         {
             bool AlreadyHas = false;
-            if (inventoryItem.ItemType == item.ItemType)
+            foreach (Item inventoryItem in itemList)
             {
-                inventoryItem.Count += item.Count;
-                AlreadyHas = true;
+                if (inventoryItem.ItemType == item.ItemType)
+                {
+                    inventoryItem.Count += item.Count;
+                    AlreadyHas = true;
+                }
             }
             if (!AlreadyHas) itemList.Add(item);
         }
     }
+
+    public bool RemoveItem(Item item)
+    {
+        Item SelectedItem = null;
+        bool RemovedItem = false;
+        foreach (Item inventoryItem in itemList)
+        {
+            if (inventoryItem.ItemType == item.ItemType)
+            {
+                if (inventoryItem.Count - item.Count >= 0)
+                {
+                    inventoryItem.Count -= item.Count;
+                    if (inventoryItem.Count == 0) SelectedItem = inventoryItem;
+                    RemovedItem = true;
+                }
+            }
+        }
+        if (SelectedItem != null) 
+        {
+            itemList.Remove(SelectedItem);
+        }
+        return RemovedItem;
+    }
+
+    public int ClearItem(ScriptableObject_Item itemType)
+    {
+        Item SelectedItem = null;
+        int ItemCount = 0;
+        foreach (Item inventoryItem in itemList)
+        {
+            if (inventoryItem.ItemType == itemType)
+            {
+                ItemCount += inventoryItem.Count;
+                SelectedItem = inventoryItem;
+            }
+        }
+        if (SelectedItem != null)
+        {
+            itemList.Remove(SelectedItem);
+        }
+        return ItemCount;
+    }
+
+    public int SellAllItem()
+    {
+        int ItemCount = 0;
+        foreach (Item inventoryItem in itemList)
+        {
+            ItemCount += inventoryItem.Count * inventoryItem.ItemType.Price;
+        }
+        itemList.Clear();
+        return ItemCount;
+    }
+
     public List<Item> GetItems()
     {
         return itemList;

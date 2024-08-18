@@ -23,6 +23,9 @@ public class GameTimer : MonoBehaviourPunCallbacks
 
     private Image tempImage; // Temporary image for swapping sprites
 
+    private float TideChangeProgress = 0;
+
+
     void Start()
     {
         Wave_Time_Active_LT.SetActive(true);
@@ -36,7 +39,14 @@ public class GameTimer : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
         GameValue.WaveTimer = currentTime;
         GameValue.WaveTimerMax = totalTime;
-        Debug.Log("토탈 타이머: " + totalTime + " 현재 라운드: " + GameValue.Round + " 최대 라운드: " + GameValue.MaxRound + " 세팅 시간: " + GameValue.setMaxtime);
+        GameValue.LowTide = true;
+        GameValue.TideCycle = 1;
+        GameValue.TideChange = false;
+        GameValue.TideChangeProgress = 0;
+        
+        GameValue.DNCycle = 0;
+
+        TideChangeProgress = 0;
     }
 
     void Update()
@@ -44,25 +54,47 @@ public class GameTimer : MonoBehaviourPunCallbacks
         // 타이머 감소 및 이미지 위치 조정
         if (SceneManager.GetActiveScene().name == "Map")
         {
-            currentTime -= Time.deltaTime;
+
+            GameValue.DNCycle += Time.deltaTime;
+
+            if (GameValue.DNCycle > 720.0f)
+            {
+                GameValue.DNCycle = 0.0f;
+            }
+
+            if (!GameValue.TideChange)
+            {
+                currentTime -= Time.deltaTime;
+
+                // 타이머가 0 이하로 떨어지면 이미지 변경 처리
+                if (currentTime < 0)
+                {
+                    HandleTimeChange();
+                }
+
+                // f1 키를 누르면 시간 감소
+                if (Input.GetKeyDown(KeyCode.F1))
+                {
+                    photonView.RPC("RPC_DecreaseTime", RpcTarget.AllBuffered);
+                }
+            }
+            else
+            {
+                TideChangeProgress -= Time.deltaTime;
+                if (TideChangeProgress < 0)
+                {
+                    TideChangeProgress = 0;
+                    GameValue.TideChange = false;
+                }
+
+                GameValue.TideChangeProgress = TideChangeProgress;
+            }
             GameValue.WaveTimer = currentTime;
             GameValue.WaveTimerMax = totalTime;
             float ratio = currentTime / totalTime;
             float posX = Mathf.Lerp(finalPosX, initialPosX, ratio);
             timerImage.localPosition = new Vector3(posX, timerImage.localPosition.y, timerImage.localPosition.z);
             timerImageFill_LT.fillAmount = ratio;
-
-            // 타이머가 0 이하로 떨어지면 이미지 변경 처리
-            if (currentTime < 0)
-            {
-                HandleTimeChange();
-            }
-
-            // f1 키를 누르면 시간 감소
-            if (Input.GetKeyDown(KeyCode.F1))
-            {
-                photonView.RPC("RPC_DecreaseTime", RpcTarget.AllBuffered);
-            }
         }
     }
 
@@ -91,6 +123,15 @@ public class GameTimer : MonoBehaviourPunCallbacks
 
     void HandleTimeChange()
     {
+        GameValue.LowTide = !GameValue.LowTide;
+        if (GameValue.LowTide) GameValue.TideCycle++;
+
+        if (!GameValue.TideChange)
+        {
+            GameValue.TideChange = true;
+            TideChangeProgress = 5.0f;
+        }
+
         if (tempImage == null)
         {
             tempImage = new GameObject("TempImage").AddComponent<Image>();

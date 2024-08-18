@@ -436,7 +436,8 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (terrainData.useFalloff)
                     {
-                        noiseMap[x, y] = Mathf.Lerp(noiseMap[x, y], falloffMap[x, y], 0.5f);
+                        //noiseMap[x, y] = Mathf.Lerp(noiseMap[x, y], falloffMap[x, y], 0.5f);
+                        noiseMap[x, y] = Mathf.Lerp(noiseMap[x, y], falloffMap[x, y], 0.5f) * falloffMap[x, y];
                     }
                 }
             }

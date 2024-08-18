@@ -5,7 +5,6 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.Demo.PunBasics;
-using Unity.Burst.CompilerServices;
 
 public class PlayerController : MonoBehaviour
 {
@@ -78,7 +77,7 @@ public class PlayerController : MonoBehaviour
     public float speeed = 0;
 
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
-    private string[] poiName = { "RPOI_Boat", "RPOI_Car", "RPOI_Container", "RPOI_Wooden_Boat" };
+    private string[] poiName = { "Poi_Distiller", "Poi_Dryer", "Poi_Filter", "Poi_Grinder", "Poi_Heater", "Poi_Smelter" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
@@ -88,7 +87,12 @@ public class PlayerController : MonoBehaviour
 
     public event Action OnInventoryChanged;
 
-    public Inventory PlayerInventory;
+    public Inventory PlayerInventory = new Inventory { };
+
+    //[SerializeField] private UI_Inventory ui_Inventory;
+
+    [SerializeField] private ScriptableObject_Item[] InitalItems;
+
 
     public float positionLerpSpeed = 8f;
     public float rotationLerpSpeed = 8f;
@@ -96,6 +100,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 networkPosition;
     private Quaternion networkRotation;
 
+    public bool ShopActive;
 
     //리스폰 관련 변수
     private static GameObject player;
@@ -103,6 +108,8 @@ public class PlayerController : MonoBehaviour
     public Transform AptTransform;
 
     //아파트 진입변수
+    private bool isInside;
+    private bool isOutside;
     public int inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
@@ -114,23 +121,21 @@ public class PlayerController : MonoBehaviour
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
     private string lastDoorEntered;
 
-    private void ActivateLinkChildObjects(Transform parentTransform)
+    public bool Godmode = false;
+
+    //InteractableObject를 위한 코드
+    private void Awake()
     {
-        // 부모 Transform의 모든 자식 Transform을 순회 (비활성화된 자식도 포함)
-        foreach (Transform child in parentTransform.GetComponentsInChildren<Transform>(true))
+        if (Instance == null)
         {
-            // 자식 GameObject의 태그가 'Link'인지 확인
-            if (child.CompareTag("Link"))
-            {
-                // 비활성화된 경우만 활성화
-                if (!child.gameObject.activeSelf)
-                {
-                    child.gameObject.SetActive(true);
-                }
-            }
+            Instance = this;
+          
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
-
     public void SetPlayer(GameObject player)
     {
         currentPlayer = player;
@@ -170,14 +175,28 @@ public class PlayerController : MonoBehaviour
             AptTransform = gameObject.transform;
             inside = 0;
             keydowns = false;
+
+            ShopActive = false;
+            live = true;
+            GameValue.Money_total = 0;
+            GameValue.setMoney();
+
+            GameValue.Axe = 0;
+            GameValue.Pickaxe = 0;
+            GameValue.Shovel = 0;
+
+            //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
+
+            for (int i = 0; i < InitalItems.Length; i++)
+            {
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 0 });
+            }
         }
 
         nickName = this.gameObject.name;
 
         EquipWeapon(selectedWeaponIndex);
         Cursor.lockState = CursorLockMode.Locked;
-
-        GameValue.setMoney();
 
         originalCameraY = theCamera.transform.localPosition.y;
         originalToolCameraY = toolCamera.transform.localPosition.y;
@@ -187,9 +206,6 @@ public class PlayerController : MonoBehaviour
 
         Items();
         wavetransform = FindObjectOfType<Wavetransform>();
-        live = true;
-
-        GameValue.setMoney();
         Hp = 100;
     }
 
@@ -230,6 +246,10 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.F3))
             {
+                Godmode = !Godmode;
+            }
+            if (Input.GetKeyDown(KeyCode.F4))
+            {
                 Hp = -1;
             }
             if (Input.GetKeyDown(KeyCode.F5))
@@ -250,11 +270,7 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.F9))
             {
-                for (int i = 0; i < 6; i++)
-                {
-                    Debug.Log("노드 아이템 " + nodeItiems[i]);
-                    Debug.Log("믹스 아이템 " + mixItiems[i]);
-                }
+                Debug.Log("PlayerController" + PlayerInventory.GetItems());
             }
             if (Hp <= 0)
             {
@@ -265,49 +281,43 @@ public class PlayerController : MonoBehaviour
             {
                 DeathPPSVolume.SetActive(false);
             }
-            if (insideActive && InsideFillHandler.fillValue >= 100)
+            //if (insideActive && InsideFillHandler.fillValue >= 100)
+            //{
+            //    Debug.Log("인사이드" + inside);
+            //    InsideFillHandler.fillValue = 0;
+            //    InsideUpdate();
+            //    keydowns = false;
+            //    myRigid.isKinematic = false;
+            //}
+            if (GameValue.exit)
             {
-                Debug.Log("인사이드" + inside);
-                InsideFillHandler.fillValue = 0;
-                InsideUpdate();
-                keydowns = false;
-                myRigid.isKinematic = false;
+                Destroy(gameObject);
             }
         }
     }
 
-    public void InsideUpdate()
+    /*public void InsideUpdate()
     {
-        Debug.Log("위치1");
         switch(inside)
         {
             case 0:
-                Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
-                Debug.Log("스폰 위치" + parentTransform.position);
                 gameObject.transform.position = parentTransform.position;
                 gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
                 break;
             case 1:
-                Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
-                Debug.Log("아파트 위치" + PlayerAPT.playerPoint);
-
                 gameObject.transform.position = PlayerAPT.playerPoint;
                 gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
                 break;
             case 2:
                 if (doorPositions.ContainsKey(lastDoorEntered))
                 {
-                    Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
-                    Debug.Log("스폰 위치" + doorPositions[lastDoorEntered]);
-
                     gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
                     gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
                 }
                 break;
 
         }
-        Debug.Log("위치4");
-    }
+    }*/
 
     public void Sell()
     {
@@ -353,7 +363,6 @@ public class PlayerController : MonoBehaviour
 
             if (!isCrouching) myRigid.AddForce(Vector3.up * 5 * WaterDepth, ForceMode.Impulse);
             else myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
-
             if (Time.time >= lastDamageTime + damageInterval)
             {
                 if (!sfx_PlayerDrown.isPlaying) sfx_PlayerDrown.Play();
@@ -395,7 +404,6 @@ public class PlayerController : MonoBehaviour
 
                 // 게임 오브젝트 파괴
                 PhotonNetwork.Destroy(gameObject);
-
                 live = false;
                 reSpwan();
             }
@@ -412,14 +420,16 @@ public class PlayerController : MonoBehaviour
             {
                 Transform child = parentTransform.GetChild(i);
                 directChildren.Add(child);
+                Debug.Log("스폰포인트: " + i + " : " + directChildren[i]);
             }
 
             if (directChildren.Count > 0)
             {
                 
                 int idx = UnityEngine.Random.Range(0, directChildren.Count);
-                Debug.Log("스폰포인트: " + idx);
-                SpawnPlayer(idx, directChildren.ToArray());
+                Debug.Log("스폰포인트: " + idx+" : "+directChildren.ToArray());
+                SpawnPlayer(idx, directChildren[idx]);
+                
             }
             else
             {
@@ -428,9 +438,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void SpawnPlayer(int idx, Transform[] points)
+    public void SpawnPlayer(int idx, Transform points)
     {
-        player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
+        //GameObject playerSpawn = GameObject.Find("PlayerSpawn");
+        //playerSpawn.GetComponent<PlayerSpawn>().SpawnPlayer(idx,points);
+        player = PhotonNetwork.Instantiate("Player", points.position, points.rotation);
         if (player != null)
         {
             player.name = PhotonNetwork.LocalPlayer.NickName;
@@ -438,12 +450,12 @@ public class PlayerController : MonoBehaviour
             Transform LocalPlayer = player.transform.Find("LocalPlayer");
             Transform Tool = player.transform.Find("Player001");
             Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
-
+        
             if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
             if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
             if (Tool != null) Tool.gameObject.SetActive(false);
             if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
-
+        
             PhotonView photonView = player.GetComponent<PhotonView>();
             photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             Debug.Log("Player spawned and ownership transferred.");
@@ -452,6 +464,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
+        Instance = null;
         Debug.Log("Player object destroyed.");
     }
 
@@ -704,58 +717,90 @@ public class PlayerController : MonoBehaviour
     private void Interaction()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
-        bool keydowns = Input.GetKey(KeyCode.E);
+        keydowns = Input.GetKey(KeyCode.E);
 
-        if (keydowns && Physics.Raycast(ray, out RaycastHit hitInfo, 5))
+        if (keydowns && Physics.Raycast(ray, out hitInfo, 5))
         {
-            switch (hitInfo.collider.tag)
+            if (hitInfo.collider.CompareTag("Door"))
             {
-                case "Door":
-                    myRigid.isKinematic = true;
-                    insideActive = true;
-                    EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+                //isInside = false;
+                myRigid.isKinematic = true;
+                insideActive = true;
+                // 문을 통과하여 아파트로 들어가는 경우
+                EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+               
+                if (InsideFillHandler.fillValue >= 100)
+                {
                     inside = 1;
-                    break;
-
-                case "ReturnDoor":
-                    myRigid.isKinematic = true;
-                    insideActive = true;
-                    inside = 2;
-                    break;
-
-                case "RPoi":
-                    myRigid.isKinematic = false;
-                    // 'Link' 태그를 가진 자식만 활성화
-                    PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
-                    ActivateLinkChildObjects(hitInfo.collider.transform);
-                    InteractableObject interactableObject = hitInfo.collider.GetComponent<InteractableObject>();
-                    if(targetPv !=null)
-                    {
-                        if (interactableObject != null)
-                        {
-                            // 상호작용을 수행합니다.
-                            //Debug.Log($"Interacting with object: {hitInfo.collider.gameObject.name}"); // 상호작용하는 오브젝트 이름 출력
-                            //interactableObject.Interact();
-                            targetPv.RPC("SetAcitve", RpcTarget.AllBuffered,true);
-                        }
-                        else
-                        {
-                            Debug.Log("No InteractableObject found.");
-                        }
-                    }
-                    
-                    break;
-
-                default:
-                    myRigid.isKinematic = false;
+                    keydowns = false;
                     insideActive = false;
-                    break;
+                    //InsideUpdate();
+                    gameObject.transform.position = PlayerAPT.playerPoint;
+                    Debug.Log("pos2" + gameObject.transform.position);
+                    gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
+                    myRigid.isKinematic = false;
+                    isInside = true;
+                    InsideFillHandler.fillValue = 0;
+                }
+                if (isInside)
+                {
+                    InsideFillHandler.fillValue = 0;
+                    if (gameObject.transform.position != PlayerAPT.playerPoint)
+                    {
+                        gameObject.transform.position = PlayerAPT.playerPoint;
+                        Debug.Log("pos1" + gameObject.transform.position);
+                        isInside = false;
+                    }
+                }
+               
+            }
+            else if (hitInfo.collider.CompareTag("ReturnDoor"))
+            {
+                isOutside = false;
+                myRigid.isKinematic = true;
+                insideActive = true;
+                // 이전에 저장된 문 위치로 되돌아가는 경우
+         
+                if (InsideFillHandler.fillValue >= 100)
+                {
+                    inside = 2;
+                    keydowns = false;
+                    insideActive = false;
+                    //InsideUpdate();    
+                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                    myRigid.isKinematic = false;
+                    isOutside = true;
+                    InsideFillHandler.fillValue = 0;
+                }
+                if (isOutside)
+                {
+                    InsideFillHandler.fillValue = 0;
+                    if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                    {
+                        gameObject.transform.position = doorPositions[lastDoorEntered];
+                        Debug.Log("pos1" + gameObject.transform.position);
+                        isOutside = false;
+                    }
+                }
+               
+            }
+            else
+            {
+                myRigid.isKinematic = false;
+                insideActive = false;
             }
         }
         else
         {
             myRigid.isKinematic = false;
             insideActive = false;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Portal")
+        {
+            ShopActive = true;
         }
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
@@ -766,23 +811,16 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
-                    // station interaction logic
-                    for (int i = 0; i < nodeItiems.Length; i++)
+                    //stationinteration
+
+                    for (int i=0; i<nodeItiems.Length;i++)
                     {
-                        if (poiController.name.Equals(poiName[i] + "(Clone)") && nodeItiems[i] > 0)
+                        if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
                         {
                             nodeItiems[i]--;
-                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName, i);
-
-                            // Activate child objects with the "Link" tag
-                            foreach (Transform child in hitInfo.collider.GetComponentsInChildren<Transform>())
-                            {
-                                if (child.CompareTag("Link"))
-                                {
-                                    child.gameObject.SetActive(true);
-                                }
-                            }
+                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName,i);
                         }
+                            
                     }
                 }
             }
@@ -929,15 +967,18 @@ public class PlayerController : MonoBehaviour
         }
         if (pv.IsMine)
         {
-            animator.SetTrigger("Hit");
-            Hp -= damage;
-            ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
-            customProperties["HP"] = Hp;
-            PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
-
-            if (Hp <= 0)
+            if (!Godmode)
             {
-                Die();
+                animator.SetTrigger("Hit");
+                Hp -= damage;
+                ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+                customProperties["HP"] = Hp;
+                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+
+                if (Hp <= 0)
+                {
+                    Die();
+                }
             }
         }
     }
@@ -948,69 +989,33 @@ public class PlayerController : MonoBehaviour
         if (GameValue.Axe == 1)
         {
             weapons[0] = weaponsSwitching[0];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 1;
-                GameValue.toolSwitching = false;
-            }
-            */
+
 
         }
         else if (GameValue.Axe == 2)
         {
             weapons[0] = weaponsSwitching[3];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 1;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         if (GameValue.Pickaxe == 1)
         {
             weapons[1] = weaponsSwitching[1];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 2;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         else if (GameValue.Pickaxe == 2)
         {
             weapons[1] = weaponsSwitching[4];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 2;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         if (GameValue.Shovel == 1)
         {
             weapons[2] = weaponsSwitching[2];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 0;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         else if (GameValue.Shovel == 2)
         {
             weapons[2] = weaponsSwitching[5];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 0;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))

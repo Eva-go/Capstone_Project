@@ -15,29 +15,6 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
     }
     public  void OnBuildingCreated()
     {
-        /*GameObject[] buildings = GameObject.FindGameObjectsWithTag("APT");
-        
-        foreach (GameObject building in buildings)
-        {
-            Transform[] childTransforms = building.GetComponentsInChildren<Transform>();
-            foreach (Transform child in childTransforms)
-            {
-                if (child.name.Equals("Point"))
-                {
-                    points.Add(child);
-                }
-            }
-        
-        }
-         if (points.Count > 0)
-        {
-            int idx = Random.Range(0, points.Count);
-            SpawnPlayer(idx);
-        }
-        else
-        {
-            Debug.LogError("스폰 포인트가 없거나 충분하지 않습니다.");
-        }*/
         Transform parentTransform = GameObject.Find("SpawnPoint").transform;
         List<Transform> directChildren = new List<Transform>();
 

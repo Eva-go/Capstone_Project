@@ -7,7 +7,7 @@ public static class FalloffGenerator
     {
         float[,] map = new float[size, size];
         Vector2 center = new Vector2(size / 2f, size / 2f);
-        float maxDistance = size / 2f;
+        float maxDistance = size / 1.75f;
 
         for (int i = 0; i < size; i++)
         {

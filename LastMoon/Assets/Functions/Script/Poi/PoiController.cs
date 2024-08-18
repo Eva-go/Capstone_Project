@@ -63,6 +63,10 @@ public class PoiController : MonoBehaviour
     public float StationTemperture;
     public float StationProgress;
 
+    public AudioSource sfx_Station_Start, sfx_Station_Activation;
+
+    private bool Activation;
+
     //tick  관련 변수
     public int tick;
     public int tickMax;
@@ -93,19 +97,15 @@ public class PoiController : MonoBehaviour
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
     }
 
-
-
     private void Update()
     {
         tick_ck(5);
     }
 
-
     public void SlotClick(int _slotNumber)
     {
         onClickStart(_slotNumber); // Call the start method for preview
     }
-
     public void onClickStart(int _slotNumber)
     {
         for(int i=0; i< SelectableRecipes.Length; i++)
@@ -116,16 +116,18 @@ public class PoiController : MonoBehaviour
             }
         }
     }
-
     private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
     {
         if (isConstructing)
         {
             tick = e.tick % tickMax;
+            Debug.Log("E tIck" + tick + " : " + e.tick);
             if (tick >= tickMax - 1)
             {
                 CheckRecipe();
                 HeatingManage();
+                ActivationEffect();
+                Debug.Log("tick" + tick + " : " + tickMax + " : " + PhotonNetwork.Time);
                 isConstructing = false;
             }
             else
@@ -136,7 +138,6 @@ public class PoiController : MonoBehaviour
 
         }
     }
-
     public Item AddItem(GameObject[] objects, Item item, ScriptableObject_Item Type, int Count)
     {
         if (item == null)
@@ -153,18 +154,15 @@ public class PoiController : MonoBehaviour
         }
         return item;
     }
-
     public Item SubtractItem(GameObject[] objects, Item item, int Count)
     {
         item.SubtractItem(Count);
         for (int i = 0; i < objects.Length; i++)
         {
-            UpdateMatFill(objects[i], (float)item.Count / (float)item.ItemType.MaxCount);
+            UpdateMatInventory(objects[i], item);
         }
         return item;
     }
-
-
     public void UpdateMatStation()
     {
         UpdateObjMat(StationBases, StationBaseMat);
@@ -224,14 +222,34 @@ public class PoiController : MonoBehaviour
                 case 1:
                     if (Inv_Input[0].ItemType == SelectedRecipe.Input001)
                     {
-                        StationProgress++;
+                        if (!Activation)
+                        {
+                            Activation = true;
+                            animator.SetBool("isActvie", true);
+                        }
+                            StationProgress++;
+                    }
+                    else if (Activation)
+                    {
+                        Activation = false;
+                        animator.SetBool("isActvie", false);
                     }
                     break;
                 case 2:
                     if (Inv_Input[0].ItemType == SelectedRecipe.Input001
                         && Inv_Input[1].ItemType == SelectedRecipe.Input002)
                     {
+                        if (!Activation)
+                        {
+                            Activation = true;
+                            animator.SetBool("isActvie", true);
+                        }
                         StationProgress++;
+                    }
+                    else if (Activation)
+                    {
+                        Activation = false;
+                        animator.SetBool("isActvie", false);
                     }
                     break;
                 case 3:
@@ -239,10 +257,20 @@ public class PoiController : MonoBehaviour
                         && Inv_Input[1].ItemType == SelectedRecipe.Input002
                         && Inv_Input[2].ItemType == SelectedRecipe.Input003)
                     {
+                        if (!Activation)
+                        {
+                            Activation = true;
+                            animator.SetBool("isActvie", true);
+                        }
                         StationProgress++;
                     }
+                    else if (Activation)
+                    {
+                        Activation = false;
+                        animator.SetBool("isActvie", false);
+                    }
                     break;
-            }    
+            }
             if (StationProgress > SelectedRecipe.ProgressTime)
             {
                 StationProgress = 0;
@@ -250,6 +278,15 @@ public class PoiController : MonoBehaviour
                 {
                     Inv_Input[i] = SubtractItem(InputSlot[i].Count, Inv_Input[i], 1);
                 }
+                if (SelectedRecipe.Coolent > 0)
+                {
+                    Inv_Coolent.SubtractItem(1);
+                    for (int i = 0; i < Obj_Coolent.Length; i++)
+                    {
+                        UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
+                    }
+                }
+
                 switch (SelectedRecipe.OutputCount)
                 {
                     case 1:
@@ -267,12 +304,17 @@ public class PoiController : MonoBehaviour
                 }
             }
         }
+        else if (Activation)
+        {
+            Activation = false;
+            animator.SetBool("isActvie", false);
+        }
     }
     public void HeatingManage()
     {
-        Debug.Log("Tick executed at HeatingManage()");
-        if (StationTemperture < SelectedRecipe.Temperture)
+        if (StationTemperture < SelectedRecipe.Temperture + 5)
         {
+            Debug.Log("Tick executed at HeatingManage()");
             if (Inv_Fuel.Count > 0)
             {
                 StationTemperture += Inv_Fuel.ItemType.Heating;
@@ -286,25 +328,29 @@ public class PoiController : MonoBehaviour
         }
         if (StationTemperture > 25)
         {
-            if (StationTemperture > SelectedRecipe.Temperture && Inv_Coolent.Count > 0)
-            {
-                Inv_Coolent.SubtractItem(1);
-                for (int i = 0; i < Obj_Coolent.Length; i++)
-                {
-                    UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
-                }
-            }
-            else
-            {
-                StationTemperture--;
-            }
+            StationTemperture--;
         }
         for (int i = 0; i < Obj_Temperture.Length; i++)
         {
             UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
         }
     }
-
+    public void ActivationEffect()
+    {
+        if (Activation)
+        {
+            if (!sfx_Station_Activation.isPlaying)
+            {
+                if (sfx_Station_Start != null) sfx_Station_Start.Play();
+                sfx_Station_Activation.Play();
+            }
+        }
+        else if (sfx_Station_Activation.isPlaying)
+        {
+            if (sfx_Station_Start != null) sfx_Station_Start.Stop();
+            sfx_Station_Activation.Stop();
+        }
+    }
 
 
     [PunRPC]
@@ -329,6 +375,8 @@ public class PoiController : MonoBehaviour
         Inv_Fuel = AddItem(FuelSlot, Inv_Fuel, Debug_Fuel, 10);
         Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 10);
 
+        //=== Old Recipe -V
+
         if (itemData.nodeName[i].Equals(nodeName) && nodeItemCount >= 0)
         {
             if (playerName == " ")
@@ -352,7 +400,7 @@ public class PoiController : MonoBehaviour
     private IEnumerator ProcessItems(int i)
     {
         processing = true;
-        animator.SetBool("isActvie", true);
+        //animator.SetBool("isActvie", true);
         while (itemData.nodeItemCount[i] > 0)
         {
             itemData.nodeItemCount[i]--;
@@ -361,7 +409,7 @@ public class PoiController : MonoBehaviour
         }
         itemData.nodeItemCount[i] = 0;
         processing = false;
-        animator.SetBool("isActvie", false);
+        //animator.SetBool("isActvie", false);
     }
 
     [PunRPC]

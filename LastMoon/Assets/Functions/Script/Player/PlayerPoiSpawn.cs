@@ -201,7 +201,7 @@ public class PlayerPoiSpawn : MonoBehaviour
     {
         slotNumber = _slotNumber; // Set the slot number
         onClickStart(); // Call the start method for preview
-        Debug.Log("버튼 클릭" + _slotNumber);
+
     }
 
     public void onClickStart()

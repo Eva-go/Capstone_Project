@@ -11,6 +11,13 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject money;
     public GameObject Tab;
     public GameObject Poi;
+    public GameObject Shop;
+
+    public Transform inventory_Tab;
+    private Inventory UIinventory;
+    private Transform ItemTab;
+    private Transform ItemSlot;
+    private Transform ItemScroll;
 
     private int keyTabCode = 2;
     private bool inventory_ck;
@@ -19,10 +26,10 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public bool SetPoi = false;
 
     // 노드
-    public GameObject[] nodes;
-    public Text[] nodesCount;
+    //public GameObject[] nodes;
+    //public Text[] nodesCount;
     public Text[] mixCount;
-    public Text[] nodePrice;
+    //public Text[] nodePrice;
     public Text[] mixPrice;
 
     public int[] count = new int[6]; // 배열 크기 초기화
@@ -47,6 +54,9 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private Transform inventoryTransform;
 
+    //인벤토리
+    public Inventory PlayerInventory;
+
     void Awake()
     {
         isItme = false;
@@ -59,6 +69,10 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             Destroy(gameObject);
         }
+
+        ItemTab = inventory_Tab.Find("Misc_Tab");
+        ItemScroll = ItemTab.GetChild(0).GetChild(0);
+        ItemSlot = ItemScroll.GetChild(0);
     }
 
     void Start()
@@ -66,12 +80,11 @@ public class CanvasController : MonoBehaviourPunCallbacks
         ToolIconUpdate();
         ToolColorUpdate();
 
+        inventory.SetActive(true);
         inside.SetActive(false);
-        inventory.SetActive(false);
         Tab.SetActive(false);
         money.SetActive(true);
         Poi.SetActive(false);
-
         inventoryTransform = inventory.transform;
 
         // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
@@ -84,6 +97,88 @@ public class CanvasController : MonoBehaviourPunCallbacks
             // Non-master clients will request random prices from master
             RequestRandomPricesFromMaster();
         }
+        RefreshInventory();
+        inventory.SetActive(false);
+    }
+    void Update()
+    {
+        ToolIconSwitching();
+        UpdateInsideActive();
+        UpdateInventoryActive();
+        UpdateInventoryTabActive();
+        UpdateMoneyActive();
+        PoiActive();
+        // 노드 관련 함수
+        Die();
+        Shoping();
+        //아이템 업데이트
+        if (isItme)
+        {
+            nodeCountUpdate();
+            mixCountUpdate();
+        }
+        if(Input.GetKeyDown(KeyCode.F9))
+        {
+            foreach (Item item in UIinventory.GetItems())
+            {
+                Debug.Log("CanvasController" + item.ItemType+" : "+item.Count);
+            }
+                
+        }
+        // 랜덤 가격이 아직 초기화되지 않았다면, 요청
+        RequestRandomPricesFromMaster();
+    }
+
+
+
+    public void SetInventory(Inventory inventory)
+    {
+        UIinventory = inventory;
+    }
+    private void RefreshInventory()
+    {
+        if (playerController != null) SetInventory(playerController.PlayerInventory);
+        int x = 0;
+        int y = 6;
+        float itemSlotSize = 150f;
+        foreach (Item item in UIinventory.GetItems())
+        {
+            RectTransform itemRectTransform = Instantiate(ItemSlot, ItemScroll).GetComponent<RectTransform>();
+            itemRectTransform.gameObject.SetActive(true);
+            itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize );
+
+            Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
+            image.sprite = item.ItemType.ItemSprite;
+
+            Text text = itemRectTransform.Find("Count").GetComponent<Text>();
+
+            text.text = item.Count.ToString();
+
+            text = itemRectTransform.Find("Price").GetComponent<Text>();
+            text.text = item.ItemType.Price.ToString();
+
+            y--;
+        }
+    }
+
+    public void Shoping()
+    {
+        if(playerController!=null)
+        {
+            Shop.SetActive(playerController.ShopActive);
+            if(playerController.ShopActive)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                Debug.Log(playerController.ShopActive);
+            }
+        }
+    }
+
+    public void Shoping_Exit()
+    {
+        playerController.ShopActive = false;
+        Shop.SetActive(playerController.ShopActive);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void InitializeAndSendRandomPrices()
@@ -98,7 +193,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             tempMixPriceCount[i] = Random.Range(100, 151); // 100~150 사이의 랜덤값
 
             // Update UI elements with random values
-            nodePrice[i].text = tempNodePriceCount[i].ToString();
+            //nodePrice[i].text = tempNodePriceCount[i].ToString();
             mixPrice[i].text = tempMixPriceCount[i].ToString();
         }
 
@@ -125,13 +220,42 @@ public class CanvasController : MonoBehaviourPunCallbacks
             nodePriceCount[i] = nodePrices[i];
             mixPriceCount[i] = mixPrices[i];
 
-            nodePrice[i].text = nodePriceCount[i].ToString();
+            //nodePrice[i].text = nodePriceCount[i].ToString();
             mixPrice[i].text = mixPriceCount[i].ToString();
             GameValue.getPrice(i, nodePriceCount[i], mixPriceCount[i]);
         }
 
         // 랜덤 값이 초기화된 것으로 플래그 설정
         pricesInitialized = true;
+    }
+
+
+    public void Sell()
+    {
+        money.SetActive(true);
+        /*
+        for (int i = 0; i < nodesCount.Length; i++)
+        {
+            Amount = nodePriceCount[i] * playerController.nodeItiems[i];
+            TotalSell += Amount;
+        }
+        for(int i=0; i< mixCount.Length; i++)
+        {
+            Amount = mixPriceCount[i] * playerController.mixItiems[i];
+            TotalSell += Amount;
+        }
+        for (int i = 0; i < nodesCount.Length; i++)
+        {
+            nodesCount[i].text = "0";
+            playerController.nodeItiems[i] = 0;
+        }
+        for(int i=0; i<mixCount.Length;i++)
+        {
+            mixCount[i].text = "0";
+            playerController.mixItiems[i] = 0;
+        }
+         */
+        GameValue.GetMomey(TotalSell);
     }
 
     void RequestRandomPricesFromMaster()
@@ -149,28 +273,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             InitializeAndSendRandomPrices();
         }
-    }
-
-    void Update()
-    {
-        ToolIconSwitching();
-        UpdateInsideActive();
-        UpdateInventoryActive();
-        UpdateInventoryTabActive();
-        UpdateMoneyActive();
-        PoiActive();
-        // 노드 관련 함수
-        Sell();
-        Die();
-        //아이템 업데이트
-        if (isItme)
-        {
-            nodeCountUpdate();
-            mixCountUpdate();
-        }
-
-        // 랜덤 가격이 아직 초기화되지 않았다면, 요청
-        RequestRandomPricesFromMaster();
     }
 
     public void PoiActive()
@@ -274,7 +376,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             for (int i = 0; i < 6; i++)
             {
                 count[i] = playerController.nodeItiems[i];
-                nodesCount[i].text = count[i].ToString();
+                //nodesCount[i].text = count[i].ToString();
             }
         }
     }
@@ -288,38 +390,17 @@ public class CanvasController : MonoBehaviourPunCallbacks
         }
     }
 
-    private void Sell()
-    {
-        if (GameValue.lived)
-        {
-            money.SetActive(true);
-            GameValue.setMoney();
-            for (int i = 0; i < nodesCount.Length; i++)
-            {
-                Amount = SellCount[i] * salePrice[i];
-                TotalSell += Amount;
-            }
-            GameValue.GetMomey(TotalSell);
-            GameValue.lived = false;
-
-            for (int i = 0; i < nodesCount.Length; i++)
-            {
-                nodesCount[i].text = "0";
-                SellCount[i] = 0;
-                count[i] = 0;
-            }
-        }
-    }
-
     private void Die()
     {
         if (PlayerController.Hp == 0)
         {
+            /*
             for (int i = 0; i < nodesCount.Length; i++)
             {
-                nodesCount[i].text = "0";
+                //nodesCount[i].text = "0";
                 mixCount[i].text = "0";
             }
+            */
         }
     }
 
@@ -342,7 +423,14 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
+            RefreshInventory();
             inventory_ck = !inventory_ck;
+            if(inventory_ck)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+            }
+            else
+                Cursor.lockState = CursorLockMode.Locked;
             inventory.SetActive(inventory_ck);
             Tab.SetActive(inventory_ck);
         }

@@ -1624,13 +1624,22 @@ MonoBehaviour:
   nodeItiems: 000000000000000000000000000000000000000000000000
   mixItiems: 000000000000000000000000000000000000000000000000
   nodeCounts: 000000000000000000000000000000000000000000000000
+  InitalItems:
+  - {fileID: 11400000, guid: fa259c40698d76049a21547bf0bc5d54, type: 2}
+  - {fileID: 11400000, guid: c6cbcc82f2224644e96d108a738627f9, type: 2}
+  - {fileID: 11400000, guid: eba0a1bd10be48d4fa669a861ab2ca8e, type: 2}
+  - {fileID: 11400000, guid: 85f839ab0ba31ff4d9d3c031148573dc, type: 2}
+  - {fileID: 11400000, guid: 88f06c7edf76e864fb1ea95e4d076ba1, type: 2}
+  - {fileID: 11400000, guid: 85401f175740a5140933e305d4ab3a6b, type: 2}
   positionLerpSpeed: 8
   rotationLerpSpeed: 8
+  ShopActive: 0
   oldTransform: {fileID: 0}
   AptTransform: {fileID: 0}
   inside: 0
   keydowns: 0
   PlayerAPT: {fileID: 0}
+  Godmode: 0
 --- !u!114 &4323000284422157701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1654,11 +1663,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   Poi_BT:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -2497,6 +2502,7 @@ MonoBehaviour:
   waveHeightTime: 0
   waveStrength: 0
   normalizedTime: 0
+  normalizedTidalChange: 0
 --- !u!82 &3467233979378440662
 AudioSource:
   m_ObjectHideFlags: 0

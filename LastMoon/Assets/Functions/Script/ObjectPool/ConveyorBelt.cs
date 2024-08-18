@@ -18,7 +18,53 @@ public class ConveyorBelt: MonoBehaviour
 
     void Start()
     {
-        // 초기화가 필요하다면 여기에 작성
+        // 현재 물체의 회전값을 Quaternion으로 가져옵니다.
+        Quaternion rotation = gameObject.transform.rotation;
+        
+        // Quaternion을 오일러 각도로 변환합니다.
+        Vector3 eulerAngles = rotation.eulerAngles;
+        
+        // 오일러 각도를 360도 범위로 변환합니다.
+        eulerAngles = NormalizeEulerAngles(eulerAngles);
+        
+        // 오일러 각도에 따라 direction을 설정합니다.
+        if (eulerAngles.y == 0)
+        {
+            direction = new Vector3(1, 0, 0);
+        }
+        else if (eulerAngles.y == 180)
+        {
+            direction = new Vector3(-1, 0, 0);
+        }
+        else if (eulerAngles.y == 90)
+        {
+            direction = new Vector3(0, 0, -1);
+        }
+        else if (eulerAngles.y == 270)
+        {
+            direction = new Vector3(0, 0, 1);
+        }
+        else
+        {
+            direction = Vector3.zero; // 기본값
+        }
+        
+    }
+
+    private Vector3 NormalizeEulerAngles(Vector3 eulerAngles)
+    {
+        eulerAngles.x = NormalizeAngle(eulerAngles.x);
+        eulerAngles.y = NormalizeAngle(eulerAngles.y);
+        eulerAngles.z = NormalizeAngle(eulerAngles.z);
+        return eulerAngles;
+    }
+
+    // 개별 각도를 0-360도 범위로 정규화합니다.
+    private float NormalizeAngle(float angle)
+    {
+        angle = angle % 360f;
+        if (angle < 0f) angle += 360f;
+        return angle;
     }
 
     void Update()
