@@ -119,6 +119,8 @@ public class PlayerController : MonoBehaviour
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
     private string lastDoorEntered;
 
+    public bool Godmode = false;
+
     //InteractableObject를 위한 코드
     private void Awake()
     {
@@ -239,6 +241,10 @@ public class PlayerController : MonoBehaviour
                 Hp = 100;
             }
             if (Input.GetKeyDown(KeyCode.F3))
+            {
+                Godmode = !Godmode;
+            }
+            if (Input.GetKeyDown(KeyCode.F4))
             {
                 Hp = -1;
             }
@@ -367,7 +373,6 @@ public class PlayerController : MonoBehaviour
 
             if (!isCrouching) myRigid.AddForce(Vector3.up * 5 * WaterDepth, ForceMode.Impulse);
             else myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
-
             if (Time.time >= lastDamageTime + damageInterval)
             {
                 if (!sfx_PlayerDrown.isPlaying) sfx_PlayerDrown.Play();
@@ -919,15 +924,18 @@ public class PlayerController : MonoBehaviour
         }
         if (pv.IsMine)
         {
-            animator.SetTrigger("Hit");
-            Hp -= damage;
-            ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
-            customProperties["HP"] = Hp;
-            PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
-
-            if (Hp <= 0)
+            if (!Godmode)
             {
-                Die();
+                animator.SetTrigger("Hit");
+                Hp -= damage;
+                ExitGames.Client.Photon.Hashtable customProperties = new ExitGames.Client.Photon.Hashtable();
+                customProperties["HP"] = Hp;
+                PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
+
+                if (Hp <= 0)
+                {
+                    Die();
+                }
             }
         }
     }
