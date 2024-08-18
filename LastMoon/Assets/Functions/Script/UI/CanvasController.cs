@@ -222,7 +222,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             }
 
             x++;
-            if (x >= 3)
+            if (x >= 1)
             {
                 x = 0;
                 y--;
