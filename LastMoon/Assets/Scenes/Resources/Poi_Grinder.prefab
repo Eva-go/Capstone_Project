@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 8967602037494354336}
   - component: {fileID: 2937159026886568493}
   - component: {fileID: 6369805564078711892}
-  - component: {fileID: -6086055802904456117}
   - component: {fileID: -1204528744865690132}
   m_Layer: 0
   m_Name: Poi_Grinder
@@ -90,6 +89,8 @@ MonoBehaviour:
     - {fileID: 8954694521056130001}
     - {fileID: 7100785231769997054}
   Debug_Filler: {fileID: 0}
+  Debug_Fuel: {fileID: 11400000, guid: 3cd8bfa6b525e5d4d898971bc6b76ae7, type: 2}
+  Debug_Coolent: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 0}
   StationFixMat: {fileID: 0}
@@ -105,8 +106,13 @@ MonoBehaviour:
   Obj_Temperture: []
   SelectableRecipes: []
   SelectedRecipe: {fileID: 0}
-  testObject: {fileID: 0}
-  testObjectTransform: {fileID: 0}
+  StationTemperture: 0
+  StationProgress: 0
+  sfx_Station_Start: {fileID: 0}
+  sfx_Station_Activation: {fileID: -1204528744865690132}
+  tick: 0
+  tickMax: 0
+  isConstructing: 0
 --- !u!65 &8967602037494354336
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -175,102 +181,6 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
---- !u!82 &-6086055802904456117
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1478360869261646978}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -8840630211801972984, guid: 7e17712ba7a5f0e46a7a2ebe94ff2161, type: 2}
-  m_audioClip: {fileID: 8300000, guid: a606822c8a0f7e64184cc37388f38e12, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!82 &-1204528744865690132
 AudioSource:
   m_ObjectHideFlags: 0
@@ -281,7 +191,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -8840630211801972984, guid: 7e17712ba7a5f0e46a7a2ebe94ff2161, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 59ba245bda2946c488bf7618694fbf63, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 122df205189635b42b56ba707e45e891, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
