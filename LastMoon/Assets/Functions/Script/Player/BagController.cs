@@ -12,7 +12,7 @@ public class BagController : MonoBehaviourPunCallbacks
     private int lastAttackerViewID;
 
     [PunRPC]
-    public void GetItem(Item item)
+    public void GetItem(int ItemCount)
     {
         //BagInventory.OverrideInventory(inventory);
         /*
@@ -22,8 +22,9 @@ public class BagController : MonoBehaviourPunCallbacks
             health += item.Count * 5;
         }
          */
-        BagInventory.AddItem(item);
-        health += item.Count * 5;
+        //BagInventory.AddItem(item);
+        //health += item.Count * 5;
+        health += ItemCount;
     }
 
     [PunRPC]

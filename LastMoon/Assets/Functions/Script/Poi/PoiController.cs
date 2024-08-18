@@ -78,6 +78,8 @@ public class PoiController : MonoBehaviour
 
     //ÆÄ±« º¯¼ö
     public int hp = 3;
+
+    public Transform OutputTransform;
     void Start()
     {
         pv = GetComponent<PhotonView>();

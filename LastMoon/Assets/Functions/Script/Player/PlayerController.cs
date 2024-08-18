@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < InitalItems.Length; i++)
             {
-                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 0 });
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
             }
             RespawnCamera.SetActive(false);
             Hp = 100;
@@ -407,8 +407,9 @@ public class PlayerController : MonoBehaviour
                     // 아이템 데이터 전송
                     foreach (Item item in PlayerInventory.GetItems())
                     {
-                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item);
+                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.Count);
                     }
+                    PlayerInventory.ClearInventory();
                 }
             }
             /*
