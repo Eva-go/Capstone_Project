@@ -5,13 +5,16 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.Demo.PunBasics;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
     public GameObject currentPlayer { get; private set; }
 
-
+    public float interactionCooldown = 0.5f; // 상호작용 쿨다운 시간
+    private bool canInteract = true; // 상호작용 가능 여부
+    private bool isCooldown = false;
 
     public PhotonView pv;
     public string nickName;
@@ -77,7 +80,7 @@ public class PlayerController : MonoBehaviour
     public float speeed = 0;
 
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
-    private string[] poiName = { "Poi_Distiller", "Poi_Dryer", "Poi_Filter", "Poi_Grinder", "Poi_Heater", "Poi_Smelter" };
+    private string[] poiName = { "RPOI_Boat", "RPOI_Car", "RPOI_Container", "RPOI_Wooden_Boat" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
@@ -123,6 +126,22 @@ public class PlayerController : MonoBehaviour
 
     public bool Godmode = false;
 
+    private void ActivateLinkChildObjects(Transform parentTransform)
+    {
+        // 부모 Transform의 모든 자식 Transform을 순회 (비활성화된 자식도 포함)
+        foreach (Transform child in parentTransform.GetComponentsInChildren<Transform>(true))
+        {
+            // 자식 GameObject의 태그가 'Link'인지 확인
+            if (child.CompareTag("Link"))
+            {
+                // 비활성화된 경우만 활성화
+                if (!child.gameObject.activeSelf)
+                {
+                    child.gameObject.SetActive(true);
+                }
+            }
+        }
+    }
     //InteractableObject를 위한 코드
     private void Awake()
     {
@@ -721,74 +740,122 @@ public class PlayerController : MonoBehaviour
 
         if (keydowns && Physics.Raycast(ray, out hitInfo, 5))
         {
-            if (hitInfo.collider.CompareTag("Door"))
+            switch (hitInfo.collider.tag)
             {
-                //isInside = false;
-                myRigid.isKinematic = true;
-                insideActive = true;
-                // 문을 통과하여 아파트로 들어가는 경우
-                EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
-               
-                if (InsideFillHandler.fillValue >= 100)
-                {
-                    inside = 1;
-                    keydowns = false;
-                    insideActive = false;
-                    //InsideUpdate();
-                    gameObject.transform.position = PlayerAPT.playerPoint;
-                    Debug.Log("pos2" + gameObject.transform.position);
-                    gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                    myRigid.isKinematic = false;
-                    isInside = true;
-                    InsideFillHandler.fillValue = 0;
-                }
-                if (isInside)
-                {
-                    InsideFillHandler.fillValue = 0;
-                    if (gameObject.transform.position != PlayerAPT.playerPoint)
+                case "Door":
+                    myRigid.isKinematic = true;
+                    insideActive = true;
+                    // 문을 통과하여 아파트로 들어가는 경우
+                    EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+
+                    if (InsideFillHandler.fillValue >= 100)
                     {
+                        inside = 1;
+                        keydowns = false;
+                        insideActive = false;
+                        //InsideUpdate();
                         gameObject.transform.position = PlayerAPT.playerPoint;
-                        Debug.Log("pos1" + gameObject.transform.position);
-                        isInside = false;
+                        Debug.Log("pos2" + gameObject.transform.position);
+                        gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
+                        myRigid.isKinematic = false;
+                        isInside = true;
+                        InsideFillHandler.fillValue = 0;
                     }
-                }
-               
-            }
-            else if (hitInfo.collider.CompareTag("ReturnDoor"))
-            {
-                isOutside = false;
-                myRigid.isKinematic = true;
-                insideActive = true;
-                // 이전에 저장된 문 위치로 되돌아가는 경우
-         
-                if (InsideFillHandler.fillValue >= 100)
-                {
-                    inside = 2;
-                    keydowns = false;
-                    insideActive = false;
-                    //InsideUpdate();    
-                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                    myRigid.isKinematic = false;
-                    isOutside = true;
-                    InsideFillHandler.fillValue = 0;
-                }
-                if (isOutside)
-                {
-                    InsideFillHandler.fillValue = 0;
-                    if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                    if (isInside)
                     {
-                        gameObject.transform.position = doorPositions[lastDoorEntered];
-                        Debug.Log("pos1" + gameObject.transform.position);
-                        isOutside = false;
+                        InsideFillHandler.fillValue = 0;
+                        if (gameObject.transform.position != PlayerAPT.playerPoint)
+                        {
+                            gameObject.transform.position = PlayerAPT.playerPoint;
+                            Debug.Log("pos1" + gameObject.transform.position);
+                            isInside = false;
+                        }
                     }
-                }
-               
-            }
-            else
-            {
-                myRigid.isKinematic = false;
-                insideActive = false;
+
+                    break;
+
+                case "ReturnDoor":
+                    isOutside = false;
+                    myRigid.isKinematic = true;
+                    insideActive = true;
+                    // 이전에 저장된 문 위치로 되돌아가는 경우
+
+                    if (InsideFillHandler.fillValue >= 100)
+                    {
+                        inside = 2;
+                        keydowns = false;
+                        insideActive = false;
+                        //InsideUpdate();    
+                        gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                        gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                        myRigid.isKinematic = false;
+                        isOutside = true;
+                        InsideFillHandler.fillValue = 0;
+                    }
+                    if (isOutside)
+                    {
+                        InsideFillHandler.fillValue = 0;
+                        if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                        {
+                            gameObject.transform.position = doorPositions[lastDoorEntered];
+                            Debug.Log("pos1" + gameObject.transform.position);
+                            isOutside = false;
+                        }
+                    }
+                    break;
+
+                case "RPoi":
+                    RaycastHit hit;
+                    if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
+                    {
+                        PoiController poiController = hit.collider.GetComponent<PoiController>();
+                        if (poiController != null)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
+                                {
+                                    bool isActive = true;
+                                    poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
+                                    if (poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf == false)
+                                    {
+                                        isActive = false;
+                                    }
+                                    else
+                                    {
+                                        isActive = true;
+                                    }
+                                    PhotonView pv = poiController.GetComponent<PhotonView>();
+                                    InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
+                                    if (pv != null)
+                                    {
+                                        pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
+                                        int playerId = NetworkManager.PlayerID + 1;
+
+                                        if (interactableObject.GetInteractingPlayerId() != playerId)
+                                        {
+                                            // 다른 플레이어가 상호작용하고 있으면 소유권을 넘겨주고 카운트를 초기화
+                                            interactableObject.SetInteractingPlayerId(playerId); // 새 플레이어에게 소유권 부여
+                                            pv.RPC("ResetOwnership", RpcTarget.OthersBuffered, isActive);
+                                        }
+                                        else
+                                        {
+                                            // 이미 소유하고 있는 플레이어가 상호작용할 경우
+                                            interactableObject.IncreaseCount(playerId); // 카운트 증가
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+
+
+                default:
+                    myRigid.isKinematic = false;
+                    insideActive = false;
+                    break;
             }
         }
         else
@@ -892,22 +959,32 @@ public class PlayerController : MonoBehaviour
                     bagPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, pv.ViewID);
                 }
             }
-            else if (hit.collider.CompareTag("Poi"))
+            else if (hit.collider.CompareTag("RPoi"))
             {
                 PoiController poiController = hit.collider.GetComponent<PoiController>();
                 if(poiController != null)
                 {
-                    for(int i=0;i<6;i++)
+                    for(int i=0;i<4;i++)
                     {
                         if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
                         {
-                            Debug.Log("에러" + poiController.name); ;
-                            int mixItemCount = poiController.itemData.mixItemCount[i];
-                            pv.RPC("UpdateMixItem", RpcTarget.AllBuffered, i, mixItemCount);
+                            bool isActive = true;
+                            poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
+                            if (poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf == false)
+                            {
+                                isActive = false;
+                            }
+                            else
+                            {
+                                isActive = true;
+                            }
+                            PhotonView pv = poiController.GetComponent<PhotonView>();
+                            if (pv != null)
+                            {
+                                pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
+                            }
                         }
-                            
                     }
-                  
                 }
             }
         }

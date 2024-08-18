@@ -69,7 +69,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5e4d8aa7bef8314ea456857f1e3b505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linkedObjects: []
   count: 0
+  countText: {fileID: 0}
 --- !u!114 &1629333546366384732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,6 +114,8 @@ MonoBehaviour:
   SelectedRecipe: {fileID: 0}
   StationTemperture: 0
   StationProgress: 0
+  sfx_Station_Start: {fileID: 0}
+  sfx_Station_Activation: {fileID: 0}
   tick: 0
   tickMax: 0
   isConstructing: 0
