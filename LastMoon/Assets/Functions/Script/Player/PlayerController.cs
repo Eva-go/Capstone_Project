@@ -405,9 +405,12 @@ public class PlayerController : MonoBehaviour
                 BagController bagScript = bag.GetComponent<BagController>();
                 if (bagScript != null)
                 {
+
                     // 아이템 데이터 전송
                     foreach (Item item in PlayerInventory.GetItems())
                     {
+                        bagScript.BagInventory.AddItem(item);
+
                         bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.Count);
                     }
                     PlayerInventory.ClearInventory();
