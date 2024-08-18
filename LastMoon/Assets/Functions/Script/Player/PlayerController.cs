@@ -126,6 +126,7 @@ public class PlayerController : MonoBehaviour
     private string lastDoorEntered;
 
     public bool Godmode = false;
+    private bool Bagdrop = false;
 
     PoiController UISelectedPOIController;
 
@@ -394,6 +395,22 @@ public class PlayerController : MonoBehaviour
             //{
             //    nodeItiems[i] = 0;
             //}
+            if (!Bagdrop)
+            {
+                // Bag 생성
+                Bagdrop = true;
+
+                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
+                BagController bagScript = bag.GetComponent<BagController>();
+                if (bagScript != null)
+                {
+                    // 아이템 데이터 전송
+                    bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, PlayerInventory);
+                }
+                PlayerInventory.ClearInventory();
+            }
+
+
             InvokeInventoryChanged();
             Hp = 0;
             RespawnAcive = true;
@@ -408,15 +425,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (RespawnFillHandler.fillValue >= 100)
             {
-                // Bag 생성
-                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
-                BagController bagScript = bag.GetComponent<BagController>();
-                if (bagScript != null)
-                {
-                    // 아이템 데이터 전송
-                    bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, PlayerInventory);
-                }
-                PlayerInventory.ClearInventory();
+                Bagdrop = false;
                 RespawnAcive = false;
                 RespawnCamera.SetActive(false);
                 RespawnFillHandler.fillValue = 0;

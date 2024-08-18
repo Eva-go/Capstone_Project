@@ -7,14 +7,19 @@ public class BagController : MonoBehaviourPunCallbacks
     public int[] mixItems = new int[6];
     
     public float health = 30f;
-    public Inventory BagInventory;
+    public Inventory BagInventory = new Inventory { };
 
     private int lastAttackerViewID;
 
     [PunRPC]
     public void GetItem(Inventory inventory)
     {
-        inventory.OverrideInventory(inventory);
+        //BagInventory.OverrideInventory(inventory);
+        foreach (Item item in inventory.GetItems())
+        {
+            BagInventory.AddItem(item);
+            health += item.Count * 5;
+        }
     }
 
     [PunRPC]
@@ -40,6 +45,7 @@ public class BagController : MonoBehaviourPunCallbacks
                 foreach (Item item in BagInventory.GetItems())
                 {
                     playerController.PlayerInventory.AddItem(item);
+                    playerController.TakeDamage(5f);
                 }
                 /*
                 for (int i = 0; i < nodeItems.Length; i++)
