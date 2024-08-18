@@ -405,7 +405,11 @@ public class PlayerController : MonoBehaviour
                 if (bagScript != null)
                 {
                     // 아이템 데이터 전송
-                    bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, PlayerInventory);
+                    //
+                    foreach (Item item in PlayerInventory.GetItems())
+                    {
+                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item);
+                    }
                 }
                 PlayerInventory.ClearInventory();
             }
