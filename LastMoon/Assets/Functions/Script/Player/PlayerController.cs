@@ -108,6 +108,8 @@ public class PlayerController : MonoBehaviour
     public Transform AptTransform;
 
     //아파트 진입변수
+    private bool isInside;
+    private bool isOutside;
     public int inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
@@ -283,14 +285,14 @@ public class PlayerController : MonoBehaviour
             {
                 DeathPPSVolume.SetActive(false);
             }
-            if (insideActive && InsideFillHandler.fillValue >= 100)
-            {
-                Debug.Log("인사이드" + inside);
-                InsideFillHandler.fillValue = 0;
-                InsideUpdate();
-                keydowns = false;
-                myRigid.isKinematic = false;
-            }
+            //if (insideActive && InsideFillHandler.fillValue >= 100)
+            //{
+            //    Debug.Log("인사이드" + inside);
+            //    InsideFillHandler.fillValue = 0;
+            //    InsideUpdate();
+            //    keydowns = false;
+            //    myRigid.isKinematic = false;
+            //}
             if (GameValue.exit)
             {
                 Destroy(gameObject);
@@ -298,38 +300,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void InsideUpdate()
+    /*public void InsideUpdate()
     {
-        Debug.Log("위치1");
         switch(inside)
         {
             case 0:
-                Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
-                Debug.Log("스폰 위치" + parentTransform.position);
                 gameObject.transform.position = parentTransform.position;
                 gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
                 break;
             case 1:
-                Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
-                Debug.Log("아파트 위치" + PlayerAPT.playerPoint);
-
                 gameObject.transform.position = PlayerAPT.playerPoint;
                 gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
                 break;
             case 2:
                 if (doorPositions.ContainsKey(lastDoorEntered))
                 {
-                    Debug.Log("게임오브젝트 위치" + gameObject.transform.position);
-                    Debug.Log("스폰 위치" + doorPositions[lastDoorEntered]);
-
                     gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
                     gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
                 }
                 break;
 
         }
-        Debug.Log("위치4");
-    }
+    }*/
 
     public void Sell()
     {
@@ -731,18 +723,67 @@ public class PlayerController : MonoBehaviour
         {
             if (hitInfo.collider.CompareTag("Door"))
             {
+                //isInside = false;
                 myRigid.isKinematic = true;
                 insideActive = true;
                 // 문을 통과하여 아파트로 들어가는 경우
                 EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
-                inside = 1;
+               
+                if (InsideFillHandler.fillValue >= 100)
+                {
+                    inside = 1;
+                    keydowns = false;
+                    insideActive = false;
+                    //InsideUpdate();
+                    gameObject.transform.position = PlayerAPT.playerPoint;
+                    Debug.Log("pos2" + gameObject.transform.position);
+                    gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
+                    myRigid.isKinematic = false;
+                    isInside = true;
+                    InsideFillHandler.fillValue = 0;
+                }
+                if (isInside)
+                {
+                    InsideFillHandler.fillValue = 0;
+                    if (gameObject.transform.position != PlayerAPT.playerPoint)
+                    {
+                        gameObject.transform.position = PlayerAPT.playerPoint;
+                        Debug.Log("pos1" + gameObject.transform.position);
+                        isInside = false;
+                    }
+                }
+               
             }
             else if (hitInfo.collider.CompareTag("ReturnDoor"))
             {
+                isOutside = false;
                 myRigid.isKinematic = true;
                 insideActive = true;
                 // 이전에 저장된 문 위치로 되돌아가는 경우
-                inside = 2;
+         
+                if (InsideFillHandler.fillValue >= 100)
+                {
+                    inside = 2;
+                    keydowns = false;
+                    insideActive = false;
+                    //InsideUpdate();    
+                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                    myRigid.isKinematic = false;
+                    isOutside = true;
+                    InsideFillHandler.fillValue = 0;
+                }
+                if (isOutside)
+                {
+                    InsideFillHandler.fillValue = 0;
+                    if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                    {
+                        gameObject.transform.position = doorPositions[lastDoorEntered];
+                        Debug.Log("pos1" + gameObject.transform.position);
+                        isOutside = false;
+                    }
+                }
+               
             }
             else
             {
@@ -948,69 +989,33 @@ public class PlayerController : MonoBehaviour
         if (GameValue.Axe == 1)
         {
             weapons[0] = weaponsSwitching[0];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 1;
-                GameValue.toolSwitching = false;
-            }
-            */
+
 
         }
         else if (GameValue.Axe == 2)
         {
             weapons[0] = weaponsSwitching[3];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 1;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         if (GameValue.Pickaxe == 1)
         {
             weapons[1] = weaponsSwitching[1];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 2;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         else if (GameValue.Pickaxe == 2)
         {
             weapons[1] = weaponsSwitching[4];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 2;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         if (GameValue.Shovel == 1)
         {
             weapons[2] = weaponsSwitching[2];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 0;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
         else if (GameValue.Shovel == 2)
         {
             weapons[2] = weaponsSwitching[5];
-            /*
-            if (GameValue.toolSwitching)
-            {
-                selectedWeaponIndex = 0;
-                GameValue.toolSwitching = false;
-            }
-            */
+
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
