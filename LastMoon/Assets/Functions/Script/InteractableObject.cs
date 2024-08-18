@@ -1,26 +1,52 @@
-using Photon.Pun.Demo.PunBasics;
+using Photon.Pun;
+using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
 {
-    public ScriptableObject_Item itemData;
-    public int itemCount = 1;
+    private PhotonView photonView;
+    [SerializeField]
+    private List<PhotonView> linkedObjects; // 사용되지 않는 변수 삭제
+    public int count = 0;
+    private int interactingPlayerId = -1; // 현재 상호작용 중인 플레이어의 ID
 
-    private void OnTriggerEnter(Collider other)
+    public void IncreaseCount(int playerId)
     {
-        if (other.CompareTag("Player"))
+        // 소유권이 있는 플레이어만 카운트를 증가시킬 수 있음
+        if (interactingPlayerId == playerId)
         {
-            PlayerRPOIInventory playerInventory = other.GetComponent<PlayerRPOIInventory>();
-
-            // 만약 플레이어에 PlayerInventory가 없다면 추가
-            if (playerInventory == null)
-            {
-                playerInventory = other.gameObject.AddComponent<PlayerRPOIInventory>();
-            }
-
-            playerInventory.AddItem(itemData, itemCount);
+            // 카운트는 코루틴에서 증가하므로 여기는 필요 없을 수 있습니다.
         }
+    }
+
+
+    [PunRPC]
+    public void ResetOwnership(bool state)
+    {
+        ResetInteraction(); // 카운트 초기화
+        SetLinkObjectsActive(state); // Link 오브젝트 비활성화
+    }
+
+    private void ResetInteraction()
+    {
+        count = 0; // 카운트 초기화
+    }
+
+    public void SetLinkObjectsActive(bool state)
+    {
+        gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(state);
+    }
+
+
+    public int GetInteractingPlayerId()
+    {
+        return interactingPlayerId;
+    }
+
+    public void SetInteractingPlayerId(int playerId)
+    {
+        interactingPlayerId = playerId;
     }
 }

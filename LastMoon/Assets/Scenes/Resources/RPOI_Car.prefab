@@ -9,9 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2871609621159087222}
+  - component: {fileID: 6108013050004770880}
+  - component: {fileID: 2171475891185907227}
+  - component: {fileID: 1166988488032865851}
+  - component: {fileID: 3595415533794972517}
   m_Layer: 0
   m_Name: RPOI_Car
-  m_TagString: Untagged
+  m_TagString: RPoi
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +36,116 @@ Transform:
   - {fileID: 5516784367913106005}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6108013050004770880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pv: {fileID: 0}
+  itemData:
+    nodeName: []
+    nodeItemCount: 
+    mixName: []
+    mixItemCount: 
+  poiName: 
+  SetnodeCount: 0
+  animator: {fileID: 0}
+  ConstructionProgress: 0
+  StationConstructionMesh: {fileID: 0}
+  StationConstructionParts: {fileID: 0}
+  StationBases: []
+  StationFixes: []
+  StationAuxes: []
+  StationCons: []
+  Debug_Filler: {fileID: 0}
+  Debug_Fuel: {fileID: 0}
+  Debug_Coolent: {fileID: 0}
+  StationBaseMat: {fileID: 0}
+  StationAuxMat: {fileID: 0}
+  StationFixMat: {fileID: 0}
+  StationConMat: []
+  InputSlot: []
+  OutputSlot: []
+  FuelSlot: []
+  FuelWick: []
+  Obj_Coolent: []
+  Obj_Temperture: []
+  SelectableRecipes: []
+  SelectedRecipe: {fileID: 0}
+  StationTemperture: 25
+  StationProgress: 0
+  sfx_Station_Start: {fileID: 0}
+  sfx_Station_Activation: {fileID: 0}
+  tick: 0
+  tickMax: 0
+  isConstructing: 0
+  stop: 0
+  hp: 3
+  OutputTransform: {fileID: 0}
+--- !u!114 &2171475891185907227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6917bedb88928624dbeaa37d5a857b2f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedObjects: []
+  count: 0
+--- !u!65 &1166988488032865851
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Material: {fileID: 13400000, guid: 99b9dd6b15f26324bbc4492698960cb4, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.2032056, y: 9.221029, z: 8.468801}
+  m_Center: {x: -0.44331622, y: 0.81634617, z: 0.8679819}
+--- !u!114 &3595415533794972517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8708602044620867591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &5405787788377202110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79,6 +193,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 60ced80325146984d85c09ee71a5b515, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: -1401502698246452131, guid: 60ced80325146984d85c09ee71a5b515, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 60ced80325146984d85c09ee71a5b515, type: 3}
       propertyPath: m_Name
