@@ -107,6 +107,7 @@ MonoBehaviour:
   ConstructionProgress: 0
   StationConstructionMesh: {fileID: 0}
   StationConstructionParts: {fileID: 0}
+  ObjectlessSlot: 010101000101000101
   StationBases:
   - {fileID: 2537302229213875025}
   - {fileID: 7160964510233662432}
@@ -160,7 +161,13 @@ MonoBehaviour:
   isConstructing: 0
   stop: 0
   hp: 3
+  itme: {fileID: 0}
   OutputTransform: {fileID: 3112131222398767506}
+  isOutput: 0
+  Ountput_stop: 0
+  tickMaxOUtput: 0
+  OutputTick: 0
+  test_ck: 0
 --- !u!114 &527718943812757758
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,7 +5,8 @@ using Photon.Pun;
 public class CanvasController : MonoBehaviourPunCallbacks
 {
     public static CanvasController Instance;
-    public PhotonView pv;
+
+    public GameObject Respawn_Text;
 
     public GameObject inside;
     public GameObject inventory;
@@ -13,7 +14,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject Tab;
     public GameObject Poi;
     public GameObject Shop;
-    public GameObject Respawn;
+    //public GameObject Respawn;
+    public GameObject PoiPopup;
 
     public GameObject StationUI;
 
@@ -68,92 +70,91 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        pv = GetComponent<PhotonView>();
-        if (pv.IsMine)
+        isItme = false;
+        localplayerck = false;
+        if (Instance == null)
         {
-            isItme = false;
-            localplayerck = false;
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-
-            ItemTab = inventory_Tab.Find("Misc_Tab");
-            ItemScroll = ItemTab.GetChild(0).GetChild(0);
-            ItemSlot = ItemScroll.GetChild(0);
-
-            Recipe_Slot = Recipe_Tab.GetChild(0);
+            Instance = this;
         }
-        
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        ItemTab = inventory_Tab.Find("Misc_Tab");
+        ItemScroll = ItemTab.GetChild(0).GetChild(0);
+        ItemSlot = ItemScroll.GetChild(0);
+
+        Recipe_Slot = Recipe_Tab.GetChild(0);
+
     }
 
     void Start()
     {
-        if(pv.IsMine)
+        ToolIconUpdate();
+        ToolColorUpdate();
+
+        Respawn_Text.SetActive(false);
+
+        inventory.SetActive(true);
+        inside.SetActive(false);
+        Tab.SetActive(false);
+        money.SetActive(true);
+        Poi.SetActive(false);
+        inventory.SetActive(false);
+        PoiPopup.SetActive(false);
+        inventoryTransform = inventory.transform;
+
+        // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
+        if (PhotonNetwork.IsMasterClient)
         {
-            ToolIconUpdate();
-            ToolColorUpdate();
-
-            inventory.SetActive(true);
-            inside.SetActive(false);
-            Tab.SetActive(false);
-            money.SetActive(true);
-            Poi.SetActive(false);
-            inventory.SetActive(false);
-            inventoryTransform = inventory.transform;
-
-            // 마스터 클라이언트인지 확인 후 랜덤 값 초기화 요청
-            if (PhotonNetwork.IsMasterClient)
-            {
-                InitializeAndSendRandomPrices();
-            }
-            else
-            {
-                // Non-master clients will request random prices from master
-                RequestRandomPricesFromMaster();
-            }
-            RefreshInventory();
+            InitializeAndSendRandomPrices();
         }
-        Cursor.lockState = CursorLockMode.Locked;
+        else
+        {
+            // Non-master clients will request random prices from master
+            RequestRandomPricesFromMaster();
+        }
+        RefreshInventory();
     }
     void Update()
     {
-        if(pv.IsMine)
+        ToolIconSwitching();
+        UpdateInsideActive();
+        UpdateInventoryActive();
+        UpdateInventoryTabActive();
+        UpdateMoneyActive();
+        PoiActive();
+        PoiPopupActive();
+        // 노드 관련 함수
+        Die();
+        Shoping();
+        Station_Manageing();
+        RespawnSet();
+        Respawn_T();
+        //아이템 업데이트
+        if (isItme)
         {
-            ToolIconSwitching();
-            UpdateInsideActive();
-            UpdateInventoryActive();
-            UpdateInventoryTabActive();
-            UpdateMoneyActive();
-            PoiActive();
-            // 노드 관련 함수
-            Die();
-            Shoping();
-            Station_Manageing();
-            RespawnSet();
-            //아이템 업데이트
-            if (isItme)
-            {
-                nodeCountUpdate();
-                mixCountUpdate();
-            }
-            if (Input.GetKeyDown(KeyCode.F9))
-            {
-                foreach (Item item in UIinventory.GetItems())
-                {
-                    Debug.Log("CanvasController" + item.ItemType + " : " + item.Count);
-                }
-
-            }
-            // 랜덤 가격이 아직 초기화되지 않았다면, 요청
-            RequestRandomPricesFromMaster();
+            nodeCountUpdate();
+            mixCountUpdate();
         }
-    }
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            foreach (Item item in UIinventory.GetItems())
+            {
+                Debug.Log("CanvasController" + item.ItemType + " : " + item.Count);
+            }
 
+        }
+        // 랜덤 가격이 아직 초기화되지 않았다면, 요청
+        RequestRandomPricesFromMaster();
+}
+
+
+    public void Respawn_T()
+    {
+        Respawn_Text.SetActive(playerController.isRespawn);
+    }
 
 
     public void SetInventory(Inventory inventory)
@@ -193,6 +194,22 @@ public class CanvasController : MonoBehaviourPunCallbacks
         }
     }
 
+    public void PoiPopupActive()
+    {
+        //PoiPopup.SetActive(playerController.PoiPopUp);
+    }
+     
+    public void PoiPopupActive_BT()
+    {
+        playerController.PoiPopUp = false;
+        PoiPopup.SetActive(playerController.PoiPopUp);
+    }
+
+    public void Extract_BT()
+    {
+        playerController.Extract = !playerController.Extract;
+    }
+
 
     private void RecipeSelect(ScriptableObject_Station[] SelectableRecipes)
     {
@@ -205,7 +222,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
         int x = -1;
         int y = 1;
         float itemSlotSize = 300f;
-        for (int i = 0; i< SelectableRecipes.Length; i++)
+        for (int i = 0; i < SelectableRecipes.Length; i++)
         {
             RectTransform RecipeRectTransform = Instantiate(Recipe_Slot, Recipe_Tab).GetComponent<RectTransform>();
             RecipeRectTransform.gameObject.SetActive(true);
@@ -222,9 +239,9 @@ public class CanvasController : MonoBehaviourPunCallbacks
             }
 
             x++;
-            if (x >= 3)
+            if (x > 1)
             {
-                x = 0;
+                x = -1;
                 y--;
             }
         }
@@ -232,7 +249,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     private void SelectedRecipeInfo(ScriptableObject_Station SelectedRecipe)
     {
         Image image;
-        
+
         switch (SelectedRecipe.InputCount)
         {
             case 1:
@@ -329,12 +346,9 @@ public class CanvasController : MonoBehaviourPunCallbacks
     }
     public void Station_Exit()
     {
-        if (pv.IsMine)
-        {
-            playerController.StationActive = false;
-            StationUI.SetActive(playerController.StationActive);
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        playerController.StationActive = false;
+        StationUI.SetActive(playerController.StationActive);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
 
@@ -352,21 +366,18 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void RespawnSet()
     {
-        if(playerController !=null)
-        {
-            Debug.Log("RespawnAcive" + PlayerController.RespawnAcive);
-            Respawn.SetActive(PlayerController.RespawnAcive);
-        }
+        //if(playerController !=null)
+        //{
+        //    Debug.Log("RespawnAcive" + PlayerController.RespawnAcive);
+        //    Respawn.SetActive(PlayerController.RespawnAcive);
+        //}
     }
 
     public void Shoping_Exit()
     {
-        if(pv.IsMine)
-        {
-            playerController.ShopActive = false;
-            Shop.SetActive(playerController.ShopActive);
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        playerController.ShopActive = false;
+        Shop.SetActive(playerController.ShopActive);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void InitializeAndSendRandomPrices()
@@ -420,34 +431,31 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void Sell()
     {
-        if(pv.IsMine)
+        money.SetActive(true);
+        /*
+        for (int i = 0; i < nodesCount.Length; i++)
         {
-            money.SetActive(true);
-            /*
-            for (int i = 0; i < nodesCount.Length; i++)
-            {
-                Amount = nodePriceCount[i] * playerController.nodeItiems[i];
-                TotalSell += Amount;
-            }
-            for(int i=0; i< mixCount.Length; i++)
-            {
-                Amount = mixPriceCount[i] * playerController.mixItiems[i];
-                TotalSell += Amount;
-            }
-            for (int i = 0; i < nodesCount.Length; i++)
-            {
-                nodesCount[i].text = "0";
-                playerController.nodeItiems[i] = 0;
-            }
-            for(int i=0; i<mixCount.Length;i++)
-            {
-                mixCount[i].text = "0";
-                playerController.mixItiems[i] = 0;
-            }
-             */
-            TotalSell = playerController.Sell();
-            GameValue.GetMomey(TotalSell);
+            Amount = nodePriceCount[i] * playerController.nodeItiems[i];
+            TotalSell += Amount;
         }
+        for(int i=0; i< mixCount.Length; i++)
+        {
+            Amount = mixPriceCount[i] * playerController.mixItiems[i];
+            TotalSell += Amount;
+        }
+        for (int i = 0; i < nodesCount.Length; i++)
+        {
+            nodesCount[i].text = "0";
+            playerController.nodeItiems[i] = 0;
+        }
+        for(int i=0; i<mixCount.Length;i++)
+        {
+            mixCount[i].text = "0";
+            playerController.mixItiems[i] = 0;
+        }
+         */
+        TotalSell = playerController.Sell();
+        GameValue.GetMomey(TotalSell);
     }
 
     void RequestRandomPricesFromMaster()

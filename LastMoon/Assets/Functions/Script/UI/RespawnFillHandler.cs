@@ -32,29 +32,30 @@ public class RespawnFillHandler : MonoBehaviour
             tick = e.tick % tickMax;
             if (tick >= tickMax - 1)
             {
-                if (PlayerController.RespawnAcive)
-                {
-                    if (fillValue < 100)
-                    {
-                        fillValue += tick;
-                    }
-                    else if (fillValue >= 100)
-                    {
-                        if (!hasFilled && pv.IsMine)
-                        {
-                            fillValue = 100;
-                            hasFilled = true; // Set flag to true to prevent multiple updates
-                        }
-                    }
-                    FillCircleValue(fillValue);
-                }
-                else
-                {
-                    tick = 0;
-                    fillValue = 0;
-                    hasFilled = false; // Reset flag when not inside
-                    FillCircleValue(fillValue);
-                }
+               // if (PlayerController.RespawnAcive)
+               // {
+               //     if (fillValue < 100)
+               //     {
+               //         fillValue += tick;
+               //     }
+               //     else if (fillValue >= 100)
+               //     {
+               //         if (!hasFilled && pv.IsMine)
+               //         {
+               //             fillValue = 100;
+               //             hasFilled = true; // Set flag to true to prevent multiple updates
+               //         }
+               //     }
+               //     FillCircleValue(fillValue);
+               // }
+               //
+               // else
+               // {
+               //     tick = 0;
+               //     fillValue = 0;
+               //     hasFilled = false; // Reset flag when not inside
+               //     FillCircleValue(fillValue);
+               // }
             }
             else
             {
@@ -91,7 +92,7 @@ public class RespawnFillHandler : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            if (gameObject.activeSelf == true&&player.respawnTick)
+            if (gameObject.activeSelf == true)//&&player.respawnTick)
             {
                 tick_ck(10);
             }
