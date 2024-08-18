@@ -174,8 +174,9 @@ MonoBehaviour:
   - {fileID: 4546778786806565866}
   Obj_Coolent: []
   Obj_Temperture: []
-  SelectableRecipes: []
-  SelectedRecipe: {fileID: 0}
+  SelectableRecipes:
+  - {fileID: 11400000, guid: e319e8df19835214cb1db1ef731cd530, type: 2}
+  SelectedRecipe: {fileID: 11400000, guid: e319e8df19835214cb1db1ef731cd530, type: 2}
   StationTemperture: 0
   StationProgress: 0
   sfx_Station_Start: {fileID: 6955859011504677635}
@@ -185,7 +186,13 @@ MonoBehaviour:
   isConstructing: 0
   stop: 0
   hp: 3
+  itme: {fileID: 0}
   OutputTransform: {fileID: 5170737213738554540}
+  isOutput: 0
+  Ountput_stop: 0
+  tickMaxOUtput: 0
+  OutputTick: 0
+  test_ck: 0
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0
