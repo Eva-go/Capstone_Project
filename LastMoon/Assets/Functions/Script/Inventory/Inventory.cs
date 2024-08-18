@@ -28,6 +28,52 @@ public class Inventory
         }
     }
 
+    public bool RemoveItem(Item item)
+    {
+        foreach (Item inventoryItem in itemList)
+        {
+            if (inventoryItem.ItemType == item.ItemType)
+            {
+                if (inventoryItem.Count - item.Count >= 0)
+                {
+                    inventoryItem.Count -= item.Count;
+                    if (inventoryItem.Count == 0) itemList.Remove(inventoryItem);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int ClearItem(ScriptableObject_Item itemType)
+    {
+        int ItemCount = 0;
+        foreach (Item inventoryItem in itemList)
+        {
+            if (inventoryItem.ItemType == itemType)
+            {
+                ItemCount += inventoryItem.Count;
+                itemList.Remove(inventoryItem);
+            }
+        }
+        return ItemCount;
+    }
+
+    public int SellAllItem()
+    {
+        int ItemCount = 0;
+        foreach (Item inventoryItem in itemList)
+        {
+            ItemCount += inventoryItem.Count * inventoryItem.ItemType.Price;
+            itemList.Remove(inventoryItem);
+        }
+        return ItemCount;
+    }
+
     public List<Item> GetItems()
     {
         return itemList;
