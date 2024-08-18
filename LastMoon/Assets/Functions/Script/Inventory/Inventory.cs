@@ -30,6 +30,8 @@ public class Inventory
 
     public bool RemoveItem(Item item)
     {
+        Item SelectedItem = null;
+        bool RemovedItem = false;
         foreach (Item inventoryItem in itemList)
         {
             if (inventoryItem.ItemType == item.ItemType)
@@ -37,28 +39,33 @@ public class Inventory
                 if (inventoryItem.Count - item.Count >= 0)
                 {
                     inventoryItem.Count -= item.Count;
-                    if (inventoryItem.Count == 0) itemList.Remove(inventoryItem);
-                    return true;
-                }
-                else
-                {
-                    return false;
+                    if (inventoryItem.Count == 0) SelectedItem = inventoryItem;
+                    RemovedItem = true;
                 }
             }
         }
-        return false;
+        if (SelectedItem != null) 
+        {
+            itemList.Remove(SelectedItem);
+        }
+        return RemovedItem;
     }
 
     public int ClearItem(ScriptableObject_Item itemType)
     {
+        Item SelectedItem = null;
         int ItemCount = 0;
         foreach (Item inventoryItem in itemList)
         {
             if (inventoryItem.ItemType == itemType)
             {
                 ItemCount += inventoryItem.Count;
-                itemList.Remove(inventoryItem);
+                SelectedItem = inventoryItem;
             }
+        }
+        if (SelectedItem != null)
+        {
+            itemList.Remove(SelectedItem);
         }
         return ItemCount;
     }
@@ -69,8 +76,8 @@ public class Inventory
         foreach (Item inventoryItem in itemList)
         {
             ItemCount += inventoryItem.Count * inventoryItem.ItemType.Price;
-            itemList.Remove(inventoryItem);
         }
+        itemList.Clear();
         return ItemCount;
     }
 
