@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.42063814, g: 0.67821544, b: 0.8630935, a: 1}
+  m_IndirectSpecularColor: {r: 0.23292005, g: 0.48363107, b: 0.69624203, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7056,13 +7056,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7259c3ad079f3624a8b9acd1f42e2259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pv: {fileID: 0}
   inside: {fileID: 1128210277765991128}
   inventory: {fileID: 9086266201164180596}
   money: {fileID: 314078177251069070}
   Tab: {fileID: 1351447151317463844}
   Poi: {fileID: 4286151811828318155}
   Shop: {fileID: 6546941956470770688}
+  Respawn: {fileID: 0}
   inventory_Tab: {fileID: 5464814629149097888}
+  Recipe_Info: {fileID: 0}
+  Recipe_Tab: {fileID: 0}
   SetPoi: 0
   mixCount:
   - {fileID: 1957177870}
@@ -26822,7 +26826,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &7327986653802547872
 GameObject:
   m_ObjectHideFlags: 0
@@ -29100,7 +29104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &9092303404232625822
 CanvasRenderer:
   m_ObjectHideFlags: 0

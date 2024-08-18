@@ -93,6 +93,7 @@ public class PlayerController : MonoBehaviour
     public event Action OnInventoryChanged;
 
     public Inventory PlayerInventory = new Inventory { };
+    public Item[] RPOI_PortalInventory = new Item[4];
 
     //[SerializeField] private UI_Inventory ui_Inventory;
     PoiController UISelectedPOIController;

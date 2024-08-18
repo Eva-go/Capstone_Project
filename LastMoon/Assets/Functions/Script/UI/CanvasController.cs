@@ -21,6 +21,9 @@ public class CanvasController : MonoBehaviourPunCallbacks
     private Transform ItemSlot;
     private Transform ItemScroll;
 
+    public Transform Recipe_Info;
+    public Transform Recipe_Tab;
+
     private int keyTabCode = 2;
     private bool inventory_ck;
     private int TotalSell = 0;
@@ -182,6 +185,60 @@ public class CanvasController : MonoBehaviourPunCallbacks
             y--;
         }
     }
+
+
+    private void RecipeSelect(ScriptableObject_Station[] SelectableRecipes)
+    {
+        int x = -1;
+        int y = 1;
+        float itemSlotSize = 300f;
+
+        for (int i = 0; i< SelectableRecipes.Length; i++)
+        {
+            RectTransform RecipeRectTransform = Instantiate(ItemSlot, ItemScroll).GetComponent<RectTransform>();
+            RecipeRectTransform.gameObject.SetActive(true);
+
+            RecipeRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+
+            Image image = RecipeRectTransform.Find("Icon").GetComponent<Image>();
+            image.sprite = SelectableRecipes[i].Output001.ItemSprite;
+
+            Text text = RecipeRectTransform.Find("Text").GetComponent<Text>();
+            text.text = SelectableRecipes[i].OutputCount.ToString();
+
+            x++;
+            if (x >= 3)
+            {
+                x = 0;
+                y--;
+            }
+        }
+    }
+
+    private void SelectedRecipeInfo(ScriptableObject_Station SelectedRecipe)
+    {
+        Image image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+        image.sprite = SelectedRecipe.Input001.ItemSprite;
+        image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+        image.sprite = SelectedRecipe.Input002.ItemSprite;
+        image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+        image.sprite = SelectedRecipe.Input003.ItemSprite;
+
+        image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+        image.sprite = SelectedRecipe.Output001.ItemSprite;
+        image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+        image.sprite = SelectedRecipe.Output002.ItemSprite;
+        image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+        image.sprite = SelectedRecipe.Output003.ItemSprite;
+
+        Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
+        text.text = SelectedRecipe.Temperture.ToString();
+        text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(0).GetComponent<Text>();
+        text.text = SelectedRecipe.ProgressTime.ToString();
+        text = Recipe_Info.Find("Recipe_Coolent").GetChild(0).GetComponent<Text>();
+        text.text = SelectedRecipe.Coolent.ToString();
+    }
+
 
     public void Shoping()
     {
