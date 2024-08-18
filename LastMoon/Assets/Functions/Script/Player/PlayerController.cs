@@ -95,6 +95,7 @@ public class PlayerController : MonoBehaviour
     public Inventory PlayerInventory = new Inventory { };
 
     //[SerializeField] private UI_Inventory ui_Inventory;
+    PoiController UISelectedPOIController;
 
     [SerializeField] private ScriptableObject_Item[] InitalItems;
 
@@ -125,7 +126,7 @@ public class PlayerController : MonoBehaviour
     private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
     private string lastDoorEntered;
-
+    private bool Bagdrop = false;
     public bool Godmode = false;
 
     //InteractableObject를 위한 코드
@@ -395,6 +396,34 @@ public class PlayerController : MonoBehaviour
             //{
             //    nodeItiems[i] = 0;
             //}
+            if (!Bagdrop)
+            {
+                Bagdrop = true;
+                // Bag 생성
+                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
+                BagController bagScript = bag.GetComponent<BagController>();
+                if (bagScript != null)
+                {
+                    // 아이템 데이터 전송
+                    foreach (Item item in PlayerInventory.GetItems())
+                    {
+                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item);
+                    }
+                }
+            }
+            /*
+                // Bag 생성
+                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
+                BagController bagScript = bag.GetComponent<BagController>();
+                if (bagScript != null)
+                {
+                    // 아이템 데이터 전송
+                    for (int i = 0; i < nodeItiems.Length; i++)
+                    {
+                        bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
+                    }
+                }
+             */
             InvokeInventoryChanged();
             Hp = 0;
             RespawnAcive = true;
@@ -409,18 +438,8 @@ public class PlayerController : MonoBehaviour
             }
             else if (RespawnFillHandler.fillValue >= 100)
             {
+                Bagdrop = false;
                 respawnTick = false;
-                // Bag 생성
-                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
-                BagController bagScript = bag.GetComponent<BagController>();
-                if (bagScript != null)
-                {
-                    // 아이템 데이터 전송
-                    for (int i = 0; i < nodeItiems.Length; i++)
-                    {
-                        bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
-                    }
-                }
                 RespawnAcive = false;
                 RespawnCamera.SetActive(false);
                 RespawnFillHandler.fillValue = 0;
@@ -855,17 +874,10 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
-                    //stationinteration
+                    UISelectedPOIController = poiController;
 
-                    for (int i=0; i<nodeItiems.Length;i++)
-                    {
-                        if (poiController.name.Equals(poiName[i] + "(Clone)")&& nodeItiems[i]>0)
-                        {
-                            nodeItiems[i]--;
-                            targetPv.RPC("ReceiveData", RpcTarget.AllBuffered, nodeItiems[i], nodeName[i], nickName,i);
-                        }
-                            
-                    }
+                    //stationinteration
+                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
                 }
             }
         }
