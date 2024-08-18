@@ -6,6 +6,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
 {
     public static CanvasController Instance;
 
+    public GameObject Respawn_Text;
+
     public GameObject inside;
     public GameObject inventory;
     public GameObject money;
@@ -89,6 +91,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
         ToolIconUpdate();
         ToolColorUpdate();
 
+        Respawn_Text.SetActive(false);
+
         inventory.SetActive(true);
         inside.SetActive(false);
         Tab.SetActive(false);
@@ -123,6 +127,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
         Die();
         Shoping();
         RespawnSet();
+        Respawn_T();
         //아이템 업데이트
         if (isItme)
         {
@@ -141,6 +146,11 @@ public class CanvasController : MonoBehaviourPunCallbacks
         RequestRandomPricesFromMaster();
 }
 
+
+    public void Respawn_T()
+    {
+        Respawn_Text.SetActive(playerController.isRespawn);
+    }
 
 
     public void SetInventory(Inventory inventory)

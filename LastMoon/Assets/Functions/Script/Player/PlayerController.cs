@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     public string nickName;
     public static float Hp = 100f;
     public GameObject cam;
+    public GameObject RespawnCam;
+    public bool isRespawn;
     //public GameObject RespawnCamera;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
@@ -139,11 +141,13 @@ public class PlayerController : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
           
         }
         else
         {
-            Destroy(gameObject);
+            if(gameObject.name.Equals("Player(Clone)(Clone)"))
+                Destroy(gameObject);
         }
     }
     public void SetPlayer(GameObject player)
@@ -175,6 +179,8 @@ public class PlayerController : MonoBehaviour
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
+            RespawnCam.SetActive(false);
+            isRespawn = false;
             idx = 0;
             myRigid = GetComponent<Rigidbody>();
             myCollider = GetComponent<CapsuleCollider>();
@@ -412,6 +418,7 @@ public class PlayerController : MonoBehaviour
                     }
                     PlayerInventory.ClearInventory();
                 }
+                isRespawn = true;
             }
             /*
                 // Bag 생성
@@ -429,15 +436,15 @@ public class PlayerController : MonoBehaviour
             InvokeInventoryChanged();
             Hp = 0;
             //RespawnAcive = true;
-            //if (live)
-            //{
-            //    RespawnCamera.SetActive(true);
-            //    gameObject.transform.GetChild(1).gameObject.SetActive(false);
-            //    gameObject.transform.GetChild(3).gameObject.SetActive(false);
-            //    gameObject.transform.GetChild(4).gameObject.SetActive(false);
-            //    gameObject.transform.GetChild(5).gameObject.SetActive(false);
-            //    live = false;
-            //}
+            if (live)
+            {
+                RespawnCam.SetActive(true);
+                gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                gameObject.transform.GetChild(3).gameObject.SetActive(false);
+                gameObject.transform.GetChild(4).gameObject.SetActive(false);
+                gameObject.transform.GetChild(5).gameObject.SetActive(false);
+                live = false;
+            }
             //else if (RespawnFillHandler.fillValue >= 100)
             //{
             //    Bagdrop = false;
@@ -446,10 +453,14 @@ public class PlayerController : MonoBehaviour
             //    RespawnCamera.SetActive(false);
             //    RespawnFillHandler.fillValue = 0; 
             //}
-
-            live = false;
-            PhotonNetwork.Destroy(gameObject);
-            reSpwan();
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                RespawnCam.SetActive(false);
+                live = false;
+                isRespawn = false;
+                PhotonNetwork.Destroy(gameObject);
+                reSpwan();
+            }
         }
     }
 
@@ -482,7 +493,7 @@ public class PlayerController : MonoBehaviour
 
     public void SpawnPlayer(int idx, Transform points)
     {
-        /*if(pv.IsMine)
+        if(pv.IsMine)
         {
             player = PhotonNetwork.Instantiate("Player", PlayerAPT.playerPoint, Quaternion.Euler(PlayerAPT.playerrotation));
             if (player != null)
@@ -508,9 +519,9 @@ public class PlayerController : MonoBehaviour
             //    Debug.Log("플레이어 없음");
             //    reSpwan();
             //}
-        }*/
-        PlayerSpawn playerSpawn = GameObject.Find("PlayerSpwan").GetComponent<PlayerSpawn>();
-        playerSpawn.OnBuildingCreated();
+        }
+        //PlayerSpawn playerSpawn = GameObject.Find("PlayerSpwan").GetComponent<PlayerSpawn>();
+        //playerSpawn.OnBuildingCreated();
 
 
     }
@@ -848,7 +859,7 @@ public class PlayerController : MonoBehaviour
                 if (isOutside)
                 {
                     InsideFillHandler.fillValue = 0;
-                    if(lastDoorEntered != null)
+                    if(lastDoorEntered == null)
                     {
                         gameObject.transform.position = directChildren[idx].position;
                         Debug.Log("pos1" + gameObject.transform.position);
