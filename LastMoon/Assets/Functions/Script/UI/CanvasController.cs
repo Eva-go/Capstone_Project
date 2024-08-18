@@ -145,6 +145,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             RectTransform itemRectTransform = Instantiate(ItemSlot, ItemScroll).GetComponent<RectTransform>();
             itemRectTransform.gameObject.SetActive(true);
+
             itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize );
 
             Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
