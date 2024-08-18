@@ -80,13 +80,24 @@ public class PoiController : MonoBehaviour
     public bool isConstructing;
     public bool stop;
 
+
+
     //레시피 관련 변수
     private int slotNumber; // 현재 슬롯 번호
 
     //파괴 변수
     public int hp = 3;
 
+
+    //출력 변수
+    public GameObject itme;
     public Transform OutputTransform;
+
+    public bool isOutput;
+    public bool Ountput_stop;
+    public int tickMaxOUtput;
+    public int OutputTick;
+    public bool test_ck;
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -106,13 +117,18 @@ public class PoiController : MonoBehaviour
         StationProgress = 0;
         Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
+        test_ck = false;
     }
 
     private void Update()
     {
         if(gameObject.activeSelf == true&&!stop)
         {
-            tick_ck(5);
+            tick_ck(5);  
+        }
+        if(gameObject.activeSelf == true&&test_ck)
+        {
+            tick_OutPut(20);
         }
         
     }
@@ -155,6 +171,7 @@ public class PoiController : MonoBehaviour
                 CheckRecipe();
                 HeatingManage();
                 ActivationEffect();
+                //Ountput(0);
                 isConstructing = false;
             }
             else
@@ -165,6 +182,32 @@ public class PoiController : MonoBehaviour
 
         }
     }
+
+    private void TimeTickSystem_OnTick_OutPut(object sender, TickTimer.OnTickEventArgs e)
+    {
+        if (isOutput && Ountput_stop)
+        {
+            OutputTick = e.tick % tickMaxOUtput;
+            if (OutputTick >= tickMaxOUtput - 1)
+            {
+                Ountput(0);
+                isOutput = false;
+            }
+            else
+            {
+
+                //Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
+            }
+
+        }
+    }
+
+
+    public void Ountput(int index)
+    {
+        Instantiate(itme, OutputTransform.position, Quaternion.identity);
+    }
+
     public Item AddItem(GameObject[] objects, Item item, ScriptableObject_Item Type, int Count)
     {
         if (item == null)
@@ -264,8 +307,19 @@ public class PoiController : MonoBehaviour
             isConstructing = true;
             TickTimer.OnTick += TimeTickSystem_OnTick;
         }
-
     }
+
+    public void tick_OutPut(int ticksToConstruct)
+    {
+        if (!isOutput)
+        {
+            tickMaxOUtput = ticksToConstruct;
+            isOutput = true;
+            TickTimer.OnTick += TimeTickSystem_OnTick_OutPut;
+        }
+    }
+
+
 
     public void CheckRecipe()
     {

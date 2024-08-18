@@ -1585,7 +1585,8 @@ MonoBehaviour:
   pv: {fileID: 0}
   nickName: 
   cam: {fileID: 2425928368607806541}
-  RespawnCamera: {fileID: 2995100504835171403}
+  RespawnCam: {fileID: 2995100504835171403}
+  isRespawn: 0
   walkSpeed: 6
   runSpeed: 9
   crouchSpeed: 3
@@ -1596,7 +1597,6 @@ MonoBehaviour:
   jumpForce: 375
   crouchHeight: 0.5
   live: 0
-  respawnTick: 0
   sfx_PlayerHit: {fileID: 7701677681895841406}
   sfx_PlayerJump: {fileID: -8643451468561478562}
   sfx_PlayerWalk: {fileID: 5143286595257116987}
@@ -1619,6 +1619,7 @@ MonoBehaviour:
   - {fileID: 6438757288700106276, guid: bbe91e4f26c1f614494384f485c6c473, type: 3}
   - {fileID: 884030554955172031, guid: 9455b438aca141b4bb4e7cb1b2bd25f8, type: 3}
   insidegameObject: {fileID: 1048959158753274472, guid: bf7e3f11c6811344ca646c3de85bd43a, type: 3}
+  PoiPopUp: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -1640,6 +1641,7 @@ MonoBehaviour:
   positionLerpSpeed: 8
   rotationLerpSpeed: 8
   ShopActive: 0
+  Extract: 0
   oldTransform: {fileID: 0}
   AptTransform: {fileID: 0}
   inside: 0
