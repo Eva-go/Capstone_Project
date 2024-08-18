@@ -414,6 +414,7 @@ public class PlayerController : MonoBehaviour
                         bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
                     }
                 }
+                RespawnAcive = false;
                 RespawnCamera.SetActive(false);
                 RespawnFillHandler.fillValue = 0;
                 PhotonNetwork.Destroy(gameObject);
