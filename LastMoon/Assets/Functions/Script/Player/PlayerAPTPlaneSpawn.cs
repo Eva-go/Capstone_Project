@@ -15,9 +15,9 @@ public class PlayerAPTPlaneSpawn: MonoBehaviour
     void Start()
     {
         SpawnPos = 100;
-        spawnPoint = new Vector3((GameValue.PlayerID + 1) * SpawnPos, SpawnPos, (GameValue.PlayerID + 1) * SpawnPos);
+        spawnPoint = new Vector3((GameValue.PlayerID + 1) * SpawnPos, SpawnPos * 2, (GameValue.PlayerID + 1) * SpawnPos);
         GameObject instance = Instantiate(APTPlane, spawnPoint, Quaternion.identity);
-        playerPoint = new Vector3((GameValue.PlayerID + 1) * SpawnPos, SpawnPos, (GameValue.PlayerID + 1) * SpawnPos + 2.5f);
+        playerPoint = new Vector3((GameValue.PlayerID + 1) * SpawnPos, SpawnPos * 2, (GameValue.PlayerID + 1) * SpawnPos + 2.5f);
         playerrotation = new Vector3(gameObject.transform.rotation.x, -gameObject.transform.rotation.y, gameObject.transform.rotation.z);
         player= gameObject.GetComponent<PlayerController>();
     }

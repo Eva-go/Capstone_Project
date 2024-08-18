@@ -208,10 +208,6 @@ public class PlayerController : MonoBehaviour
             
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
 
-            for (int i = 0; i < InitalItems.Length; i++)
-            {
-                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
-            }
             Hp = 100;
         }
 
@@ -291,6 +287,10 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F8))
             {
                 IncreaseLocalPlayerItems();
+                for (int i = 0; i < InitalItems.Length; i++)
+                {
+                    PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
+                }
             }
             if (Input.GetKeyDown(KeyCode.F9))
             {
