@@ -482,7 +482,7 @@ public class PlayerController : MonoBehaviour
 
     public void SpawnPlayer(int idx, Transform points)
     {
-        if(pv.IsMine)
+        /*if(pv.IsMine)
         {
             player = PhotonNetwork.Instantiate("Player", PlayerAPT.playerPoint, Quaternion.Euler(PlayerAPT.playerrotation));
             if (player != null)
@@ -503,13 +503,16 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Player spawned and ownership transferred.");
             }
             Debug.Log("플레이어 확인" + GameObject.Find(player.name));
-            if(PhotonNetwork.LocalPlayer.NickName != GameObject.Find(player.name).ToString())
-            {
-                Debug.Log("플레이어 없음");
-                reSpwan();
-            }
-        }
-       
+            //if(PhotonNetwork.LocalPlayer.NickName != GameObject.Find(player.name).ToString())
+            //{
+            //    Debug.Log("플레이어 없음");
+            //    reSpwan();
+            //}
+        }*/
+        PlayerSpawn playerSpawn = GameObject.Find("PlayerSpwan").GetComponent<PlayerSpawn>();
+        playerSpawn.OnBuildingCreated();
+
+
     }
 
     private void OnDestroy()
