@@ -90,6 +90,7 @@ public class PoiController : MonoBehaviour
 
 
     //출력 변수
+    /*
     public GameObject itme;
     public Transform OutputTransform;
 
@@ -98,6 +99,7 @@ public class PoiController : MonoBehaviour
     public int tickMaxOUtput;
     public int OutputTick;
     public bool test_ck;
+     */
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -117,20 +119,15 @@ public class PoiController : MonoBehaviour
         StationProgress = 0;
         Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
-        test_ck = false;
+        //test_ck = false;
+
+        isConstructing = false;
     }
 
     private void Update()
     {
-        if(gameObject.activeSelf == true&&!stop)
-        {
-            tick_ck(5);  
-        }
-        if(gameObject.activeSelf == true&&test_ck)
-        {
-            tick_OutPut(20);
-        }
-        
+        tick_ck(5);
+
     }
 
     public void ConstructionAnimation()
@@ -168,8 +165,25 @@ public class PoiController : MonoBehaviour
             tick = e.tick % tickMax;
             if (tick >= tickMax - 1)
             {
-                CheckRecipe();
-                HeatingManage();
+                if (SelectedRecipe != null)
+                {
+                    CheckRecipe();
+                    HeatingManage();
+
+                    if (!Activation)
+                    {
+                        if (SelectedRecipe.Temperture > 0)
+                        {
+                            if (ObjectlessSlot[6]) Inv_Fuel = AddItem_Slotless(Inv_Fuel, Debug_Fuel, 1);
+                            else Inv_Fuel = AddItem(FuelSlot, Inv_Fuel, Debug_Fuel, 1);
+                        }
+                    }
+                    if (SelectedRecipe.Coolent > 0)
+                    {
+                        if (ObjectlessSlot[7]) Inv_Coolent = AddItem_Slotless(Inv_Coolent, Debug_Coolent, 1);
+                        else Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 1);
+                    }
+                }
                 ActivationEffect();
                 //Ountput(0);
                 isConstructing = false;
@@ -182,7 +196,7 @@ public class PoiController : MonoBehaviour
 
         }
     }
-
+    /*
     private void TimeTickSystem_OnTick_OutPut(object sender, TickTimer.OnTickEventArgs e)
     {
         if (isOutput && Ountput_stop)
@@ -201,12 +215,14 @@ public class PoiController : MonoBehaviour
 
         }
     }
+     */
 
-
+    /*
     public void Ountput(int index)
     {
         Instantiate(itme, OutputTransform.position, Quaternion.identity);
     }
+     */
 
     public Item AddItem(GameObject[] objects, Item item, ScriptableObject_Item Type, int Count)
     {
@@ -308,7 +324,7 @@ public class PoiController : MonoBehaviour
             TickTimer.OnTick += TimeTickSystem_OnTick;
         }
     }
-
+    /*
     public void tick_OutPut(int ticksToConstruct)
     {
         if (!isOutput)
@@ -318,25 +334,29 @@ public class PoiController : MonoBehaviour
             TickTimer.OnTick += TimeTickSystem_OnTick_OutPut;
         }
     }
+     */
 
 
 
     public void CheckRecipe()
     {
         Debug.Log("Tick executed at CheckRecipe()");
-        if (StationTemperture >= SelectedRecipe.Temperture && Inv_Coolent.Count >= SelectedRecipe.Coolent)
+        if ((StationTemperture >= SelectedRecipe.Temperture || Inv_Fuel.Count > 0) && Inv_Coolent.Count >= SelectedRecipe.Coolent)
         {
             switch (SelectedRecipe.InputCount)
             {
                 case 1:
-                    if (Inv_Input[0].ItemType == SelectedRecipe.Input001)
+                    if (Inv_Input[0] != null)
                     {
-                        if (!Activation)
+                        if (Inv_Input[0].ItemType == SelectedRecipe.Input001)
                         {
-                            Activation = true;
-                            animator.SetBool("isActvie", true);
-                        }
+                            if (!Activation)
+                            {
+                                Activation = true;
+                                animator.SetBool("isActvie", true);
+                            }
                             StationProgress++;
+                        }
                     }
                     else if (Activation)
                     {
@@ -345,15 +365,18 @@ public class PoiController : MonoBehaviour
                     }
                     break;
                 case 2:
-                    if (Inv_Input[0].ItemType == SelectedRecipe.Input001
-                        && Inv_Input[1].ItemType == SelectedRecipe.Input002)
+                    if (Inv_Input[0] != null && Inv_Input[1] != null)
                     {
-                        if (!Activation)
+                        if (Inv_Input[0].ItemType == SelectedRecipe.Input001
+                        && Inv_Input[1].ItemType == SelectedRecipe.Input002)
                         {
-                            Activation = true;
-                            animator.SetBool("isActvie", true);
+                            if (!Activation)
+                            {
+                                Activation = true;
+                                animator.SetBool("isActvie", true);
+                            }
+                            StationProgress++;
                         }
-                        StationProgress++;
                     }
                     else if (Activation)
                     {
@@ -362,16 +385,19 @@ public class PoiController : MonoBehaviour
                     }
                     break;
                 case 3:
-                    if (Inv_Input[0].ItemType == SelectedRecipe.Input001
+                    if (Inv_Input[0] != null && Inv_Input[1] != null && Inv_Input[2] != null)
+                    {
+                        if (Inv_Input[0].ItemType == SelectedRecipe.Input001
                         && Inv_Input[1].ItemType == SelectedRecipe.Input002
                         && Inv_Input[2].ItemType == SelectedRecipe.Input003)
-                    {
-                        if (!Activation)
                         {
-                            Activation = true;
-                            animator.SetBool("isActvie", true);
+                            if (!Activation)
+                            {
+                                Activation = true;
+                                animator.SetBool("isActvie", true);
+                            }
+                            StationProgress++;
                         }
-                        StationProgress++;
                     }
                     else if (Activation)
                     {
@@ -465,18 +491,21 @@ public class PoiController : MonoBehaviour
     }
     public void ActivationEffect()
     {
-        if (Activation)
+        if (sfx_Station_Activation != null)
         {
-            if (!sfx_Station_Activation.isPlaying)
+            if (Activation)
             {
-                if (sfx_Station_Start != null) sfx_Station_Start.Play();
-                sfx_Station_Activation.Play();
+                if (!sfx_Station_Activation.isPlaying)
+                {
+                    if (sfx_Station_Start != null) sfx_Station_Start.Play();
+                    sfx_Station_Activation.Play();
+                }
             }
-        }
-        else if (sfx_Station_Activation.isPlaying)
-        {
-            if (sfx_Station_Start != null) sfx_Station_Start.Stop();
-            sfx_Station_Activation.Stop();
+            else if (sfx_Station_Activation.isPlaying)
+            {
+                if (sfx_Station_Start != null) sfx_Station_Start.Stop();
+                sfx_Station_Activation.Stop();
+            }
         }
     }
 
@@ -504,17 +533,13 @@ public class PoiController : MonoBehaviour
                 Inv_Input[2] = AddItem(InputSlot[2].Count, Inv_Input[2], SelectedRecipe.Input003, 1);
                 break;
         }
-        if (ObjectlessSlot[6]) Inv_Fuel = AddItem_Slotless(Inv_Fuel, Debug_Fuel, 10);
-        else Inv_Fuel = AddItem(FuelSlot, Inv_Fuel, Debug_Fuel, 10);
-        if (ObjectlessSlot[7]) Inv_Coolent = AddItem_Slotless(Inv_Coolent, Debug_Coolent, 10);
-        else Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 10);
     }
 
 
     [PunRPC]
     public void ReceiveData()
     {
-        InputItem();
+        //InputItem();
 
         //=== Old Recipe -V
         /*

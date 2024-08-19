@@ -97,6 +97,8 @@ public class PlayerController : MonoBehaviour
     public Inventory PlayerInventory = new Inventory { };
     public Item[] RPOI_PortalInventory = new Item[4];
 
+    public ScriptableObject_Item Seawater;
+
     //[SerializeField] private UI_Inventory ui_Inventory;
     public PoiController UISelectedPOIController;
     public bool StationActive;
@@ -291,6 +293,7 @@ public class PlayerController : MonoBehaviour
                 {
                     PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
                 }
+                PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
             }
             if (Input.GetKeyDown(KeyCode.F9))
             {
@@ -384,6 +387,7 @@ public class PlayerController : MonoBehaviour
             else myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
             if (Time.time >= lastDamageTime + damageInterval)
             {
+                PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
                 if (!sfx_PlayerDrown.isPlaying) sfx_PlayerDrown.Play();
                 pv.RPC("RPC_TakeDamage", RpcTarget.AllBuffered, pv.ViewID, tickDamage * wavetransform.waveStrength + WaterDepth * WaterDepth / 10);
                 lastDamageTime = Time.time;
@@ -926,10 +930,10 @@ public class PlayerController : MonoBehaviour
                 if (poiController != null)
                 {
                     PoiPopUp = true;
-                    poiController.Ountput_stop = Extract;
+                    //poiController.Ountput_stop = Extract;
                     UISelectedPOIController = poiController;
                     //stationinteration
-                    targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
+                    //targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
 
                     StationActive = true;
                 }

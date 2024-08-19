@@ -20,6 +20,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject StationUI;
 
     public Color EmptyColor;
+    public Color IsColor;
     public Transform inventory_Tab;
     private Inventory UIinventory;
     private Transform ItemTab;
@@ -255,6 +256,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             case 1:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Input001.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
                 image.color = EmptyColor;
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
@@ -263,18 +265,23 @@ public class CanvasController : MonoBehaviourPunCallbacks
             case 2:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Input001.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Input002.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
                 image.color = EmptyColor;
                 break;
             case 3:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Input001.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Input002.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Input003.ItemSprite;
+                image.color = IsColor;
                 break;
         }
         switch (SelectedRecipe.OutputCount)
@@ -282,6 +289,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             case 1:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Output001.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
                 image.color = EmptyColor;
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
@@ -290,18 +298,23 @@ public class CanvasController : MonoBehaviourPunCallbacks
             case 2:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Output001.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Output002.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
                 image.color = EmptyColor;
                 break;
             case 3:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Output001.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Output002.ItemSprite;
+                image.color = IsColor;
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
                 image.sprite = SelectedRecipe.Output003.ItemSprite;
+                image.color = IsColor;
                 break;
         }
         Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
@@ -312,7 +325,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
         text.text = SelectedRecipe.Coolent.ToString();
     }
 
-    private void Station_Input()
+    public void Station_Input()
     {
         bool MatchRecipe001 = false;
         bool MatchRecipe002 = false;
@@ -365,13 +378,13 @@ public class CanvasController : MonoBehaviourPunCallbacks
         }
     }
 
-    private void Station_Output()
+    public void Station_Output()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < playerController.UISelectedPOIController.SelectedRecipe.OutputCount; i++)
         {
             if(playerController.UISelectedPOIController.Inv_Output[i] != null)
             {
-                playerController.PlayerInventory.AddItem(playerController.UISelectedPOIController.Inv_Output[i]);
+                playerController.PlayerInventory.AddItem(new Item { ItemType = playerController.UISelectedPOIController.Inv_Output[i].ItemType, Count = playerController.UISelectedPOIController.Inv_Output[i].Count });
                 playerController.UISelectedPOIController.Inv_Output[i].ClearItem();
             }
         }
