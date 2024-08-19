@@ -314,14 +314,67 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private void Station_Input()
     {
+        bool MatchRecipe001 = false;
+        bool MatchRecipe002 = false;
+        bool MatchRecipe003 = false;
+        ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
 
+        switch (SelectedRecipe.InputCount)
+        {
+            case 1:
+                MatchRecipe002 = true;
+                MatchRecipe003 = true;
+                break;
+            case 2:
+                MatchRecipe003 = true;
+                break;
+        }
+        foreach (Item item in playerController.PlayerInventory.GetItems())
+        {
+            if (!MatchRecipe001 && item.ItemType == SelectedRecipe.Input001) {
+                MatchRecipe001 = true;
+            }
+            else if (!MatchRecipe002 && item.ItemType == SelectedRecipe.Input002)
+            {
+                MatchRecipe002 = true;
+            }
+            else if (!MatchRecipe003 && item.ItemType == SelectedRecipe.Input003)
+            {
+                MatchRecipe003 = true;
+            }
+        }
+        if(MatchRecipe001 && MatchRecipe002 && MatchRecipe003)
+        {
+
+            playerController.UISelectedPOIController.InputItem();
+            switch (SelectedRecipe.InputCount)
+            {
+                case 1:
+                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input001, Count = 1 });
+                    break;
+                case 2:
+                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input001, Count = 1 });
+                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input002, Count = 1 });
+                    break;
+                case 3:
+                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input001, Count = 1 });
+                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input002, Count = 1 });
+                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input003, Count = 1 });
+                    break;
+            }
+        }
     }
 
     private void Station_Output()
     {
-        playerController.PlayerInventory.AddItem(playerController.UISelectedPOIController.Inv_Output[0]);
-
-
+        for (int i = 0; i < 3; i++)
+        {
+            if(playerController.UISelectedPOIController.Inv_Output[i] != null)
+            {
+                playerController.PlayerInventory.AddItem(playerController.UISelectedPOIController.Inv_Output[i]);
+                playerController.UISelectedPOIController.Inv_Output[i].ClearItem();
+            }
+        }
     }
 
     private void SelectingRecipe()
@@ -335,11 +388,10 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             StationUI.SetActive(playerController.StationActive);
 
-            SelectedRecipeInfo(playerController.UISelectedPOIController.SelectedRecipe);
-            RecipeSelect(playerController.UISelectedPOIController.SelectableRecipes);
-
             if (playerController.StationActive)
             {
+                SelectedRecipeInfo(playerController.UISelectedPOIController.SelectedRecipe);
+                RecipeSelect(playerController.UISelectedPOIController.SelectableRecipes);
                 Cursor.lockState = CursorLockMode.Confined;
             }
         }

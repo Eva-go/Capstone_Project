@@ -45,6 +45,11 @@ public class Item
         else return 0;
     }
 
+    public void ClearItem()
+    {
+        Count = 0;
+    }
+
     public void SubtractItem(int SubCount)
     {
         Count -= SubCount;
