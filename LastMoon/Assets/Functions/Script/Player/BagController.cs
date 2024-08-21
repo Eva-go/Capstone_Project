@@ -62,9 +62,6 @@ public class BagController : MonoBehaviourPunCallbacks
                     playerController.mixItiems[i] += mixItems[i];
                 }
                  */
-
-                // 인벤토리 변경 이벤트 호출
-                playerController.InvokeInventoryChanged();
             }
         }
         if (PhotonNetwork.IsMasterClient || photonView.IsMine)

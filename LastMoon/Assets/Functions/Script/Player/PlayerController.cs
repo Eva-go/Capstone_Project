@@ -123,15 +123,9 @@ public class PlayerController : MonoBehaviour
     public Transform AptTransform;
 
     //아파트 진입변수
-    private bool isInside;
-    private bool isOutside;
-    public int inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
-    private bool oldPosState = false; // 상태를 추적하기 위한 변수
-    private bool insideState = false; // 상태를 추적하기 위한 변수
-    Transform parentTransform;
-
+    public Vector3 APTinside;
     private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
     private string lastDoorEntered;
@@ -157,13 +151,6 @@ public class PlayerController : MonoBehaviour
     {
         currentPlayer = player;
     }
-    //InteractableObject를 위한 코드 끝
-
-    public void InvokeInventoryChanged()
-    {
-        OnInventoryChanged?.Invoke();
-    }
-
     public void EnterDoor(Transform doorTransform)
     {
         string doorName = doorTransform.name; // 문 이름을 사용하여 고유 식별자로 사용
@@ -193,12 +180,13 @@ public class PlayerController : MonoBehaviour
             CanvasController.Instance.RegisterPlayerController(this);
             oldTransform = gameObject.transform;
             AptTransform = gameObject.transform;
-            inside = 0;
             keydowns = false;
             PoiPopUp = false;
             ShopActive = false;
             live = true;
             Extract = false;
+            APTinside = PlayerAPT.playerPoint;
+
             GameValue.Money_total = 0;
             GameValue.setMoney();
 
@@ -227,15 +215,6 @@ public class PlayerController : MonoBehaviour
         Items();
         wavetransform = FindObjectOfType<Wavetransform>();
 
-    }
-
-    void OnEnable()
-    {
-        if (pv.IsMine)
-        {
-            LocalPlayerManger.Instance.RegisterLocalPlayer(this);
-            CanvasController.Instance.RegisterPlayerController(this);
-        }
     }
 
     void Update()
@@ -308,43 +287,12 @@ public class PlayerController : MonoBehaviour
             {
                 DeathPPSVolume.SetActive(false);
             }
-            //if (insideActive && InsideFillHandler.fillValue >= 100)
-            //{
-            //    Debug.Log("인사이드" + inside);
-            //    InsideFillHandler.fillValue = 0;
-            //    InsideUpdate();
-            //    keydowns = false;
-            //    myRigid.isKinematic = false;
-            //}
             if (GameValue.exit)
             {
                 Destroy(gameObject);
             }
         }
     }
-
-    /*public void InsideUpdate()
-    {
-        switch(inside)
-        {
-            case 0:
-                gameObject.transform.position = parentTransform.position;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 1:
-                gameObject.transform.position = PlayerAPT.playerPoint;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 2:
-                if (doorPositions.ContainsKey(lastDoorEntered))
-                {
-                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                }
-                break;
-
-        }
-    }*/
 
     public int Sell()
     {
@@ -442,7 +390,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
              */
-            InvokeInventoryChanged();
             Hp = 0;
             //RespawnAcive = true;
             if (live)
@@ -787,6 +734,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //플레이어 이동
+    [PunRPC]
+    void TeleportPlayer(Vector3 newPosition)
+    {
+        transform.position = newPosition;
+    }
+
     private void Interaction()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
@@ -799,65 +753,153 @@ public class PlayerController : MonoBehaviour
                 case "Door":
                     myRigid.isKinematic = true;
                     insideActive = true;
-                    // 문을 통과하여 아파트로 들어가는 경우
                     EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
-
+                    keydowns = false;
                     if (InsideFillHandler.fillValue >= 100)
                     {
-                        inside = 1;
-                        keydowns = false;
-                        insideActive = false;
-                        //InsideUpdate();
-                        gameObject.transform.position = PlayerAPT.playerPoint;
-                        Debug.Log("pos2" + gameObject.transform.position);
-                        gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
+                        InsideFillHandler.fillValue = 100;
+                        // 이동을 RPC로 호출
                         myRigid.isKinematic = false;
-                        isInside = true;
-                        InsideFillHandler.fillValue = 0;
-                    }
-                    if (isInside)
-                    {
-                        InsideFillHandler.fillValue = 0;
-                        if (gameObject.transform.position != PlayerAPT.playerPoint)
+                        pv.RPC("TeleportPlayer", RpcTarget.All, PlayerAPT.playerPoint);
+                        if(player.transform.position == PlayerAPT.playerPoint)
                         {
-                            gameObject.transform.position = PlayerAPT.playerPoint;
-                            Debug.Log("pos1" + gameObject.transform.position);
-                            isInside = false;
+                            InsideFillHandler.fillValue = 0;
+                            insideActive = false;
+                        }
+                        else
+                        {
+                            Debug.Log("아파트 진입 에러");
                         }
                     }
+                    /*  myRigid.isKinematic = true;
+                      insideActive = true;
+                      // 문을 통과하여 아파트로 들어가는 경우
+                      EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+
+                      if (InsideFillHandler.fillValue >= 100)
+                      {
+                          inside = 1;
+                          keydowns = false;
+                          insideActive = false;
+                          //InsideUpdate();
+                          gameObject.transform.position = PlayerAPT.playerPoint;
+                          Debug.Log("pos2" + gameObject.transform.position);
+                          gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
+                          myRigid.isKinematic = false;
+                          isInside = true;
+                          InsideFillHandler.fillValue = 0;
+                      }*/
+
+                    /* if (isInside)
+                     {
+                         InsideFillHandler.fillValue = 0;
+                         if (gameObject.transform.position != PlayerAPT.playerPoint)
+                         {
+                             gameObject.transform.position = PlayerAPT.playerPoint;
+                             Debug.Log("pos1" + gameObject.transform.position);
+                             isInside = false;
+                         }
+                     }*/
 
                     break;
 
                 case "ReturnDoor":
-                    isOutside = false;
                     myRigid.isKinematic = true;
                     insideActive = true;
-                    // 이전에 저장된 문 위치로 되돌아가는 경우
-
+                    keydowns = false;
                     if (InsideFillHandler.fillValue >= 100)
                     {
-                        inside = 2;
-                        keydowns = false;
-                        insideActive = false;
-                        //InsideUpdate();    
-                        gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                        gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                        InsideFillHandler.fillValue = 100;
+                        // 이동을 RPC로 호출
                         myRigid.isKinematic = false;
-                        isOutside = true;
-                        InsideFillHandler.fillValue = 0;
-                    }
-                    if (isOutside)
-                    {
-                        InsideFillHandler.fillValue = 0;
-                        if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                        if (doorPositions != null)
                         {
-                            gameObject.transform.position = doorPositions[lastDoorEntered];
-                            Debug.Log("pos1" + gameObject.transform.position);
-                            isOutside = false;
+                            pv.RPC("TeleportPlayer", RpcTarget.All, doorPositions[lastDoorEntered]);
+                            if (player.transform.position == doorPositions[lastDoorEntered])
+                            {
+                                InsideFillHandler.fillValue = 0;
+                                insideActive = false;
+                            }
                         }
-                    }
-                    break;
+                        else
+                        {
+                            Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+                            List<Transform> directChildren = new List<Transform>();
 
+                            for (int i = 0; i < parentTransform.childCount; i++)
+                            {
+                                Transform child = parentTransform.GetChild(i);
+                                directChildren.Add(child);
+                            }
+
+                            if (directChildren.Count > 0)
+                            {
+                                int idx = UnityEngine.Random.Range(0, directChildren.Count);
+                                Transform reTransform = directChildren[idx];
+                                pv.RPC("TeleportPlayer", RpcTarget.All, reTransform.position);
+                                if (player.transform.position == reTransform.position)
+                                {
+                                    InsideFillHandler.fillValue = 0;
+                                    insideActive = false;
+                                }
+                            }
+                        }
+
+                    }
+                   /* myRigid.isKinematic = true;
+                    if (lastDoorEntered != null)
+                    {
+                        //gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                        //gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                        pv.RPC("TeleportPlayer", RpcTarget.All, doorPositions[lastDoorEntered]);
+                    }
+                    else
+                    {
+                        Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+                        List<Transform> directChildren = new List<Transform>();
+
+                        for (int i = 0; i < parentTransform.childCount; i++)
+                        {
+                            Transform child = parentTransform.GetChild(i);
+                            directChildren.Add(child);
+                        }
+
+                        if (directChildren.Count > 0)
+                        {
+
+                            int idx = UnityEngine.Random.Range(0, directChildren.Count);
+                            Transform reTransform = directChildren[idx];
+                            pv.RPC("TeleportPlayer", RpcTarget.All, reTransform.position);
+                        }
+                    }*/
+
+
+
+                        //insideActive = true;
+                        // 이전에 저장된 문 위치로 되돌아가는 경우
+                        /* if (InsideFillHandler.fillValue >= 100)
+                         {
+                             inside = 2;
+                             keydowns = false;
+                             insideActive = false;
+                             //InsideUpdate();    
+                             gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                             gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                             myRigid.isKinematic = false;
+                             isOutside = true;
+                             InsideFillHandler.fillValue = 0;
+                         }
+                         if (isOutside)
+                         {
+                             InsideFillHandler.fillValue = 0;
+                             if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                             {
+                                 gameObject.transform.position = doorPositions[lastDoorEntered];
+                                 Debug.Log("pos1" + gameObject.transform.position);
+                                 isOutside = false;
+                             }
+                         }*/
+                        break;
                 case "RPoi":
                     RaycastHit hit;
                     if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))

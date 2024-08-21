@@ -1645,9 +1645,9 @@ MonoBehaviour:
   Extract: 0
   oldTransform: {fileID: 0}
   AptTransform: {fileID: 0}
-  inside: 0
   keydowns: 0
   PlayerAPT: {fileID: 0}
+  APTinside: {x: 0, y: 0, z: 0}
   Godmode: 0
 --- !u!114 &4323000284422157701
 MonoBehaviour:
@@ -1797,36 +1797,36 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isMove
   - Type: 9
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Swing
   - Type: 9
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Hit
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isCrouch
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isCrouchWalk
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isRuns
   - Type: 4
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: isGrounded
   - Type: 9
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: Combat_Swing
   - Type: 1
-    SynchronizeType: 1
+    SynchronizeType: 2
     Name: MoveAniModifire
   m_SynchronizeLayers:
-  - SynchronizeType: 1
+  - SynchronizeType: 2
     LayerIndex: 0
-  - SynchronizeType: 1
+  - SynchronizeType: 2
     LayerIndex: 1
   - SynchronizeType: 0
     LayerIndex: 2
