@@ -78,7 +78,6 @@ public class PoiController : MonoBehaviour
     public int tick;
     public int tickMax;
     public bool isConstructing;
-    public bool stop;
 
 
 
@@ -119,15 +118,31 @@ public class PoiController : MonoBehaviour
         StationProgress = 0;
         Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
-        //test_ck = false;
+        TickTimer.StartTickTimer(20f, OnTickAction);
+    }
 
-        isConstructing = false;
+    private void OnDestroy()
+    {
+        TickTimer.StopTickTimer(); // Ensure timer is stopped when the object is destroyed
     }
 
     private void Update()
     {
-        tick_ck(5);
+        
 
+    }
+
+    private void OnTickAction()
+    {
+        Debug.Log("Æ½ º¯¼ö" + PhotonNetwork.Time);
+        if (isConstructing)
+        {
+            Debug.Log("Æ½ º¯¼ö" + PhotonNetwork.Time);
+            CheckRecipe();
+            HeatingManage();
+            ActivationEffect();
+            isConstructing = false;
+        }
     }
 
     public void ConstructionAnimation()
@@ -160,7 +175,7 @@ public class PoiController : MonoBehaviour
     }
     private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
     {
-        if (isConstructing&&!stop)
+        if (isConstructing)
         {
             tick = e.tick % tickMax;
             if (tick >= tickMax - 1)
