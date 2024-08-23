@@ -40,9 +40,6 @@
             "m_Id": "de46630a8f9a4e7d9972ea823c977635"
         },
         {
-            "m_Id": "95c2de98528c433e9b784dbac1affefa"
-        },
-        {
             "m_Id": "0eb251ff054e4f608605e70657ff734a"
         },
         {
@@ -239,20 +236,6 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "4809eafe308443b38bf7280ad75eb457"
-                },
-                "m_SlotId": 0
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "afef72931bcc4809a895565f69fef4a3"
-                },
-                "m_SlotId": 1
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "95c2de98528c433e9b784dbac1affefa"
                 },
                 "m_SlotId": 0
             }
@@ -624,30 +607,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
-    "m_ObjectId": "1b58833ddd2b4f528916ef52f11614f4",
-    "m_Id": 1,
-    "m_DisplayName": "In",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "In",
-    "m_StageCapability": 3,
-    "m_Value": {
-        "x": 0.5,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    }
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.SubGraphNode",
     "m_ObjectId": "1cedd76b4f334ab486911242bcebb97a",
     "m_Group": {
@@ -967,30 +926,6 @@
         "x": 0.0,
         "y": 0.0,
         "z": 1.0,
-        "w": 0.0
-    }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
-    "m_ObjectId": "5619f513d12f4bef8b6fe4c50c2ecbc9",
-    "m_Id": 2,
-    "m_DisplayName": "Out",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
-    "m_StageCapability": 3,
-    "m_Value": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
         "w": 0.0
     }
 }
@@ -1416,45 +1351,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.StepNode",
-    "m_ObjectId": "95c2de98528c433e9b784dbac1affefa",
-    "m_Group": {
-        "m_Id": "12f7229904d644bd83fe0a80ecc62966"
-    },
-    "m_Name": "Step",
-    "m_DrawState": {
-        "m_Expanded": false,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": -1723.1998291015625,
-            "y": -224.79995727539063,
-            "width": 144.800048828125,
-            "height": 93.59999084472656
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "cc520746382b42bbbd00fa0130920257"
-        },
-        {
-            "m_Id": "1b58833ddd2b4f528916ef52f11614f4"
-        },
-        {
-            "m_Id": "5619f513d12f4bef8b6fe4c50c2ecbc9"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": false,
-    "m_DismissedVersion": 0,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    }
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.RedirectNodeData",
     "m_ObjectId": "9848923e3f7d44b1a27b257b414523b6",
     "m_Group": {
@@ -1702,7 +1598,7 @@
     "m_ShaderOutputName": "_Specular",
     "m_StageCapability": 3,
     "m_Value": {
-        "x": 1.0,
+        "x": 0.5,
         "y": 1.0,
         "z": 4.0
     },
@@ -1844,30 +1740,6 @@
     ],
     "m_Dropdowns": [],
     "m_DropdownSelectedEntries": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
-    "m_ObjectId": "cc520746382b42bbbd00fa0130920257",
-    "m_Id": 0,
-    "m_DisplayName": "Edge",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Edge",
-    "m_StageCapability": 3,
-    "m_Value": {
-        "x": 1.0,
-        "y": 1.0,
-        "z": 1.0,
-        "w": 1.0
-    },
-    "m_DefaultValue": {
-        "x": 0.0,
-        "y": 0.0,
-        "z": 0.0,
-        "w": 0.0
-    }
 }
 
 {

@@ -829,33 +829,36 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case "ReturnDoor":
-                    isOutside = false;
-                    myRigid.isKinematic = true;
-                    insideActive = true;
-                    // 이전에 저장된 문 위치로 되돌아가는 경우
+                        Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+                        List<Transform> directChildren = new List<Transform>();
 
-                    if (InsideFillHandler.fillValue >= 100)
-                    {
-                        inside = 2;
-                        keydowns = false;
-                        insideActive = false;
-                        //InsideUpdate();    
-                        gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                        gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                        myRigid.isKinematic = false;
-                        isOutside = true;
-                        InsideFillHandler.fillValue = 0;
-                    }
-                    if (isOutside)
-                    {
-                        InsideFillHandler.fillValue = 0;
-                        if (gameObject.transform.position != doorPositions[lastDoorEntered])
+                        for (int i = 0; i < parentTransform.childCount; i++)
                         {
-                            gameObject.transform.position = doorPositions[lastDoorEntered];
-                            Debug.Log("pos1" + gameObject.transform.position);
-                            isOutside = false;
+                            Transform child = parentTransform.GetChild(i);
+                            directChildren.Add(child);
                         }
-                    }
+
+                        if (directChildren.Count > 0)
+                        {
+                            idx = UnityEngine.Random.Range(0, directChildren.Count);
+                        }
+                        isOutside = false;
+                        myRigid.isKinematic = true;
+                        //insideActive = true;
+                        
+                            if (lastDoorEntered != null)
+                            {
+                                gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                                gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                            }
+                            else
+                            {
+                                gameObject.transform.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
+                                gameObject.transform.rotation = directChildren[idx].rotation; // 마지막으로 들어갔던 문의 회전 값으로 설정
+                            }
+                            myRigid.isKinematic = false;
+                            isOutside = true;
+                            //InsideFillHandler.fillValue = 0;
                     break;
 
                 case "RPoi":
