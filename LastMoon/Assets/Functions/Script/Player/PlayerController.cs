@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance { get; private set; }
     public GameObject currentPlayer { get; private set; }
 
-
+    //보간 속도
+    public float interpolationSpeed = 1.0f;
 
     public PhotonView pv;
     public string nickName;
@@ -346,6 +347,11 @@ public class PlayerController : MonoBehaviour
             if (isUnderWater) isUnderWater = false;
             if (isSwimming) isSwimming = false;
         }
+
+        if (pv.IsMine)
+        {
+            pv.RPC("UpdateTransform", RpcTarget.AllBuffered, transform.position, transform.rotation);
+        }
     }
 
     private void Die()
@@ -399,6 +405,7 @@ public class PlayerController : MonoBehaviour
                 gameObject.transform.GetChild(3).gameObject.SetActive(false);
                 gameObject.transform.GetChild(4).gameObject.SetActive(false);
                 gameObject.transform.GetChild(5).gameObject.SetActive(false);
+                
                 live = false;
             }
             //else if (RespawnFillHandler.fillValue >= 100)
@@ -470,16 +477,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Player spawned and ownership transferred.");
             }
             Debug.Log("플레이어 확인" + GameObject.Find(player.name));
-            //if(PhotonNetwork.LocalPlayer.NickName != GameObject.Find(player.name).ToString())
-            //{
-            //    Debug.Log("플레이어 없음");
-            //    reSpwan();
-            //}
         }
-        //PlayerSpawn playerSpawn = GameObject.Find("PlayerSpwan").GetComponent<PlayerSpawn>();
-        //playerSpawn.OnBuildingCreated();
-
-
     }
 
     private void OnDestroy()
@@ -528,13 +526,19 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isMove", false);
                 Localanimator.SetBool("isMove", false);
             }
+
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("UpdateTransform", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
     }
-
+    [PunRPC]
+    private void UpdateTransform(Vector3 position, Quaternion rotation)
+    {
+        transform.position = Vector3.Lerp(transform.position, position, Time.deltaTime * interpolationSpeed);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * interpolationSpeed);
+    }
     private void Jump()
     {
         if (Input.GetKey(KeyCode.Space) && isSwimming)
@@ -575,6 +579,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+ 
+
     private void Run()
     {
         if (!isCrouching)
@@ -594,6 +600,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isRuns", true);
                 Localanimator.SetBool("isMove", true);
                 Localanimator.SetFloat("MoveSpeed", 1.5f);
+
                 float moveDirY = myRigid.velocity.y;
                 Vector3 moveHorizontal = transform.right * moveDirX;
                 Vector3 moveVertical = transform.forward * moveDirZ;
@@ -615,9 +622,10 @@ public class PlayerController : MonoBehaviour
                 animator.SetBool("isRuns", false);
                 Localanimator.SetBool("isMove", false);
             }
+
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("UpdateTransform", RpcTarget.AllBuffered, transform.position, transform.rotation);
             }
         }
     }
@@ -688,10 +696,12 @@ public class PlayerController : MonoBehaviour
             Jumpforgived = false;
             isWallCliming = true;
         }
+
     }
 
     private void OnCollisionExit(Collision collision)
     {
+
         if (collision.gameObject.tag == "PLANE")
         {
             if (Jumpforgived)
