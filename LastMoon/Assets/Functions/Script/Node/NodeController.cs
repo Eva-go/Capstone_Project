@@ -13,6 +13,8 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     public AudioSource sfx_NodeHit;
     public AudioClip sfx_NodeHit1, sfx_NodeHit2, sfx_NodeHit3, sfx_NodeHit4;
 
+    public ParticleSystem HitParticle;
+
     public int nodeCount;
 
     public ScriptableObject_Item NodeItemType;
@@ -47,6 +49,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         }
 
         sfx_NodeHit.Play();
+        HitParticle.Play();
 
         currentHealth -= Damage;
         if (currentHealth > 0)
