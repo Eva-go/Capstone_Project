@@ -1014,7 +1014,7 @@ public class PlayerController : MonoBehaviour
                 PoiController poiController = hit.collider.GetComponent<PoiController>();
                 if (poiController != null)
                 {
-                    if (poiController.hp > 0)
+                    if (poiController.ConstructionProgress >= 100 && poiController.hp > 0)
                     {
                         poiController.hp -= 1;
                         poiController.animator.SetTrigger("isHit");
