@@ -1009,6 +1009,24 @@ public class PlayerController : MonoBehaviour
                     bagPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, pv.ViewID);
                 }
             }
+            else if (hit.collider.CompareTag("Poi"))
+            {
+                PoiController poiController = hit.collider.GetComponent<PoiController>();
+                if (poiController != null)
+                {
+                    if (poiController.hp > 0)
+                    {
+                        poiController.hp -= 1;
+                        poiController.animator.SetTrigger("isHit");
+                        /*
+                        if (poiController.hp < 0)
+                        {
+                            Destroy(poiController.gameObject);
+                        }
+                        */
+                    }
+                }
+            }
             else if (hit.collider.CompareTag("RPoi"))
             {
                 PoiController poiController = hit.collider.GetComponent<PoiController>();

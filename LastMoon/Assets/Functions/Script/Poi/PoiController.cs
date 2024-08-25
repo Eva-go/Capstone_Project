@@ -126,23 +126,56 @@ public class PoiController : MonoBehaviour
 
     private void Update()
     {
-        tick_ck(5);
+        tick_ck(1);
 
     }
 
     public void ConstructionAnimation()
     {
+        if (!StationConstructionMesh.activeSelf)
+        {
+            StationConstructionParts.SetActive(false);
+            StationConstructionMesh.SetActive(true);
+        }
 
-        ConstructionProgress++;
-
-        StationConstructionParts.SetActive(false);
-        StationConstructionMesh.SetActive(true);
+        ConstructionProgress += 1;
 
         propertyBlock = new MaterialPropertyBlock();
-        propertyBlock.SetFloat("_Construction_Progress", ConstructionProgress);
+        propertyBlock.SetFloat("_Construction_Progress", ConstructionProgress / 100f);
+        StationConstructionMesh.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+    }
+    public void DestroyAnimation()
+    {
+        if (!StationConstructionMesh.activeSelf)
+        {
+            StationConstructionParts.SetActive(false);
+            StationConstructionMesh.SetActive(true);
+        }
+
+        ConstructionProgress -= 1;
+
+        propertyBlock = new MaterialPropertyBlock();
+        propertyBlock.SetFloat("_Construction_Progress", ConstructionProgress / 100f);
         StationConstructionMesh.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
 
+    public void TakeDamage(float Damage)
+    {
+        hp -= (int)Damage;
+        if (hp > 0)
+        {
+            animator.SetTrigger("isHit");
+
+        }
+        else if (hp <= 0)
+        {
+            if (!StationConstructionMesh.activeSelf)
+            {
+                StationConstructionParts.SetActive(false);
+                StationConstructionMesh.SetActive(true);
+            }
+        }
+    }
 
     public void SlotClick(int _slotNumber)
     {
@@ -165,26 +198,50 @@ public class PoiController : MonoBehaviour
             tick = e.tick % tickMax;
             if (tick >= tickMax - 1)
             {
-                if (SelectedRecipe != null)
+                if (hp > 0)
                 {
-                    CheckRecipe();
-                    HeatingManage();
-
-                    if (!Activation)
+                    if (ConstructionProgress < 100)
                     {
-                        if (SelectedRecipe.Temperture > 0)
-                        {
-                            if (ObjectlessSlot[6]) Inv_Fuel = AddItem_Slotless(Inv_Fuel, Debug_Fuel, 1);
-                            else Inv_Fuel = AddItem(FuelSlot, Inv_Fuel, Debug_Fuel, 1);
-                        }
+                        if (StationConstructionMesh != null) ConstructionAnimation();
                     }
-                    if (SelectedRecipe.Coolent > 0)
+                    else
                     {
-                        if (ObjectlessSlot[7]) Inv_Coolent = AddItem_Slotless(Inv_Coolent, Debug_Coolent, 1);
-                        else Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 1);
+                        if (StationConstructionMesh != null && StationConstructionMesh.activeSelf)
+                        {
+                            StationConstructionParts.SetActive(true);
+                            StationConstructionMesh.SetActive(false);
+                        }
+
+                        if (SelectedRecipe != null)
+                        {
+                            CheckRecipe();
+                            HeatingManage();
+
+                            if (!Activation)
+                            {
+                                if (SelectedRecipe.Temperture > 0)
+                                {
+                                    if (ObjectlessSlot[6]) Inv_Fuel = AddItem_Slotless(Inv_Fuel, Debug_Fuel, 1);
+                                    else Inv_Fuel = AddItem(FuelSlot, Inv_Fuel, Debug_Fuel, 1);
+                                }
+                            }
+                            if (SelectedRecipe.Coolent > 0)
+                            {
+                                if (ObjectlessSlot[7]) Inv_Coolent = AddItem_Slotless(Inv_Coolent, Debug_Coolent, 1);
+                                else Inv_Coolent = AddItem(Obj_Coolent, Inv_Coolent, Debug_Coolent, 1);
+                            }
+                        }
+                        ActivationEffect();
                     }
                 }
-                ActivationEffect();
+                else
+                {
+                    DestroyAnimation();
+                    if (ConstructionProgress < 0)
+                    {
+                        Destroy(gameObject);
+                    }
+                }
                 //Ountput(0);
                 isConstructing = false;
             }
@@ -470,8 +527,8 @@ public class PoiController : MonoBehaviour
                 {
                     for (int i = 0; i < FuelSlot.Length; i++)
                     {
-                        UpdateMatInventory(FuelSlot[i], Inv_Fuel);
-                        UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+                        if (FuelSlot[i] != null) UpdateMatInventory(FuelSlot[i], Inv_Fuel);
+                        if (FuelWick[i] != null) UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
                     }
                 }
             }
@@ -485,7 +542,7 @@ public class PoiController : MonoBehaviour
         {
             for (int i = 0; i < Obj_Temperture.Length; i++)
             {
-                UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
+                if (Obj_Temperture[i] != null) UpdateMatFill(Obj_Temperture[i], StationTemperture / 250);
             }
         }
     }

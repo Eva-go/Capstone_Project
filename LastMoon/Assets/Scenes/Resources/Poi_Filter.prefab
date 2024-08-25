@@ -84,8 +84,8 @@ MonoBehaviour:
   SetnodeCount: 0
   animator: {fileID: 6614159032398034088}
   ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 0}
-  StationConstructionParts: {fileID: 0}
+  StationConstructionMesh: {fileID: 4317728816855925798}
+  StationConstructionParts: {fileID: 4830127637327253245}
   ObjectlessSlot: 000101000101010101
   StationBases:
   - {fileID: 8573461314253515776}
@@ -5215,7 +5215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5d5d0d22ca2777141a1c7cbfbeda4f74, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5225,6 +5225,11 @@ PrefabInstance:
 --- !u!4 &3503932275791896220 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5d5d0d22ca2777141a1c7cbfbeda4f74, type: 3}
+  m_PrefabInstance: {fileID: 3975216852411840887}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4317728816855925798 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 5d5d0d22ca2777141a1c7cbfbeda4f74, type: 3}
   m_PrefabInstance: {fileID: 3975216852411840887}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5749239302709916588
@@ -5279,6 +5284,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LastLuna_Model_Station_Filter
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eb82806a993c1dc44966e7d31e0be0be, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: eb82806a993c1dc44966e7d31e0be0be, type: 3}
     m_RemovedGameObjects: []
@@ -5328,6 +5337,11 @@ GameObject:
 --- !u!1 &3612501998913458950 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9073426975147499690, guid: eb82806a993c1dc44966e7d31e0be0be, type: 3}
+  m_PrefabInstance: {fileID: 5749239302709916588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4830127637327253245 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: eb82806a993c1dc44966e7d31e0be0be, type: 3}
   m_PrefabInstance: {fileID: 5749239302709916588}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5207251687743444039 stripped

@@ -190,8 +190,8 @@ MonoBehaviour:
   SetnodeCount: 0
   animator: {fileID: 7105125737143260221}
   ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 0}
-  StationConstructionParts: {fileID: 0}
+  StationConstructionMesh: {fileID: 8955284402385740947}
+  StationConstructionParts: {fileID: 2922736634236160829}
   ObjectlessSlot: 000101000000000000
   StationBases:
   - {fileID: 5083290219700720759}
@@ -272,7 +272,6 @@ MonoBehaviour:
   isConstructing: 0
   stop: 0
   hp: 3
-  OutputTransform: {fileID: 7140555518296932469}
 --- !u!65 &5094086931020389506
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -615,7 +614,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 84b1533d1a6fb7847803129154a7e338, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -625,6 +624,11 @@ PrefabInstance:
 --- !u!4 &2577314454603207047 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 84b1533d1a6fb7847803129154a7e338, type: 3}
+  m_PrefabInstance: {fileID: 2616253464663553644}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2922736634236160829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 84b1533d1a6fb7847803129154a7e338, type: 3}
   m_PrefabInstance: {fileID: 2616253464663553644}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8108421506612156866
@@ -678,6 +682,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 708b384fe64e6234397e0199f595b2f4, type: 3}
       propertyPath: m_Name
       value: LastLuna_Model_Station_Fractional_Distiller
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 708b384fe64e6234397e0199f595b2f4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 708b384fe64e6234397e0199f595b2f4, type: 3}
@@ -868,5 +876,10 @@ GameObject:
 --- !u!1 &8902464700174752461 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 796308224039944975, guid: 708b384fe64e6234397e0199f595b2f4, type: 3}
+  m_PrefabInstance: {fileID: 8108421506612156866}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8955284402385740947 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 708b384fe64e6234397e0199f595b2f4, type: 3}
   m_PrefabInstance: {fileID: 8108421506612156866}
   m_PrefabAsset: {fileID: 0}

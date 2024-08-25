@@ -136,8 +136,8 @@ MonoBehaviour:
   SetnodeCount: 0
   animator: {fileID: 1666849040754533448}
   ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 0}
-  StationConstructionParts: {fileID: 0}
+  StationConstructionMesh: {fileID: 5665469141119341595}
+  StationConstructionParts: {fileID: 6899375817951067344}
   ObjectlessSlot: 000101010101000101
   StationBases:
   - {fileID: 6899375817951067344}
@@ -186,13 +186,6 @@ MonoBehaviour:
   isConstructing: 0
   stop: 0
   hp: 3
-  itme: {fileID: 0}
-  OutputTransform: {fileID: 5170737213738554540}
-  isOutput: 0
-  Ountput_stop: 0
-  tickMaxOUtput: 0
-  OutputTick: 0
-  test_ck: 0
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,7 +479,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7ee44b9fa5e60bc44b47209bb91d85bb, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -496,6 +489,11 @@ PrefabInstance:
 --- !u!4 &5031675847059918497 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7ee44b9fa5e60bc44b47209bb91d85bb, type: 3}
+  m_PrefabInstance: {fileID: 4782440154328869194}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5665469141119341595 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7ee44b9fa5e60bc44b47209bb91d85bb, type: 3}
   m_PrefabInstance: {fileID: 4782440154328869194}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6016501313618674049
@@ -549,6 +547,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: dadb23ba04985d6419ec160a127a0fe9, type: 3}
       propertyPath: m_Name
       value: LastLuna_Model_Station_Heater
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: dadb23ba04985d6419ec160a127a0fe9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: dadb23ba04985d6419ec160a127a0fe9, type: 3}
       propertyPath: m_Avatar

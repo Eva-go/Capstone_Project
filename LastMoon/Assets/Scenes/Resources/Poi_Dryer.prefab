@@ -114,8 +114,8 @@ MonoBehaviour:
   SetnodeCount: 0
   animator: {fileID: 590244116874518604}
   ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 0}
-  StationConstructionParts: {fileID: 0}
+  StationConstructionMesh: {fileID: 8955088677233956302}
+  StationConstructionParts: {fileID: 4395175976066511117}
   ObjectlessSlot: 000101010101010101
   StationBases:
   - {fileID: 4395175976066511117}
@@ -152,13 +152,6 @@ MonoBehaviour:
   isConstructing: 0
   stop: 0
   hp: 3
-  itme: {fileID: 0}
-  OutputTransform: {fileID: 3068176167865136821}
-  isOutput: 0
-  Ountput_stop: 0
-  tickMaxOUtput: 0
-  OutputTick: 0
-  test_ck: 0
 --- !u!65 &4611769558836440013
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -375,6 +368,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LastLuna_Model_Station_Dryer
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 789bef70f6ea6a74682971ea80bd6e88, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 789bef70f6ea6a74682971ea80bd6e88, type: 3}
     m_RemovedGameObjects: []
@@ -455,7 +452,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 05eff764876274e4e928f9f6b81d6244, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -465,5 +462,10 @@ PrefabInstance:
 --- !u!4 &8578527262613655412 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 05eff764876274e4e928f9f6b81d6244, type: 3}
+  m_PrefabInstance: {fileID: 8108648001442556063}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8955088677233956302 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 05eff764876274e4e928f9f6b81d6244, type: 3}
   m_PrefabInstance: {fileID: 8108648001442556063}
   m_PrefabAsset: {fileID: 0}
