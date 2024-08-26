@@ -291,7 +291,7 @@ public class PlayerController : MonoBehaviour
                 IncreaseLocalPlayerItems();
                 for (int i = 0; i < InitalItems.Length; i++)
                 {
-                    PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 1 });
+                    PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
                 }
                 PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
             }

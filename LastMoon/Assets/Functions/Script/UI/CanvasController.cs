@@ -253,80 +253,183 @@ public class CanvasController : MonoBehaviourPunCallbacks
     }
     private void SelectedRecipeInfo(ScriptableObject_Station SelectedRecipe)
     {
+        Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
+        text.text = "(" + SelectedRecipe.Temperture.ToString() + ")";
+        text = Recipe_Info.Find("Recipe_Temperture").GetChild(1).GetComponent<Text>();
+        text.text = playerController.UISelectedPOIController.StationTemperture.ToString();
+
+
+        text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(0).GetComponent<Text>();
+        text.text = "(" + SelectedRecipe.ProgressTime.ToString() + ")";
+        text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(1).GetComponent<Text>();
+        text.text = (playerController.UISelectedPOIController.StationProgress / SelectedRecipe.ProgressTime * 100f).ToString("F0") + "%";
+
+        text = Recipe_Info.Find("Recipe_Coolent").GetChild(0).GetComponent<Text>();
+        text.text = "(" + SelectedRecipe.Coolent.ToString() + ")";
+        text = Recipe_Info.Find("Recipe_Coolent").GetChild(1).GetComponent<Text>();
+        if (playerController.UISelectedPOIController.Inv_Coolent != null)
+            text.text = playerController.UISelectedPOIController.Inv_Coolent.Count.ToString();
+        else
+            text.text = "0";
+
         Image image;
 
         switch (SelectedRecipe.InputCount)
         {
             case 1:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input002").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 2:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 3:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input003").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[2].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[2] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[2].Count.ToString();
+                else
+                    text.text = "0";
+
                 break;
         }
         switch (SelectedRecipe.OutputCount)
         {
             case 1:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output002").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 2:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 3:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output003").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[2].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[2] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[2].Count.ToString();
+                else
+                    text.text = "0";
+
                 break;
         }
-        Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
-        text.text = SelectedRecipe.Temperture.ToString();
-        text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(0).GetComponent<Text>();
-        text.text = SelectedRecipe.ProgressTime.ToString();
-        text = Recipe_Info.Find("Recipe_Coolent").GetChild(0).GetComponent<Text>();
-        text.text = SelectedRecipe.Coolent.ToString();
     }
 
     public void Station_Input()
@@ -367,20 +470,13 @@ public class CanvasController : MonoBehaviourPunCallbacks
         if(MatchRecipe001 && MatchRecipe002 && MatchRecipe003)
         {
             playerController.UISelectedPOIController.InputItem(ItemRequireCount);
-            switch (SelectedRecipe.InputCount)
+
+            for (int i = 0; i < SelectedRecipe.InputCount; i++)
             {
-                case 1:
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[0], Count = ItemRequireCount });
-                    break;
-                case 2:
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[0], Count = ItemRequireCount });
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[1], Count = ItemRequireCount });
-                    break;
-                case 3:
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[0], Count = ItemRequireCount });
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[1], Count = ItemRequireCount });
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[2], Count = ItemRequireCount });
-                    break;
+                playerController.PlayerInventory.RemoveItem(new Item { 
+                    ItemType = SelectedRecipe.Input[i], 
+                    Count = ItemRequireCount 
+                });
             }
         }
     }

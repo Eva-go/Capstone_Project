@@ -14,6 +14,8 @@ public class ScriptableObject_Item : ScriptableObject
 
     public GameObject ItemObject;
 
+    public int ItemType; // 0 - misc, 1 - construction, 2 - consumable
+
     public int Price;
     public int MaxCount;
 

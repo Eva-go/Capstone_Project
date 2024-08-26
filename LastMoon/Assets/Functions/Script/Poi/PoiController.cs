@@ -34,7 +34,7 @@ public class PoiController : MonoBehaviour
     public GameObject StationConstructionParts;
 
     public bool[] ObjectlessSlot = new bool[9];
-    
+
     public GameObject[] StationBases;
     public GameObject[] StationFixes;
     public GameObject[] StationAuxes;
@@ -71,6 +71,9 @@ public class PoiController : MonoBehaviour
     public float StationProgress;
 
     public AudioSource sfx_Station_Start, sfx_Station_Activation;
+    public ParticleSystem Particle_Activation;
+
+    private int CoolentDrain;
 
     private bool Activation;
     private bool Refilling;
@@ -131,10 +134,12 @@ public class PoiController : MonoBehaviour
         Activation = false;
         Heating = false;
         Refilling = true;
+        CoolentDrain = 0;
     }
 
     private void Update()
     {
+        ActivationEffect();
         tick_ck(1);
 
     }
@@ -232,7 +237,7 @@ public class PoiController : MonoBehaviour
                             {
                                 if (ActivationType_Heating)
                                 {
-                                    Inv_Fuel = AddItem_Slotless(Inv_Fuel, Debug_Fuel, 1);
+                                    Inv_Fuel = AddItem(Inv_Fuel, Debug_Fuel, 1);
                                     if (!ObjectlessSlot[6])
                                     {
                                         for (int i = 0; i < FuelSlot.Length; i++)
@@ -242,21 +247,22 @@ public class PoiController : MonoBehaviour
                                         }
                                     }
                                 }
-                            }
-                            if (SelectedRecipe.Coolent > 0)
-                            {
-                                Inv_Coolent = AddItem_Slotless(Inv_Coolent, Debug_Coolent, 1);
-                                if (Obj_Coolent != null)
+                                if (SelectedRecipe.Coolent > 0)
                                 {
-                                    for (int i = 0; i < Obj_Coolent.Length; i++)
+                                    Inv_Coolent = AddItem(Inv_Coolent, Debug_Coolent, 1);
+                                    if (Obj_Coolent != null)
                                     {
-                                        UpdateMatInventory(Obj_Coolent[i], Inv_Coolent);
+                                        for (int i = 0; i < Obj_Coolent.Length; i++)
+                                        {
+                                            UpdateMatInventory(Obj_Coolent[i], Inv_Coolent);
+                                        }
                                     }
                                 }
                             }
-                            if ((!ActivationType_Heating || Inv_Fuel.Count >= 50) && (SelectedRecipe.Coolent <= 0 || Inv_Coolent.Count >= 50)) Refilling = false;
+                            if ((!ActivationType_Heating || Inv_Fuel.Count >= 75) && 
+                                (SelectedRecipe.Coolent <= 0 || Inv_Coolent.Count >= 75))
+                                Refilling = false;
                         }
-                        ActivationEffect();
                     }
                 }
                 else
@@ -306,28 +312,7 @@ public class PoiController : MonoBehaviour
     }
      */
 
-    public Item AddItem(GameObject[] objects, Item item, ScriptableObject_Item Type, int Count)
-    {
-        if (item == null)
-        {
-            item = new Item { ItemType = Type, Count = Count };
-        }
-        else
-        {
-            item.OverrideItem(Type, Count);
-        }
-        if (objects != null)
-        {
-            for (int i = 0; i < objects.Length; i++)
-            {
-                UpdateMatInventory(objects[i], item);
-            }
-        }
-        return item;
-    }
-
-
-    public Item AddItem_Slotless(Item item, ScriptableObject_Item Type, int Count)
+    public Item AddItem(Item item, ScriptableObject_Item Type, int Count)
     {
         if (item == null)
         {
@@ -339,23 +324,9 @@ public class PoiController : MonoBehaviour
         }
         return item;
     }
-
-    public Item SubtractItem_Slotless(Item item, int Count)
+    public Item SubtractItem(Item item, int Count)
     {
         item.SubtractItem(Count);
-        return item;
-    }
-
-    public Item SubtractItem(GameObject[] objects, Item item, int Count)
-    {
-        item.SubtractItem(Count);
-        if (objects != null)
-        {
-            for (int i = 0; i < objects.Length; i++)
-            {
-                UpdateMatInventory(objects[i], item);
-            }
-        }
         return item;
     }
 
@@ -455,6 +426,21 @@ public class PoiController : MonoBehaviour
             Inv_Coolent.Count >= SelectedRecipe.Coolent
             );
 
+
+        if (CoolentDrain > 0)
+        {
+            CoolentDrain--;
+            Inv_Coolent.SubtractItem(1);
+            if (Inv_Coolent.Count <= SelectedRecipe.Coolent) Refilling = true;
+            if (!ObjectlessSlot[7])
+            {
+                for (int i = 0; i < Obj_Coolent.Length; i++)
+                {
+                    UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
+                }
+            }
+        }
+
         if (Activation)
         {
             StationProgress++;
@@ -462,47 +448,30 @@ public class PoiController : MonoBehaviour
             {
                 StationProgress = 0;
                 if (hp < 3) hp++;
-                if (SelectedRecipe.Coolent > 0)
+                if (SelectedRecipe.Coolent > 0) CoolentDrain = (int)SelectedRecipe.Coolent;
+                for (int i = 0; i < SelectedRecipe.InputCount; i++)
                 {
-                    Inv_Coolent.SubtractItem(1);
-                    if (Inv_Coolent.Count <= 0) Refilling = true;
-                    if (!ObjectlessSlot[7])
+                    Inv_Input[i] = SubtractItem(Inv_Input[i], 1);
+                    if (i < InputSlot.Length && InputSlot[i].Count != null)
                     {
-                        for (int i = 0; i < Obj_Coolent.Length; i++)
+                        for (int j = 0; j < InputSlot[i].Count.Length; j++)
                         {
-                            UpdateMatFill(Obj_Coolent[i], (float)Inv_Coolent.Count / (float)Inv_Coolent.ItemType.MaxCount);
+                            UpdateMatInventory(InputSlot[i].Count[j], Inv_Input[i]);
                         }
                     }
                 }
-                for (int i = 0; i < SelectedRecipe.InputCount; i++)
+                for (int i = 0; i < SelectedRecipe.OutputCount; i++)
                 {
-                    if (ObjectlessSlot[i])
+                    Inv_Output[i] = AddItem(Inv_Output[i], SelectedRecipe.Output[i], 1);
+                    if (i < OutputSlot.Length && OutputSlot[i].Count != null)
                     {
-                        Inv_Input[i] = SubtractItem_Slotless(Inv_Input[i], 1);
+                        for (int j = 0; j < OutputSlot[i].Count.Length; j++)
+                        {
+                            UpdateMatInventory(OutputSlot[i].Count[j], Inv_Output[i]);
+                        }
                     }
-                    else Inv_Input[i] = SubtractItem(InputSlot[i].Count, Inv_Input[i], 1);
                 }
-                switch (SelectedRecipe.OutputCount)
-                {
-                    case 1:
-                        if (ObjectlessSlot[3]) Inv_Output[0] = AddItem_Slotless(Inv_Output[0], SelectedRecipe.Output[0], 1);
-                        else Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output[0], 1);
-                        break;
-                    case 2:
-                        if (ObjectlessSlot[3]) Inv_Output[0] = AddItem_Slotless(Inv_Output[0], SelectedRecipe.Output[0], 1);
-                        else Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output[0], 1);
-                        if (ObjectlessSlot[4]) Inv_Output[1] = AddItem_Slotless(Inv_Output[1], SelectedRecipe.Output[1], 1);
-                        else Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output[1], 1);
-                        break;
-                    case 3:
-                        if (ObjectlessSlot[3]) Inv_Output[0] = AddItem_Slotless(Inv_Output[0], SelectedRecipe.Output[0], 1);
-                        else Inv_Output[0] = AddItem(OutputSlot[0].Count, Inv_Output[0], SelectedRecipe.Output[0], 1);
-                        if (ObjectlessSlot[4]) Inv_Output[1] = AddItem_Slotless(Inv_Output[1], SelectedRecipe.Output[1], 1);
-                        else Inv_Output[1] = AddItem(OutputSlot[1].Count, Inv_Output[1], SelectedRecipe.Output[1], 1);
-                        if (ObjectlessSlot[5]) Inv_Output[2] = AddItem_Slotless(Inv_Output[2], SelectedRecipe.Output[2], 1);
-                        else Inv_Output[2] = AddItem(OutputSlot[2].Count, Inv_Output[2], SelectedRecipe.Output[2], 1);
-                        break;
-                }
+
             }
         }
         
@@ -550,25 +519,30 @@ public class PoiController : MonoBehaviour
     }
     public void ActivationEffect()
     {
-        if (sfx_Station_Activation != null)
+        if (!Refilling && (Activation || Heating))
         {
-            if (Activation || Heating) 
+            if (animator != null) animator.SetBool("isActvie", true);
+            if (sfx_Station_Activation != null && !sfx_Station_Activation.isPlaying)
             {
-                animator.SetBool("isActvie", true);
-                if (!sfx_Station_Activation.isPlaying)
-                {
-                    if (sfx_Station_Start != null) sfx_Station_Start.Play();
-                    sfx_Station_Activation.Play();
-                }
+                if (sfx_Station_Start != null) sfx_Station_Start.Play();
+                sfx_Station_Activation.Play();
             }
-            else
+            if (Particle_Activation != null && !Particle_Activation.isPlaying)
             {
-                animator.SetBool("isActvie", false);
-                if (sfx_Station_Activation.isPlaying)
-                {
-                    if (sfx_Station_Start != null) sfx_Station_Start.Stop();
-                    sfx_Station_Activation.Stop();
-                }
+                Particle_Activation.Play();
+            }
+        }
+        else
+        {
+            if (animator != null) animator.SetBool("isActvie", false);
+            if (sfx_Station_Activation != null && sfx_Station_Activation.isPlaying)
+            {
+                if (sfx_Station_Start != null) sfx_Station_Start.Stop();
+                sfx_Station_Activation.Stop();
+            }
+            if (Particle_Activation != null && Particle_Activation.isPlaying)
+            {
+                Particle_Activation.Stop();
             }
         }
     }
@@ -576,23 +550,9 @@ public class PoiController : MonoBehaviour
 
     public void InputItem(int ItemRequireCount)
     {
-        switch (SelectedRecipe.InputCount)
+        for (int i = 0; i < SelectedRecipe.InputCount; i++) 
         {
-            case 1:
-                Inv_Input[0] = AddItem_Slotless(Inv_Input[0], SelectedRecipe.Input[0], ItemRequireCount);
-                break;
-            case 2:
-                Inv_Input[0] = AddItem_Slotless(Inv_Input[0], SelectedRecipe.Input[0], ItemRequireCount);
-                Inv_Input[1] = AddItem_Slotless(Inv_Input[1], SelectedRecipe.Input[1], ItemRequireCount);
-                break;
-            case 3:
-                Inv_Input[0] = AddItem_Slotless(Inv_Input[0], SelectedRecipe.Input[0], ItemRequireCount);
-                Inv_Input[1] = AddItem_Slotless(Inv_Input[1], SelectedRecipe.Input[1], ItemRequireCount);
-                Inv_Input[2] = AddItem_Slotless(Inv_Input[2], SelectedRecipe.Input[2], ItemRequireCount);
-                break;
-        }
-        for (int i = 0; i < SelectedRecipe.InputCount; i++)
-        {
+            Inv_Input[i] = AddItem(Inv_Input[i], SelectedRecipe.Input[i], ItemRequireCount);
             if (i < InputSlot.Length && InputSlot[i].Count != null)
             {
                 for (int j = 0; j < InputSlot[i].Count.Length; j++)
