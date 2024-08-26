@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd03877c80f8a154c8b70df7eea5170b, type: 3}
   m_Name: Smelter_Cast_Iron
   m_EditorClassIdentifier: 
-  Input001: {fileID: 11400000, guid: 85401f175740a5140933e305d4ab3a6b, type: 2}
-  Input002: {fileID: 0}
-  Input003: {fileID: 0}
+  Input:
+  - {fileID: 11400000, guid: 85401f175740a5140933e305d4ab3a6b, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   InputCount: 1
-  Output001: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
-  Output002: {fileID: 0}
-  Output003: {fileID: 0}
+  Output:
+  - {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   OutputCount: 1
   Temperture: 400
   Coolent: 0

@@ -29,32 +29,32 @@ public class ScriptableObject_Station_Editor : Editor
 
         EditorGUILayout.BeginVertical();
         texture = null;
-        if (EditorObject.Input001 != null)
+        if (EditorObject.Input[0] != null)
         {
-            texture = EditorObject.Input001.ItemSprite.texture;
+            texture = EditorObject.Input[0].ItemSprite.texture;
         }
         GUILayout.Box(texture, GUILayout.Width(150), GUILayout.Height(150));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Input001"), GUIContent.none, true, GUILayout.Width(150));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Input").GetArrayElementAtIndex(0), GUIContent.none, true, GUILayout.Width(150));
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical();
         texture = null;
-        if (EditorObject.Input002 != null)
+        if (EditorObject.Input[1] != null)
         {
-            texture = EditorObject.Input002.ItemSprite.texture;
+            texture = EditorObject.Input[1].ItemSprite.texture;
         }
         GUILayout.Box(texture, GUILayout.Width(150), GUILayout.Height(150));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Input002"), GUIContent.none, true, GUILayout.Width(150));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Input").GetArrayElementAtIndex(1), GUIContent.none, true, GUILayout.Width(150));
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical();
         texture = null;
-        if (EditorObject.Input003 != null)
+        if (EditorObject.Input[2] != null)
         {
-            texture = EditorObject.Input003.ItemSprite.texture;
+            texture = EditorObject.Input[2].ItemSprite.texture;
         }
         GUILayout.Box(texture, GUILayout.Width(150), GUILayout.Height(150));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Input003"), GUIContent.none, true, GUILayout.Width(150));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Input").GetArrayElementAtIndex(2), GUIContent.none, true, GUILayout.Width(150));
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndHorizontal();
@@ -71,32 +71,32 @@ public class ScriptableObject_Station_Editor : Editor
 
         EditorGUILayout.BeginVertical();
         texture = null;
-        if (EditorObject.Output001 != null)
+        if (EditorObject.Output[0] != null)
         {
-            texture = EditorObject.Output001.ItemSprite.texture;
+            texture = EditorObject.Output[0].ItemSprite.texture;
         }
         GUILayout.Box(texture, GUILayout.Width(150), GUILayout.Height(150));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Output001"), GUIContent.none, true, GUILayout.Width(150));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Output").GetArrayElementAtIndex(0), GUIContent.none, true, GUILayout.Width(150));
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical();
         texture = null;
-        if (EditorObject.Output002 != null)
+        if (EditorObject.Output[1] != null)
         {
-            texture = EditorObject.Output002.ItemSprite.texture;
+            texture = EditorObject.Output[1].ItemSprite.texture;
         }
         GUILayout.Box(texture, GUILayout.Width(150), GUILayout.Height(150));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Output002"), GUIContent.none, true, GUILayout.Width(150));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Output").GetArrayElementAtIndex(1), GUIContent.none, true, GUILayout.Width(150));
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical();
         texture = null;
-        if (EditorObject.Output003 != null)
+        if (EditorObject.Output[2] != null)
         {
-            texture = EditorObject.Output003.ItemSprite.texture;
+            texture = EditorObject.Output[2].ItemSprite.texture;
         }
         GUILayout.Box(texture, GUILayout.Width(150), GUILayout.Height(150));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Output003"), GUIContent.none, true, GUILayout.Width(150));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Output").GetArrayElementAtIndex(2), GUIContent.none, true, GUILayout.Width(150));
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndHorizontal();

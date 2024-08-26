@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd03877c80f8a154c8b70df7eea5170b, type: 3}
   m_Name: Smelter_Quartz_Glass
   m_EditorClassIdentifier: 
-  Input001: {fileID: 11400000, guid: 85f839ab0ba31ff4d9d3c031148573dc, type: 2}
-  Input002: {fileID: 0}
-  Input003: {fileID: 0}
+  Input:
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   InputCount: 1
-  Output001: {fileID: 11400000, guid: 00a932406cb906f4ca7788210e2fea3d, type: 2}
-  Output002: {fileID: 0}
-  Output003: {fileID: 0}
+  Output:
+  - {fileID: 11400000, guid: 00a932406cb906f4ca7788210e2fea3d, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   OutputCount: 1
   Temperture: 2000
   Coolent: 0
