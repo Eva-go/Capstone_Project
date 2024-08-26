@@ -770,7 +770,7 @@ public class PlayerController : MonoBehaviour
                         keydowns = false;
                         insideActive = false;
                         //myRigid.position = PlayerAPT.playerPoint;
-                        myRigid.MovePosition(PlayerAPT.playerPoint);
+                        myRigid.position=PlayerAPT.playerPoint;
                         InsideFillHandler.fillValue = 0;
                     }
                     break;
@@ -794,14 +794,14 @@ public class PlayerController : MonoBehaviour
                     if (lastDoorEntered != null && InsideFillHandler.fillValue >= 100)
                     {
                         //myRigid.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                        myRigid.MovePosition(doorPositions[lastDoorEntered]);
+                        myRigid.position=doorPositions[lastDoorEntered];
                         InsideFillHandler.fillValue = 0;
                         insideActive = false;
                     }
                     else if (lastDoorEntered == null && InsideFillHandler.fillValue >= 100)
                     {
                         //myRigid.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
-                        myRigid.MovePosition(directChildren[idx].position);
+                        myRigid.position = directChildren[idx].position;
                         InsideFillHandler.fillValue = 0;
                         insideActive = false;
                     }
