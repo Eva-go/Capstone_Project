@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
     public GameObject cam;
     public GameObject RespawnCam;
     public bool isRespawn;
-    //public GameObject RespawnCamera;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -110,7 +109,7 @@ public class PlayerController : MonoBehaviour
     public float rotationLerpSpeed = 8f;
 
     private Vector3 networkPosition;
-    private Quaternion networkRotation;
+    //private Quaternion networkRotation;
 
     public bool ShopActive;
 
@@ -123,14 +122,9 @@ public class PlayerController : MonoBehaviour
     public Transform AptTransform;
 
     //아파트 진입변수
-    private bool isInside;
-    private bool isOutside;
     public int inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
-    private bool oldPosState = false; // 상태를 추적하기 위한 변수
-    private bool insideState = false; // 상태를 추적하기 위한 변수
-    Transform parentTransform;
 
     private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
@@ -308,43 +302,12 @@ public class PlayerController : MonoBehaviour
             {
                 DeathPPSVolume.SetActive(false);
             }
-            //if (insideActive && InsideFillHandler.fillValue >= 100)
-            //{
-            //    Debug.Log("인사이드" + inside);
-            //    InsideFillHandler.fillValue = 0;
-            //    InsideUpdate();
-            //    keydowns = false;
-            //    myRigid.isKinematic = false;
-            //}
             if (GameValue.exit)
             {
                 Destroy(gameObject);
             }
         }
     }
-
-    /*public void InsideUpdate()
-    {
-        switch(inside)
-        {
-            case 0:
-                gameObject.transform.position = parentTransform.position;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 1:
-                gameObject.transform.position = PlayerAPT.playerPoint;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 2:
-                if (doorPositions.ContainsKey(lastDoorEntered))
-                {
-                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                }
-                break;
-
-        }
-    }*/
 
     public int Sell()
     {
@@ -583,7 +546,7 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("RPC_UpdatePosition", RpcTarget.AllBuffered, transform.position);
             }
         }
     }
@@ -670,7 +633,7 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("RPC_UpdatePosition", RpcTarget.AllBuffered, transform.position);
             }
         }
     }
@@ -804,61 +767,44 @@ public class PlayerController : MonoBehaviour
 
                     if (InsideFillHandler.fillValue >= 100)
                     {
-                        inside = 1;
                         keydowns = false;
                         insideActive = false;
-                        //InsideUpdate();
-                        gameObject.transform.position = PlayerAPT.playerPoint;
-                        Debug.Log("pos2" + gameObject.transform.position);
-                        gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                        myRigid.isKinematic = false;
-                        isInside = true;
+                        //myRigid.position = PlayerAPT.playerPoint;
+                        myRigid.MovePosition(PlayerAPT.playerPoint);
                         InsideFillHandler.fillValue = 0;
                     }
-                    if (isInside)
-                    {
-                        InsideFillHandler.fillValue = 0;
-                        if (gameObject.transform.position != PlayerAPT.playerPoint)
-                        {
-                            gameObject.transform.position = PlayerAPT.playerPoint;
-                            Debug.Log("pos1" + gameObject.transform.position);
-                            isInside = false;
-                        }
-                    }
-
                     break;
 
                 case "ReturnDoor":
-                        Transform parentTransform = GameObject.Find("SpawnPoint").transform;
-                        List<Transform> directChildren = new List<Transform>();
+                    Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+                    List<Transform> directChildren = new List<Transform>();
 
-                        for (int i = 0; i < parentTransform.childCount; i++)
-                        {
-                            Transform child = parentTransform.GetChild(i);
-                            directChildren.Add(child);
-                        }
+                    for (int i = 0; i < parentTransform.childCount; i++)
+                    {
+                        Transform child = parentTransform.GetChild(i);
+                        directChildren.Add(child);
+                    }
 
-                        if (directChildren.Count > 0)
-                        {
-                            idx = UnityEngine.Random.Range(0, directChildren.Count);
-                        }
-                        isOutside = false;
-                        myRigid.isKinematic = true;
-                        //insideActive = true;
-                        
-                            if (lastDoorEntered != null)
-                            {
-                                gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                                gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                            }
-                            else
-                            {
-                                gameObject.transform.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
-                                gameObject.transform.rotation = directChildren[idx].rotation; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                            }
-                            myRigid.isKinematic = false;
-                            isOutside = true;
-                            //InsideFillHandler.fillValue = 0;
+                    if (directChildren.Count > 0)
+                    {
+                        idx = UnityEngine.Random.Range(0, directChildren.Count);
+                    }
+                    insideActive = true;
+
+                    if (lastDoorEntered != null && InsideFillHandler.fillValue >= 100)
+                    {
+                        //myRigid.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                        myRigid.MovePosition(doorPositions[lastDoorEntered]);
+                        InsideFillHandler.fillValue = 0;
+                        insideActive = false;
+                    }
+                    else if (lastDoorEntered == null && InsideFillHandler.fillValue >= 100)
+                    {
+                        //myRigid.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
+                        myRigid.MovePosition(directChildren[idx].position);
+                        InsideFillHandler.fillValue = 0;
+                        insideActive = false;
+                    }
                     break;
 
                 case "RPoi":
@@ -1084,10 +1030,10 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    private void RPC_UpdatePositionAndRotation(Vector3 position, Quaternion rotation)
+    private void RPC_UpdatePosition(Vector3 position)
     {
         networkPosition = position;
-        networkRotation = rotation;
+        //networkRotation = rotation;
     }
 
     [PunRPC]
@@ -1232,7 +1178,7 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < nodeItiems.Length; i++)
             {
                 nodeItiems[i] += 10;
-              
+
             }
             OnInventoryChanged?.Invoke();
         }
