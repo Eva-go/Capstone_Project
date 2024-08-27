@@ -244,18 +244,22 @@ public class PlayerController : MonoBehaviour
         {
             if (live)
             {
-                Move();
-                if (!isRunning)
+                if (Cursor.lockState != CursorLockMode.Confined)
                 {
-                    Crouch();
+                    Move();
+                    if (!isRunning)
+                    {
+                        Crouch();
+                    }
+                    if (!isCrouching)
+                    {
+                        Run();
+                    }
+                    CameraRotation();
+                    CharacterRotation();
+                    Jump();
                 }
-                if (!isCrouching)
-                {
-                    Run();
-                }
-                CameraRotation();
-                CharacterRotation();
-                Jump();
+
                 Interaction();
                 Attack();
                 Switching();
@@ -349,6 +353,23 @@ public class PlayerController : MonoBehaviour
     public int Sell()
     {
         return PlayerInventory.SellAllItem();
+    }
+    public int Sell_Item(ScriptableObject_Item itemType, int SellCount)
+    {
+        int price = itemType.Price;
+
+        if (PlayerInventory.RemoveItem(new Item { Count = SellCount, ItemType = itemType })) price *= SellCount;
+        else price *= PlayerInventory.ClearItem(itemType);
+
+        return price;
+    }
+    public int Sell_ItemStack(ScriptableObject_Item itemType)
+    {
+        int price = itemType.Price;
+
+        price *= PlayerInventory.ClearItem(itemType);
+
+        return price;
     }
 
     public void Items()
@@ -1016,7 +1037,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (poiController.ConstructionProgress >= 100 && poiController.hp > 0)
                     {
-                        poiController.hp -= 1;
+                        if (poiController.hp - 10 <= 0)
+                        {
+                            ExtractStation(poiController, 0);
+                        }
+                        poiController.hp -= 10;
                         poiController.animator.SetTrigger("isHit");
                         /*
                         if (poiController.hp < 0)
@@ -1057,6 +1082,114 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public void ExtractStation(PoiController Station, int ExtractType)
+    {
+        switch (ExtractType) // 0 - all, 1 - inventory, 2 - output, 3 - input 
+        {
+            case 0:
+                if (Station.Inv_Fuel != null)
+                {
+                    PlayerInventory.AddItem(new Item
+                    {
+                        ItemType = Station.Inv_Fuel.ItemType,
+                        Count = Station.Inv_Fuel.Count
+                    });
+                    Station.EmptyItem(0, 2);
+                }
+                if (Station.Inv_Coolent != null)
+                {
+                    PlayerInventory.AddItem(new Item
+                    {
+                        ItemType = Station.Inv_Coolent.ItemType,
+                        Count = Station.Inv_Coolent.Count
+                    });
+                    Station.EmptyItem(0, 3);
+                }
+                for (int i = 0; i < Station.SelectedRecipe.InputCount; i++)
+                {
+                    if (Station.Inv_Input[i] != null)
+                    {
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Input[i].ItemType,
+                            Count = Station.Inv_Input[i].Count
+                        });
+                        Station.EmptyItem(i, 0);
+                    }
+                }
+                for (int i = 0; i < Station.Inv_Output.Length; i++)
+                {
+                    if (Station.Inv_Output[i] != null)
+                    {
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Output[i].ItemType,
+                            Count = Station.Inv_Output[i].Count
+                        });
+                        Station.EmptyItem(i, 1);
+                    }
+                }
+                break;
+            case 1:
+                for (int i = 0; i < Station.SelectedRecipe.InputCount; i++)
+                {
+                    if (Station.Inv_Input[i] != null)
+                    {
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Input[i].ItemType,
+                            Count = Station.Inv_Input[i].Count
+                        });
+                        Station.EmptyItem(i, 0);
+                    }
+                }
+                for (int i = 0; i < Station.Inv_Output.Length; i++)
+                {
+                    if (Station.Inv_Output[i] != null)
+                    {
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Output[i].ItemType,
+                            Count = Station.Inv_Output[i].Count
+                        });
+                        Station.EmptyItem(i, 1);
+                    }
+                }
+                break;
+            case 2:
+                for (int i = 0; i < Station.Inv_Output.Length; i++)
+                {
+                    if (Station.Inv_Output[i] != null)
+                    {
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Output[i].ItemType,
+                            Count = Station.Inv_Output[i].Count
+                        });
+                        Station.EmptyItem(i, 1);
+                    }
+                }
+                break;
+            case 3:
+                for (int i = 0; i < Station.SelectedRecipe.InputCount; i++)
+                {
+                    if (Station.Inv_Input[i] != null)
+                    {
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Input[i].ItemType,
+                            Count = Station.Inv_Input[i].Count
+                        });
+                        Station.EmptyItem(i, 0);
+                    }
+                }
+                break;
+        }
+
+
+    }
+
 
     private void Attack()
     {

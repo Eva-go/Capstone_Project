@@ -34,6 +34,8 @@ public class PoiController : MonoBehaviour
     public GameObject StationConstructionParts;
 
     public bool[] ObjectlessSlot = new bool[9];
+    public int[] InputSlotType = new int[3];
+    public int[] OutputSlotType = new int[3];
 
     public GameObject[] StationBases;
     public GameObject[] StationFixes;
@@ -94,7 +96,7 @@ public class PoiController : MonoBehaviour
     private int slotNumber; // 현재 슬롯 번호
 
     //파괴 변수
-    public int hp = 3;
+    public int hp = 30;
 
 
     //출력 변수
@@ -123,7 +125,7 @@ public class PoiController : MonoBehaviour
             itemData.nodeItemCount[i] = 0;
             itemData.mixItemCount[i] = 0;
         }
-        hp = 3;
+        hp = 30;
         StationProgress = 0;
         Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
@@ -341,6 +343,32 @@ public class PoiController : MonoBehaviour
             UpdateObjMat(StationCons[i].Count, StationConMat[i]);
         }
     }
+    public void UpdateMatInventories()
+    {
+        for (int i = 0; i < InputSlot.Length; i++)
+        {
+            if (InputSlot[i].Count != null)
+            {
+                for (int j = 0; j < InputSlot[i].Count.Length; j++)
+                {
+                    if (InputSlotType[i] == 1) UpdateMatInventory_Liquid(InputSlot[i].Count[j], Inv_Input[i]);
+                    else if (InputSlotType[i] == 2) UpdateMatInventory_Solid(InputSlot[i].Count[j], Inv_Input[i]);
+                }
+            }
+        }
+        for (int i = 0; i < OutputSlot.Length; i++)
+        {
+            if (OutputSlot[i].Count != null)
+            {
+                for (int j = 0; j < OutputSlot[i].Count.Length; j++)
+                {
+                    if (InputSlotType[i] == 1) UpdateMatInventory_Liquid(OutputSlot[i].Count[j], Inv_Output[i]);
+                    else if (InputSlotType[i] == 2) UpdateMatInventory_Solid(OutputSlot[i].Count[j], Inv_Output[i]);
+                }
+            }
+        }
+    }
+
     public void UpdateObjMat(GameObject[] objects, ScriptableObject_Item item)
     {
         for (int i = 0; i < objects.Length; i++)
@@ -348,6 +376,30 @@ public class PoiController : MonoBehaviour
             objects[i].GetComponent<MeshRenderer>().material = item.ItemLUM;
         }
     }
+
+    public void UpdateMatInventory_Solid(GameObject MatObj, Item InvItem)
+    {
+        float InvAmount;
+        InvAmount = (float)InvItem.Count / (float)InvItem.ItemType.MaxCount;
+
+        MatObj.GetComponent<MeshRenderer>().material = InvItem.ItemType.ItemLUM;
+        MatObj.GetComponent<Transform>().localScale = new Vector3(InvAmount, InvAmount, InvAmount);
+    }
+    public void UpdateMatInventory_Liquid(GameObject MatObj, Item InvItem)
+    {
+        float InvAmount;
+        Texture InvLU;
+
+        InvAmount = (float)InvItem.Count / (float)InvItem.ItemType.MaxCount;
+        InvLU = InvItem.ItemType.ItemLU;
+
+        propertyBlock = new MaterialPropertyBlock();
+        propertyBlock.SetFloat("_Fill", InvAmount);
+        propertyBlock.SetTexture("_Look_Up_Texture", InvLU);
+        MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+    }
+
+
     public void UpdateMatInventory(GameObject MatObj, Item InvItem)
     {
         float InvAmount;
@@ -447,7 +499,7 @@ public class PoiController : MonoBehaviour
             if (StationProgress >= SelectedRecipe.ProgressTime)
             {
                 StationProgress = 0;
-                if (hp < 3) hp++;
+                if (hp < 30) hp++;
                 if (SelectedRecipe.Coolent > 0) CoolentDrain = (int)SelectedRecipe.Coolent;
                 for (int i = 0; i < SelectedRecipe.InputCount; i++)
                 {
@@ -548,7 +600,9 @@ public class PoiController : MonoBehaviour
     }
 
 
-    public void InputItem(int ItemRequireCount)
+
+
+    public void InputItems(int ItemRequireCount)
     {
         for (int i = 0; i < SelectedRecipe.InputCount; i++) 
         {
@@ -562,17 +616,66 @@ public class PoiController : MonoBehaviour
             }
         }
     }
-
-    public void ExtractItem(int Inv_Slot)
+    public void InputItem(int Inv_Slot, int ItemRequireCount)
     {
-        Inv_Output[Inv_Slot].ClearItem();
-        if (Inv_Slot < OutputSlot.Length && OutputSlot[Inv_Slot].Count != null)
+        Inv_Input[Inv_Slot] = AddItem(Inv_Input[Inv_Slot], SelectedRecipe.Input[Inv_Slot], ItemRequireCount);
+        if (Inv_Slot < InputSlot.Length && InputSlot[Inv_Slot].Count != null)
         {
-            for (int i = 0; i < OutputSlot[Inv_Slot].Count.Length; i++)
+            for (int j = 0; j < InputSlot[Inv_Slot].Count.Length; j++)
             {
-                UpdateMatInventory(OutputSlot[Inv_Slot].Count[i], Inv_Output[Inv_Slot]);
+                UpdateMatInventory(InputSlot[Inv_Slot].Count[j], Inv_Input[Inv_Slot]);
             }
         }
+    }
+
+    public void EmptyItem(int Inv_Slot, int ExtractType)
+    {
+        switch (ExtractType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
+        {
+            case 0:
+                Inv_Input[Inv_Slot].ClearItem();
+                if (Inv_Slot < InputSlot.Length && InputSlot[Inv_Slot].Count != null)
+                {
+                    for (int i = 0; i < InputSlot[Inv_Slot].Count.Length; i++)
+                    {
+                        UpdateMatInventory(InputSlot[Inv_Slot].Count[i], Inv_Input[Inv_Slot]);
+                    }
+                }
+                break;
+            case 1:
+                Inv_Output[Inv_Slot].ClearItem();
+                if (Inv_Slot < OutputSlot.Length && OutputSlot[Inv_Slot].Count != null)
+                {
+                    for (int i = 0; i < OutputSlot[Inv_Slot].Count.Length; i++)
+                    {
+                        UpdateMatInventory(OutputSlot[Inv_Slot].Count[i], Inv_Output[Inv_Slot]);
+                    }
+                }
+                break;
+            case 2:
+                Inv_Fuel.ClearItem();
+                if (FuelSlot != null)
+                {
+                    for (int i = 0; i < FuelSlot.Length; i++)
+                    {
+                        UpdateMatInventory(FuelSlot[i], Inv_Fuel);
+                        if (FuelWick[i] != null) UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+                    }
+                }
+                break;
+            case 3:
+                Inv_Coolent.ClearItem();
+                if (Inv_Coolent != null)
+                {
+                    for (int i = 0; i < Obj_Coolent.Length; i++)
+                    {
+                        UpdateMatInventory(Obj_Coolent[i], Inv_Coolent);
+                    }
+                }
+                break;
+        }
+
+
     }
 
     [PunRPC]
