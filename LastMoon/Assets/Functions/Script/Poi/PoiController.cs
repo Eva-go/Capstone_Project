@@ -627,7 +627,6 @@ public class PoiController : MonoBehaviour
             }
         }
     }
-
     public void EmptyItem(int Inv_Slot, int ExtractType)
     {
         switch (ExtractType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
@@ -674,9 +673,105 @@ public class PoiController : MonoBehaviour
                 }
                 break;
         }
-
-
     }
+
+
+    public void Item_Input(int Inv_Slot, int SlotType, ScriptableObject_Item ItemType, int Count)
+    {
+        switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
+        {
+            case 0:
+                Inv_Input[Inv_Slot] = AddItem(Inv_Input[Inv_Slot], ItemType, Count);
+                if (Inv_Slot < InputSlot.Length && InputSlot[Inv_Slot].Count != null)
+                {
+                    for (int j = 0; j < InputSlot[Inv_Slot].Count.Length; j++)
+                    {
+                        UpdateMatInventory(InputSlot[Inv_Slot].Count[j], Inv_Input[Inv_Slot]);
+                    }
+                }
+                break;
+            case 1:
+                Inv_Output[Inv_Slot] = AddItem(Inv_Output[Inv_Slot], ItemType, Count);
+                if (Inv_Slot < OutputSlot.Length && OutputSlot[Inv_Slot].Count != null)
+                {
+                    for (int j = 0; j < OutputSlot[Inv_Slot].Count.Length; j++)
+                    {
+                        UpdateMatInventory(OutputSlot[Inv_Slot].Count[j], Inv_Output[Inv_Slot]);
+                    }
+                }
+                break;
+            case 2:
+                Inv_Fuel = AddItem(Inv_Fuel, ItemType, Count);
+                if (FuelSlot != null)
+                {
+                    for (int i = 0; i < FuelSlot.Length; i++)
+                    {
+                        UpdateMatInventory(FuelSlot[i], Inv_Fuel);
+                        if (FuelWick[i] != null) UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+                    }
+                }
+                break;
+            case 3:
+                Inv_Coolent = AddItem(Inv_Coolent, ItemType, Count);
+                if (Inv_Coolent != null)
+                {
+                    for (int i = 0; i < Obj_Coolent.Length; i++)
+                    {
+                        UpdateMatInventory(Obj_Coolent[i], Inv_Coolent);
+                    }
+                }
+                break;
+        }
+    }
+
+    public void Item_Extract(int Inv_Slot, int SlotType, int Count)
+    {
+        switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
+        {
+            case 0:
+                Inv_Input[Inv_Slot] = SubtractItem(Inv_Input[Inv_Slot], Count);
+                if (Inv_Slot < InputSlot.Length && InputSlot[Inv_Slot].Count != null)
+                {
+                    for (int j = 0; j < InputSlot[Inv_Slot].Count.Length; j++)
+                    {
+                        UpdateMatInventory(InputSlot[Inv_Slot].Count[j], Inv_Input[Inv_Slot]);
+                    }
+                }
+                break;
+            case 1:
+                Inv_Output[Inv_Slot] = SubtractItem(Inv_Output[Inv_Slot], Count);
+                if (Inv_Slot < OutputSlot.Length && OutputSlot[Inv_Slot].Count != null)
+                {
+                    for (int j = 0; j < OutputSlot[Inv_Slot].Count.Length; j++)
+                    {
+                        UpdateMatInventory(OutputSlot[Inv_Slot].Count[j], Inv_Output[Inv_Slot]);
+                    }
+                }
+                break;
+            case 2:
+                Inv_Fuel = SubtractItem(Inv_Fuel, Count);
+                if (FuelSlot != null)
+                {
+                    for (int i = 0; i < FuelSlot.Length; i++)
+                    {
+                        UpdateMatInventory(FuelSlot[i], Inv_Fuel);
+                        if (FuelWick[i] != null) UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+                    }
+                }
+                break;
+            case 3:
+                Inv_Coolent = SubtractItem(Inv_Coolent, Count);
+                if (Inv_Coolent != null)
+                {
+                    for (int i = 0; i < Obj_Coolent.Length; i++)
+                    {
+                        UpdateMatInventory(Obj_Coolent[i], Inv_Coolent);
+                    }
+                }
+                break;
+        }
+    }
+
 
     [PunRPC]
     public void ReceiveData()

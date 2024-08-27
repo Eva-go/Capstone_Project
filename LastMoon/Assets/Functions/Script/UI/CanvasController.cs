@@ -269,7 +269,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
         text = Recipe_Info.Find("Recipe_Temperture").GetChild(1).GetComponent<Text>();
         text.text = playerController.UISelectedPOIController.StationTemperture.ToString();
 
-
         text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(0).GetComponent<Text>();
         text.text = "(" + SelectedRecipe.ProgressTime.ToString() + ")";
         text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(1).GetComponent<Text>();
@@ -451,7 +450,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
         int[] ItemRequireCounts = new int[3] { 1, 1, 1 };
         int[] ItemInputCounts = new int[3] { 1, 1, 1 };
-        bool[] MatchRecipe = new bool[3] { false, false, false };
 
         ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
 
@@ -478,7 +476,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
             }))
             {
                 ItemInputCounts[i] = ItemRequireCounts[i];
-                MatchRecipe[i] = true;
             }
             else
                 ItemInputCounts[i] = playerController.PlayerInventory.ClearItem(SelectedRecipe.Input[i]);
@@ -490,11 +487,26 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         playerController.ExtractStation(playerController.UISelectedPOIController, 2);
     }
-
-    private void SelectingRecipe()
+    /*
+    public void Station_Input_Item(int SlotNum)
     {
+        ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
 
+        int ItemRequireCount = 1;
+        if (Input.GetKey(KeyCode.LeftShift)) ItemRequireCount *= 10;
+        if (Input.GetKey(KeyCode.LeftControl)) ItemRequireCount *= 5;
+
+        playerController.Station_Input_Item(SlotNum, 0, SelectedRecipe.Input[SlotNum], ItemRequireCount);
     }
+     */
+    public void Station_Input_Coolent(ScriptableObject_Item ItemType)
+    {
+        int ItemRequireCount = 1;
+        if (Input.GetKey(KeyCode.LeftShift)) ItemRequireCount *= 10;
+        if (Input.GetKey(KeyCode.LeftControl)) ItemRequireCount *= 5;
+        playerController.Station_Input_Item(0, 3, ItemType, ItemRequireCount);
+    }
+
 
     public void Station_Manageing()
     {

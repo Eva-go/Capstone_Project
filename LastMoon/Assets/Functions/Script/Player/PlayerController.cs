@@ -1083,6 +1083,182 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Station_Input_Item(int SlotNum, int SlotType, ScriptableObject_Item ItemType, int Count)
+    {
+        int ItemRequireCount;
+        int ItemInputCount;
+
+        switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
+        {
+            case 0:
+                if (UISelectedPOIController.Inv_Input[SlotNum] != null
+                    && UISelectedPOIController.Inv_Input[SlotNum].ItemType == ItemType)
+                {
+                    ItemRequireCount =
+                        UISelectedPOIController.
+                        Inv_Input[SlotNum].ItemType.MaxCount -
+                        UISelectedPOIController.
+                        Inv_Input[SlotNum].Count;
+                }
+                else
+                {
+                    ItemRequireCount = ItemType.MaxCount;
+                }
+                break;
+            case 1:
+                if (UISelectedPOIController.Inv_Output[SlotNum] != null
+                    && UISelectedPOIController.Inv_Output[SlotNum].ItemType == ItemType)
+                {
+                    ItemRequireCount =
+                        UISelectedPOIController.
+                        Inv_Output[SlotNum].ItemType.MaxCount -
+                        UISelectedPOIController.
+                        Inv_Output[SlotNum].Count;
+                }
+                else
+                {
+                    ItemRequireCount = ItemType.MaxCount;
+                }
+                break;
+            case 2:
+                if (UISelectedPOIController.Inv_Fuel != null
+                    && UISelectedPOIController.Inv_Fuel.ItemType == ItemType)
+                {
+                    ItemRequireCount =
+                        UISelectedPOIController.
+                        Inv_Fuel.ItemType.MaxCount -
+                        UISelectedPOIController.
+                        Inv_Fuel.Count;
+                }
+                else
+                {
+                    ItemRequireCount = ItemType.MaxCount;
+                }
+                break;
+            case 3:
+                if (UISelectedPOIController.Inv_Coolent != null
+                    && UISelectedPOIController.Inv_Coolent.ItemType == ItemType)
+                {
+                    ItemRequireCount =
+                        UISelectedPOIController.
+                        Inv_Coolent.ItemType.MaxCount -
+                        UISelectedPOIController.
+                        Inv_Coolent.Count;
+                }
+                else
+                {
+                    ItemRequireCount = ItemType.MaxCount;
+                }
+                break;
+            default:
+                ItemRequireCount = ItemType.MaxCount;
+                break;
+        }
+
+        if (!Input.GetKey(KeyCode.LeftAlt) && ItemRequireCount > Count) ItemRequireCount = Count;
+        if (PlayerInventory.RemoveItem(new Item
+        {
+            ItemType = ItemType,
+            Count = ItemRequireCount
+        }))
+        {
+            ItemInputCount = ItemRequireCount;
+        }
+        else
+            ItemInputCount = PlayerInventory.ClearItem(ItemType);
+        UISelectedPOIController.Item_Input(SlotNum, SlotType, ItemType, ItemInputCount);
+    }
+
+    public void Station_Extract_Item(int SlotNum, int SlotType, ScriptableObject_Item ItemType, int Count)
+    {
+        int ExtractCount;
+
+        switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
+        {
+            case 0:
+                if (UISelectedPOIController.Inv_Input[SlotNum] != null
+                    && UISelectedPOIController.Inv_Input[SlotNum].ItemType == ItemType)
+                {
+                    ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Input[SlotNum].Count - Count;
+                    if (Input.GetKey(KeyCode.LeftAlt) || ExtractCount < 0) 
+                        ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Input[SlotNum].Count;
+                }
+                else
+                {
+                    ExtractCount = 0;
+                }
+                break;
+            case 1:
+                if (UISelectedPOIController.Inv_Output[SlotNum] != null
+                    && UISelectedPOIController.Inv_Output[SlotNum].ItemType == ItemType)
+                {
+                    ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Output[SlotNum].Count - Count;
+                    if (Input.GetKey(KeyCode.LeftAlt) || ExtractCount < 0)
+                        ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Output[SlotNum].Count;
+                }
+                else
+                {
+                    ExtractCount = 0;
+                }
+                break;
+            case 2:
+                if (UISelectedPOIController.Inv_Fuel != null
+                    && UISelectedPOIController.Inv_Fuel.ItemType == ItemType)
+                {
+                    ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Fuel.Count - Count;
+                    if (Input.GetKey(KeyCode.LeftAlt) || ExtractCount < 0)
+                        ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Fuel.Count - Count;
+                }
+                else
+                {
+                    ExtractCount = 0;
+                }
+                break;
+            case 3:
+                if (UISelectedPOIController.Inv_Coolent != null
+                    && UISelectedPOIController.Inv_Coolent.ItemType == ItemType)
+                {
+                    ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Coolent.Count - Count;
+                    if (Input.GetKey(KeyCode.LeftAlt) || ExtractCount < 0)
+                        ExtractCount =
+                        UISelectedPOIController.
+                        Inv_Coolent.Count - Count;
+                }
+                else
+                {
+                    ExtractCount = 0;
+                }
+                break;
+            default:
+                ExtractCount = 0;
+                break;
+        }
+
+        if (ExtractCount > 0)
+        {
+            PlayerInventory.AddItem(new Item
+            {
+                ItemType = ItemType,
+                Count = ExtractCount
+            });
+            UISelectedPOIController.Item_Extract(SlotNum, SlotType, ExtractCount);
+        }
+    }
+
     public void ExtractStation(PoiController Station, int ExtractType)
     {
         switch (ExtractType) // 0 - all, 1 - inventory, 2 - output, 3 - input 
@@ -1186,8 +1362,6 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
         }
-
-
     }
 
 
