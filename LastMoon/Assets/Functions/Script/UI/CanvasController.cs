@@ -272,6 +272,10 @@ public class CanvasController : MonoBehaviourPunCallbacks
                     sellbutton.RegisterPlayerController(playerController);
                     sellbutton.ItemType = item.ItemType;
 
+                    Button_Use Usebutton = itemRectTransform.Find("Button_Use").GetComponent<Button_Use>();
+                    Usebutton.RegisterPlayerController(playerController);
+                    Usebutton.ItemType = item.ItemType;
+
                     y--;
                 }
             }
