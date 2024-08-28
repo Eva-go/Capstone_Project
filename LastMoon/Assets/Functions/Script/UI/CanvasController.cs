@@ -206,6 +206,10 @@ public class CanvasController : MonoBehaviourPunCallbacks
         int x = 0;
         int y = 6;
         float itemSlotSize = 150f;
+        int x_Construction = 0;
+        int y_Construction = 6;
+        int x_Consumable = 0;
+        int y_Consumable = 6;
 
         if (UIinventory != null)
         {
@@ -235,7 +239,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
                     itemRectTransform = Instantiate(ItemSlot_Construction, ItemScroll_Construction).GetComponent<RectTransform>();
                     itemRectTransform.gameObject.SetActive(true);
 
-                    itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+                    itemRectTransform.anchoredPosition = new Vector2(x_Construction * itemSlotSize, y_Construction * itemSlotSize);
 
                     image = itemRectTransform.Find("Icon").GetComponent<Image>();
                     image.sprite = item.ItemType.ItemSprite;
@@ -250,14 +254,14 @@ public class CanvasController : MonoBehaviourPunCallbacks
                     sellbutton.RegisterPlayerController(playerController);
                     sellbutton.ItemType = item.ItemType;
 
-                    y--;
+                    y_Construction--;
                 }
                 else if (item.ItemType.ItemType == 2)
                 {
                     itemRectTransform = Instantiate(ItemSlot_Consumable, ItemScroll_Consumable).GetComponent<RectTransform>();
                     itemRectTransform.gameObject.SetActive(true);
 
-                    itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+                    itemRectTransform.anchoredPosition = new Vector2(x_Consumable * itemSlotSize, y_Consumable * itemSlotSize);
 
                     image = itemRectTransform.Find("Icon").GetComponent<Image>();
                     image.sprite = item.ItemType.ItemSprite;
@@ -276,7 +280,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
                     Usebutton.RegisterPlayerController(playerController);
                     Usebutton.ItemType = item.ItemType;
 
-                    y--;
+                    y_Consumable--;
                 }
             }
         }
