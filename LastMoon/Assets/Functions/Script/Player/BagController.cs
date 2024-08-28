@@ -59,16 +59,6 @@ public class BagController : MonoBehaviourPunCallbacks
                     playerController.PlayerInventory.AddItem(item);
                     playerController.TakeDamage(5f);
                 }
-                /*
-                for (int i = 0; i < nodeItems.Length; i++)
-                {
-                    playerController.nodeItiems[i] += nodeItems[i];
-                }
-                for (int i = 0; i < mixItems.Length; i++)
-                {
-                    playerController.mixItiems[i] += mixItems[i];
-                }
-                 */
 
                 // 인벤토리 변경 이벤트 호출
                 playerController.InvokeInventoryChanged();

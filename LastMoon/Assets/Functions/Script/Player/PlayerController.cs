@@ -425,11 +425,6 @@ public class PlayerController : MonoBehaviour
     {
         if (pv.IsMine)
         {
-            // 아이템 초기화
-            //for (int i = 0; i < nodeItiems.Length; i++)
-            //{
-            //    nodeItiems[i] = 0;
-            //}
             if (!Bagdrop)
             {
                 Bagdrop = true;
@@ -438,31 +433,15 @@ public class PlayerController : MonoBehaviour
                 BagController bagScript = bag.GetComponent<BagController>();
                 if (bagScript != null)
                 {
-
                     // 아이템 데이터 전송
                     foreach (Item item in PlayerInventory.GetItems())
                     {
-                        //bagScript.BagInventory.AddItem(item);
-
                         bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.ItemType.ItemName, item.Count);
                     }
                     PlayerInventory.ClearInventory();
                 }
                 isRespawn = true;
             }
-            /*
-                // Bag 생성
-                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
-                BagController bagScript = bag.GetComponent<BagController>();
-                if (bagScript != null)
-                {
-                    // 아이템 데이터 전송
-                    for (int i = 0; i < nodeItiems.Length; i++)
-                    {
-                        bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
-                    }
-                }
-             */
             InvokeInventoryChanged();
             Hp = 0;
             //RespawnAcive = true;
