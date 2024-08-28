@@ -442,9 +442,9 @@ public class PlayerController : MonoBehaviour
                     // 아이템 데이터 전송
                     foreach (Item item in PlayerInventory.GetItems())
                     {
-                        bagScript.BagInventory.AddItem(item);
+                        //bagScript.BagInventory.AddItem(item);
 
-                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.Count);
+                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.ItemType.ItemName, item.Count);
                     }
                     PlayerInventory.ClearInventory();
                 }

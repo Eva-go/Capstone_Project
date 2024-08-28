@@ -186,6 +186,32 @@ public class PlayerPoiSpawn : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            Vector3 _location = playerController.theCamera.transform.position + playerController.theCamera.transform.forward * 4f;
+            if (previewObjectInstance != null)
+            {
+                // Save current rotation
+                Quaternion currentRotation = previewObjectInstance.transform.rotation;
+
+                // Update position
+                previewObjectInstance.transform.position = _location;
+
+                // Restore rotation
+                previewObjectInstance.transform.rotation = currentRotation;
+            }
+            else
+            {
+                // Instantiate a new preview object if none exists
+                previewObjectInstance = Instantiate(PreviewPoi_red[slotNumber], _location, Quaternion.identity);
+            }
+            if (!isColliding)
+            {
+                isColliding = true;
+                Destroy(previewObjectInstance); // Destroy current preview object
+                previewObjectInstance = Instantiate(PreviewPoi_red[slotNumber], _location, Quaternion.identity);
+            }
+        }
     }
 
     private void RotatePreview(float angle)
