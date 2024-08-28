@@ -10,9 +10,6 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
     public GameObject currentPlayer { get; private set; }
-
-
-
     public PhotonView pv;
     public string nickName;
     public static float Hp = 100f;
@@ -132,7 +129,6 @@ public class PlayerController : MonoBehaviour
     private bool Bagdrop = false;
     public bool Godmode = false;
 
-    //InteractableObject를 위한 코드
     private void Awake()
     {
         if (Instance == null)
@@ -386,13 +382,11 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
+        if (!pv.IsMine) return;
+
+        pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
         if (pv.IsMine)
         {
-            // 아이템 초기화
-            //for (int i = 0; i < nodeItiems.Length; i++)
-            //{
-            //    nodeItiems[i] = 0;
-            //}
             if (!Bagdrop)
             {
                 Bagdrop = true;
@@ -413,22 +407,8 @@ public class PlayerController : MonoBehaviour
                 }
                 isRespawn = true;
             }
-            /*
-                // Bag 생성
-                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
-                BagController bagScript = bag.GetComponent<BagController>();
-                if (bagScript != null)
-                {
-                    // 아이템 데이터 전송
-                    for (int i = 0; i < nodeItiems.Length; i++)
-                    {
-                        bagScript.photonView.RPC("GetItme", RpcTarget.AllBuffered, nodeItiems[i], mixItiems[i], i);
-                    }
-                }
-             */
             InvokeInventoryChanged();
             Hp = 0;
-            //RespawnAcive = true;
             if (live)
             {
                 RespawnCam.SetActive(true);
@@ -436,16 +416,9 @@ public class PlayerController : MonoBehaviour
                 gameObject.transform.GetChild(3).gameObject.SetActive(false);
                 gameObject.transform.GetChild(4).gameObject.SetActive(false);
                 gameObject.transform.GetChild(5).gameObject.SetActive(false);
+               
                 live = false;
             }
-            //else if (RespawnFillHandler.fillValue >= 100)
-            //{
-            //    Bagdrop = false;
-            //    respawnTick = false;
-            //    RespawnAcive = false;
-            //    RespawnCamera.SetActive(false);
-            //    RespawnFillHandler.fillValue = 0; 
-            //}
             if (Input.GetKeyDown(KeyCode.R))
             {
                 RespawnCam.SetActive(false);
@@ -456,6 +429,16 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    [PunRPC]
+    public void RPC_PlayerDied()
+    {
+        // 로컬 플레이어의 GameObject 비활성화
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(3).gameObject.SetActive(false);
+        gameObject.transform.GetChild(4).gameObject.SetActive(false);
+        gameObject.transform.GetChild(5).gameObject.SetActive(false);
+    }
+
 
     private void reSpwan()
     {
@@ -507,15 +490,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Player spawned and ownership transferred.");
             }
             Debug.Log("플레이어 확인" + GameObject.Find(player.name));
-            //if(PhotonNetwork.LocalPlayer.NickName != GameObject.Find(player.name).ToString())
-            //{
-            //    Debug.Log("플레이어 없음");
-            //    reSpwan();
-            //}
         }
-        //PlayerSpawn playerSpawn = GameObject.Find("PlayerSpwan").GetComponent<PlayerSpawn>();
-        //playerSpawn.OnBuildingCreated();
-
 
     }
 
@@ -797,21 +772,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case "ReturnDoor":
-                    Transform parentTransform = GameObject.Find("SpawnPoint").transform;
-                    List<Transform> directChildren = new List<Transform>();
-
-                    for (int i = 0; i < parentTransform.childCount; i++)
-                    {
-                        Transform child = parentTransform.GetChild(i);
-                        directChildren.Add(child);
-                    }
-
-                    if (directChildren.Count > 0)
-                    {
-                        idx = UnityEngine.Random.Range(0, directChildren.Count);
-                    }
                     insideActive = true;
-
                     if (lastDoorEntered != null && InsideFillHandler.fillValue >= 100)
                     {
                         //myRigid.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
@@ -821,6 +782,19 @@ public class PlayerController : MonoBehaviour
                     }
                     else if (lastDoorEntered == null && InsideFillHandler.fillValue >= 100)
                     {
+                        Transform parentTransform = GameObject.Find("SpawnPoint").transform;
+                        List<Transform> directChildren = new List<Transform>();
+
+                        for (int i = 0; i < parentTransform.childCount; i++)
+                        {
+                            Transform child = parentTransform.GetChild(i);
+                            directChildren.Add(child);
+                        }
+
+                        if (directChildren.Count > 0)
+                        {
+                            idx = UnityEngine.Random.Range(0, directChildren.Count);
+                        }
                         //myRigid.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
                         myRigid.position = directChildren[idx].position;
                         InsideFillHandler.fillValue = 0;
@@ -1354,6 +1328,32 @@ public class PlayerController : MonoBehaviour
             {
                 targetPlayer.TakeDamage(damage);
             }
+        }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // 다른 클라이언트에게 채력 정보를 보내기
+            stream.SendNext(Hp);
+        }
+        else
+        {
+            // 다른 클라이언트로부터 채력 정보를 받기
+            Hp = (float)stream.ReceiveNext();
+        }
+    }
+
+    [PunRPC]
+    
+    private void RPC_RecoverHp(float amount)
+    {
+        if (pv.IsMine)
+        {
+            Hp += amount;
+            Hp = Mathf.Min(Hp, 100f); // 최대 체력 제한
         }
     }
 
