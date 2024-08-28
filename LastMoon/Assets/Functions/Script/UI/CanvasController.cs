@@ -22,14 +22,24 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public Color EmptyColor;
     public Color IsColor;
     public Transform inventory_Tab;
-    private Inventory UIinventory;
     private Transform ItemTab;
     private Transform ItemSlot;
     private Transform ItemScroll;
 
+    private Transform ItemTab_Consumable;
+    private Transform ItemSlot_Consumable;
+    private Transform ItemScroll_Consumable;
+
+    private Transform ItemTab_Construction;
+    private Transform ItemSlot_Construction;
+    private Transform ItemScroll_Construction;
+
+    private Inventory UIinventory;
+
     public Transform Recipe_Info;
     public Transform Recipe_Tab;
     private Transform Recipe_Slot;
+    public Transform Recipe_Scroll;
 
     private int keyTabCode = 2;
     private bool inventory_ck;
@@ -61,6 +71,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private int selectedToolIndex = 0;
 
+    private bool StationUIOpened = false;
+
     //æ∆¿Ã≈€ »πµÊ ø©∫Œ
     private bool isItme = false;
 
@@ -86,7 +98,17 @@ public class CanvasController : MonoBehaviourPunCallbacks
         ItemScroll = ItemTab.GetChild(0).GetChild(0);
         ItemSlot = ItemScroll.GetChild(0);
 
-        Recipe_Slot = Recipe_Tab.GetChild(0);
+        ItemTab_Consumable = inventory_Tab.Find("Food_Tab");
+        ItemScroll_Consumable = ItemTab_Consumable.GetChild(0).GetChild(0);
+        ItemSlot_Consumable = ItemScroll_Consumable.GetChild(0);
+
+        ItemTab_Construction = inventory_Tab.Find("Mix_Tab");
+        ItemScroll_Construction = ItemTab_Construction.GetChild(0).GetChild(0);
+        ItemSlot_Construction = ItemScroll_Construction.GetChild(0);
+
+
+        Recipe_Scroll = Recipe_Tab.GetChild(0).GetChild(0);
+        Recipe_Slot = Recipe_Scroll.GetChild(0);
 
     }
 
@@ -162,11 +184,124 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         UIinventory = inventory;
     }
-    private void RefreshInventory()
+    public void RefreshInventory()
     {
         foreach (Transform child in ItemScroll)
         {
             if (child == ItemSlot) continue;
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in ItemScroll_Consumable)
+        {
+            if (child == ItemSlot_Consumable) continue;
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in ItemScroll_Construction)
+        {
+            if (child == ItemSlot_Construction) continue;
+            Destroy(child.gameObject);
+        }
+
+        if (playerController != null) SetInventory(playerController.PlayerInventory);
+        int x = 0;
+        int y = 6;
+        float itemSlotSize = 150f;
+        int x_Construction = 0;
+        int y_Construction = 6;
+        int x_Consumable = 0;
+        int y_Consumable = 6;
+
+        if (UIinventory != null)
+        {
+            foreach (Item item in UIinventory.GetItems())
+            {
+                RectTransform itemRectTransform = Instantiate(ItemSlot, ItemScroll).GetComponent<RectTransform>();
+                itemRectTransform.gameObject.SetActive(true);
+
+                itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+
+                Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
+                image.sprite = item.ItemType.ItemSprite;
+
+                Text text = itemRectTransform.Find("Count").GetComponent<Text>();
+                text.text = item.Count.ToString();
+
+                text = itemRectTransform.Find("Price").GetComponent<Text>();
+                text.text = item.ItemType.Price.ToString();
+
+                Button_Sell sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
+                sellbutton.RegisterPlayerController(playerController);
+                sellbutton.ItemType = item.ItemType;
+
+                y--;
+                if (item.ItemType.ItemType == 1)
+                {
+                    itemRectTransform = Instantiate(ItemSlot_Construction, ItemScroll_Construction).GetComponent<RectTransform>();
+                    itemRectTransform.gameObject.SetActive(true);
+
+                    itemRectTransform.anchoredPosition = new Vector2(x_Construction * itemSlotSize, y_Construction * itemSlotSize);
+
+                    image = itemRectTransform.Find("Icon").GetComponent<Image>();
+                    image.sprite = item.ItemType.ItemSprite;
+
+                    text = itemRectTransform.Find("Count").GetComponent<Text>();
+                    text.text = item.Count.ToString();
+
+                    text = itemRectTransform.Find("Price").GetComponent<Text>();
+                    text.text = item.ItemType.Price.ToString();
+
+                    sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
+                    sellbutton.RegisterPlayerController(playerController);
+                    sellbutton.ItemType = item.ItemType;
+
+                    y_Construction--;
+                }
+                else if (item.ItemType.ItemType == 2)
+                {
+                    itemRectTransform = Instantiate(ItemSlot_Consumable, ItemScroll_Consumable).GetComponent<RectTransform>();
+                    itemRectTransform.gameObject.SetActive(true);
+
+                    itemRectTransform.anchoredPosition = new Vector2(x_Consumable * itemSlotSize, y_Consumable * itemSlotSize);
+
+                    image = itemRectTransform.Find("Icon").GetComponent<Image>();
+                    image.sprite = item.ItemType.ItemSprite;
+
+                    text = itemRectTransform.Find("Count").GetComponent<Text>();
+                    text.text = item.Count.ToString();
+
+                    text = itemRectTransform.Find("Price").GetComponent<Text>();
+                    text.text = item.ItemType.Price.ToString();
+
+                    sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
+                    sellbutton.RegisterPlayerController(playerController);
+                    sellbutton.ItemType = item.ItemType;
+
+                    Button_Use Usebutton = itemRectTransform.Find("Button_Use").GetComponent<Button_Use>();
+                    Usebutton.RegisterPlayerController(playerController);
+                    Usebutton.ItemType = item.ItemType;
+
+                    y_Consumable--;
+                }
+            }
+        }
+    }
+
+    /*
+    public void RefreshInventory_Consumable()
+    {
+        foreach (Transform child in ItemScroll)
+        {
+            if (child == ItemSlot) continue;
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in ItemScroll_Consumable)
+        {
+            if (child == ItemSlot_Consumable) continue;
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in ItemScroll_Construction)
+        {
+            if (child == ItemSlot_Construction) continue;
             Destroy(child.gameObject);
         }
 
@@ -188,16 +323,64 @@ public class CanvasController : MonoBehaviourPunCallbacks
                 image.sprite = item.ItemType.ItemSprite;
 
                 Text text = itemRectTransform.Find("Count").GetComponent<Text>();
-
                 text.text = item.Count.ToString();
 
                 text = itemRectTransform.Find("Price").GetComponent<Text>();
                 text.text = item.ItemType.Price.ToString();
 
+                Button_Sell sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
+                sellbutton.RegisterPlayerController(playerController);
+                sellbutton.ItemType = item.ItemType;
+
                 y--;
+                if (item.ItemType.ItemType == 1)
+                {
+                    RectTransform itemRectTransform = Instantiate(ItemSlot_Construction, ItemScroll_Construction).GetComponent<RectTransform>();
+                    itemRectTransform.gameObject.SetActive(true);
+
+                    itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+
+                    Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
+                    image.sprite = item.ItemType.ItemSprite;
+
+                    Text text = itemRectTransform.Find("Count").GetComponent<Text>();
+                    text.text = item.Count.ToString();
+
+                    text = itemRectTransform.Find("Price").GetComponent<Text>();
+                    text.text = item.ItemType.Price.ToString();
+
+                    Button_Sell sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
+                    sellbutton.RegisterPlayerController(playerController);
+                    sellbutton.ItemType = item.ItemType;
+
+                    y--;
+                }
+                else if (item.ItemType.ItemType == 2)
+                {
+                    RectTransform itemRectTransform = Instantiate(ItemSlot_Consumable, ItemScroll_Consumable).GetComponent<RectTransform>();
+                    itemRectTransform.gameObject.SetActive(true);
+
+                    itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
+
+                    Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
+                    image.sprite = item.ItemType.ItemSprite;
+
+                    Text text = itemRectTransform.Find("Count").GetComponent<Text>();
+                    text.text = item.Count.ToString();
+
+                    text = itemRectTransform.Find("Price").GetComponent<Text>();
+                    text.text = item.ItemType.Price.ToString();
+
+                    Button_Sell sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
+                    sellbutton.RegisterPlayerController(playerController);
+                    sellbutton.ItemType = item.ItemType;
+
+                    y--;
+                }
             }
         }
     }
+     */
 
     public void PoiPopupActive()
     {
@@ -216,9 +399,11 @@ public class CanvasController : MonoBehaviourPunCallbacks
     }
 
 
-    private void RecipeSelect(ScriptableObject_Station[] SelectableRecipes)
+    public void RecipeSelect()
     {
-        foreach (Transform child in Recipe_Tab)
+        ScriptableObject_Station[] SelectableRecipes = playerController.UISelectedPOIController.SelectableRecipes;
+
+        foreach (Transform child in Recipe_Scroll)
         {
             if (child == Recipe_Slot) continue;
             Destroy(child.gameObject);
@@ -229,19 +414,21 @@ public class CanvasController : MonoBehaviourPunCallbacks
         float itemSlotSize = 300f;
         for (int i = 0; i < SelectableRecipes.Length; i++)
         {
-            RectTransform RecipeRectTransform = Instantiate(Recipe_Slot, Recipe_Tab).GetComponent<RectTransform>();
+            RectTransform RecipeRectTransform = Instantiate(Recipe_Slot, Recipe_Scroll).GetComponent<RectTransform>();
             RecipeRectTransform.gameObject.SetActive(true);
 
-            RecipeRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize - 150f);
+            RecipeRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize + 535f);
 
             Image image = RecipeRectTransform.Find("Icon").GetComponent<Image>();
             image.sprite = SelectableRecipes[i].Output[0].ItemSprite;
 
-            if (SelectableRecipes[i].OutputCount > 1)
-            {
-                Text text = RecipeRectTransform.Find("Text").GetComponent<Text>();
-                text.text = ("+" + SelectableRecipes[i].OutputCount.ToString());
-            }
+            Text text = RecipeRectTransform.Find("Text").GetComponent<Text>();
+            if (SelectableRecipes[i].OutputCount > 1) text.text = ("+" + SelectableRecipes[i].OutputCount.ToString());
+            else text.text = "";
+
+            SeletRecipe Recipebutton = RecipeRectTransform.GetComponent<SeletRecipe>();
+            Recipebutton.RegisterStationController(playerController.UISelectedPOIController);
+            Recipebutton.SelectableRecipe = SelectableRecipes[i];
 
             x++;
             if (x > 1)
@@ -253,156 +440,249 @@ public class CanvasController : MonoBehaviourPunCallbacks
     }
     private void SelectedRecipeInfo(ScriptableObject_Station SelectedRecipe)
     {
+        Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
+        text.text = "(" + SelectedRecipe.Temperture.ToString() + ")";
+        text = Recipe_Info.Find("Recipe_Temperture").GetChild(1).GetComponent<Text>();
+        text.text = playerController.UISelectedPOIController.StationTemperture.ToString();
+
+        text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(0).GetComponent<Text>();
+        text.text = "(" + SelectedRecipe.ProgressTime.ToString() + ")";
+        text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(1).GetComponent<Text>();
+        text.text = (playerController.UISelectedPOIController.StationProgress / SelectedRecipe.ProgressTime * 100f).ToString("F0") + "%";
+
+        text = Recipe_Info.Find("Recipe_Coolent").GetChild(0).GetComponent<Text>();
+        text.text = "(" + SelectedRecipe.Coolent.ToString() + ")";
+        text = Recipe_Info.Find("Recipe_Coolent").GetChild(1).GetComponent<Text>();
+        if (playerController.UISelectedPOIController.Inv_Coolent != null)
+            text.text = playerController.UISelectedPOIController.Inv_Coolent.Count.ToString();
+        else
+            text.text = "0";
+
         Image image;
 
         switch (SelectedRecipe.InputCount)
         {
             case 1:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input002").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 2:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 3:
                 image = Recipe_Info.Find("Recipe_Input001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Input003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Input003").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Input[2].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Input[2] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Input[2].Count.ToString();
+                else
+                    text.text = "0";
+
                 break;
         }
         switch (SelectedRecipe.OutputCount)
         {
             case 1:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output002").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 2:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output003").GetChild(1).GetComponent<Text>();
                 image.color = EmptyColor;
+                text.text = "";
+
                 break;
             case 3:
                 image = Recipe_Info.Find("Recipe_Output001").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output001").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[0].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[0] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[0].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output002").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output002").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[1].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[1] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[1].Count.ToString();
+                else
+                    text.text = "0";
+
                 image = Recipe_Info.Find("Recipe_Output003").GetChild(0).GetComponent<Image>();
+                text = Recipe_Info.Find("Recipe_Output003").GetChild(1).GetComponent<Text>();
                 image.sprite = SelectedRecipe.Output[2].ItemSprite;
                 image.color = IsColor;
+                if (playerController.UISelectedPOIController.Inv_Output[2] != null)
+                    text.text = playerController.UISelectedPOIController.Inv_Output[2].Count.ToString();
+                else
+                    text.text = "0";
+
                 break;
         }
-        Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
-        text.text = SelectedRecipe.Temperture.ToString();
-        text = Recipe_Info.Find("Recipe_ProcessTime").GetChild(0).GetComponent<Text>();
-        text.text = SelectedRecipe.ProgressTime.ToString();
-        text = Recipe_Info.Find("Recipe_Coolent").GetChild(0).GetComponent<Text>();
-        text.text = SelectedRecipe.Coolent.ToString();
     }
 
     public void Station_Input()
     {
         int ItemRequireCount = 1;
-        bool MatchRecipe001 = false;
-        bool MatchRecipe002 = false;
-        bool MatchRecipe003 = false;
-        ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
-
         if (Input.GetKey(KeyCode.LeftShift)) ItemRequireCount *= 10;
         if (Input.GetKey(KeyCode.LeftControl)) ItemRequireCount *= 5;
 
-        switch (SelectedRecipe.InputCount)
+        int[] ItemRequireCounts = new int[3] { 1, 1, 1 };
+        int[] ItemInputCounts = new int[3] { 1, 1, 1 };
+
+        ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
+
+        for (int i = 0; i < SelectedRecipe.InputCount; i++)
         {
-            case 1:
-                MatchRecipe002 = true;
-                MatchRecipe003 = true;
-                break;
-            case 2:
-                MatchRecipe003 = true;
-                break;
-        }
-        foreach (Item item in playerController.PlayerInventory.GetItems())
-        {
-            if (!MatchRecipe001 && item.ItemType == SelectedRecipe.Input[0] && item.Count >= ItemRequireCount) {
-                MatchRecipe001 = true;
-            }
-            else if (!MatchRecipe002 && item.ItemType == SelectedRecipe.Input[1] && item.Count >= ItemRequireCount)
+            if (playerController.UISelectedPOIController.Inv_Input[i] != null)
             {
-                MatchRecipe002 = true;
+                ItemRequireCounts[i] =
+                    playerController.UISelectedPOIController.
+                    Inv_Input[i].ItemType.MaxCount -
+                    playerController.UISelectedPOIController.
+                    Inv_Input[i].Count;
             }
-            else if (!MatchRecipe003 && item.ItemType == SelectedRecipe.Input[2] && item.Count >= ItemRequireCount)
+            else
             {
-                MatchRecipe003 = true;
+                ItemRequireCounts[i] = SelectedRecipe.Input[i].MaxCount;
             }
-        }
-        if(MatchRecipe001 && MatchRecipe002 && MatchRecipe003)
-        {
-            playerController.UISelectedPOIController.InputItem(ItemRequireCount);
-            switch (SelectedRecipe.InputCount)
+
+            if (!Input.GetKey(KeyCode.LeftAlt) && ItemRequireCounts[i] > ItemRequireCount) ItemRequireCounts[i] = ItemRequireCount;
+            if (playerController.PlayerInventory.RemoveItem(new Item
             {
-                case 1:
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[0], Count = ItemRequireCount });
-                    break;
-                case 2:
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[0], Count = ItemRequireCount });
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[1], Count = ItemRequireCount });
-                    break;
-                case 3:
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[0], Count = ItemRequireCount });
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[1], Count = ItemRequireCount });
-                    playerController.PlayerInventory.RemoveItem(new Item { ItemType = SelectedRecipe.Input[2], Count = ItemRequireCount });
-                    break;
+                ItemType = SelectedRecipe.Input[i],
+                Count = ItemRequireCounts[i]
+            }))
+            {
+                ItemInputCounts[i] = ItemRequireCounts[i];
             }
+            else
+                ItemInputCounts[i] = playerController.PlayerInventory.ClearItem(SelectedRecipe.Input[i]);
+            playerController.UISelectedPOIController.InputItem(i, ItemInputCounts[i]);
         }
     }
 
     public void Station_Output()
     {
-        for (int i = 0; i < playerController.UISelectedPOIController.SelectedRecipe.OutputCount; i++)
-        {
-            if (playerController.UISelectedPOIController.Inv_Output[i] != null)
-            {
-                playerController.PlayerInventory.AddItem(new Item { 
-                    ItemType = playerController.UISelectedPOIController.Inv_Output[i].ItemType, 
-                    Count = playerController.UISelectedPOIController.Inv_Output[i].Count });
-                playerController.UISelectedPOIController.ExtractItem(i);
-            }
-        }
+        playerController.ExtractStation(playerController.UISelectedPOIController, 2);
     }
-
-    private void SelectingRecipe()
+    /*
+    public void Station_Input_Item(int SlotNum)
     {
+        ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
 
+        int ItemRequireCount = 1;
+        if (Input.GetKey(KeyCode.LeftShift)) ItemRequireCount *= 10;
+        if (Input.GetKey(KeyCode.LeftControl)) ItemRequireCount *= 5;
+
+        playerController.Station_Input_Item(SlotNum, 0, SelectedRecipe.Input[SlotNum], ItemRequireCount);
     }
+     */
+    public void Station_Input_Coolent(ScriptableObject_Item ItemType)
+    {
+        int ItemRequireCount = 1;
+        if (Input.GetKey(KeyCode.LeftShift)) ItemRequireCount *= 10;
+        if (Input.GetKey(KeyCode.LeftControl)) ItemRequireCount *= 5;
+        playerController.Station_Input_Item(0, 3, ItemType, ItemRequireCount);
+    }
+
 
     public void Station_Manageing()
     {
@@ -412,10 +692,15 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
             if (playerController.StationActive)
             {
+                if (!StationUIOpened)
+                {
+                    RecipeSelect();
+                    StationUIOpened = true;
+                }
                 SelectedRecipeInfo(playerController.UISelectedPOIController.SelectedRecipe);
-                RecipeSelect(playerController.UISelectedPOIController.SelectableRecipes);
                 Cursor.lockState = CursorLockMode.Confined;
             }
+            else StationUIOpened = false;
         }
     }
     public void Station_Exit()
