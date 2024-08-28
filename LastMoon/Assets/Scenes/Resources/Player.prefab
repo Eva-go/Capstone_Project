@@ -1582,7 +1582,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b5b9052fa619f140b889fdc459a67f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interpolationSpeed: 10
   pv: {fileID: 0}
   nickName: 
   cam: {fileID: 2425928368607806541}
@@ -1646,9 +1645,9 @@ MonoBehaviour:
   Extract: 0
   oldTransform: {fileID: 0}
   AptTransform: {fileID: 0}
+  inside: 0
   keydowns: 0
   PlayerAPT: {fileID: 0}
-  APTinside: {x: 0, y: 0, z: 0}
   Godmode: 0
 --- !u!114 &4323000284422157701
 MonoBehaviour:
@@ -1671,11 +1670,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   Poi_BT:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1695,11 +1690,7 @@ MonoBehaviour:
   - {fileID: 5371151852980298888, guid: 627abb0447284b14db4685ec0a1ec1fa, type: 3}
   - {fileID: 1573298627077628865, guid: 8d135d89ef062d0488aa91232deeda99, type: 3}
   - {fileID: 3079423493778808962, guid: afe729128ae93674398fec5c714e91f4, type: 3}
-  - {fileID: 6583875056677868264, guid: 68b009705a5ed154f94f640f4a3317e8, type: 3}
   - {fileID: 366367957362793796, guid: 945ebfa6b0be2fb44a5216aba940fbc3, type: 3}
-  - {fileID: 7058263592653485094, guid: ba7ab096de0f27c48966fadc0df0475b, type: 3}
-  - {fileID: 7058263592653485094, guid: ba7ab096de0f27c48966fadc0df0475b, type: 3}
-  - {fileID: 7058263592653485094, guid: ba7ab096de0f27c48966fadc0df0475b, type: 3}
   PreviewPoi_red:
   - {fileID: 4602713722304676980, guid: 74b51c08a73e6a24b97342c33c567c42, type: 3}
   - {fileID: 6168536886686802060, guid: 339dda61583ba2041b28b977f0594784, type: 3}
@@ -1708,11 +1699,7 @@ MonoBehaviour:
   - {fileID: 5371151852980298888, guid: edb4338e6138a724697c4125f0a7dda0, type: 3}
   - {fileID: 1573298627077628865, guid: 05e7f3a5a9725f54ea99b43ad05cd0c3, type: 3}
   - {fileID: 7058263592653485094, guid: 3eddab1b6a2a2d141b6acace7849a8d5, type: 3}
-  - {fileID: 6583875056677868264, guid: 6d91011f1f6da7041bdc4337a840c86e, type: 3}
   - {fileID: 366367957362793796, guid: b6e8001fc342d8a4a92ffb761c84528e, type: 3}
-  - {fileID: 3079423493778808962, guid: 149ab4d860507214692cd3cadaf3f042, type: 3}
-  - {fileID: 3079423493778808962, guid: 149ab4d860507214692cd3cadaf3f042, type: 3}
-  - {fileID: 3079423493778808962, guid: 149ab4d860507214692cd3cadaf3f042, type: 3}
   SpawnPoi:
   - {fileID: 4602713722304676980, guid: a4e93a2ac38c7dd4b9a595842e46ba63, type: 3}
   - {fileID: 6168536886686802060, guid: e4d5ad35d50095844af75ebbe6e21d76, type: 3}
@@ -1721,11 +1708,7 @@ MonoBehaviour:
   - {fileID: 5371151852980298888, guid: 8348f3e586f3b2d40b39eac5f8255ae2, type: 3}
   - {fileID: 1573298627077628865, guid: 450e9e22cb792264ba66d152ca3d680f, type: 3}
   - {fileID: 3079423493778808962, guid: 2bb68449aa1a9cb41ad3217de786d5b9, type: 3}
-  - {fileID: 6583875056677868264, guid: 591800b85e760ed4796732a4207b3773, type: 3}
   - {fileID: 366367957362793796, guid: a60e9eae64ede5d4585237ec19d1c350, type: 3}
-  - {fileID: 7058263592653485094, guid: d0c72ef28bd94fa4ebef548f9a64ee56, type: 3}
-  - {fileID: 8885146718095934298, guid: b2faf6319bb0e4645aa1d837fb03f669, type: 3}
-  - {fileID: 4036164873422094590, guid: d00b39124191fe5498ff3e29a7493851, type: 3}
 --- !u!114 &725141506427028762
 MonoBehaviour:
   m_ObjectHideFlags: 0

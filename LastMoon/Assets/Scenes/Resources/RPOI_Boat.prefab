@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2871609621159087222}
-  - component: {fileID: 7591809547935075685}
   - component: {fileID: 809853977935099049}
   - component: {fileID: 6722279684780833062}
   - component: {fileID: 7708983368767926273}
@@ -36,61 +35,6 @@ Transform:
   - {fileID: 1509487380024004085}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7591809547935075685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8708602044620867591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae495f7e44e0884ebf1ab9925798385, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pv: {fileID: 0}
-  itemData:
-    nodeName: []
-    nodeItemCount: 
-    mixName: []
-    mixItemCount: 
-  poiName: 
-  SetnodeCount: 0
-  animator: {fileID: 0}
-  ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 0}
-  StationConstructionParts: {fileID: 0}
-  ObjectlessSlot: 000000000000000000
-  InputSlotType: 000000000000000000000000
-  OutputSlotType: 000000000000000000000000
-  StationBases: []
-  StationFixes: []
-  StationAuxes: []
-  StationCons: []
-  Debug_Filler: {fileID: 0}
-  Debug_Fuel: {fileID: 0}
-  Debug_Coolent: {fileID: 0}
-  StationBaseMat: {fileID: 0}
-  StationAuxMat: {fileID: 0}
-  StationFixMat: {fileID: 0}
-  StationConMat: []
-  InputSlot: []
-  OutputSlot: []
-  FuelSlot: []
-  FuelWick: []
-  Obj_Coolent: []
-  Obj_Temperture: []
-  SelectableRecipes: []
-  SelectedRecipe: {fileID: 0}
-  StationTemperture: 25
-  StationProgress: 0
-  sfx_Station_Start: {fileID: 0}
-  sfx_Station_Activation: {fileID: 0}
-  Particle_Activation: {fileID: 0}
-  tick: 0
-  tickMax: 0
-  isConstructing: 0
-  hp: 3
 --- !u!114 &809853977935099049
 MonoBehaviour:
   m_ObjectHideFlags: 0
