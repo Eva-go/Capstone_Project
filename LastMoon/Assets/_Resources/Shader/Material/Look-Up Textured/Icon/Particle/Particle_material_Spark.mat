@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Particle_material_Spark
-  m_Shader: {fileID: -6465566751694194690, guid: 9102cb73467593c4d8c9b3c66976e91d, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 636cb0ffa1129ff4e998d018a4623f65, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -109,6 +109,7 @@ Material:
     - _AlphaToMask: 1
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _Brightness: 2
     - _BumpScale: 1
     - _CastShadows: 0
     - _ClearCoatMask: 0
@@ -141,7 +142,7 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 2, g: 0.10471204, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
