@@ -104,16 +104,10 @@ public class PoiController : MonoBehaviour
 
 
     //출력 변수
-    /*
-    public GameObject itme;
+    
+    public GameObject item;
     public Transform OutputTransform;
 
-    public bool isOutput;
-    public bool Ountput_stop;
-    public int tickMaxOUtput;
-    public int OutputTick;
-    public bool test_ck;
-     */
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -143,10 +137,12 @@ public class PoiController : MonoBehaviour
         CoolentDrain = 0;
     }
 
+    //TODO 업데이트
     private void Update()
     {
         ActivationEffect();
         tick_ck(1);
+        GiveItem(1);
 
     }
     public void tick_ck(int ticksToConstruct)
@@ -158,6 +154,9 @@ public class PoiController : MonoBehaviour
             TickTimer.OnTick += TimeTickSystem_OnTick;
         }
     }
+
+
+
     private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
     {
         if (isConstructing && !stop)
@@ -639,18 +638,25 @@ public class PoiController : MonoBehaviour
     public void TakeItem(Item InputItem)
     {
         int activeSlot = -1;
+        Debug.Log("충돌" + SelectedRecipe);
         if (SelectedRecipe != null)
         {
+            Debug.Log("충돌1");
             for (int i = 0; i < SelectedRecipe.InputCount; i++)
             {
-                if (SelectedRecipe.Input[i] == InputItem.ItemType && activeSlot != -1)
+                Debug.Log("충돌2");
+                if (SelectedRecipe.Input[i] == InputItem.ItemType && activeSlot == -1)
                 {
+                    Debug.Log("충돌3");
                     activeSlot = i;
                 }
             }
         }
         if (activeSlot != -1)
+        {
+            Debug.Log("충돌4");
             Item_Input(activeSlot, 0, InputItem.ItemType, InputItem.Count);
+        }
     }
 
 
@@ -701,7 +707,21 @@ public class PoiController : MonoBehaviour
                 break;
         }
     }
-    // 아이템 내보내기
+   
+
+    public void GiveItem(int OutputNum)
+    {
+        if (Inv_Output[OutputNum] != null && Inv_Output[OutputNum].Count > 0) 
+        {
+            GameObject nodeItem = Instantiate(item, OutputTransform);
+            NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
+            nodeDestroy.Inv_Input = new Item { ItemType = Inv_Output[OutputNum].ItemType, Count = 1 };
+
+            Item_Extract(OutputNum, 1, 1);
+        }
+    }
+
+
     public void Item_Extract(int Inv_Slot, int SlotType, int Count)
     {
         switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
@@ -748,12 +768,6 @@ public class PoiController : MonoBehaviour
                 }
                 break;
         }
-    }
-
-
-    [PunRPC]
-    public void ReceiveData()
-    {
     }
 
     private IEnumerator ProcessItems(int i)

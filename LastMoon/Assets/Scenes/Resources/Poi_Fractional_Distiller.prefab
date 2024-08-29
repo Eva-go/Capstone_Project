@@ -5128,6 +5128,8 @@ MonoBehaviour:
   isConstructing: 0
   stop: 0
   hp: 3
+  item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
+  OutputTransform: {fileID: 7140555518296932469}
 --- !u!65 &5094086931020389506
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5186,7 +5188,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 0
+    Name: isActvie
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

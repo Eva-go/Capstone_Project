@@ -134,8 +134,9 @@ MonoBehaviour:
   tick: 0
   tickMax: 0
   isConstructing: 0
+  stop: 0
   hp: 3
-  nodeItme: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
+  item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 8782543227419162442}
 --- !u!65 &8967602037494354336
 BoxCollider:
@@ -195,13 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 1
-    Name: isActvie
-  - Type: 9
-    SynchronizeType: 1
-    Name: isHit
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -5237,18 +5232,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2292299002258769464}
     m_Modifications:
-    - target: {fileID: -4184555109157435748, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -1175895916701686911, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -1053814455068287314, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5bfaeb80e13449a40816d36aa6c2a50b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5300,6 +5283,18 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5bfaeb80e13449a40816d36aa6c2a50b, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4184555109157435748, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -1175895916701686911, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -1053814455068287314, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 5bfaeb80e13449a40816d36aa6c2a50b, type: 3}
