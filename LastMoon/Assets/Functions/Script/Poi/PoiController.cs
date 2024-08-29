@@ -61,8 +61,8 @@ public class PoiController : MonoBehaviour
     public GameObject[] Obj_Coolent;
     public GameObject[] Obj_Temperture;
 
-    public ScriptableObject_Station[] SelectableRecipes;
-    public ScriptableObject_Station SelectedRecipe;
+    public ScriptableObject_Recipe[] SelectableRecipes;
+    public ScriptableObject_Recipe SelectedRecipe;
 
     public Item[] Inv_Input = new Item[3];
     public Item[] Inv_Output = new Item[3];
@@ -83,6 +83,10 @@ public class PoiController : MonoBehaviour
     private bool Heating;
 
     private bool ActivationType_Heating;
+
+    public float MaxHealth = 10;
+    public float ProcessEfficiency = 1;
+    public float TempertureLimit = 100;
 
     //tick  관련 변수
     public int tick;
@@ -495,7 +499,7 @@ public class PoiController : MonoBehaviour
 
         if (Activation)
         {
-            StationProgress++;
+            StationProgress += ProcessEfficiency;
             if (StationProgress >= SelectedRecipe.ProgressTime)
             {
                 StationProgress = 0;

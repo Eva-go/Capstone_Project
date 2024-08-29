@@ -5,7 +5,7 @@ using UnityEngine;
 public class SeletRecipe : MonoBehaviour
 {
     private PoiController poiController;
-    public ScriptableObject_Station SelectableRecipe;
+    public ScriptableObject_Recipe SelectableRecipe;
 
     public void RegisterStationController(PoiController station)
     {

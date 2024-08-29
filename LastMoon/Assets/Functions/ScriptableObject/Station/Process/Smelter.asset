@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd03877c80f8a154c8b70df7eea5170b, type: 3}
+  m_Name: Smelter
+  m_EditorClassIdentifier: 
+  SelectableRecipes:
+  - {fileID: 11400000, guid: e319e8df19835214cb1db1ef731cd530, type: 2}
+  - {fileID: 11400000, guid: 3bd243934ea36b946ac865497b7eccae, type: 2}
+  - {fileID: 11400000, guid: 5a5c5957c8f6fe04fb072a1743fb1eb6, type: 2}
+  - {fileID: 11400000, guid: e3ecf7a7885d6a14f9221cbcf6fa9abb, type: 2}
+  - {fileID: 11400000, guid: 0ed14c4ef38f65f4c9d96bdc962ee163, type: 2}
+  - {fileID: 11400000, guid: 993146a4849474048b66b87f3c6b2410, type: 2}
+  - {fileID: 11400000, guid: 4f103a49adbb4ce4b8ab7a42ec1bf15e, type: 2}
+  StationMaterialCount: 2
+  StationMatType: 0300000004000000
+  TempertureSensitive: 0100
+  StationAux: 1
+  StationFix: 1
+  StationCoolent: 0
+  StationFuel: 1
+  StationThermometer: 0

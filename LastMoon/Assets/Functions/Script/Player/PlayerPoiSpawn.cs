@@ -21,6 +21,9 @@ public class PlayerPoiSpawn : MonoBehaviour
     public GameObject[] PreviewPoi_green; // 프리뷰 포인트 배열
     public GameObject[] PreviewPoi_red;
     public GameObject[] SpawnPoi; // 생성 포인트 배열
+
+    public ScriptableObject_Station[] SelectableStations; // 스테이션 스크립트오브젝트
+
     private GameObject previewObjectInstance; // 프리뷰 오브젝트 인스턴스
     private int slotNumber; // 현재 슬롯 번호
 
@@ -33,19 +36,31 @@ public class PlayerPoiSpawn : MonoBehaviour
     // 충돌 여부 변수
     private bool isColliding = false;
 
+    public float MaxHealth = 10;
+    public float ProcessEfficiency = 1;
+    public float TempertureLimit = 100;
+
+    ScriptableObject_Station SelectedStation;
+
+    public ScriptableObject_Item[] StationMaterial = new ScriptableObject_Item[5];
+    public ScriptableObject_Item AuxMat;
+    public ScriptableObject_Item FixMat;
+
+
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
             playerController = GetComponent<PlayerController>(); // 플레이어 컨트롤러 가져오기
-            GameObject poiLists = GameObject.FindWithTag("PoiList").transform.Find("PoiListBG").gameObject;
+            GameObject poiLists = GameObject.FindWithTag("PoiList").transform.Find("PoiList").gameObject;
             canvas = GameObject.FindWithTag("Canvas").transform.Find("CanvasController").gameObject;
             canvasController = canvas.GetComponent<CanvasController>();
 
             for (int i = 0; i < PoiTab.Length; i++)
             {
-                PoiTab[i] = poiLists.transform.GetChild(0).GetChild(0).gameObject.transform.GetChild(i).gameObject; // PoiTab 배열 초기화
+                PoiTab[i] = poiLists.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.transform.GetChild(i).gameObject; // PoiTab 배열 초기화
                 Poi_BT[i] = PoiTab[i].GetComponent<Button>(); // Poi_BT 배열 초기화
                 int index = i; // 인덱스를 로컬 변수로 복사
                 Poi_BT[i].onClick.AddListener(() => SlotClick(index)); // 버튼 클릭 리스너 추가
@@ -232,6 +247,12 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     public void onClickStart()
     {
+        if (slotNumber >= 0 && slotNumber < SelectableStations.Length)
+        {
+            SelectedStation = SelectableStations[slotNumber];
+        }
+        //StationValueCaculate();
+
         tf_player = playerController.theCamera.transform; // Get the player camera transform
         // Ensure only the local player sees their preview object
         if (previewObjectInstance != null)
@@ -245,5 +266,33 @@ public class PlayerPoiSpawn : MonoBehaviour
         canvasController.SetPoi = false;
         canvasController.Poi.SetActive(canvasController.SetPoi);
         Cursor.lockState = CursorLockMode.Locked;
+    }
+    void StationValueCaculate()
+    {
+        bool TempApplied = false;
+        for (int i = 0; i < SelectedStation.StationMaterialCount; i++)
+        {
+            MaxHealth += StationMaterial[i].HealthStrength;
+            ProcessEfficiency *= StationMaterial[i].ProcessEfficiency;
+
+            if (SelectedStation.TempertureSensitive[i])
+            {
+                if (!TempApplied) TempertureLimit = StationMaterial[i].TempertureLimit;
+                else if (TempertureLimit > StationMaterial[i].TempertureLimit)
+                    TempertureLimit = StationMaterial[i].TempertureLimit;
+            }
+        }
+
+        if (SelectedStation.StationAux)
+        {
+            MaxHealth += AuxMat.HealthStrength;
+            ProcessEfficiency *= AuxMat.ProcessEfficiency;
+        }
+        if (SelectedStation.StationFix)
+        {
+            MaxHealth += FixMat.HealthStrength;
+            ProcessEfficiency *= FixMat.ProcessEfficiency;
+        }
+
     }
 }

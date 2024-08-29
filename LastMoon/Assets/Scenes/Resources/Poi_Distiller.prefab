@@ -4989,7 +4989,7 @@ MonoBehaviour:
     - {fileID: 7933939605641198729}
     - {fileID: 2462593538141356077}
   - Count:
-    - {fileID: 0}
+    - {fileID: 5285389819777528829}
   Debug_Filler: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
   Debug_Fuel: {fileID: 11400000, guid: 3cd8bfa6b525e5d4d898971bc6b76ae7, type: 2}
   Debug_Coolent: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
@@ -5027,6 +5027,9 @@ MonoBehaviour:
   sfx_Station_Start: {fileID: -1948325961606883014}
   sfx_Station_Activation: {fileID: -4352816645513060272}
   Particle_Activation: {fileID: 3419444053046917970}
+  MaxHealth: 10
+  ProcessEfficiency: 1
+  TempertureLimit: 100
   tick: 0
   tickMax: 0
   isConstructing: 0
@@ -5892,6 +5895,11 @@ GameObject:
 --- !u!1 &5226556163261262966 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5328426983082963531, guid: 42c905e111266e84a97353e4286eb3ac, type: 3}
+  m_PrefabInstance: {fileID: 9116951132251038147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5285389819777528829 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4025251364138717758, guid: 42c905e111266e84a97353e4286eb3ac, type: 3}
   m_PrefabInstance: {fileID: 9116951132251038147}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &5329581063634114022 stripped

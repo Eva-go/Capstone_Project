@@ -18,6 +18,11 @@ public class ScriptableObject_Item : ScriptableObject
     public int ConsumableType; // 0 - healing
     public float ConsumeStrength;
 
+    public float HealthStrength;
+    public float ProcessEfficiency;
+    public float TempertureLimit;
+    public bool Transparency;
+
     public int Price;
     public int MaxCount;
 

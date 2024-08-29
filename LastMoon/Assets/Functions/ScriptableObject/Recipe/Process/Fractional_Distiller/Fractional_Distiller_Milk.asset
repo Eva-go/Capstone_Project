@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e501762f194f70446b880a37fe27f6c6, type: 3}
+  m_Name: Fractional_Distiller_Milk
+  m_EditorClassIdentifier: 
+  Input:
+  - {fileID: 11400000, guid: f554a3f8f437cf34ba1d47b0aa81e292, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  InputCount: 1
+  Output:
+  - {fileID: 11400000, guid: de3e7d740031a624f8cf1c421bbe23dc, type: 2}
+  - {fileID: 11400000, guid: b790ba33e82af3849bdd6bc092acff84, type: 2}
+  - {fileID: 11400000, guid: 60d5cb35721627140bdf488c9917ce35, type: 2}
+  OutputCount: 3
+  Temperture: 250
+  Coolent: 50
+  ProgressTime: 128

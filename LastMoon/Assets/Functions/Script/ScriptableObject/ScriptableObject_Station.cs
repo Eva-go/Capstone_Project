@@ -5,14 +5,16 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/ScriptableObject_Station")]
 public class ScriptableObject_Station : ScriptableObject
 {
-    public ScriptableObject_Item[] Input = new ScriptableObject_Item[3];
-    public int InputCount;
+    public ScriptableObject_Recipe[] SelectableRecipes;
 
-    public ScriptableObject_Item[] Output = new ScriptableObject_Item[3];
-    public int OutputCount;
+    public int StationMaterialCount;
+    public int[] StationMatType; // 0 - Default, 1 - Input, 2 - Output, 3 - InOut, 4 - Fuel, 5 - Coolent
 
-    public float Temperture;
-    public float Coolent;
+    public bool[] TempertureSensitive;
 
-    public float ProgressTime;
+    public bool StationAux;
+    public bool StationFix;
+    public bool StationCoolent;
+    public bool StationFuel;
+    public bool StationThermometer;
 }

@@ -401,7 +401,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void RecipeSelect()
     {
-        ScriptableObject_Station[] SelectableRecipes = playerController.UISelectedPOIController.SelectableRecipes;
+        ScriptableObject_Recipe[] SelectableRecipes = playerController.UISelectedPOIController.SelectableRecipes;
 
         foreach (Transform child in Recipe_Scroll)
         {
@@ -438,7 +438,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             }
         }
     }
-    private void SelectedRecipeInfo(ScriptableObject_Station SelectedRecipe)
+    private void SelectedRecipeInfo(ScriptableObject_Recipe SelectedRecipe)
     {
         Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
         text.text = "(" + SelectedRecipe.Temperture.ToString() + ")";
@@ -627,7 +627,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
         int[] ItemRequireCounts = new int[3] { 1, 1, 1 };
         int[] ItemInputCounts = new int[3] { 1, 1, 1 };
 
-        ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
+        ScriptableObject_Recipe SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
 
         for (int i = 0; i < SelectedRecipe.InputCount; i++)
         {
@@ -666,7 +666,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     /*
     public void Station_Input_Item(int SlotNum)
     {
-        ScriptableObject_Station SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
+        ScriptableObject_Recipe SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
 
         int ItemRequireCount = 1;
         if (Input.GetKey(KeyCode.LeftShift)) ItemRequireCount *= 10;
