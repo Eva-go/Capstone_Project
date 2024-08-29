@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -110,15 +110,15 @@ public class PlayerController : MonoBehaviour
 
     public bool ShopActive;
 
-    //ÃßÃâ º¯¼ö
+    //ì¶”ì¶œ ë³€ìˆ˜
     public bool Extract;
 
-    //¸®½ºÆù °ü·Ã º¯¼ö
+    //ë¦¬ìŠ¤í° ê´€ë ¨ ë³€ìˆ˜
     private static GameObject player;
     public Transform oldTransform;
     public Transform AptTransform;
 
-    //¾ÆÆÄÆ® ÁøÀÔº¯¼ö
+    //ì•„íŒŒíŠ¸ ì§„ì…ë³€ìˆ˜
     public int inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviour
     {
         currentPlayer = player;
     }
-    //InteractableObject¸¦ À§ÇÑ ÄÚµå ³¡
+    //InteractableObjectë¥¼ ìœ„í•œ ì½”ë“œ ë
 
     public void InvokeInventoryChanged()
     {
@@ -156,10 +156,10 @@ public class PlayerController : MonoBehaviour
 
     public void EnterDoor(Transform doorTransform)
     {
-        string doorName = doorTransform.name; // ¹® ÀÌ¸§À» »ç¿ëÇÏ¿© °íÀ¯ ½Äº°ÀÚ·Î »ç¿ë
+        string doorName = doorTransform.name; // ë¬¸ ì´ë¦„ì„ ì‚¬ìš©í•˜ì—¬ ê³ ìœ  ì‹ë³„ìë¡œ ì‚¬ìš©
         lastDoorEntered = doorName;
 
-        // ¹® À§Ä¡¿Í È¸Àü ÀúÀå
+        // ë¬¸ ìœ„ì¹˜ì™€ íšŒì „ ì €ì¥
         if (!doorPositions.ContainsKey(doorName))
         {
             doorPositions[doorName] = doorTransform.position;
@@ -389,15 +389,17 @@ public class PlayerController : MonoBehaviour
             if (!Bagdrop)
             {
                 Bagdrop = true;
-                // Bag »ı¼º
+                // Bag
                 GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
                 BagController bagScript = bag.GetComponent<BagController>();
                 if (bagScript != null)
                 {
-                    // ¾ÆÀÌÅÛ µ¥ÀÌÅÍ Àü¼Û
+
                     foreach (Item item in PlayerInventory.GetItems())
                     {
-                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.ItemType.ItemName, item.Count);
+                        bagScript.BagInventory.AddItem(item);
+
+                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.Count);
                     }
                     PlayerInventory.ClearInventory();
                 }
@@ -413,7 +415,7 @@ public class PlayerController : MonoBehaviour
                 gameObject.transform.GetChild(4).gameObject.SetActive(false);
                 gameObject.transform.GetChild(5).gameObject.SetActive(false);
             }
-            if (Input.GetKeyDown(KeyCode.R)&&Hp<=0)
+            if (Input.GetKeyDown(KeyCode.R) && Hp <= 0)
             {
                 live = false;
                 Hp = 100;
@@ -427,13 +429,13 @@ public class PlayerController : MonoBehaviour
                 Bagdrop = false;
             }
         }
-        if(isRespawn&&!live)
+        if (isRespawn && !live)
         {
             if (!pv.IsMine) return;
             pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
             isRespawn = false;
-            live = true;  
-        }    
+            live = true;
+        }
     }
     [PunRPC]
     public void RPC_Alive()
@@ -445,7 +447,7 @@ public class PlayerController : MonoBehaviour
     [PunRPC]
     public void RPC_PlayerDied()
     {
-        // ·ÎÄÃ ÇÃ·¹ÀÌ¾îÀÇ GameObject ºñÈ°¼ºÈ­
+        // ë¡œì»¬ í”Œë ˆì´ì–´ì˜ GameObject ë¹„í™œì„±í™”
         gameObject.transform.GetChild(1).gameObject.SetActive(false);
         gameObject.transform.GetChild(3).gameObject.SetActive(false);
         gameObject.transform.GetChild(4).gameObject.SetActive(false);
@@ -477,7 +479,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                Debug.LogError("½ºÆù Æ÷ÀÎÆ®°¡ ¾ø½À´Ï´Ù.");
+                Debug.LogError("ìŠ¤í° í¬ì¸íŠ¸ê°€ ì—†ìŠµë‹ˆë‹¤.");
             }
         }
     }
@@ -504,7 +506,7 @@ public class PlayerController : MonoBehaviour
                 photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
                 Debug.Log("Player spawned and ownership transferred.");
             }
-            Debug.Log("ÇÃ·¹ÀÌ¾î È®ÀÎ" + GameObject.Find(player.name));
+            Debug.Log("í”Œë ˆì´ì–´ í™•ì¸" + GameObject.Find(player.name));
         }
 
     }
@@ -773,8 +775,8 @@ public class PlayerController : MonoBehaviour
                 case "Door":
                     myRigid.isKinematic = true;
                     insideActive = true;
-                    // ¹®À» Åë°úÇÏ¿© ¾ÆÆÄÆ®·Î µé¾î°¡´Â °æ¿ì
-                    EnterDoor(hitInfo.collider.transform); // ¹® À§Ä¡¸¦ ÀúÀå
+                    // ë¬¸ì„ í†µê³¼í•˜ì—¬ ì•„íŒŒíŠ¸ë¡œ ë“¤ì–´ê°€ëŠ” ê²½ìš°
+                    EnterDoor(hitInfo.collider.transform); // ë¬¸ ìœ„ì¹˜ë¥¼ ì €ì¥
 
                     if (InsideFillHandler.fillValue >= 100)
                     {
@@ -790,7 +792,7 @@ public class PlayerController : MonoBehaviour
                     insideActive = true;
                     if (lastDoorEntered != null && InsideFillHandler.fillValue >= 100)
                     {
-                        //myRigid.position = doorPositions[lastDoorEntered]; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹® À§Ä¡·Î ÀÌµ¿
+                        //myRigid.position = doorPositions[lastDoorEntered]; // ë§ˆì§€ë§‰ìœ¼ë¡œ ë“¤ì–´ê°”ë˜ ë¬¸ ìœ„ì¹˜ë¡œ ì´ë™
                         myRigid.position=doorPositions[lastDoorEntered];
                         InsideFillHandler.fillValue = 0;
                         insideActive = false;
@@ -810,7 +812,7 @@ public class PlayerController : MonoBehaviour
                         {
                             idx = UnityEngine.Random.Range(0, directChildren.Count);
                         }
-                        //myRigid.position = directChildren[idx].position; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹® À§Ä¡·Î ÀÌµ¿
+                        //myRigid.position = directChildren[idx].position; // ë§ˆì§€ë§‰ìœ¼ë¡œ ë“¤ì–´ê°”ë˜ ë¬¸ ìœ„ì¹˜ë¡œ ì´ë™
                         myRigid.position = directChildren[idx].position;
                         InsideFillHandler.fillValue = 0;
                         insideActive = false;
@@ -847,14 +849,14 @@ public class PlayerController : MonoBehaviour
 
                                         if (interactableObject.GetInteractingPlayerId() != playerId)
                                         {
-                                            // ´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ëÇÏ°í ÀÖÀ¸¸é ¼ÒÀ¯±ÇÀ» ³Ñ°ÜÁÖ°í Ä«¿îÆ®¸¦ ÃÊ±âÈ­
-                                            interactableObject.SetInteractingPlayerId(playerId); // »õ ÇÃ·¹ÀÌ¾î¿¡°Ô ¼ÒÀ¯±Ç ºÎ¿©
+                                            // ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš©í•˜ê³  ìˆìœ¼ë©´ ì†Œìœ ê¶Œì„ ë„˜ê²¨ì£¼ê³  ì¹´ìš´íŠ¸ë¥¼ ì´ˆê¸°í™”
+                                            interactableObject.SetInteractingPlayerId(playerId); // ìƒˆ í”Œë ˆì´ì–´ì—ê²Œ ì†Œìœ ê¶Œ ë¶€ì—¬
                                             pv.RPC("ResetOwnership", RpcTarget.OthersBuffered, isActive);
                                         }
                                         else
                                         {
-                                            // ÀÌ¹Ì ¼ÒÀ¯ÇÏ°í ÀÖ´Â ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ëÇÒ °æ¿ì
-                                            interactableObject.IncreaseCount(playerId); // Ä«¿îÆ® Áõ°¡
+                                            // ì´ë¯¸ ì†Œìœ í•˜ê³  ìˆëŠ” í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš©í•  ê²½ìš°
+                                            interactableObject.IncreaseCount(playerId); // ì¹´ìš´íŠ¸ ì¦ê°€
                                         }
                                     }
                                 }
@@ -1351,12 +1353,12 @@ public class PlayerController : MonoBehaviour
     {
         if (stream.IsWriting)
         {
-            // ´Ù¸¥ Å¬¶óÀÌ¾ğÆ®¿¡°Ô Ã¤·Â Á¤º¸¸¦ º¸³»±â
+            // ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ì±„ë ¥ ì •ë³´ë¥¼ ë³´ë‚´ê¸°
             stream.SendNext(Hp);
         }
         else
         {
-            // ´Ù¸¥ Å¬¶óÀÌ¾ğÆ®·ÎºÎÅÍ Ã¤·Â Á¤º¸¸¦ ¹Ş±â
+            // ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ë¡œë¶€í„° ì±„ë ¥ ì •ë³´ë¥¼ ë°›ê¸°
             Hp = (float)stream.ReceiveNext();
         }
     }
@@ -1368,7 +1370,7 @@ public class PlayerController : MonoBehaviour
         if (pv.IsMine)
         {
             Hp += amount;
-            Hp = Mathf.Min(Hp, 100f); // ÃÖ´ë Ã¼·Â Á¦ÇÑ
+            Hp = Mathf.Min(Hp, 100f); // ìµœëŒ€ ì²´ë ¥ ì œí•œ
         }
     }
 
