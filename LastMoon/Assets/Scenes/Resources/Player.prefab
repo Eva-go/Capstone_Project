@@ -785,7 +785,7 @@ Transform:
   m_GameObject: {fileID: 2425928368607806541}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 0, y: 1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1521,7 +1521,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &4093038744633329121
@@ -1670,7 +1670,15 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   Poi_BT:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1689,6 +1697,10 @@ MonoBehaviour:
   - {fileID: 1478360869261646978, guid: 12350d5745dd6d04c8a024f57f19375e, type: 3}
   - {fileID: 5371151852980298888, guid: 627abb0447284b14db4685ec0a1ec1fa, type: 3}
   - {fileID: 1573298627077628865, guid: 8d135d89ef062d0488aa91232deeda99, type: 3}
+  - {fileID: 5371151852980298888, guid: 3ac3d84653c57bb409691d7521ce89ea, type: 3}
+  - {fileID: 5371151852980298888, guid: 49e2c4b60a2938c45bf0d7e040d58058, type: 3}
+  - {fileID: 5371151852980298888, guid: 3ac3d84653c57bb409691d7521ce89ea, type: 3}
+  - {fileID: 5371151852980298888, guid: 3ac3d84653c57bb409691d7521ce89ea, type: 3}
   - {fileID: 3079423493778808962, guid: afe729128ae93674398fec5c714e91f4, type: 3}
   - {fileID: 366367957362793796, guid: 945ebfa6b0be2fb44a5216aba940fbc3, type: 3}
   PreviewPoi_red:
@@ -1698,6 +1710,10 @@ MonoBehaviour:
   - {fileID: 1478360869261646978, guid: a2c2873688c8de946a42871c0f2c69a0, type: 3}
   - {fileID: 5371151852980298888, guid: edb4338e6138a724697c4125f0a7dda0, type: 3}
   - {fileID: 1573298627077628865, guid: 05e7f3a5a9725f54ea99b43ad05cd0c3, type: 3}
+  - {fileID: 5371151852980298888, guid: f9f25eecda9396643bc0ebc1390d4626, type: 3}
+  - {fileID: 5371151852980298888, guid: ff816bff0bc08874aac068a22d739325, type: 3}
+  - {fileID: 5371151852980298888, guid: f9f25eecda9396643bc0ebc1390d4626, type: 3}
+  - {fileID: 5371151852980298888, guid: f9f25eecda9396643bc0ebc1390d4626, type: 3}
   - {fileID: 7058263592653485094, guid: 3eddab1b6a2a2d141b6acace7849a8d5, type: 3}
   - {fileID: 366367957362793796, guid: b6e8001fc342d8a4a92ffb761c84528e, type: 3}
   SpawnPoi:
@@ -1707,8 +1723,36 @@ MonoBehaviour:
   - {fileID: 1478360869261646978, guid: 23a68ec0c2bc287479fd9d44228ddbc3, type: 3}
   - {fileID: 5371151852980298888, guid: 8348f3e586f3b2d40b39eac5f8255ae2, type: 3}
   - {fileID: 1573298627077628865, guid: 450e9e22cb792264ba66d152ca3d680f, type: 3}
+  - {fileID: 1478360869261646978, guid: 910da535ef05ace48b39c42d41c3d29a, type: 3}
+  - {fileID: 4553568369980560637, guid: d9854da560cccb84885d1b1bce3b7eca, type: 3}
+  - {fileID: 1478360869261646978, guid: 0aa2a480db95caa499eff08be06847b9, type: 3}
+  - {fileID: 1478360869261646978, guid: d326b442e7a459040824b92ac5ff4e0c, type: 3}
   - {fileID: 3079423493778808962, guid: 2bb68449aa1a9cb41ad3217de786d5b9, type: 3}
   - {fileID: 366367957362793796, guid: a60e9eae64ede5d4585237ec19d1c350, type: 3}
+  SelectableStations:
+  - {fileID: 11400000, guid: 13e9c125e6a97914492715fcf1ed617f, type: 2}
+  - {fileID: 11400000, guid: e3e47e76109b77a46a96e89e3f00c240, type: 2}
+  - {fileID: 11400000, guid: 4758188ea26b4b34db3148d7375018d2, type: 2}
+  - {fileID: 11400000, guid: aa4ad5b98c7758f4782a34aa983115f1, type: 2}
+  - {fileID: 11400000, guid: cfba71d597c68b044866b96f94121fbc, type: 2}
+  - {fileID: 11400000, guid: 9177320d05582bf41a6b9100b2eec238, type: 2}
+  - {fileID: 11400000, guid: 3a5eb20a162150e4baaf48d67c33ce55, type: 2}
+  - {fileID: 11400000, guid: 6a1d220090171e54fa08d9f0bd24233c, type: 2}
+  - {fileID: 11400000, guid: dede11eb70417ca4b8b5e7fb645d339c, type: 2}
+  - {fileID: 11400000, guid: a0de4ffabd74be04bbcc3acc0aeafe91, type: 2}
+  - {fileID: 11400000, guid: 6a1d220090171e54fa08d9f0bd24233c, type: 2}
+  - {fileID: 11400000, guid: 6a1d220090171e54fa08d9f0bd24233c, type: 2}
+  MaxHealth: 10
+  ProcessEfficiency: 1
+  TempertureLimit: 100
+  StationMaterial:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  AuxMat: {fileID: 0}
+  FixMat: {fileID: 0}
 --- !u!114 &725141506427028762
 MonoBehaviour:
   m_ObjectHideFlags: 0

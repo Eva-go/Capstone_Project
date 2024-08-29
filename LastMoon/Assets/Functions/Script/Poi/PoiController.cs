@@ -132,7 +132,7 @@ public class PoiController : MonoBehaviour
         {
             TickTimer.Instance.StartTickTimer(0.05f, OnTickAction);
         }
-        TickTimer.Instance.StartTickTimer(1f, nodeSpawnTick);
+        //TickTimer.Instance.StartTickTimer(1f, nodeSpawnTick);
     }
 
     private void OnDestroy()
