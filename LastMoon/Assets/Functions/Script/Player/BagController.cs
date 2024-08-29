@@ -6,14 +6,13 @@ public class BagController : MonoBehaviourPunCallbacks
     public int[] nodeItems = new int[6];
     public int[] mixItems = new int[6];
     
-    public float health = 10f;
+    public float health = 30f;
     public Inventory BagInventory = new Inventory { };
-    public ScriptableObject_ItemList Itemlist;
 
     private int lastAttackerViewID;
 
     [PunRPC]
-    public void GetItem(string ItemType, int ItemCount)
+    public void GetItem(int ItemCount)
     {
         //BagInventory.OverrideInventory(inventory);
         /*
@@ -25,13 +24,7 @@ public class BagController : MonoBehaviourPunCallbacks
          */
         //BagInventory.AddItem(item);
         //health += item.Count * 5;
-
-        BagInventory.AddItem(new Item { ItemType = Itemlist.FindListByIDMatch(ItemType), Count = ItemCount });
-        if (health < 100)
-        {
-            health += (int)(ItemCount / 10);
-        }
-        else if (health != 100) health = 100;
+        health += ItemCount;
     }
 
     [PunRPC]
@@ -59,9 +52,16 @@ public class BagController : MonoBehaviourPunCallbacks
                     playerController.PlayerInventory.AddItem(item);
                     playerController.TakeDamage(5f);
                 }
-
-                // 인벤토리 변경 이벤트 호출
-                playerController.InvokeInventoryChanged();
+                /*
+                for (int i = 0; i < nodeItems.Length; i++)
+                {
+                    playerController.nodeItiems[i] += nodeItems[i];
+                }
+                for (int i = 0; i < mixItems.Length; i++)
+                {
+                    playerController.mixItiems[i] += mixItems[i];
+                }
+                 */
             }
         }
         if (PhotonNetwork.IsMasterClient || photonView.IsMine)

@@ -10,16 +10,12 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
     public GameObject currentPlayer { get; private set; }
-
-
-
     public PhotonView pv;
     public string nickName;
     public static float Hp = 100f;
     public GameObject cam;
     public GameObject RespawnCam;
     public bool isRespawn;
-    //public GameObject RespawnCamera;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -110,7 +106,7 @@ public class PlayerController : MonoBehaviour
     public float rotationLerpSpeed = 8f;
 
     private Vector3 networkPosition;
-    private Quaternion networkRotation;
+    //private Quaternion networkRotation;
 
     public bool ShopActive;
 
@@ -123,14 +119,9 @@ public class PlayerController : MonoBehaviour
     public Transform AptTransform;
 
     //아파트 진입변수
-    private bool isInside;
-    private bool isOutside;
     public int inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
-    private bool oldPosState = false; // 상태를 추적하기 위한 변수
-    private bool insideState = false; // 상태를 추적하기 위한 변수
-    Transform parentTransform;
 
     private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
@@ -138,7 +129,6 @@ public class PlayerController : MonoBehaviour
     private bool Bagdrop = false;
     public bool Godmode = false;
 
-    //InteractableObject를 위한 코드
     private void Awake()
     {
         if (Instance == null)
@@ -312,43 +302,12 @@ public class PlayerController : MonoBehaviour
             {
                 DeathPPSVolume.SetActive(false);
             }
-            //if (insideActive && InsideFillHandler.fillValue >= 100)
-            //{
-            //    Debug.Log("인사이드" + inside);
-            //    InsideFillHandler.fillValue = 0;
-            //    InsideUpdate();
-            //    keydowns = false;
-            //    myRigid.isKinematic = false;
-            //}
             if (GameValue.exit)
             {
                 Destroy(gameObject);
             }
         }
     }
-
-    /*public void InsideUpdate()
-    {
-        switch(inside)
-        {
-            case 0:
-                gameObject.transform.position = parentTransform.position;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 1:
-                gameObject.transform.position = PlayerAPT.playerPoint;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 2:
-                if (doorPositions.ContainsKey(lastDoorEntered))
-                {
-                    gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                }
-                break;
-
-        }
-    }*/
 
     public int Sell()
     {
@@ -423,6 +382,8 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
+        if (!pv.IsMine) return;
+        pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
         if (pv.IsMine)
         {
             if (!Bagdrop)
@@ -444,7 +405,6 @@ public class PlayerController : MonoBehaviour
             }
             InvokeInventoryChanged();
             Hp = 0;
-            //RespawnAcive = true;
             if (live)
             {
                 RespawnCam.SetActive(true);
@@ -452,26 +412,46 @@ public class PlayerController : MonoBehaviour
                 gameObject.transform.GetChild(3).gameObject.SetActive(false);
                 gameObject.transform.GetChild(4).gameObject.SetActive(false);
                 gameObject.transform.GetChild(5).gameObject.SetActive(false);
-                live = false;
             }
-            //else if (RespawnFillHandler.fillValue >= 100)
-            //{
-            //    Bagdrop = false;
-            //    respawnTick = false;
-            //    RespawnAcive = false;
-            //    RespawnCamera.SetActive(false);
-            //    RespawnFillHandler.fillValue = 0; 
-            //}
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R)&&Hp<=0)
             {
-                RespawnCam.SetActive(false);
                 live = false;
-                isRespawn = false;
-                PhotonNetwork.Destroy(gameObject);
-                reSpwan();
+                Hp = 100;
+                RespawnCam.SetActive(false);
+                gameObject.transform.GetChild(2).gameObject.SetActive(true);
+                gameObject.transform.GetChild(3).gameObject.SetActive(true);
+                gameObject.transform.GetChild(4).gameObject.SetActive(true);
+                //PhotonNetwork.Destroy(gameObject);
+                //reSpwan();
+                myRigid.position = PlayerAPT.playerPoint;
+                Bagdrop = false;
             }
         }
+        if(isRespawn&&!live)
+        {
+            if (!pv.IsMine) return;
+            pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
+            isRespawn = false;
+            live = true;  
+        }    
     }
+    [PunRPC]
+    public void RPC_Alive()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(true);
+        gameObject.transform.GetChild(5).gameObject.SetActive(true);
+    }
+
+    [PunRPC]
+    public void RPC_PlayerDied()
+    {
+        // 로컬 플레이어의 GameObject 비활성화
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(3).gameObject.SetActive(false);
+        gameObject.transform.GetChild(4).gameObject.SetActive(false);
+        gameObject.transform.GetChild(5).gameObject.SetActive(false);
+    }
+
 
     private void reSpwan()
     {
@@ -490,7 +470,9 @@ public class PlayerController : MonoBehaviour
             {
 
                 int idx = UnityEngine.Random.Range(0, directChildren.Count);
-                SpawnPlayer(idx, directChildren[idx]);
+
+                //SpawnPlayer(idx, directChildren[idx]);
+               
 
             }
             else
@@ -523,15 +505,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Player spawned and ownership transferred.");
             }
             Debug.Log("플레이어 확인" + GameObject.Find(player.name));
-            //if(PhotonNetwork.LocalPlayer.NickName != GameObject.Find(player.name).ToString())
-            //{
-            //    Debug.Log("플레이어 없음");
-            //    reSpwan();
-            //}
         }
-        //PlayerSpawn playerSpawn = GameObject.Find("PlayerSpwan").GetComponent<PlayerSpawn>();
-        //playerSpawn.OnBuildingCreated();
-
 
     }
 
@@ -583,7 +557,7 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("RPC_UpdatePosition", RpcTarget.AllBuffered, transform.position);
             }
         }
     }
@@ -670,7 +644,7 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("RPC_UpdatePosition", RpcTarget.AllBuffered, transform.position);
             }
         }
     }
@@ -804,31 +778,25 @@ public class PlayerController : MonoBehaviour
 
                     if (InsideFillHandler.fillValue >= 100)
                     {
-                        inside = 1;
                         keydowns = false;
                         insideActive = false;
-                        //InsideUpdate();
-                        gameObject.transform.position = PlayerAPT.playerPoint;
-                        Debug.Log("pos2" + gameObject.transform.position);
-                        gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                        myRigid.isKinematic = false;
-                        isInside = true;
+                        //myRigid.position = PlayerAPT.playerPoint;
+                        myRigid.position=PlayerAPT.playerPoint;
                         InsideFillHandler.fillValue = 0;
                     }
-                    if (isInside)
-                    {
-                        InsideFillHandler.fillValue = 0;
-                        if (gameObject.transform.position != PlayerAPT.playerPoint)
-                        {
-                            gameObject.transform.position = PlayerAPT.playerPoint;
-                            Debug.Log("pos1" + gameObject.transform.position);
-                            isInside = false;
-                        }
-                    }
-
                     break;
 
                 case "ReturnDoor":
+                    insideActive = true;
+                    if (lastDoorEntered != null && InsideFillHandler.fillValue >= 100)
+                    {
+                        //myRigid.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
+                        myRigid.position=doorPositions[lastDoorEntered];
+                        InsideFillHandler.fillValue = 0;
+                        insideActive = false;
+                    }
+                    else if (lastDoorEntered == null && InsideFillHandler.fillValue >= 100)
+                    {
                         Transform parentTransform = GameObject.Find("SpawnPoint").transform;
                         List<Transform> directChildren = new List<Transform>();
 
@@ -842,23 +810,11 @@ public class PlayerController : MonoBehaviour
                         {
                             idx = UnityEngine.Random.Range(0, directChildren.Count);
                         }
-                        isOutside = false;
-                        myRigid.isKinematic = true;
-                        //insideActive = true;
-                        
-                            if (lastDoorEntered != null)
-                            {
-                                gameObject.transform.position = doorPositions[lastDoorEntered]; // 마지막으로 들어갔던 문 위치로 이동
-                                gameObject.transform.rotation = doorRotations[lastDoorEntered]; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                            }
-                            else
-                            {
-                                gameObject.transform.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
-                                gameObject.transform.rotation = directChildren[idx].rotation; // 마지막으로 들어갔던 문의 회전 값으로 설정
-                            }
-                            myRigid.isKinematic = false;
-                            isOutside = true;
-                            //InsideFillHandler.fillValue = 0;
+                        //myRigid.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
+                        myRigid.position = directChildren[idx].position;
+                        InsideFillHandler.fillValue = 0;
+                        insideActive = false;
+                    }
                     break;
 
                 case "RPoi":
@@ -1370,10 +1326,10 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    private void RPC_UpdatePositionAndRotation(Vector3 position, Quaternion rotation)
+    private void RPC_UpdatePosition(Vector3 position)
     {
         networkPosition = position;
-        networkRotation = rotation;
+        //networkRotation = rotation;
     }
 
     [PunRPC]
@@ -1387,6 +1343,32 @@ public class PlayerController : MonoBehaviour
             {
                 targetPlayer.TakeDamage(damage);
             }
+        }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // 다른 클라이언트에게 채력 정보를 보내기
+            stream.SendNext(Hp);
+        }
+        else
+        {
+            // 다른 클라이언트로부터 채력 정보를 받기
+            Hp = (float)stream.ReceiveNext();
+        }
+    }
+
+    [PunRPC]
+    
+    private void RPC_RecoverHp(float amount)
+    {
+        if (pv.IsMine)
+        {
+            Hp += amount;
+            Hp = Mathf.Min(Hp, 100f); // 최대 체력 제한
         }
     }
 
@@ -1518,7 +1500,7 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < nodeItiems.Length; i++)
             {
                 nodeItiems[i] += 10;
-              
+
             }
             OnInventoryChanged?.Invoke();
         }

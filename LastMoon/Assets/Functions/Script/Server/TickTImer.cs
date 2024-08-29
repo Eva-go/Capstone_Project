@@ -1,52 +1,81 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Photon.Pun;
 
 public class TickTimer : MonoBehaviourPun
 {
-    // 이벤트 인수를 정의하는 클래스
-    public class OnTickEventArgs : EventArgs
-    {
-        public int tick;
-    }
+    public static TickTimer Instance { get; private set; }
 
-    // 티크가 발생할 때 호출될 이벤트
-    public static event EventHandler<OnTickEventArgs> OnTick;
-
-    // 티크 타이머의 최대 간격 (초 당 틱을 몇번 부를것인가?)
-    private const float TICK_TIMER_MAX = 0.05f;
-
-    // 현재 티크 및 타이머 상태를 저장하는 변수
-    private int tick;
-    private double lastTickTime;
+    private List<Timer> timers = new List<Timer>();
+    private float serverTimeOffset; // 서버와 클라이언트 간의 시간 오프셋
 
     private void Awake()
     {
-        // 초기화: 티크 및 마지막 티크 시간을 서버 시간으로 설정
-        tick = 0;
-        lastTickTime = PhotonNetwork.Time;
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        // 서버 시간 오프셋을 계산합니다. 이 값은 처음 시작할 때 서버와 클라이언트의 시간 차이를 맞추기 위한 값입니다.
+        serverTimeOffset = PhotonNetwork.ServerTimestamp / 1000f - Time.time;
+    }
+
+    public void StartTickTimer(float interval, System.Action callback)
+    {
+        Timer timer = new Timer
+        {
+            Interval = interval,
+            Callback = callback,
+            NextTickTime = GetCurrentServerTime() + interval
+        };
+        timers.Add(timer);
+    }
+
+    public void StopTickTimer(System.Action callback)
+    {
+        Timer timerToRemove = timers.FirstOrDefault(t => t.Callback == callback);
+        if (timerToRemove != null)
+        {
+            timers.Remove(timerToRemove);
+        }
+    }
+
+    public bool IsRunning(System.Action callback)
+    {
+        return timers.Any(t => t.Callback == callback);
     }
 
     private void Update()
     {
-        // 현재 서버 시간을 가져옴
-        double currentTime = PhotonNetwork.Time;
+        float currentServerTime = GetCurrentServerTime();
 
-        // 마지막 티크 시간과 현재 시간의 차이를 계산
-        float elapsedTime = (float)(currentTime - lastTickTime);
-
-        // 티크 타이머가 최대 값을 초과했는지 확인
-        if (elapsedTime >= TICK_TIMER_MAX)
+        foreach (var timer in timers.ToArray())
         {
-            // 남은 시간 계산 후 업데이트
-            lastTickTime = currentTime - (elapsedTime % TICK_TIMER_MAX);
-            tick++;
-            if(tick>=20000)
+            if (currentServerTime >= timer.NextTickTime)
             {
-                tick = 0;
+                timer.Callback.Invoke();
+                timer.NextTickTime = currentServerTime + timer.Interval;
             }
-            // OnTick 이벤트 호출
-            OnTick?.Invoke(this, new OnTickEventArgs { tick = tick });
         }
+    }
+
+    private float GetCurrentServerTime()
+    {
+        return PhotonNetwork.ServerTimestamp / 1000f - serverTimeOffset;
+    }
+
+    private class Timer
+    {
+        public float Interval { get; set; }
+        public float NextTickTime { get; set; }
+        public System.Action Callback { get; set; }
     }
 }

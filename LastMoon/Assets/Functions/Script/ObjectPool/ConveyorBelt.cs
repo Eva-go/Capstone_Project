@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConveyorBelt: MonoBehaviour
+public class ConveyorBelt : MonoBehaviour
 {
     [SerializeField]
     private float speed;          // 벨트의 속도
@@ -16,39 +16,12 @@ public class ConveyorBelt: MonoBehaviour
     [SerializeField]
     private List<GameObject> onBelt; // 벨트 위의 물체들
 
-    void Start()
+    [SerializeField]
+    private BoxCollider boxCollider;
+
+    private void Start()
     {
-        // 현재 물체의 회전값을 Quaternion으로 가져옵니다.
-        Quaternion rotation = gameObject.transform.rotation;
-        
-        // Quaternion을 오일러 각도로 변환합니다.
-        Vector3 eulerAngles = rotation.eulerAngles;
-        
-        // 오일러 각도를 360도 범위로 변환합니다.
-        eulerAngles = NormalizeEulerAngles(eulerAngles);
-        
-        // 오일러 각도에 따라 direction을 설정합니다.
-        if (eulerAngles.y == 0)
-        {
-            direction = new Vector3(1, 0, 0);
-        }
-        else if (eulerAngles.y == 180)
-        {
-            direction = new Vector3(-1, 0, 0);
-        }
-        else if (eulerAngles.y == 90)
-        {
-            direction = new Vector3(0, 0, -1);
-        }
-        else if (eulerAngles.y == 270)
-        {
-            direction = new Vector3(0, 0, 1);
-        }
-        else
-        {
-            direction = Vector3.zero; // 기본값
-        }
-        
+        UpdateBeltDirection(direction);
     }
 
     private Vector3 NormalizeEulerAngles(Vector3 eulerAngles)
@@ -59,18 +32,11 @@ public class ConveyorBelt: MonoBehaviour
         return eulerAngles;
     }
 
-    // 개별 각도를 0-360도 범위로 정규화합니다.
     private float NormalizeAngle(float angle)
     {
         angle = angle % 360f;
         if (angle < 0f) angle += 360f;
         return angle;
-    }
-
-    void Update()
-    {
-        // 텍스처의 이동 처리 (필요한 경우에만 사용)
-        // material.mainTextureOffset += new Vector2(0, 1) * conveyorSpeed * Time.deltaTime;
     }
 
     void FixedUpdate()
@@ -84,29 +50,92 @@ public class ConveyorBelt: MonoBehaviour
             }
             else
             {
-                // 벨트 위의 각 물체에 힘을 추가
-                onBelt[i].GetComponent<Rigidbody>()?.AddForce(speed * direction);
+                // 물체의 Collider와 boxCollider 간의 충돌 체크
+                if (IsCollidingWithBoxCollider(onBelt[i]))
+                {
+                    UpdateDirectionForObject(onBelt[i]);
+                    onBelt[i].GetComponent<Rigidbody>().velocity = direction;
+                }
+                else
+                {
+                    onBelt[i].GetComponent<Rigidbody>().velocity = direction;
+                }
             }
         }
     }
 
-    // 물체가 벨트와 충돌했을 때
+    private bool IsCollidingWithBoxCollider(GameObject obj)
+    {
+        Collider objCollider = obj.GetComponent<Collider>();
+        if(boxCollider !=null)
+        {
+            // Collider의 bounds를 사용하여 충돌 여부를 확인합니다.
+            return boxCollider.bounds.Intersects(objCollider.bounds);
+        }
+        if (objCollider == null||boxCollider ==null)
+        {
+            return false;
+        }
+        return false;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        // 충돌한 객체가 null이 아니고 리스트에 포함되어 있지 않은 경우 추가
+        // 물체가 벨트와 충돌했을 때
         if (collision.gameObject != null && !onBelt.Contains(collision.gameObject))
         {
             onBelt.Add(collision.gameObject);
         }
+        else
+        {
+            if (collision.gameObject != null)
+            {
+                onBelt.Add(collision.gameObject);
+            }
+        }
     }
 
-    // 물체가 벨트와의 충돌을 끝냈을 때
     private void OnCollisionExit(Collision collision)
     {
-        // 충돌이 끝난 객체가 null이 아니면 리스트에서 제거
-        if (collision.gameObject != null)
+        
+        //collision.gameObject.GetComponent<Rigidbody>().useGravity = true;
+        onBelt.Remove(collision.gameObject);
+        
+    }
+
+    private void UpdateBeltDirection(Vector3 eulerAngles)
+    {
+        // 오일러 각도를 360도 범위로 변환합니다.
+        eulerAngles = NormalizeEulerAngles(eulerAngles);
+        eulerAngles.y = Mathf.Round(eulerAngles.y);
+
+        // 오일러 각도에 따라 direction을 설정합니다.
+        if (eulerAngles.y == 0f || eulerAngles.y == 360f)
         {
-            onBelt.Remove(collision.gameObject);
+            direction = new Vector3(1, 0, 0);
         }
+        else if (eulerAngles.y == 180f)
+        {
+            direction = new Vector3(-1, 0, 0);
+        }
+        else if (eulerAngles.y == 90f)
+        {
+            direction = new Vector3(0, 0, -1);
+        }
+        else if (eulerAngles.y == 270f)
+        {
+            direction = new Vector3(0, 0, 1);
+        }
+    }
+
+    private void UpdateDirectionForObject(GameObject obj)
+    {
+        // 벨트의 방향을 업데이트하고, 오일러 각도를 수정합니다.
+        Quaternion rotation = gameObject.transform.rotation;
+        Vector3 eulerAngles = rotation.eulerAngles;
+        eulerAngles.y -= 90;
+
+        // 벨트의 direction을 다시 설정합니다.
+        UpdateBeltDirection(eulerAngles);
     }
 }

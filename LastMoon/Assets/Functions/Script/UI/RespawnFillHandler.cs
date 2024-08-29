@@ -25,58 +25,6 @@ public class RespawnFillHandler : MonoBehaviour
     public bool isConstructing;
 
 
-    private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
-    {
-        if (isConstructing)
-        {
-            tick = e.tick % tickMax;
-            if (tick >= tickMax - 1)
-            {
-               // if (PlayerController.RespawnAcive)
-               // {
-               //     if (fillValue < 100)
-               //     {
-               //         fillValue += tick;
-               //     }
-               //     else if (fillValue >= 100)
-               //     {
-               //         if (!hasFilled && pv.IsMine)
-               //         {
-               //             fillValue = 100;
-               //             hasFilled = true; // Set flag to true to prevent multiple updates
-               //         }
-               //     }
-               //     FillCircleValue(fillValue);
-               // }
-               //
-               // else
-               // {
-               //     tick = 0;
-               //     fillValue = 0;
-               //     hasFilled = false; // Reset flag when not inside
-               //     FillCircleValue(fillValue);
-               // }
-            }
-            else
-            {
-
-                //Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
-            }
-
-        }
-    }
-
-    public void tick_ck(int ticksToConstruct)
-    {
-
-        if (!isConstructing)
-        {
-            tickMax = ticksToConstruct;
-            isConstructing = true;
-            TickTimer.OnTick += TimeTickSystem_OnTick;
-        }
-
-    }
 
 
     void Start()
@@ -94,7 +42,7 @@ public class RespawnFillHandler : MonoBehaviour
         {
             if (gameObject.activeSelf == true)//&&player.respawnTick)
             {
-                tick_ck(10);
+             
             }
 
         }
