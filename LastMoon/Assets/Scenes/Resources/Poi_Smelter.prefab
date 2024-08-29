@@ -149,7 +149,7 @@ MonoBehaviour:
   Obj_Temperture: []
   SelectableRecipes:
   - {fileID: 11400000, guid: e319e8df19835214cb1db1ef731cd530, type: 2}
-  - {fileID: 11400000, guid: 3bd243934ea36b946ac865497b7eccae, type: 2}
+  - {fileID: 11400000, guid: e3ecf7a7885d6a14f9221cbcf6fa9abb, type: 2}
   - {fileID: 11400000, guid: 5a5c5957c8f6fe04fb072a1743fb1eb6, type: 2}
   - {fileID: 11400000, guid: e3ecf7a7885d6a14f9221cbcf6fa9abb, type: 2}
   - {fileID: 11400000, guid: 0ed14c4ef38f65f4c9d96bdc962ee163, type: 2}
@@ -161,6 +161,9 @@ MonoBehaviour:
   sfx_Station_Start: {fileID: -935872782112775922}
   sfx_Station_Activation: {fileID: 2306740109581733371}
   Particle_Activation: {fileID: 6087245713658515881}
+  MaxHealth: 10
+  ProcessEfficiency: 1
+  TempertureLimit: 100
   tick: 0
   tickMax: 0
   isConstructing: 0

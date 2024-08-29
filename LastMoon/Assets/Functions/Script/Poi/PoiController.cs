@@ -680,6 +680,25 @@ public class PoiController : MonoBehaviour
     }
 
 
+    // 맞는 유형 아이템 받기
+    public void TakeItem(Item InputItem)
+    {
+        int activeSlot = -1;
+        if (SelectedRecipe != null)
+        {
+            for (int i = 0; i < SelectedRecipe.InputCount; i++)
+            {
+                if (SelectedRecipe.Input[i] == InputItem.ItemType && activeSlot != -1)
+                {
+                    activeSlot = i;
+                }
+            }
+        }
+        if (activeSlot != -1)
+            Item_Input(activeSlot, 0, InputItem.ItemType, InputItem.Count);
+    }
+
+
     public void Item_Input(int Inv_Slot, int SlotType, ScriptableObject_Item ItemType, int Count)
     {
         switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
@@ -727,7 +746,7 @@ public class PoiController : MonoBehaviour
                 break;
         }
     }
-
+    // 아이템 내보내기
     public void Item_Extract(int Inv_Slot, int SlotType, int Count)
     {
         switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent

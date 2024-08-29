@@ -5112,14 +5112,17 @@ MonoBehaviour:
   Obj_Temperture:
   - {fileID: 6625004870833519276}
   SelectableRecipes:
-  - {fileID: 11400000, guid: a999ab0058e84534f9eb57bd4e6a0c42, type: 2}
+  - {fileID: 11400000, guid: 50c1720b37f88e146b7a8115d16fa63a, type: 2}
   - {fileID: 11400000, guid: 43b80d38914fda841a47b78774f37513, type: 2}
-  SelectedRecipe: {fileID: 11400000, guid: a999ab0058e84534f9eb57bd4e6a0c42, type: 2}
+  SelectedRecipe: {fileID: 11400000, guid: 50c1720b37f88e146b7a8115d16fa63a, type: 2}
   StationTemperture: 0
   StationProgress: 0
   sfx_Station_Start: {fileID: -6060658159203649531}
   sfx_Station_Activation: {fileID: 1808737481051242986}
   Particle_Activation: {fileID: 9074932239176016433}
+  MaxHealth: 10
+  ProcessEfficiency: 1
+  TempertureLimit: 100
   tick: 0
   tickMax: 0
   isConstructing: 0

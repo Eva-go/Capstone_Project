@@ -116,10 +116,10 @@ MonoBehaviour:
   SelectableRecipes:
   - {fileID: 11400000, guid: 28ae8c43de2603844ab1889d42658941, type: 2}
   - {fileID: 11400000, guid: 0df8535a0d3070a4b88b0d1420435f86, type: 2}
-  - {fileID: 11400000, guid: a2009f738668a4949bd931d09cf263be, type: 2}
-  - {fileID: 11400000, guid: ddf6fbd92d0e010489c5be7dc04fd99f, type: 2}
   - {fileID: 11400000, guid: 0e7408a2fc9bae647b98b58cd4199cfd, type: 2}
+  - {fileID: 11400000, guid: ddf6fbd92d0e010489c5be7dc04fd99f, type: 2}
   - {fileID: 11400000, guid: 18e916702efcb404283b879675195ec4, type: 2}
+  - {fileID: 11400000, guid: a2009f738668a4949bd931d09cf263be, type: 2}
   - {fileID: 11400000, guid: affa9d1ce7e74ee49877543fc91682d1, type: 2}
   - {fileID: 11400000, guid: 068b5de93b485c948b0f9cbe44af25ee, type: 2}
   SelectedRecipe: {fileID: 11400000, guid: 28ae8c43de2603844ab1889d42658941, type: 2}
@@ -128,6 +128,9 @@ MonoBehaviour:
   sfx_Station_Start: {fileID: 0}
   sfx_Station_Activation: {fileID: -1204528744865690132}
   Particle_Activation: {fileID: 8744740781035122382}
+  MaxHealth: 10
+  ProcessEfficiency: 1
+  TempertureLimit: 100
   tick: 0
   tickMax: 0
   isConstructing: 0
