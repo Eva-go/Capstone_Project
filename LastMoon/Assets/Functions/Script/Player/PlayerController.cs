@@ -383,7 +383,6 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         if (!pv.IsMine) return;
-
         pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
         if (pv.IsMine)
         {
@@ -416,19 +415,36 @@ public class PlayerController : MonoBehaviour
                 gameObject.transform.GetChild(3).gameObject.SetActive(false);
                 gameObject.transform.GetChild(4).gameObject.SetActive(false);
                 gameObject.transform.GetChild(5).gameObject.SetActive(false);
-               
-                live = false;
             }
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R)&&Hp<=0)
             {
-                RespawnCam.SetActive(false);
                 live = false;
-                isRespawn = false;
-                PhotonNetwork.Destroy(gameObject);
-                reSpwan();
+                Hp = 100;
+                RespawnCam.SetActive(false);
+                gameObject.transform.GetChild(2).gameObject.SetActive(true);
+                gameObject.transform.GetChild(3).gameObject.SetActive(true);
+                gameObject.transform.GetChild(4).gameObject.SetActive(true);
+                //PhotonNetwork.Destroy(gameObject);
+                //reSpwan();
+                myRigid.position = PlayerAPT.playerPoint;
+                Bagdrop = false;
             }
         }
+        if(isRespawn&&!live)
+        {
+            if (!pv.IsMine) return;
+            pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
+            isRespawn = false;
+            live = true;  
+        }    
     }
+    [PunRPC]
+    public void RPC_Alive()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(true);
+        gameObject.transform.GetChild(5).gameObject.SetActive(true);
+    }
+
     [PunRPC]
     public void RPC_PlayerDied()
     {
@@ -457,7 +473,9 @@ public class PlayerController : MonoBehaviour
             {
 
                 int idx = UnityEngine.Random.Range(0, directChildren.Count);
-                SpawnPlayer(idx, directChildren[idx]);
+
+                //SpawnPlayer(idx, directChildren[idx]);
+               
 
             }
             else
