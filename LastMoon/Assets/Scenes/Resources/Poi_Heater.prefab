@@ -4952,7 +4952,7 @@ Animator:
   m_GameObject: {fileID: 5371151852980298888}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 7b54757032c69114fbfe320acbd47881, type: 3}
-  m_Controller: {fileID: 9100000, guid: 8618529fac583474192b09755ca4af44, type: 2}
+  m_Controller: {fileID: 9100000, guid: 9c1548df1dbc34f4e9d068e7ce3905f3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -5044,9 +5044,8 @@ MonoBehaviour:
   tick: 0
   tickMax: 0
   isConstructing: 0
+  stop: 0
   hp: 3
-  nodeItme: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
-  OutputTransform: {fileID: 5170737213738554540}
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5084,13 +5083,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 0
-    Name: isActvie
-  - Type: 9
-    SynchronizeType: 0
-    Name: isHit
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
