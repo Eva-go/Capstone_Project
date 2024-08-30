@@ -818,52 +818,53 @@ public class PlayerController : MonoBehaviour
                         insideActive = false;
                     }
                     break;
-
-                case "RPoi":
-                    RaycastHit hit;
-                    if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
+                /*
+            case "RPoi":
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
+                {
+                    PoiController poiController = hit.collider.GetComponent<PoiController>();
+                    if (poiController != null)
                     {
-                        PoiController poiController = hit.collider.GetComponent<PoiController>();
-                        if (poiController != null)
+                        for (int i = 0; i < 4; i++)
                         {
-                            for (int i = 0; i < 4; i++)
+                            if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
                             {
-                                if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
+                                bool isActive = true;
+                                poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
+                                if (poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf == false)
                                 {
-                                    bool isActive = true;
-                                    poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
-                                    if (poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf == false)
+                                    isActive = false;
+                                }
+                                else
+                                {
+                                    isActive = true;
+                                }
+                                PhotonView pv = poiController.GetComponent<PhotonView>();
+                                InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
+                                if (pv != null)
+                                {
+                                    pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
+                                    int playerId = NetworkManager.PlayerID + 1;
+
+                                    if (interactableObject.GetInteractingPlayerId() != playerId)
                                     {
-                                        isActive = false;
+                                        // 다른 플레이어가 상호작용하고 있으면 소유권을 넘겨주고 카운트를 초기화
+                                        interactableObject.SetInteractingPlayerId(playerId); // 새 플레이어에게 소유권 부여
+                                        pv.RPC("ResetOwnership", RpcTarget.OthersBuffered, isActive);
                                     }
                                     else
                                     {
-                                        isActive = true;
-                                    }
-                                    PhotonView pv = poiController.GetComponent<PhotonView>();
-                                    InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
-                                    if (pv != null)
-                                    {
-                                        pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
-                                        int playerId = NetworkManager.PlayerID + 1;
-
-                                        if (interactableObject.GetInteractingPlayerId() != playerId)
-                                        {
-                                            // 다른 플레이어가 상호작용하고 있으면 소유권을 넘겨주고 카운트를 초기화
-                                            interactableObject.SetInteractingPlayerId(playerId); // 새 플레이어에게 소유권 부여
-                                            pv.RPC("ResetOwnership", RpcTarget.OthersBuffered, isActive);
-                                        }
-                                        else
-                                        {
-                                            // 이미 소유하고 있는 플레이어가 상호작용할 경우
-                                            interactableObject.IncreaseCount(playerId); // 카운트 증가
-                                        }
+                                        // 이미 소유하고 있는 플레이어가 상호작용할 경우
+                                        interactableObject.IncreaseCount(playerId); // 카운트 증가
                                     }
                                 }
                             }
                         }
                     }
-                    break;
+                }
+                break;
+                 */
                 default:
                     myRigid.isKinematic = false;
                     insideActive = false;
