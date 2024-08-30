@@ -47,8 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6917bedb88928624dbeaa37d5a857b2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linkedObjects: []
-  count: 0
+  RPOI_Items:
+  - {fileID: 11400000, guid: dce6a3474328c934d8a6fda6d8332a94, type: 2}
+  - {fileID: 11400000, guid: fa259c40698d76049a21547bf0bc5d54, type: 2}
+  - {fileID: 11400000, guid: 7588b4b59b0e2604d9607d1ab9e5e66e, type: 2}
 --- !u!65 &1329422297804590222
 BoxCollider:
   m_ObjectHideFlags: 0
