@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
 
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
     private string[] poiName = { "Poi_Distiller", "Poi_Dryer", "Poi_Filter", "Poi_Grinder", "Poi_Heater", "Poi_Smelter" };
+    private string[] rpoiName = { "RPOI_Boat", "RPOI_Car", "RPOI_Container", "RPOI_Wooden_Boat" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
@@ -865,28 +866,26 @@ public class PlayerController : MonoBehaviour
                     RaycastHit hit;
                     if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
                     {
-                        PoiController poiController = hit.collider.GetComponent<PoiController>();
-                        if (poiController != null)
+                        // 히트된 오브젝트의 이름이 rpoiName 배열에 있는지 확인
+                        string hitObjectName = hit.collider.gameObject.name;
+                        for (int i = 0; i < rpoiName.Length; i++)
                         {
-                            for (int i = 0; i < 4; i++)
+                            if (hitObjectName.Contains(rpoiName[i])) // 이름이 포함된 경우 상호작용
                             {
-                                if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
+                                InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
+                                if (interactableObject != null)
                                 {
                                     bool isActive = true;
-                                    poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
-                                    if (poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf == false)
+                                    hit.collider.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
+                                    if (!hit.collider.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf)
                                     {
                                         isActive = false;
                                     }
-                                    else
-                                    {
-                                        isActive = true;
-                                    }
-                                    PhotonView pv = poiController.GetComponent<PhotonView>();
-                                    InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
+
+                                    PhotonView pv = hit.collider.GetComponent<PhotonView>();
+
                                     if (pv != null)
                                     {
-                                        pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
                                         int playerId = NetworkManager.PlayerID + 1;
 
                                         if (interactableObject.GetInteractingPlayerId() != playerId)
@@ -897,15 +896,31 @@ public class PlayerController : MonoBehaviour
                                         }
                                         else
                                         {
-                                            // 이미 소유하고 있는 플레이어가 상호작용할 경우
-                                            interactableObject.IncreaseCount(playerId); // 카운트 증가
+                                            // 이미 소유하고 있는 플레이어가 상호작용할 경우 내부 인벤토리에서 아이템 가져오기
+                                            Item itemFromRPoi = interactableObject.RPOI_PortalInventory[i];
+
+                                            if (itemFromRPoi != null && itemFromRPoi.Count > 0)
+                                            {
+                                                // 플레이어 인벤토리에 아이템 추가
+                                                interactableObject.AddItemToPlayerInventory(itemFromRPoi.ItemType, itemFromRPoi.Count);
+
+                                                // RPoi 내부 인벤토리에서 아이템 제거
+                                                itemFromRPoi.ClearItem();
+
+                                                Debug.Log("Player " + playerId + " took " + itemFromRPoi.Count + " of " + itemFromRPoi.ItemType.ItemName + " from RPoi.");
+                                            }
                                         }
+
+                                        pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
                                     }
                                 }
+                                break; // 일치하는 이름을 찾았으므로 루프 탈출
                             }
                         }
                     }
                     break;
+
+
                 default:
                     myRigid.isKinematic = false;
                     insideActive = false;
