@@ -104,7 +104,6 @@ public class PoiController : MonoBehaviour
 
 
     //출력 변수
-    
     public GameObject item;
     public Transform OutputTransform;
 
@@ -638,16 +637,12 @@ public class PoiController : MonoBehaviour
     public void TakeItem(Item InputItem)
     {
         int activeSlot = -1;
-        Debug.Log("충돌" + SelectedRecipe);
         if (SelectedRecipe != null)
         {
-            Debug.Log("충돌1");
             for (int i = 0; i < SelectedRecipe.InputCount; i++)
             {
-                Debug.Log("충돌2");
                 if (SelectedRecipe.Input[i] == InputItem.ItemType && activeSlot == -1)
                 {
-                    Debug.Log("충돌3");
                     activeSlot = i;
                 }
             }
@@ -713,10 +708,10 @@ public class PoiController : MonoBehaviour
     {
         if (Inv_Output[OutputNum] != null && Inv_Output[OutputNum].Count > 0) 
         {
-            GameObject nodeItem = Instantiate(item, OutputTransform);
+           
+            GameObject nodeItem = Instantiate(item, OutputTransform.position, Quaternion.identity);
             NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
             nodeDestroy.Inv_Input = new Item { ItemType = Inv_Output[OutputNum].ItemType, Count = 1 };
-
             Item_Extract(OutputNum, 1, 1);
         }
     }

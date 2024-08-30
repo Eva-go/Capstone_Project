@@ -60,6 +60,7 @@ public class ConveyorBelt : MonoBehaviour
                 {
                     onBelt[i].GetComponent<Rigidbody>().velocity = direction;
                 }
+                Debug.Log("충돌벨롭" + onBelt[i].GetComponent<Rigidbody>().velocity);
             }
         }
     }

@@ -27,4 +27,6 @@ public class ScriptableObject_Item : ScriptableObject
     public int MaxCount;
 
     public float Heating;
+
+    public bool Liquid;
 }
