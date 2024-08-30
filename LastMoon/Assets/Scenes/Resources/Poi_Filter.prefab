@@ -144,6 +144,7 @@ MonoBehaviour:
   hp: 3
   item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 4251807302551783536}
+  PipeRayRadius: 1
 --- !u!65 &8337333612337844824
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -342,7 +343,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4251807302551783536}
-  m_Layer: 0
+  - component: {fileID: 2846888281672037085}
+  m_Layer: 12
   m_Name: Transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,6 +366,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 948599586232692434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2846888281672037085
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3709382835562000770}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 0.5, z: 0.15}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5008167901069535848
 GameObject:
   m_ObjectHideFlags: 0

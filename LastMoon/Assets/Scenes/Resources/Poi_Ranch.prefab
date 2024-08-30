@@ -134,6 +134,7 @@ MonoBehaviour:
   hp: 3
   item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 8782543227419162442}
+  OutputTransformBox: {fileID: 0}
 --- !u!65 &8967602037494354336
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -192,13 +193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 0
-    Name: isActvie
-  - Type: 9
-    SynchronizeType: 0
-    Name: isHit
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -307,7 +302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8782543227419162442}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
