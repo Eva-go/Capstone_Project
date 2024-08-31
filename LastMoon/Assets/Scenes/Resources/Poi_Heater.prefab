@@ -4988,31 +4988,9 @@ MonoBehaviour:
   ObjectlessSlot: 000101010101000101
   InputSlotType: 010000000000000000000000
   OutputSlotType: 020000000000000000000000
-  StationBases:
-  - {fileID: 6899375817951067344}
-  - {fileID: 2299391520405791841}
-  - {fileID: 7251135334092682446}
-  - {fileID: 2309583930615243368}
-  StationFixes:
-  - {fileID: 690282872931931673}
-  StationAuxes:
-  - {fileID: 3244706126956219243}
-  - {fileID: 6570524833774072153}
-  StationCons:
-  - Count:
-    - {fileID: 2103763542581549233}
-    - {fileID: 5986500834034220404}
-  - Count:
-    - {fileID: 2986347016880042794}
   Debug_Filler: {fileID: 0}
   Debug_Fuel: {fileID: 11400000, guid: 3cd8bfa6b525e5d4d898971bc6b76ae7, type: 2}
   Debug_Coolent: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
-  StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
-  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
-  StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
-  StationConMat:
-  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
-  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   InputSlot:
   - Count:
     - {fileID: 6884082573564730793}
@@ -5087,6 +5065,14 @@ MonoBehaviour:
   StationConMat:
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  Obj_Slot_Input: []
+  Obj_Slot_Output: []
+  Obj_SlotType: 
+  Obj_Slot_Fuel: []
+  Obj_Slot_FuelWick: []
+  Obj_Slot_Coolent: []
+  Obj_Slot_Temperture: []
+  Obj_Additional: 
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -109,32 +109,9 @@ MonoBehaviour:
   ObjectlessSlot: 010101000101000101
   InputSlotType: 020000000000000000000000
   OutputSlotType: 010000000000000000000000
-  StationBases:
-  - {fileID: 2537302229213875025}
-  - {fileID: 7160964510233662432}
-  StationFixes:
-  - {fileID: 8439094456729854360}
-  StationAuxes:
-  - {fileID: 5876718297059130602}
-  - {fileID: 3844498298306485137}
-  StationCons:
-  - Count:
-    - {fileID: 6546667147255522839}
-    - {fileID: 7080415825632137046}
-  - Count:
-    - {fileID: 6194822120746484907}
-  - Count:
-    - {fileID: 6401058852643314478}
   Debug_Filler: {fileID: 0}
   Debug_Fuel: {fileID: 11400000, guid: 3cd8bfa6b525e5d4d898971bc6b76ae7, type: 2}
   Debug_Coolent: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
-  StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
-  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
-  StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
-  StationConMat:
-  - {fileID: 11400000, guid: a17b4d554e5495e48b064ad1177255b9, type: 2}
-  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
-  - {fileID: 11400000, guid: 202a361bea591b744b0e7b876364dc91, type: 2}
   InputSlot: []
   OutputSlot:
   - Count:
@@ -208,6 +185,14 @@ MonoBehaviour:
   StationConMat:
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  Obj_Slot_Input: []
+  Obj_Slot_Output: []
+  Obj_SlotType: 
+  Obj_Slot_Fuel: []
+  Obj_Slot_FuelWick: []
+  Obj_Slot_Coolent: []
+  Obj_Slot_Temperture: []
+  Obj_Additional: 
 --- !u!114 &527718943812757758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10356,11 +10341,6 @@ GameObject:
 --- !u!1 &6223634933178431768 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -456572471536300264, guid: 475ce431461147f43a4ee92c3e640c98, type: 3}
-  m_PrefabInstance: {fileID: 3456274389628401152}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6401058852643314478 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -638941452118250194, guid: 475ce431461147f43a4ee92c3e640c98, type: 3}
   m_PrefabInstance: {fileID: 3456274389628401152}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &6546667147255522839 stripped
