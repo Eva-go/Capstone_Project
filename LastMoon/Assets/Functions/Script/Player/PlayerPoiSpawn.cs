@@ -152,14 +152,22 @@ public class PlayerPoiSpawn : MonoBehaviour
                 stationController.MaxHealth = MaxHealth;
                 stationController.ProcessEfficiency = ProcessEfficiency;
                 stationController.TempertureLimit = TempertureLimit;
+
                 stationController.StationAuxMat = AuxMat;
                 stationController.StationFixMat = FixMat;
                 for (int i = 0; i < stationController.StationConMat.Length; i++)
                 {
                     stationController.StationConMat[i] = StationMaterial[i];
                 }
-
                 stationController.UpdateMatStation();
+
+                foreach (Item item in playerController.ConstInventory.GetItems())
+                {
+                    stationController.StationConstInv.AddItem(item);
+                    playerController.PlayerInventory.RemoveItem(item);
+                }
+                playerController.ConstInventory.ClearInventory();
+                playerController.InvokeInventoryChanged();
 
 
                 if (previewObjectInstance != null)
@@ -314,13 +322,6 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     public void onClickStart()
     {
-        foreach (Item item in playerController.ConstInventory.GetItems())
-        {
-            playerController.PlayerInventory.RemoveItem(item);
-        }
-        playerController.ConstInventory.ClearInventory();
-        playerController.InvokeInventoryChanged();
-
         tf_player = playerController.theCamera.transform; // Get the player camera transform
         // Ensure only the local player sees their preview object
         if (previewObjectInstance != null)

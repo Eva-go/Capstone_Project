@@ -42,6 +42,8 @@ public class PoiController : MonoBehaviour
     public GameObject[] StationAuxes;
     public ObjArray[] StationCons;
 
+    public Inventory StationConstInv = new Inventory { };
+
     public ScriptableObject_Item Debug_Filler;
     public ScriptableObject_Item Debug_Fuel;
     public ScriptableObject_Item Debug_Coolent;

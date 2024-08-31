@@ -985,6 +985,10 @@ public class PlayerController : MonoBehaviour
                         if (poiController.hp - 10 <= 0)
                         {
                             ExtractStation(poiController, 0);
+                            foreach (Item item in poiController.StationConstInv.GetItems())
+                            {
+                                PlayerInventory.AddItem(item);
+                            }
                         }
                         poiController.hp -= 10;
                         poiController.animator.SetTrigger("isHit");
@@ -1211,31 +1215,19 @@ public class PlayerController : MonoBehaviour
             case 0:
                 if (Station.Inv_Fuel != null)
                 {
-                    PlayerInventory.AddItem(new Item
-                    {
-                        ItemType = Station.Inv_Fuel.ItemType,
-                        Count = Station.Inv_Fuel.Count
-                    });
+                    PlayerInventory.AddItem(Station.Inv_Fuel);
                     Station.EmptyItem(0, 2);
                 }
                 if (Station.Inv_Coolent != null)
                 {
-                    PlayerInventory.AddItem(new Item
-                    {
-                        ItemType = Station.Inv_Coolent.ItemType,
-                        Count = Station.Inv_Coolent.Count
-                    });
+                    PlayerInventory.AddItem(Station.Inv_Coolent);
                     Station.EmptyItem(0, 3);
                 }
                 for (int i = 0; i < Station.SelectedRecipe.InputCount; i++)
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1243,11 +1235,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1257,11 +1245,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1269,11 +1253,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1283,11 +1263,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1297,11 +1273,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
