@@ -17,7 +17,6 @@ public class Button_ConMat : MonoBehaviour
     public ScriptableObject_Item[] SubTabSelectableItems;
 
     public bool hasSubtab;
-    public bool Selected;
     public ScriptableObject_Item SelectedItem;
 
     public PlayerPoiSpawn Station_Construction_Master;
@@ -26,18 +25,6 @@ public class Button_ConMat : MonoBehaviour
     {
         ItemTab.transform.GetChild(1).gameObject.SetActive(false);
         ItemTab.transform.GetChild(2).gameObject.SetActive(false);
-
-        /*
-        if (Selected)
-        {
-            ItemTab.SetActive(false);
-            Selected = false;
-        }
-        else
-        {
-            Selected = true;
-        }
-         */
 
         if (hasSubtab && Subtab != null)
         {

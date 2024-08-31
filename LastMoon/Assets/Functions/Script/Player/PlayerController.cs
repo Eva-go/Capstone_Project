@@ -90,6 +90,8 @@ public class PlayerController : MonoBehaviour
 
     public event Action OnInventoryChanged;
 
+    public Inventory ConstInventory = new Inventory { };
+
     public Inventory PlayerInventory = new Inventory { };
     public Item[] RPOI_PortalInventory = new Item[4];
 
@@ -100,6 +102,7 @@ public class PlayerController : MonoBehaviour
     public bool StationActive;
 
     [SerializeField] private ScriptableObject_Item[] InitalItems;
+    [SerializeField] private ScriptableObject_Item[] DebugItems;
 
 
     public float positionLerpSpeed = 8f;
@@ -199,6 +202,10 @@ public class PlayerController : MonoBehaviour
             StationActive = false;
 
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
+            for (int i = 0; i < InitalItems.Length; i++)
+            {
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+            }
 
             Hp = 100;
         }
@@ -283,9 +290,9 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F8))
             {
                 IncreaseLocalPlayerItems();
-                for (int i = 0; i < InitalItems.Length; i++)
+                for (int i = 0; i < DebugItems.Length; i++)
                 {
-                    PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+                    PlayerInventory.AddItem(new Item { ItemType = DebugItems[i], Count = 10 });
                 }
                 PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
             }

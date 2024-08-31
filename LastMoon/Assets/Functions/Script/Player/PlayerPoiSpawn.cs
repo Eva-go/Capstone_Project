@@ -49,6 +49,7 @@ public class PlayerPoiSpawn : MonoBehaviour
     public ScriptableObject_Item AuxMat;
     public ScriptableObject_Item FixMat;
 
+
     public Sprite NullSprite;
 
 
@@ -313,6 +314,13 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     public void onClickStart()
     {
+        foreach (Item item in playerController.ConstInventory.GetItems())
+        {
+            playerController.PlayerInventory.RemoveItem(item);
+        }
+        playerController.ConstInventory.ClearInventory();
+        playerController.InvokeInventoryChanged();
+
         tf_player = playerController.theCamera.transform; // Get the player camera transform
         // Ensure only the local player sees their preview object
         if (previewObjectInstance != null)
@@ -330,6 +338,8 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     public void GetConMatItem()
     {
+        playerController.ConstInventory.ClearInventory();
+
         if (SelectedStation != null)
         {
             if (StationList != null)
@@ -338,12 +348,14 @@ public class PlayerPoiSpawn : MonoBehaviour
                 if (SelectedStation.StationAux && buttonItem.SelectedItem != null)
                 {
                     AuxMat = buttonItem.SelectedItem;
+                    playerController.ConstInventory.AddItem(new Item { ItemType = AuxMat, Count = 1 });
                 }
 
                 buttonItem = StationInfoTab.transform.GetChild(4).GetComponent<Button_ConMat>();
                 if (SelectedStation.StationFix && buttonItem.SelectedItem != null)
                 {
                     FixMat = buttonItem.SelectedItem;
+                    playerController.ConstInventory.AddItem(new Item { ItemType = FixMat, Count = 1 });
                 }
 
                 for (int i = 0; i < 5; i++)
@@ -352,11 +364,13 @@ public class PlayerPoiSpawn : MonoBehaviour
                     if (i < SelectedStation.StationMaterialCount && buttonItem.SelectedItem != null)
                     {
                         StationMaterial[i] = buttonItem.SelectedItem;
+                        playerController.ConstInventory.AddItem(new Item { ItemType = StationMaterial[i], Count = 1 });
                     }
                 }
                 StationValueCaculate();
             }
         }
+        playerController.InvokeInventoryChanged();
     }
 
     public void ClearConMatItem()
