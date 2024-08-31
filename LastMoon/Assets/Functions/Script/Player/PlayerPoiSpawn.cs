@@ -10,6 +10,10 @@ public class PlayerPoiSpawn : MonoBehaviour
     public GameObject[] PoiTab; // 포인트 탭 게임 오브젝트 배열
     public Button[] Poi_BT; // 버튼 배열
 
+    public GameObject StationList;
+    public GameObject StationInfoTab;
+    public GameObject BuildButton;
+
     // 플레이어 관련 변수
     private PlayerController playerController; // 플레이어 컨트롤러
     private Transform tf_player; // 플레이어 카메라 트랜스폼
@@ -21,8 +25,6 @@ public class PlayerPoiSpawn : MonoBehaviour
     public GameObject[] PreviewPoi_green; // 프리뷰 포인트 배열
     public GameObject[] PreviewPoi_red;
     public GameObject[] SpawnPoi; // 생성 포인트 배열
-
-    public ScriptableObject_Station[] SelectableStations; // 스테이션 스크립트오브젝트
 
     private GameObject previewObjectInstance; // 프리뷰 오브젝트 인스턴스
     private int slotNumber; // 현재 슬롯 번호
@@ -40,12 +42,15 @@ public class PlayerPoiSpawn : MonoBehaviour
     public float ProcessEfficiency = 1;
     public float TempertureLimit = 100;
 
-    ScriptableObject_Station SelectedStation;
+    public ScriptableObject_Station[] SelectableStations; // 스테이션 스크립트오브젝트
+    public ScriptableObject_Station SelectedStation;
 
     public ScriptableObject_Item[] StationMaterial = new ScriptableObject_Item[5];
     public ScriptableObject_Item AuxMat;
     public ScriptableObject_Item FixMat;
 
+
+    public Sprite NullSprite;
 
 
     void Start()
@@ -54,18 +59,33 @@ public class PlayerPoiSpawn : MonoBehaviour
         if (pv.IsMine)
         {
             playerController = GetComponent<PlayerController>(); // 플레이어 컨트롤러 가져오기
-            GameObject poiLists = GameObject.FindWithTag("PoiList").transform.Find("PoiList").gameObject;
+            StationList = GameObject.FindWithTag("PoiList").transform.Find("PoiList").gameObject;
             canvas = GameObject.FindWithTag("Canvas").transform.Find("CanvasController").gameObject;
             canvasController = canvas.GetComponent<CanvasController>();
 
+            StationInfoTab = StationList.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+
+            for (int i = 0; i < 7; i++)
+            {
+                Button_ConMat buttonItem;
+                buttonItem = StationInfoTab.transform.GetChild(3 + i).gameObject.GetComponent<Button_ConMat>();
+                buttonItem.Station_Construction_Master = gameObject.GetComponent<PlayerPoiSpawn>();
+            }
+
+            BuildButton = StationList.transform.GetChild(0).GetChild(1).GetChild(1).gameObject;
+            Button build_BT = BuildButton.GetComponent<Button>();
+            build_BT.onClick.AddListener(() => BuildButtonPressed());
+
             for (int i = 0; i < PoiTab.Length; i++)
             {
-                PoiTab[i] = poiLists.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.transform.GetChild(i).gameObject; // PoiTab 배열 초기화
+                PoiTab[i] = StationList.transform.GetChild(1).GetChild(0).GetChild(0).gameObject.transform.GetChild(i).gameObject; // PoiTab 배열 초기화
                 Poi_BT[i] = PoiTab[i].GetComponent<Button>(); // Poi_BT 배열 초기화
                 int index = i; // 인덱스를 로컬 변수로 복사
                 Poi_BT[i].onClick.AddListener(() => SlotClick(index)); // 버튼 클릭 리스너 추가
+                Image image = PoiTab[i].transform.GetChild(1).GetChild(0).GetComponent<Image>();
+                image.sprite = SelectableStations[i].StationIcon;
             }
-
+            ApplySelectedStationInfo();
         }
     }
 
@@ -125,7 +145,38 @@ public class PlayerPoiSpawn : MonoBehaviour
                 );
 
                 // Instantiate the object using Photon Network for actual objects
-                PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, roundedPosition, previewObjectInstance.transform.rotation);
+                GameObject station = PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, roundedPosition, previewObjectInstance.transform.rotation);
+
+                StationMatController stationMatController = station.GetComponent<StationMatController>();
+
+                if (stationMatController != null)
+                {
+                    stationMatController.StationAuxMat = AuxMat;
+                    stationMatController.StationFixMat = FixMat;
+                    for (int i = 0; i < stationMatController.StationConMat.Length; i++)
+                    {
+                        stationMatController.StationConMat[i] = StationMaterial[i];
+                    }
+                    stationMatController.UpdateMatStation();
+                }
+
+                PoiController stationController = station.GetComponent<PoiController>();
+
+                if (stationController != null)
+                {
+                    stationController.MaxHealth = MaxHealth;
+                    stationController.ProcessEfficiency = ProcessEfficiency;
+                    stationController.TempertureLimit = TempertureLimit;
+                }
+
+                foreach (Item item in playerController.ConstInventory.GetItems())
+                {
+                    if (stationMatController != null) stationMatController.StationConstInv.AddItem(item);
+                    playerController.PlayerInventory.RemoveItem(item);
+                }
+                playerController.ConstInventory.ClearInventory();
+                playerController.InvokeInventoryChanged();
+
 
                 if (previewObjectInstance != null)
                 {
@@ -238,21 +289,47 @@ public class PlayerPoiSpawn : MonoBehaviour
         }
     }
 
+    public void BuildButtonPressed()
+    {
+        if (SelectedStation != null)
+        {
+            if (
+                (!SelectedStation.StationAux || AuxMat != null) &&
+                (!SelectedStation.StationFix || FixMat != null)
+                )
+            {
+                bool itemSelected = true;
+                for (int i = 0; i < SelectedStation.StationMaterialCount; i++)
+                {
+                    if (StationMaterial[i] == null)
+                    {
+                        itemSelected = false;
+                    }
+                }
+                if (itemSelected)
+                {
+                    onClickStart();
+                }
+            }
+        }
+    }
+    
     public void SlotClick(int _slotNumber)
     {
         slotNumber = _slotNumber; // Set the slot number
-        onClickStart(); // Call the start method for preview
 
+        if (slotNumber >= 0 && slotNumber < SelectableStations.Length)
+        {
+            SelectedStation = SelectableStations[slotNumber];
+            if (SelectedStation != null) StationValueCaculate();
+        }
+        ClearConMatItem();
+        ApplySelectedStationInfo();
+        //onClickStart(); // Call the start method for preview
     }
 
     public void onClickStart()
     {
-        if (slotNumber >= 0 && slotNumber < SelectableStations.Length)
-        {
-            SelectedStation = SelectableStations[slotNumber];
-        }
-        //StationValueCaculate();
-
         tf_player = playerController.theCamera.transform; // Get the player camera transform
         // Ensure only the local player sees their preview object
         if (previewObjectInstance != null)
@@ -267,32 +344,222 @@ public class PlayerPoiSpawn : MonoBehaviour
         canvasController.Poi.SetActive(canvasController.SetPoi);
         Cursor.lockState = CursorLockMode.Locked;
     }
-    void StationValueCaculate()
+
+    public void GetConMatItem()
+    {
+        playerController.ConstInventory.ClearInventory();
+
+        if (SelectedStation != null)
+        {
+            if (StationList != null)
+            {
+                Button_ConMat buttonItem = StationInfoTab.transform.GetChild(3).GetComponent<Button_ConMat>();
+                if (SelectedStation.StationAux && buttonItem.SelectedItem != null)
+                {
+                    AuxMat = buttonItem.SelectedItem;
+                    playerController.ConstInventory.AddItem(new Item { ItemType = AuxMat, Count = 1 });
+                }
+
+                buttonItem = StationInfoTab.transform.GetChild(4).GetComponent<Button_ConMat>();
+                if (SelectedStation.StationFix && buttonItem.SelectedItem != null)
+                {
+                    FixMat = buttonItem.SelectedItem;
+                    playerController.ConstInventory.AddItem(new Item { ItemType = FixMat, Count = 1 });
+                }
+
+                for (int i = 0; i < 5; i++)
+                {
+                    buttonItem = StationInfoTab.transform.GetChild(5 + i).GetComponent<Button_ConMat>();
+                    if (i < SelectedStation.StationMaterialCount && buttonItem.SelectedItem != null)
+                    {
+                        StationMaterial[i] = buttonItem.SelectedItem;
+                        playerController.ConstInventory.AddItem(new Item { ItemType = StationMaterial[i], Count = 1 });
+                    }
+                }
+                StationValueCaculate();
+            }
+        }
+        playerController.InvokeInventoryChanged();
+    }
+
+    public void ClearConMatItem()
+    {
+        AuxMat = null;
+        FixMat = null;
+        for (int i = 0; i < StationMaterial.Length; i++)
+        {
+            StationMaterial[i] = null;
+        }
+
+        if (SelectedStation != null)
+        {
+            if (StationList != null)
+            {
+                Button_ConMat buttonItem = StationInfoTab.transform.GetChild(3).GetComponent<Button_ConMat>();
+                Image image = StationInfoTab.transform.GetChild(3).GetChild(0).GetComponent<Image>();
+                buttonItem.SelectedItem = null;
+                image.sprite = NullSprite;
+
+                buttonItem = StationInfoTab.transform.GetChild(4).GetComponent<Button_ConMat>();
+                image = StationInfoTab.transform.GetChild(4).GetChild(0).GetComponent<Image>();
+                buttonItem.SelectedItem = null;
+                image.sprite = NullSprite;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    buttonItem = StationInfoTab.transform.GetChild(5 + i).GetComponent<Button_ConMat>();
+                    image = StationInfoTab.transform.GetChild(5 + i).GetChild(0).GetComponent<Image>();
+                    buttonItem.SelectedItem = null;
+                    image.sprite = NullSprite;
+                }
+                StationValueCaculate();
+            }
+        }
+    }
+
+    public void ApplySelectedStationInfo()
+    {
+        if (SelectedStation != null)
+        {
+            if (StationList != null)
+            {
+                Text text;
+                Image image;
+                Button button;
+                button = StationInfoTab.transform.GetChild(3).GetComponent<Button>();
+                image = StationInfoTab.transform.GetChild(3).GetChild(0).GetComponent<Image>();
+                button.interactable = SelectedStation.StationAux;
+                if (!SelectedStation.StationAux)
+                image.sprite = NullSprite;
+
+                button = StationInfoTab.transform.GetChild(4).GetComponent<Button>();
+                image = StationInfoTab.transform.GetChild(4).GetChild(0).GetComponent<Image>();
+                button.interactable = SelectedStation.StationFix;
+                if (!SelectedStation.StationFix)
+                    image.sprite = NullSprite;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    button = StationInfoTab.transform.GetChild(5 + i).GetComponent<Button>();
+                    text = StationInfoTab.transform.GetChild(5 + i).GetChild(1).GetComponent<Text>();
+                    image = StationInfoTab.transform.GetChild(5 + i).GetChild(0).GetComponent<Image>();
+                    if (i < SelectedStation.StationMaterialCount)
+                    {
+                        button.interactable = true;
+                        switch (SelectedStation.StationMatType[i])
+                        {
+                            case 1:
+                                text.text = "In";
+                                break;
+                            case 2:
+                                text.text = "Out";
+                                break;
+                            case 3:
+                                text.text = "InOut";
+                                break;
+                            case 4:
+                                text.text = "Fuel";
+                                break;
+                            case 5:
+                                text.text = "Cool";
+                                break;
+                            default:
+                                text.text = "";
+                                break;
+                        }
+                        if (SelectedStation.TempertureSensitive[i]) text.color = new Color { r = 1f, g = 0f, b = 0f, a = 1f };
+                        else text.color = new Color { r = 1f, g = 1f, b = 1f, a = 1f };
+                    }
+                    else
+                    {
+                        button.interactable = false;
+                        text.text = "";
+                        image.sprite = NullSprite;
+                    }
+                }
+            }
+
+            if (BuildButton != null)
+            {
+                Image image = BuildButton.transform.GetChild(0).GetComponent<Image>();
+                image.sprite = SelectedStation.StationIcon;
+            }
+        }
+        else
+        {
+            if (StationList != null)
+            {
+                Text text;
+                Image image;
+                Button button;
+                button = StationInfoTab.transform.GetChild(3).GetComponent<Button>();
+                image = StationInfoTab.transform.GetChild(3).GetChild(0).GetComponent<Image>();
+                button.interactable = false;
+                image.sprite = NullSprite;
+
+                button = StationInfoTab.transform.GetChild(4).GetComponent<Button>();
+                image = StationInfoTab.transform.GetChild(4).GetChild(0).GetComponent<Image>();
+                button.interactable = false;
+                image.sprite = NullSprite;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    button = StationInfoTab.transform.GetChild(5 + i).GetComponent<Button>();
+                    text = StationInfoTab.transform.GetChild(5 + i).GetChild(1).GetComponent<Text>();
+                    image = StationInfoTab.transform.GetChild(5 + i).GetChild(0).GetComponent<Image>();
+                    button.interactable = false;
+                    text.text = "";
+                    image.sprite = NullSprite;
+                }
+            }
+
+            if (BuildButton != null)
+            {
+                Image image = BuildButton.transform.GetChild(0).GetComponent<Image>();
+                image.sprite = NullSprite;
+            }
+        }
+    }
+
+    public void StationInfoUpdate()
+    {
+        Text text = StationInfoTab.transform.GetChild(0).GetChild(0).GetComponent<Text>();
+        text.text = MaxHealth.ToString("F0");
+        text = StationInfoTab.transform.GetChild(1).GetChild(0).GetComponent<Text>();
+        text.text = (ProcessEfficiency * 100f).ToString("F0") + "%";
+        text = StationInfoTab.transform.GetChild(2).GetChild(0).GetComponent<Text>();
+        text.text = TempertureLimit.ToString("F0");
+    }
+
+    public void StationValueCaculate()
     {
         bool TempApplied = false;
         for (int i = 0; i < SelectedStation.StationMaterialCount; i++)
         {
-            MaxHealth += StationMaterial[i].HealthStrength;
-            ProcessEfficiency *= StationMaterial[i].ProcessEfficiency;
-
-            if (SelectedStation.TempertureSensitive[i])
+            if (StationMaterial[i] != null)
             {
-                if (!TempApplied) TempertureLimit = StationMaterial[i].TempertureLimit;
-                else if (TempertureLimit > StationMaterial[i].TempertureLimit)
-                    TempertureLimit = StationMaterial[i].TempertureLimit;
+                MaxHealth += StationMaterial[i].HealthStrength;
+                ProcessEfficiency *= StationMaterial[i].ProcessEfficiency;
+
+                if (SelectedStation.TempertureSensitive[i])
+                {
+                    if (!TempApplied) TempertureLimit = StationMaterial[i].TempertureLimit;
+                    else if (TempertureLimit > StationMaterial[i].TempertureLimit)
+                        TempertureLimit = StationMaterial[i].TempertureLimit;
+                }
             }
         }
 
-        if (SelectedStation.StationAux)
+        if (SelectedStation.StationAux && AuxMat != null)
         {
             MaxHealth += AuxMat.HealthStrength;
             ProcessEfficiency *= AuxMat.ProcessEfficiency;
         }
-        if (SelectedStation.StationFix)
+        if (SelectedStation.StationFix && FixMat != null)
         {
             MaxHealth += FixMat.HealthStrength;
             ProcessEfficiency *= FixMat.ProcessEfficiency;
         }
-
+        StationInfoUpdate();
     }
 }

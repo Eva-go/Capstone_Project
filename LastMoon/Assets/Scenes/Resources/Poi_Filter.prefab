@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 948599586232692434}
   - component: {fileID: 6614159032398034088}
   - component: {fileID: 1208717824552971523}
+  - component: {fileID: 1902848139348021237}
   - component: {fileID: 8337333612337844824}
   - component: {fileID: 1698833173676646083}
   - component: {fileID: 7613810312804210708}
@@ -83,9 +84,6 @@ MonoBehaviour:
   poiName: 
   SetnodeCount: 0
   animator: {fileID: 6614159032398034088}
-  ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 4317728816855925798}
-  StationConstructionParts: {fileID: 4830127637327253245}
   ObjectlessSlot: 000101000101010101
   InputSlotType: 020000000100000000000000
   OutputSlotType: 020000000100000000000000
@@ -138,13 +136,53 @@ MonoBehaviour:
   ProcessEfficiency: 1
   TempertureLimit: 100
   tick: 0
-  tickMax: 0
-  isConstructing: 0
+  isTick: 0
   stop: 0
-  hp: 3
+  Constructed: 0
+  HasAnimation: 0
   item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 4251807302551783536}
-  PipeRayRadius: 1
+--- !u!114 &1902848139348021237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 459871703104435304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2596a08e0fc8a9468e1f0323aabb857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationController: {fileID: 1208717824552971523}
+  StationType: 0
+  StationConstructionMesh: {fileID: 4317728816855925798}
+  StationConstructionParts: {fileID: 4830127637327253245}
+  ConstructionProgress: 0
+  Health: 30
+  Heal_Cooldown: 0
+  Obj_Bases:
+  - {fileID: 4830127637327253245}
+  - {fileID: 242801689122412108}
+  - {fileID: 2941652005405581425}
+  - {fileID: 3612501998913458950}
+  - {fileID: 2662496777022770347}
+  Obj_Auxes:
+  - {fileID: 3580376780094503238}
+  - {fileID: 7532546370677076600}
+  Obj_Fixes:
+  - {fileID: 1523322935789511732}
+  Obj_Cons:
+  - Count:
+    - {fileID: 8303805384866826536}
+  - Count:
+    - {fileID: 8573461314253515776}
+  StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
+  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
+  StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
+  StationConMat:
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
 --- !u!65 &8337333612337844824
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -203,7 +241,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 0
+    Name: isActvie
+  - Type: 9
+    SynchronizeType: 0
+    Name: isHit
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -343,8 +387,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4251807302551783536}
-  - component: {fileID: 2846888281672037085}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,27 +409,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 948599586232692434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2846888281672037085
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3709382835562000770}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 0.15}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5008167901069535848
 GameObject:
   m_ObjectHideFlags: 0

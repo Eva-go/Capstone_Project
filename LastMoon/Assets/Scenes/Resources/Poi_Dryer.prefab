@@ -4872,6 +4872,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6832201638764886582}
   - component: {fileID: 590244116874518604}
+  - component: {fileID: 8504695087056184086}
   - component: {fileID: 2553512188279324361}
   - component: {fileID: 4611769558836440013}
   - component: {fileID: 226476466956237559}
@@ -4924,6 +4925,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8504695087056184086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6168536886686802060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2596a08e0fc8a9468e1f0323aabb857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationController: {fileID: 2553512188279324361}
+  StationType: 0
+  StationConstructionMesh: {fileID: 8955088677233956302}
+  StationConstructionParts: {fileID: 4395175976066511117}
+  ConstructionProgress: 0
+  Health: 30
+  Heal_Cooldown: 0
+  Obj_Bases:
+  - {fileID: 4395175976066511117}
+  Obj_Auxes: []
+  Obj_Fixes: []
+  Obj_Cons:
+  - Count:
+    - {fileID: 2428669234594302716}
+  StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
+  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
+  StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
+  StationConMat:
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
 --- !u!114 &2553512188279324361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4945,9 +4977,6 @@ MonoBehaviour:
   poiName: 
   SetnodeCount: 0
   animator: {fileID: 590244116874518604}
-  ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 8955088677233956302}
-  StationConstructionParts: {fileID: 4395175976066511117}
   ObjectlessSlot: 000101010101010101
   InputSlotType: 010000000000000000000000
   OutputSlotType: 020000000000000000000000
@@ -4989,10 +5018,10 @@ MonoBehaviour:
   ProcessEfficiency: 1
   TempertureLimit: 100
   tick: 0
-  tickMax: 0
-  isConstructing: 0
+  isTick: 0
   stop: 0
-  hp: 3
+  Constructed: 0
+  HasAnimation: 0
   item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 3068176167865136821}
   PipeRayRadius: 1
@@ -5054,7 +5083,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 0
+    Name: isActvie
+  - Type: 9
+    SynchronizeType: 0
+    Name: isHit
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

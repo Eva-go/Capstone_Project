@@ -90,6 +90,8 @@ public class PlayerController : MonoBehaviour
 
     public event Action OnInventoryChanged;
 
+    public Inventory ConstInventory = new Inventory { };
+
     public Inventory PlayerInventory = new Inventory { };
     public Item[] RPOI_PortalInventory = new Item[4];
 
@@ -100,6 +102,7 @@ public class PlayerController : MonoBehaviour
     public bool StationActive;
 
     [SerializeField] private ScriptableObject_Item[] InitalItems;
+    [SerializeField] private ScriptableObject_Item[] DebugItems;
 
 
     public float positionLerpSpeed = 8f;
@@ -205,6 +208,10 @@ public class PlayerController : MonoBehaviour
             StationActive = false;
 
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
+            for (int i = 0; i < InitalItems.Length; i++)
+            {
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+            }
 
             Hp = 100;
         }
@@ -301,6 +308,10 @@ public class PlayerController : MonoBehaviour
                 for (int i = 0; i < InitalItems.Length; i++)
                 {
                     PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+                }
+                for (int i = 0; i < DebugItems.Length; i++)
+                {
+                    PlayerInventory.AddItem(new Item { ItemType = DebugItems[i], Count = 10 });
                 }
                 PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
             }
@@ -953,25 +964,25 @@ public class PlayerController : MonoBehaviour
                     bagPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, pv.ViewID);
                 }
             }
-            else if (hit.collider.CompareTag("Poi"))
+            else if (hit.collider.CompareTag("Poi") || hit.collider.CompareTag("Pipe"))
             {
                 PoiController poiController = hit.collider.GetComponent<PoiController>();
-                if (poiController != null)
+                StationMatController stationMatController = hit.collider.GetComponent<StationMatController>();
+
+                if (stationMatController != null)
                 {
-                    if (poiController.ConstructionProgress >= 100 && poiController.hp > 0)
+                    if (stationMatController.ConstructionProgress >= 100 && stationMatController.Health > 0)
                     {
-                        if (poiController.hp - 10 <= 0)
+                        if (stationMatController.Health - 10 <= 0)
                         {
-                            ExtractStation(poiController, 0);
+                            if (poiController != null) ExtractStation(poiController, 0);
+                            foreach (Item item in stationMatController.StationConstInv.GetItems())
+                            {
+                                PlayerInventory.AddItem(item);
+                            }
                         }
-                        poiController.hp -= 10;
-                        poiController.animator.SetTrigger("isHit");
-                        /*
-                        if (poiController.hp < 0)
-                        {
-                            Destroy(poiController.gameObject);
-                        }
-                        */
+                        stationMatController.Health -= 10;
+                        if (poiController != null && poiController.animator != null) poiController.animator.SetTrigger("isHit");
                     }
                 }
             }
@@ -1189,31 +1200,19 @@ public class PlayerController : MonoBehaviour
             case 0:
                 if (Station.Inv_Fuel != null)
                 {
-                    PlayerInventory.AddItem(new Item
-                    {
-                        ItemType = Station.Inv_Fuel.ItemType,
-                        Count = Station.Inv_Fuel.Count
-                    });
+                    PlayerInventory.AddItem(Station.Inv_Fuel);
                     Station.EmptyItem(0, 2);
                 }
                 if (Station.Inv_Coolent != null)
                 {
-                    PlayerInventory.AddItem(new Item
-                    {
-                        ItemType = Station.Inv_Coolent.ItemType,
-                        Count = Station.Inv_Coolent.Count
-                    });
+                    PlayerInventory.AddItem(Station.Inv_Coolent);
                     Station.EmptyItem(0, 3);
                 }
                 for (int i = 0; i < Station.SelectedRecipe.InputCount; i++)
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1221,11 +1220,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1235,11 +1230,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1247,11 +1238,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1261,11 +1248,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1275,11 +1258,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }

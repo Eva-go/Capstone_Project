@@ -73,6 +73,14 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     private bool StationUIOpened = false;
 
+    //건설 오브젝트
+    public ScriptableObject_Item[] ConItem;
+    public ScriptableObject_Item[] AuxItem;
+    public ScriptableObject_Item[] FixItem;
+
+    public GameObject ConInfoTab;
+
+
     //아이템 획득 여부
     private bool isItme = false;
 
@@ -283,6 +291,53 @@ public class CanvasController : MonoBehaviourPunCallbacks
                     y_Consumable--;
                 }
             }
+        }
+    }
+
+    public void ConMatUpdate()
+    {
+        if (playerController != null) SetInventory(playerController.PlayerInventory);
+        if (UIinventory != null)
+        {
+            for (int i = 0; i < AuxItem.Length; i++)
+            {
+                ConCountUpdate(AuxItem[i], 1, i + 1);
+            }
+            for (int i = 0; i < FixItem.Length; i++)
+            {
+                ConCountUpdate(FixItem[i], 2, i + 1);
+            }
+            for (int i = 0; i < ConItem.Length; i++)
+            {
+                ConCountUpdate(ConItem[i], 3, i);
+            }
+        }
+    }
+    public void ConCountUpdate(ScriptableObject_Item ItemType, int SlotType, int SlotNum)
+    {
+        Button button;
+        Text text;
+
+        button = ConInfoTab.transform.GetChild(SlotType).GetChild(SlotNum).GetComponent<Button>();
+        text = ConInfoTab.transform.GetChild(SlotType).GetChild(SlotNum).GetChild(1).GetComponent<Text>();
+        int ConCount = 0;
+        foreach (Item item in UIinventory.GetItems())
+        {
+            if (item.ItemType == ItemType) ConCount = item.Count;
+        }
+        foreach (Item item in playerController.ConstInventory.GetItems())
+        {
+            if (item.ItemType == ItemType) ConCount -= item.Count;
+        }
+        if (ConCount > 0)
+        {
+            button.interactable = true;
+            text.text = ConCount.ToString();
+        }
+        else
+        {
+            button.interactable = false;
+            text.text = "";
         }
     }
 
@@ -841,11 +896,13 @@ public class CanvasController : MonoBehaviourPunCallbacks
             SetPoi = !SetPoi;
             if (SetPoi)
             {
+                ConMatUpdate();
                 Poi.SetActive(true);
                 Cursor.lockState = CursorLockMode.Confined;
             }
             else
             {
+                ConMatUpdate();
                 Poi.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
             }
@@ -913,6 +970,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             // 기존 이벤트 리스너 제거
             playerController.OnInventoryChanged -= nodeCountUpdate;
+            playerController.OnInventoryChanged -= RefreshInventory;
+            playerController.OnInventoryChanged -= ConMatUpdate;
         }
 
         playerController = player;
@@ -921,7 +980,11 @@ public class CanvasController : MonoBehaviourPunCallbacks
         {
             // 새로운 이벤트 리스너 등록
             playerController.OnInventoryChanged += nodeCountUpdate;
+            playerController.OnInventoryChanged += RefreshInventory;
+            playerController.OnInventoryChanged += ConMatUpdate;
             nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
+            RefreshInventory();
+            ConMatUpdate();
             isItme = true;
         }
 

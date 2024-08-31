@@ -282,7 +282,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e5b8aef387584a40b2054cedb81636e, type: 2}
+  - {fileID: 2100000, guid: 55ae0823a66270744861a69edb448b3e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1633,6 +1633,10 @@ MonoBehaviour:
   UISelectedPOIController: {fileID: 0}
   StationActive: 0
   InitalItems:
+  - {fileID: 11400000, guid: 630e65f4d91bb36449c2b4e14cdf770d, type: 2}
+  - {fileID: 11400000, guid: 45fd8d5bfd605c74ca53ac36ac43a59e, type: 2}
+  - {fileID: 11400000, guid: 406b868a330eea04cab8eedd8be96ae1, type: 2}
+  DebugItems:
   - {fileID: 11400000, guid: fa259c40698d76049a21547bf0bc5d54, type: 2}
   - {fileID: 11400000, guid: c6cbcc82f2224644e96d108a738627f9, type: 2}
   - {fileID: 11400000, guid: eba0a1bd10be48d4fa669a861ab2ca8e, type: 2}
@@ -1688,6 +1692,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  StationList: {fileID: 0}
+  StationInfoTab: {fileID: 0}
+  BuildButton: {fileID: 0}
   pv: {fileID: 0}
   canvas: {fileID: 0}
   canvasController: {fileID: 0}
@@ -1700,8 +1707,8 @@ MonoBehaviour:
   - {fileID: 1573298627077628865, guid: 8d135d89ef062d0488aa91232deeda99, type: 3}
   - {fileID: 5371151852980298888, guid: 3ac3d84653c57bb409691d7521ce89ea, type: 3}
   - {fileID: 5371151852980298888, guid: 49e2c4b60a2938c45bf0d7e040d58058, type: 3}
-  - {fileID: 5371151852980298888, guid: 3ac3d84653c57bb409691d7521ce89ea, type: 3}
-  - {fileID: 5371151852980298888, guid: 3ac3d84653c57bb409691d7521ce89ea, type: 3}
+  - {fileID: 5371151852980298888, guid: 9e05641a626b95047909b14a11981c20, type: 3}
+  - {fileID: 5371151852980298888, guid: 206d7b15c40d2db428c8d93ccdd92dd0, type: 3}
   - {fileID: 3079423493778808962, guid: afe729128ae93674398fec5c714e91f4, type: 3}
   - {fileID: 366367957362793796, guid: 945ebfa6b0be2fb44a5216aba940fbc3, type: 3}
   PreviewPoi_red:
@@ -1713,8 +1720,8 @@ MonoBehaviour:
   - {fileID: 1573298627077628865, guid: 05e7f3a5a9725f54ea99b43ad05cd0c3, type: 3}
   - {fileID: 5371151852980298888, guid: f9f25eecda9396643bc0ebc1390d4626, type: 3}
   - {fileID: 5371151852980298888, guid: ff816bff0bc08874aac068a22d739325, type: 3}
-  - {fileID: 5371151852980298888, guid: f9f25eecda9396643bc0ebc1390d4626, type: 3}
-  - {fileID: 5371151852980298888, guid: f9f25eecda9396643bc0ebc1390d4626, type: 3}
+  - {fileID: 5371151852980298888, guid: 7e240388458704e438c38a456ce41425, type: 3}
+  - {fileID: 5371151852980298888, guid: f14f978f1f2381341beb438158230e25, type: 3}
   - {fileID: 7058263592653485094, guid: 3eddab1b6a2a2d141b6acace7849a8d5, type: 3}
   - {fileID: 366367957362793796, guid: b6e8001fc342d8a4a92ffb761c84528e, type: 3}
   SpawnPoi:
@@ -1730,6 +1737,9 @@ MonoBehaviour:
   - {fileID: 1478360869261646978, guid: d326b442e7a459040824b92ac5ff4e0c, type: 3}
   - {fileID: 3079423493778808962, guid: 2bb68449aa1a9cb41ad3217de786d5b9, type: 3}
   - {fileID: 366367957362793796, guid: a60e9eae64ede5d4585237ec19d1c350, type: 3}
+  MaxHealth: 10
+  ProcessEfficiency: 1
+  TempertureLimit: 100
   SelectableStations:
   - {fileID: 11400000, guid: 13e9c125e6a97914492715fcf1ed617f, type: 2}
   - {fileID: 11400000, guid: e3e47e76109b77a46a96e89e3f00c240, type: 2}
@@ -1737,15 +1747,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aa4ad5b98c7758f4782a34aa983115f1, type: 2}
   - {fileID: 11400000, guid: cfba71d597c68b044866b96f94121fbc, type: 2}
   - {fileID: 11400000, guid: 9177320d05582bf41a6b9100b2eec238, type: 2}
-  - {fileID: 11400000, guid: 3a5eb20a162150e4baaf48d67c33ce55, type: 2}
   - {fileID: 11400000, guid: 6a1d220090171e54fa08d9f0bd24233c, type: 2}
+  - {fileID: 11400000, guid: 3a5eb20a162150e4baaf48d67c33ce55, type: 2}
   - {fileID: 11400000, guid: dede11eb70417ca4b8b5e7fb645d339c, type: 2}
   - {fileID: 11400000, guid: a0de4ffabd74be04bbcc3acc0aeafe91, type: 2}
-  - {fileID: 11400000, guid: 6a1d220090171e54fa08d9f0bd24233c, type: 2}
-  - {fileID: 11400000, guid: 6a1d220090171e54fa08d9f0bd24233c, type: 2}
-  MaxHealth: 10
-  ProcessEfficiency: 1
-  TempertureLimit: 100
+  - {fileID: 11400000, guid: 7c12142298ada6d44ac2721eab23851b, type: 2}
+  - {fileID: 11400000, guid: 92577f3228f6e6141ad48a0d0e8b62cf, type: 2}
+  SelectedStation: {fileID: 0}
   StationMaterial:
   - {fileID: 0}
   - {fileID: 0}
@@ -1754,6 +1762,7 @@ MonoBehaviour:
   - {fileID: 0}
   AuxMat: {fileID: 0}
   FixMat: {fileID: 0}
+  NullSprite: {fileID: 21300000, guid: b78f4166d1b040e4099cc811791aa7fa, type: 3}
 --- !u!114 &725141506427028762
 MonoBehaviour:
   m_ObjectHideFlags: 0

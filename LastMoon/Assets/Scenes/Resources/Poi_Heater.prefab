@@ -4857,8 +4857,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5170737213738554540}
-  - component: {fileID: 1710214745718232089}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Transform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4880,27 +4879,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4738343760245702194}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1710214745718232089
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1642066238930995027}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 0.15}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5371151852980298888
 GameObject:
   m_ObjectHideFlags: 0
@@ -4913,6 +4891,7 @@ GameObject:
   - component: {fileID: 876080383295585203}
   - component: {fileID: 1666849040754533448}
   - component: {fileID: -7799797810209526418}
+  - component: {fileID: 4534618501873039657}
   - component: {fileID: 6562338014563016698}
   - component: {fileID: 8978934352491796153}
   - component: {fileID: 6955859011504677635}
@@ -5006,9 +4985,6 @@ MonoBehaviour:
   poiName: 
   SetnodeCount: 0
   animator: {fileID: 1666849040754533448}
-  ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 5665469141119341595}
-  StationConstructionParts: {fileID: 6899375817951067344}
   ObjectlessSlot: 000101010101000101
   InputSlotType: 010000000000000000000000
   OutputSlotType: 020000000000000000000000
@@ -5064,13 +5040,53 @@ MonoBehaviour:
   ProcessEfficiency: 1
   TempertureLimit: 100
   tick: 0
-  tickMax: 0
-  isConstructing: 0
+  isTick: 0
   stop: 0
-  hp: 3
+  Constructed: 0
+  HasAnimation: 0
   item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 5170737213738554540}
-  OutputTransformBox: {fileID: 0}
+--- !u!114 &4534618501873039657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5371151852980298888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2596a08e0fc8a9468e1f0323aabb857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationController: {fileID: -7799797810209526418}
+  StationType: 0
+  StationConstructionMesh: {fileID: 5665469141119341595}
+  StationConstructionParts: {fileID: 6899375817951067344}
+  ConstructionProgress: 0
+  Health: 30
+  Heal_Cooldown: 0
+  Obj_Bases:
+  - {fileID: 6899375817951067344}
+  - {fileID: 2299391520405791841}
+  - {fileID: 7251135334092682446}
+  - {fileID: 2309583930615243368}
+  Obj_Auxes:
+  - {fileID: 3244706126956219243}
+  - {fileID: 6570524833774072153}
+  Obj_Fixes:
+  - {fileID: 690282872931931673}
+  Obj_Cons:
+  - Count:
+    - {fileID: 2103763542581549233}
+    - {fileID: 5986500834034220404}
+  - Count:
+    - {fileID: 2986347016880042794}
+  StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
+  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
+  StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
+  StationConMat:
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
 --- !u!114 &6562338014563016698
 MonoBehaviour:
   m_ObjectHideFlags: 0
