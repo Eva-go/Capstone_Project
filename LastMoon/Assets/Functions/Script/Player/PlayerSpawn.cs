@@ -39,7 +39,7 @@ public class PlayerSpawn : MonoBehaviourPunCallbacks
 
     public void SpawnPlayer(int idx,Transform[] points)
     {
-        player = PhotonNetwork.Instantiate("Player", points[idx].position, points[idx].rotation);
+        player = PhotonNetwork.Instantiate("Player", points[NetworkManager.PlayerID].position, points[idx].rotation);
         if (player != null)
         {
             GameObject playerprefab = Instantiate(player, transform.position, transform.rotation);

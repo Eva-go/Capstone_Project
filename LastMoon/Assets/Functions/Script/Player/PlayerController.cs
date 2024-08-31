@@ -132,6 +132,8 @@ public class PlayerController : MonoBehaviour
     private bool Bagdrop = false;
     public bool Godmode = false;
 
+    //하우스 진입변수
+    public int HouseKey { get; set; } = 0;
     private void Awake()
     {
         if (Instance == null)
@@ -465,63 +467,6 @@ public class PlayerController : MonoBehaviour
         gameObject.transform.GetChild(5).gameObject.SetActive(false);
     }
 
-
-    private void reSpwan()
-    {
-        if (pv.IsMine && !live)
-        {
-            Transform parentTransform = GameObject.Find("SpawnPoint").transform;
-            List<Transform> directChildren = new List<Transform>();
-
-            for (int i = 0; i < parentTransform.childCount; i++)
-            {
-                Transform child = parentTransform.GetChild(i);
-                directChildren.Add(child);
-            }
-
-            if (directChildren.Count > 0)
-            {
-
-                int idx = UnityEngine.Random.Range(0, directChildren.Count);
-
-                //SpawnPlayer(idx, directChildren[idx]);
-               
-
-            }
-            else
-            {
-                Debug.LogError("스폰 포인트가 없습니다.");
-            }
-        }
-    }
-
-    public void SpawnPlayer(int idx, Transform points)
-    {
-        if (pv.IsMine)
-        {
-            player = PhotonNetwork.Instantiate("Player", PlayerAPT.playerPoint, Quaternion.Euler(PlayerAPT.playerrotation));
-            if (player != null)
-            {
-                player.name = PhotonNetwork.LocalPlayer.NickName;
-                Transform OtherPlayer = player.transform.Find("OtherPlayer");
-                Transform LocalPlayer = player.transform.Find("LocalPlayer");
-                Transform Tool = player.transform.Find("Player001");
-                Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
-
-                if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
-                if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
-                if (Tool != null) Tool.gameObject.SetActive(false);
-                if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
-
-                PhotonView photonView = player.GetComponent<PhotonView>();
-                photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-                Debug.Log("Player spawned and ownership transferred.");
-            }
-            Debug.Log("플레이어 확인" + GameObject.Find(player.name));
-        }
-
-    }
-
     private void OnDestroy()
     {
         Instance = null;
@@ -784,18 +729,21 @@ public class PlayerController : MonoBehaviour
             switch (hitInfo.collider.tag)
             {
                 case "Door":
-                    myRigid.isKinematic = true;
-                    insideActive = true;
-                    // 문을 통과하여 아파트로 들어가는 경우
-                    EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
-
-                    if (InsideFillHandler.fillValue >= 100)
+                    if(hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<HouseInformation>().index==NetworkManager.PlayerID)
                     {
-                        keydowns = false;
-                        insideActive = false;
-                        //myRigid.position = PlayerAPT.playerPoint;
-                        myRigid.position=PlayerAPT.playerPoint;
-                        InsideFillHandler.fillValue = 0;
+                        myRigid.isKinematic = true;
+                        insideActive = true;
+                        // 문을 통과하여 아파트로 들어가는 경우
+                        EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+
+                        if (InsideFillHandler.fillValue >= 100)
+                        {
+                            keydowns = false;
+                            insideActive = false;
+                            //myRigid.position = PlayerAPT.playerPoint;
+                            myRigid.position = PlayerAPT.playerPoint;
+                            InsideFillHandler.fillValue = 0;
+                        }
                     }
                     break;
 
@@ -818,13 +766,7 @@ public class PlayerController : MonoBehaviour
                             Transform child = parentTransform.GetChild(i);
                             directChildren.Add(child);
                         }
-
-                        if (directChildren.Count > 0)
-                        {
-                            idx = UnityEngine.Random.Range(0, directChildren.Count);
-                        }
-                        //myRigid.position = directChildren[idx].position; // 마지막으로 들어갔던 문 위치로 이동
-                        myRigid.position = directChildren[idx].position;
+                        myRigid.position = directChildren[NetworkManager.PlayerID].position;
                         InsideFillHandler.fillValue = 0;
                         insideActive = false;
                     }
