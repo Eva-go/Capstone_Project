@@ -28,7 +28,6 @@ public class HouseInformation : MonoBehaviourPun
             if (spawnPointTransform.GetChild(i) == pointTransform)
             {
                 index = i;
-                Debug.Log("인덱스 : " + index + "플레이어 번호 : " + PlayerID);
                 if (index== PlayerID)
                 {
                     for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
@@ -56,6 +55,27 @@ public class HouseInformation : MonoBehaviourPun
                     {
                         playerController.HouseKey = 1;
                         HouseKey = true;
+                    }
+                }
+            }
+        }
+        else if(HouseKey)
+        {
+            foreach (PhotonView photonView in FindObjectsOfType<PhotonView>())
+            {
+                if (photonView.IsMine)
+                {
+                    PlayerController playerController = photonView.GetComponent<PlayerController>();
+                    if (playerController != null)
+                    {
+                        if(playerController.HouseKey!=1)
+                        {
+                            for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
+                            {
+                                Icon = gameObject.transform.GetChild(0).GetChild(j).GetComponent<MeshRenderer>();
+                                Icon.material = RedMaterial;
+                            }
+                        }
                     }
                 }
             }

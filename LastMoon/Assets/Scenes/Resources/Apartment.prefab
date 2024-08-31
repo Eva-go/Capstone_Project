@@ -440,7 +440,7 @@ GameObject:
   - component: {fileID: 3544922459418217556}
   m_Layer: 0
   m_Name: exit_Door
-  m_TagString: Door
+  m_TagString: APTDoor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -497,10 +497,12 @@ GameObject:
   m_Component:
   - component: {fileID: 9179460519079654788}
   - component: {fileID: 2805692319962000536}
+  - component: {fileID: 3533611983358922189}
   - component: {fileID: 5684124324294289649}
+  - component: {fileID: 1989653528262040205}
   m_Layer: 0
   m_Name: Apartment
-  m_TagString: PLANE
+  m_TagString: APT
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -544,6 +546,25 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3879596285855559070, guid: c42c49bc5af74bd4d8907848ae5cdeae, type: 3}
+--- !u!114 &3533611983358922189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9068786420175799258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2b2cc8a3293cbb46910ce47dc971dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  GreenMaterial: {fileID: 2100000, guid: 7656a28155dde7a4ea4366f0fc921005, type: 2}
+  RedMaterial: {fileID: 2100000, guid: 8210347902a34ef4b8334201d58ed9ee, type: 2}
+  APT_use: 0
+  color: 0
+  pv: {fileID: 0}
+  UsePlayer: {fileID: 0}
 --- !u!114 &5684124324294289649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,10 +583,27 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 1989653528262040205}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1989653528262040205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9068786420175799258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &4401028181743278988
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -132,8 +132,12 @@ public class PlayerController : MonoBehaviour
     private bool Bagdrop = false;
     public bool Godmode = false;
 
-    //하우스 진입변수
+    //집 진입변수
     public int HouseKey { get; set; } = 0;
+    public bool APT_in { get; set; } = false;
+
+    public bool UpdateAPT = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -263,6 +267,15 @@ public class PlayerController : MonoBehaviour
                 Attack();
                 Switching();
                 WaveTic();
+                if(UpdateAPT)
+                {
+                    GameObject[] aptObject = GameObject.FindGameObjectsWithTag("APT");
+                    for(int i=0;i<aptObject.Length;i++)
+                    {
+                        aptObject[i].GetComponent<APTInformation>().Use_player(this);
+                    }
+                    UpdateAPT = false;
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.F2))
@@ -318,6 +331,10 @@ public class PlayerController : MonoBehaviour
             if (GameValue.exit)
             {
                 Destroy(gameObject);
+            }
+            if(Input.GetKeyDown(KeyCode.F12))
+            {
+                HouseKey += 1;
             }
         }
     }
@@ -729,20 +746,46 @@ public class PlayerController : MonoBehaviour
             switch (hitInfo.collider.tag)
             {
                 case "Door":
-                    if(hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<HouseInformation>().index==NetworkManager.PlayerID)
+                    if(hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<HouseInformation>().index==NetworkManager.PlayerID&&HouseKey==1)
                     {
                         myRigid.isKinematic = true;
                         insideActive = true;
                         // 문을 통과하여 아파트로 들어가는 경우
                         EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
-
                         if (InsideFillHandler.fillValue >= 100)
                         {
                             keydowns = false;
                             insideActive = false;
-                            //myRigid.position = PlayerAPT.playerPoint;
                             myRigid.position = PlayerAPT.playerPoint;
                             InsideFillHandler.fillValue = 0;
+                        }
+                    }
+                    break;
+                case "APTDoor":
+                    var aptInfo = hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<APTInformation>();
+                    if (HouseKey == 2)
+                    {
+                        if (aptInfo.color != APTInformation.Color.Red)
+                        {
+                            myRigid.isKinematic = true;
+                            insideActive = true;
+                            // 문을 통과하여 아파트로 들어가는 경우
+                            EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+                            if (InsideFillHandler.fillValue >= 100)
+                            {
+                                aptInfo.APT_use = true;
+                                APT_in = true;
+                                keydowns = false;
+                                insideActive = false;
+                                myRigid.position = PlayerAPT.playerPoint;
+                                InsideFillHandler.fillValue = 0;
+                            }
+                            if(APT_in)
+                            {
+                                aptInfo.Use_player(this);
+                                aptInfo.Request_APT(this);
+                                UpdateAPT = true;
+                            }
                         }
                     }
                     break;
