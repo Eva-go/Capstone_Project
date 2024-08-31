@@ -290,6 +290,10 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F8))
             {
                 IncreaseLocalPlayerItems();
+                for (int i = 0; i < InitalItems.Length; i++)
+                {
+                    PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+                }
                 for (int i = 0; i < DebugItems.Length; i++)
                 {
                     PlayerInventory.AddItem(new Item { ItemType = DebugItems[i], Count = 10 });
@@ -975,29 +979,25 @@ public class PlayerController : MonoBehaviour
                     bagPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, pv.ViewID);
                 }
             }
-            else if (hit.collider.CompareTag("Poi"))
+            else if (hit.collider.CompareTag("Poi") || hit.collider.CompareTag("Pipe"))
             {
                 PoiController poiController = hit.collider.GetComponent<PoiController>();
-                if (poiController != null)
+                StationMatController stationMatController = hit.collider.GetComponent<StationMatController>();
+
+                if (stationMatController != null)
                 {
-                    if (poiController.ConstructionProgress >= 100 && poiController.hp > 0)
+                    if (stationMatController.ConstructionProgress >= 100 && stationMatController.Health > 0)
                     {
-                        if (poiController.hp - 10 <= 0)
+                        if (stationMatController.Health - 10 <= 0)
                         {
-                            ExtractStation(poiController, 0);
-                            foreach (Item item in poiController.StationConstInv.GetItems())
+                            if (poiController != null) ExtractStation(poiController, 0);
+                            foreach (Item item in stationMatController.StationConstInv.GetItems())
                             {
                                 PlayerInventory.AddItem(item);
                             }
                         }
-                        poiController.hp -= 10;
-                        poiController.animator.SetTrigger("isHit");
-                        /*
-                        if (poiController.hp < 0)
-                        {
-                            Destroy(poiController.gameObject);
-                        }
-                        */
+                        stationMatController.Health -= 10;
+                        if (poiController != null && poiController.animator != null) poiController.animator.SetTrigger("isHit");
                     }
                 }
             }

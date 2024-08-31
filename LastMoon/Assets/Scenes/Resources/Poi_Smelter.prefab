@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5223760760334705409}
   - component: {fileID: 347306188751867923}
   - component: {fileID: -1632892658035341723}
+  - component: {fileID: 4549338523262272553}
   - component: {fileID: 527718943812757758}
   - component: {fileID: 6808606798516353917}
   - component: {fileID: -935872782112775922}
@@ -105,9 +106,6 @@ MonoBehaviour:
   poiName: 
   SetnodeCount: 0
   animator: {fileID: 5223760760334705409}
-  ConstructionProgress: 0
-  StationConstructionMesh: {fileID: 6421033754997397890}
-  StationConstructionParts: {fileID: 2537302229213875025}
   ObjectlessSlot: 010101000101000101
   InputSlotType: 020000000000000000000000
   OutputSlotType: 010000000000000000000000
@@ -165,12 +163,51 @@ MonoBehaviour:
   ProcessEfficiency: 1
   TempertureLimit: 100
   tick: 0
-  tickMax: 0
-  isConstructing: 0
+  isTick: 0
   stop: 0
-  hp: 3
+  Constructed: 0
+  HasAnimation: 0
   item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 3112131222398767506}
+--- !u!114 &4549338523262272553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573298627077628865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2596a08e0fc8a9468e1f0323aabb857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stationController: {fileID: -1632892658035341723}
+  StationType: 0
+  StationConstructionMesh: {fileID: 6421033754997397890}
+  StationConstructionParts: {fileID: 2537302229213875025}
+  ConstructionProgress: 0
+  Health: 30
+  Heal_Cooldown: 0
+  Obj_Bases:
+  - {fileID: 2537302229213875025}
+  - {fileID: 7160964510233662432}
+  Obj_Auxes:
+  - {fileID: 5876718297059130602}
+  - {fileID: 3844498298306485137}
+  Obj_Fixes:
+  - {fileID: 8439094456729854360}
+  Obj_Cons:
+  - Count:
+    - {fileID: 6546667147255522839}
+    - {fileID: 7080415825632137046}
+  - Count:
+    - {fileID: 6194822120746484907}
+  StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
+  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
+  StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
+  StationConMat:
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
 --- !u!114 &527718943812757758
 MonoBehaviour:
   m_ObjectHideFlags: 0

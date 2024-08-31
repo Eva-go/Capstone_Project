@@ -147,23 +147,32 @@ public class PlayerPoiSpawn : MonoBehaviour
                 // Instantiate the object using Photon Network for actual objects
                 GameObject station = PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, roundedPosition, previewObjectInstance.transform.rotation);
 
+                StationMatController stationMatController = station.GetComponent<StationMatController>();
+
+                if (stationMatController != null)
+                {
+                    stationMatController.StationAuxMat = AuxMat;
+                    stationMatController.StationFixMat = FixMat;
+                    for (int i = 0; i < stationMatController.StationConMat.Length; i++)
+                    {
+                        stationMatController.StationConMat[i] = StationMaterial[i];
+                    }
+                    stationMatController.UpdateMatStation();
+                }
+
                 PoiController stationController = station.GetComponent<PoiController>();
 
-                stationController.MaxHealth = MaxHealth;
-                stationController.ProcessEfficiency = ProcessEfficiency;
-                stationController.TempertureLimit = TempertureLimit;
-
-                stationController.StationAuxMat = AuxMat;
-                stationController.StationFixMat = FixMat;
-                for (int i = 0; i < stationController.StationConMat.Length; i++)
+                if (stationController != null)
                 {
-                    stationController.StationConMat[i] = StationMaterial[i];
+                    stationController.MaxHealth = MaxHealth;
+                    stationController.ProcessEfficiency = ProcessEfficiency;
+                    stationController.TempertureLimit = TempertureLimit;
                 }
-                stationController.UpdateMatStation();
 
                 foreach (Item item in playerController.ConstInventory.GetItems())
                 {
-                    stationController.StationConstInv.AddItem(item);
+                    if (stationMatController != null) stationMatController.StationConstInv.AddItem(item);
+                    if (stationController != null) stationController.StationConstInv.AddItem(item);
                     playerController.PlayerInventory.RemoveItem(item);
                 }
                 playerController.ConstInventory.ClearInventory();
