@@ -32,21 +32,9 @@ public class PoiController : MonoBehaviour
     public int[] InputSlotType = new int[3];
     public int[] OutputSlotType = new int[3];
 
-    public GameObject[] StationBases;
-    public GameObject[] StationFixes;
-    public GameObject[] StationAuxes;
-    public ObjArray[] StationCons;
-
-    public Inventory StationConstInv = new Inventory { };
-
     public ScriptableObject_Item Debug_Filler;
     public ScriptableObject_Item Debug_Fuel;
     public ScriptableObject_Item Debug_Coolent;
-
-    public ScriptableObject_Item StationBaseMat;
-    public ScriptableObject_Item StationAuxMat;
-    public ScriptableObject_Item StationFixMat;
-    public ScriptableObject_Item[] StationConMat;
 
     private MaterialPropertyBlock propertyBlock;
 
@@ -235,17 +223,6 @@ public class PoiController : MonoBehaviour
         return item;
     }
 
-
-    public void UpdateMatStation()
-    {
-        UpdateObjMat(StationBases, StationBaseMat);
-        UpdateObjMat(StationFixes, StationFixMat);
-        UpdateObjMat(StationAuxes, StationAuxMat);
-        for (int i = 0; i < StationConMat.Length; i++)
-        {
-            UpdateObjMat(StationCons[i].Count, StationConMat[i]);
-        }
-    }
     public void UpdateMatInventories()
     {
         for (int i = 0; i < InputSlot.Length; i++)

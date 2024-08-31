@@ -36,6 +36,18 @@ public class StationMatController : MonoBehaviour
     public ScriptableObject_Item StationFixMat;
     public ScriptableObject_Item[] StationConMat;
 
+    //--- 아이템 슬롯 메테리얼 오브젝트-----------------
+
+    public ObjArray[] Obj_Slot_Input;
+    public ObjArray[] Obj_Slot_Output;
+    public int[] Obj_SlotType;
+
+    public GameObject[] Obj_Slot_Fuel;
+    public GameObject[] Obj_Slot_FuelWick;
+    public GameObject[] Obj_Slot_Coolent;
+    public GameObject[] Obj_Slot_Temperture;
+    public bool[] Obj_Additional;
+
     //--------------------------------------------------
 
     void Start()
@@ -130,7 +142,7 @@ public class StationMatController : MonoBehaviour
         propertyBlock.SetInt("_IsConstuction", 0);
         StationConstructionMesh.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
-
+    //--------------------------------------------------
     public void UpdateMatStation()
     {
         UpdateObjArrMat(Obj_Bases, StationBaseMat);
@@ -148,35 +160,19 @@ public class StationMatController : MonoBehaviour
             objects[i].GetComponent<MeshRenderer>().material = item.ItemLUM;
         }
     }
-
-
-
-
-
-    /*
-    //--- 아이템 슬롯 메테리얼 오브젝트
-    public ObjArray[] Obj_InputSlot;
-    public ObjArray[] Obj_OutputSlot;
-
-    public int[] Obj_SlotType;
-
-    public GameObject[] Obj_FuelSlot;
-    public GameObject[] Obj_FuelWick;
-
-    public GameObject[] Obj_Coolent;
-    public GameObject[] Obj_Temperture;
-    public bool[] Obj_Additional;
-
-
-    public void UpdateMatInventory_Solid(GameObject MatObj, Item InvItem)
+    //--------------------------------------------------
+    public void UpdateMatInventory_Solid(GameObject[] objects, Item InvItem)
     {
         float InvAmount;
         InvAmount = (float)InvItem.Count / (float)InvItem.ItemType.MaxCount;
 
-        MatObj.GetComponent<MeshRenderer>().material = InvItem.ItemType.ItemLUM;
-        MatObj.GetComponent<Transform>().localScale = new Vector3(InvAmount, InvAmount, InvAmount);
+        for (int i = 0; i < objects.Length; i++)
+        {
+            objects[i].GetComponent<MeshRenderer>().material = InvItem.ItemType.ItemLUM;
+            objects[i].GetComponent<Transform>().localScale = new Vector3(InvAmount, InvAmount, InvAmount);
+        }
     }
-    public void UpdateMatInventory_Liquid(GameObject MatObj, Item InvItem)
+    public void UpdateMatInventory_Liquid(GameObject[] objects, Item InvItem)
     {
         float InvAmount;
         Texture InvLU;
@@ -187,13 +183,68 @@ public class StationMatController : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
         propertyBlock.SetFloat("_Fill", InvAmount);
         propertyBlock.SetTexture("_Look_Up_Texture", InvLU);
-        MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+
+        for (int i = 0; i < objects.Length; i++)
+        {
+            objects[i].GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+        }
     }
-    public void UpdateMatFill(GameObject MatObj, float FillAmount)
+    public void UpdateMatFill(GameObject[] objects, float FillAmount)
     {
         propertyBlock = new MaterialPropertyBlock();
         propertyBlock.SetFloat("_Fill", FillAmount);
-        MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+        for (int i = 0; i < objects.Length; i++)
+        {
+            objects[i].GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+        }
     }
-     */
+    public void UpdateFuelInventory()
+    {
+        Item Inv_Fuel = stationController.Inv_Fuel;
+        float InvAmount;
+        Texture InvLU;
+
+        InvAmount = (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount;
+        propertyBlock = new MaterialPropertyBlock();
+        propertyBlock.SetFloat("_Fill", InvAmount);
+        
+        for (int i = 0; i < Obj_Slot_FuelWick.Length; i++)
+        {
+            Obj_Slot_FuelWick[i].GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+        }
+
+        InvLU = Inv_Fuel.ItemType.ItemLU;
+        propertyBlock = new MaterialPropertyBlock();
+        propertyBlock.SetFloat("_Fill", InvAmount);
+        propertyBlock.SetTexture("_Look_Up_Texture", InvLU);
+
+        for (int i = 0; i < Obj_Slot_Fuel.Length; i++)
+        {
+            Obj_Slot_Fuel[i].GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
+        }
+    }
+    public void UpdateTemperture()
+    {
+        UpdateMatFill(Obj_Slot_Temperture, stationController.StationTemperture / 250);
+    }
+    //--------------------------------------------------
+    public void UpdateInventories()
+    {
+        for (int i = 0; i < Obj_Slot_Input.Length; i++)
+        {
+            if (Obj_Slot_Input[i].Count != null)
+            {
+                if (Obj_SlotType[i] == 1) UpdateMatInventory_Liquid(Obj_Slot_Input[i].Count, stationController.Inv_Input[i]);
+                else if (Obj_SlotType[i] == 2) UpdateMatInventory_Solid(Obj_Slot_Input[i].Count, stationController.Inv_Input[i]);
+            }
+        }
+        for (int i = 0; i < Obj_Slot_Output.Length; i++)
+        {
+            if (Obj_Slot_Output[i].Count != null)
+            {
+                if (Obj_SlotType[i + 3] == 1) UpdateMatInventory_Liquid(Obj_Slot_Output[i].Count, stationController.Inv_Output[i]);
+                else if (Obj_SlotType[i + 3] == 2) UpdateMatInventory_Solid(Obj_Slot_Output[i].Count, stationController.Inv_Output[i]);
+            }
+        }
+    }
 }
