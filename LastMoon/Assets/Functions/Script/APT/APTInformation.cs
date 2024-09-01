@@ -10,7 +10,7 @@ public class APTInformation : MonoBehaviourPun
     public Material GreenMaterial;
     public Material RedMaterial;
     public bool APT_use;
-    public enum Color { Green, Red, Yellow }
+    public enum Color { Yellow, Green, Red }
     public Color color;
     public PhotonView pv;
     public PlayerController UsePlayer;
@@ -50,26 +50,6 @@ public class APTInformation : MonoBehaviourPun
         }
     }
 
-    public void Use_Item(PlayerController player)
-    {
-        switch (BuildingType)
-        {
-            case 0:
-                player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 50 });
-                break;
-            case 1:
-                player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 100 });
-                player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
-                break;
-            case 2:
-                player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 150 });
-                player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 100 });
-                player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
-                break;
-        }
-    }
-
-
     public void Use_player(PlayerController player)
     {
         UsePlayer = player;
@@ -78,20 +58,13 @@ public class APTInformation : MonoBehaviourPun
         switch (BuildingType)
         {
             case 0:
-                HasKey = player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 50 });
+                HasKey = (player.HouseKey == 2);
                 break;
             case 1:
-                HasKey = (
-                    player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 100 })
-                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 50 })
-                );
+                HasKey = (player.HouseKey == 3);
                 break;
             case 2:
-                HasKey = (
-                    player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 150 })
-                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 100 })
-                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key3, Count = 50 })
-                );
+                HasKey = (player.HouseKey == 4);
                 break;
         }
 
