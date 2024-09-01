@@ -16,6 +16,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject Shop;
     //public GameObject Respawn;
     public GameObject PoiPopup;
+    public GameObject Alive;
+
 
     public GameObject StationUI;
 
@@ -124,9 +126,9 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         ToolIconUpdate();
         ToolColorUpdate();
-
+        
         Respawn_Text.SetActive(false);
-
+        Alive.SetActive(false);
         inventory.SetActive(true);
         inside.SetActive(false);
         Tab.SetActive(false);
@@ -179,8 +181,24 @@ public class CanvasController : MonoBehaviourPunCallbacks
         }
         // 랜덤 가격이 아직 초기화되지 않았다면, 요청
         RequestRandomPricesFromMaster();
+
+        if(GameValue.is_Winner)
+        {
+            Alive.SetActive(true);
+            Cursor.lockState = CursorLockMode.Confined;
+        }
 }
 
+    [PunRPC]
+    void GoToAliveScene()
+    {
+        PhotonNetwork.LoadLevel("Alive");
+    }
+    public void Alive_BT()
+    {
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("GoToAliveScene", RpcTarget.All); // 모든 클라이언트에 씬 전환 명령
+    }                                                                       
 
     public void Respawn_T()
     {

@@ -140,14 +140,14 @@ public class PlayerController : MonoBehaviour
 
     public bool UpdateAPT = false;
 
-
+    public bool GameEnd = false;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
 
         }
         else
@@ -740,6 +740,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
     private void Interaction()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
@@ -799,22 +800,16 @@ public class PlayerController : MonoBehaviour
                             EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
                             if (InsideFillHandler.fillValue >= 100)
                             {
-
-                                if(aptInfo.BuildingType==2)
-                                {
-                                    Debug.Log("승리!");
-                                    SceneManager.LoadScene("Shop");
-                                }
                                 aptInfo.APT_use = true;
-                               
                                 keydowns = false;
                                 insideActive = false;
                                 myRigid.position = PlayerAPT.playerPoint;
-                                InsideFillHandler.fillValue = 0;
-
-
                                 HouseKey = aptInfo.BuildingType + 2;
                                 aptInfo.Use_player(this);
+                                if(aptInfo.BuildingType==2)
+                                {
+                                    GameValue.is_Winner = true;
+                                }
                                 switch (aptInfo.BuildingType)
                                 {
                                     case 0:
@@ -832,8 +827,9 @@ public class PlayerController : MonoBehaviour
                                 }
                                 aptInfo.Request_APT(this);
                                 UpdateAPT = true;
+                                
+                                InsideFillHandler.fillValue = 0;
                             }
-                            
                         }
                     }
                     else if (aptInfo.color == APTInformation.Color.Green)
@@ -968,6 +964,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
 
     public void Attack_Time()
     {

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
+using UnityEngine.SceneManagement;
+
 public class APTInformation : MonoBehaviourPun
 {
     private int PlayerID;
@@ -20,10 +23,11 @@ public class APTInformation : MonoBehaviourPun
     public ScriptableObject_Item Key2;
     public ScriptableObject_Item Key3;
 
+    private bool isLoading = false;
     void Start()
     {
         pv = GetComponent<PhotonView>();
-        if(pv.IsMine)
+        if (pv.IsMine)
         {
             if (gameObject.name == "Apartment(Clone)")
             {
@@ -37,7 +41,7 @@ public class APTInformation : MonoBehaviourPun
 
     void Update()
     {
-       if(GameValue.TideCycle > 11&& BuildingType==0)
+        if (GameValue.TideCycle > 11 && BuildingType == 0)
         {
             gameObject.transform.GetChild(1).gameObject.SetActive(false);
             gameObject.transform.GetChild(2).gameObject.SetActive(true);
@@ -59,8 +63,8 @@ public class APTInformation : MonoBehaviourPun
                 color = Color.Red;
             }
         }
-    }
 
+    }
     public void Use_player(PlayerController player)
     {
         UsePlayer = player;
@@ -118,8 +122,7 @@ public class APTInformation : MonoBehaviourPun
                 Icon.material = RedMaterial;
                 color = Color.Red;
             }
-        }
-       
+        } 
     }
 
     public void Request_APT(PlayerController player)
