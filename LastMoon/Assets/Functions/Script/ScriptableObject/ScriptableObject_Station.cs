@@ -10,6 +10,9 @@ public class ScriptableObject_Station : ScriptableObject
 
     public GameObject ConstModel;
 
+    public string Name;
+    public string Description;
+
     public int StationMaterialCount;
     public int[] StationMatType; // 0 - Default, 1 - Input, 2 - Output, 3 - InOut, 4 - Fuel, 5 - Coolent
 

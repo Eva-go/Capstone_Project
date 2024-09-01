@@ -88,8 +88,15 @@ public class PlayerPoiSpawn : MonoBehaviour
                 Poi_BT[i] = PoiTab[i].GetComponent<Button>(); // Poi_BT 배열 초기화
                 int index = i; // 인덱스를 로컬 변수로 복사
                 Poi_BT[i].onClick.AddListener(() => SlotClick(index)); // 버튼 클릭 리스너 추가
+
                 Image image = PoiTab[i].transform.GetChild(1).GetChild(0).GetComponent<Image>();
                 image.sprite = SelectableStations[i].StationIcon;
+
+                Text text = PoiTab[i].transform.GetChild(2).GetComponent<Text>();
+                text.text = SelectableStations[i].Name;
+
+                text = PoiTab[i].transform.GetChild(3).GetComponent<Text>();
+                text.text = SelectableStations[i].Description;
             }
             ApplySelectedStationInfo();
         }
