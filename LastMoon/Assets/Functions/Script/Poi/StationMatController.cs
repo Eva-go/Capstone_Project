@@ -29,6 +29,10 @@ public class StationMatController : MonoBehaviour
     public GameObject[] Obj_Fixes;
     public ObjArray[] Obj_Cons;
 
+    public GameObject[] Obj_AuxFix;
+
+    public GameObject[] Obj_AuxLUT;
+
     public Inventory StationConstInv = new Inventory { };
 
     public ScriptableObject_Item StationBaseMat;
@@ -148,6 +152,8 @@ public class StationMatController : MonoBehaviour
         UpdateObjArrMat(Obj_Bases, StationBaseMat);
         UpdateObjArrMat(Obj_Fixes, StationFixMat);
         UpdateObjArrMat(Obj_Auxes, StationAuxMat);
+        UpdateObjArrMatLUT(Obj_AuxLUT, StationAuxMat);
+        UpdateAuxFixMat();
         for (int i = 0; i < Obj_Cons.Length; i++)
         {
             UpdateObjArrMat(Obj_Cons[i].Count, StationConMat[i]);
@@ -158,6 +164,23 @@ public class StationMatController : MonoBehaviour
         for (int i = 0; i < objects.Length; i++)
         {
             objects[i].GetComponent<MeshRenderer>().material = item.ItemLUM;
+        }
+    }
+    public void UpdateObjArrMatLUT(GameObject[] objects, ScriptableObject_Item item)
+    {
+        for (int i = 0; i < objects.Length; i++)
+        {
+            objects[i].GetComponent<MeshRenderer>().material = item.ItemLUT;
+        }
+    }
+    public void UpdateAuxFixMat()
+    {
+        for (int i = 0; i < Obj_AuxFix.Length; i++)
+        {
+            Material[] materials = Obj_AuxFix[i].GetComponent<MeshRenderer>().materials;
+            materials[0] = StationAuxMat.ItemLUM;
+            materials[1] = StationFixMat.ItemLUM;
+            Obj_AuxFix[i].GetComponent<MeshRenderer>().materials = materials;
         }
     }
     //--------------------------------------------------
