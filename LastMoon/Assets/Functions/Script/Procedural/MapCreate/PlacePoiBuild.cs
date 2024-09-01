@@ -50,6 +50,8 @@ public class PlacePoiBuild : MonoBehaviour
 
     public NoiseData noiseData;
 
+    public bool isPhotonNetwork = false;
+
     void PlaceBuildings(float[,] noiseMap)
     {
         System.Random prng = new System.Random(seed); // Initialize random number generator with the same seed
@@ -83,11 +85,18 @@ public class PlacePoiBuild : MonoBehaviour
                             }
                         }
                     }
-
                     if (prefabToPlace != null)
                     {
-                        GameObject newBliding = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        newBliding.transform.SetParent(parentTransform);
+                        if (isPhotonNetwork)
+                        {
+                            GameObject newBliding = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
+                            newBliding.transform.SetParent(parentTransform);
+                        }
+                        else
+                        {
+                            GameObject newBliding = Instantiate(prefabToPlace, position, Quaternion.identity);
+                            newBliding.transform.SetParent(parentTransform);
+                        }
                     }
                 }
             }
@@ -136,8 +145,16 @@ public class PlacePoiBuild : MonoBehaviour
 
                     if (prefabToPlace != null)
                     {
-                        GameObject newPOI = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        newPOI.transform.SetParent(parentTransform);
+                        if (isPhotonNetwork)
+                        {
+                            GameObject newPOI = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
+                            newPOI.transform.SetParent(parentTransform);
+                        }
+                        else
+                        {
+                            GameObject newPOI = Instantiate(prefabToPlace, position, Quaternion.identity);
+                            newPOI.transform.SetParent(parentTransform);
+                        }
                     }
                 }
             }

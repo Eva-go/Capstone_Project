@@ -341,102 +341,6 @@ public class CanvasController : MonoBehaviourPunCallbacks
         }
     }
 
-    /*
-    public void RefreshInventory_Consumable()
-    {
-        foreach (Transform child in ItemScroll)
-        {
-            if (child == ItemSlot) continue;
-            Destroy(child.gameObject);
-        }
-        foreach (Transform child in ItemScroll_Consumable)
-        {
-            if (child == ItemSlot_Consumable) continue;
-            Destroy(child.gameObject);
-        }
-        foreach (Transform child in ItemScroll_Construction)
-        {
-            if (child == ItemSlot_Construction) continue;
-            Destroy(child.gameObject);
-        }
-
-        if (playerController != null) SetInventory(playerController.PlayerInventory);
-        int x = 0;
-        int y = 6;
-        float itemSlotSize = 150f;
-
-        if (UIinventory != null)
-        {
-            foreach (Item item in UIinventory.GetItems())
-            {
-                RectTransform itemRectTransform = Instantiate(ItemSlot, ItemScroll).GetComponent<RectTransform>();
-                itemRectTransform.gameObject.SetActive(true);
-
-                itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
-
-                Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
-                image.sprite = item.ItemType.ItemSprite;
-
-                Text text = itemRectTransform.Find("Count").GetComponent<Text>();
-                text.text = item.Count.ToString();
-
-                text = itemRectTransform.Find("Price").GetComponent<Text>();
-                text.text = item.ItemType.Price.ToString();
-
-                Button_Sell sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
-                sellbutton.RegisterPlayerController(playerController);
-                sellbutton.ItemType = item.ItemType;
-
-                y--;
-                if (item.ItemType.ItemType == 1)
-                {
-                    RectTransform itemRectTransform = Instantiate(ItemSlot_Construction, ItemScroll_Construction).GetComponent<RectTransform>();
-                    itemRectTransform.gameObject.SetActive(true);
-
-                    itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
-
-                    Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
-                    image.sprite = item.ItemType.ItemSprite;
-
-                    Text text = itemRectTransform.Find("Count").GetComponent<Text>();
-                    text.text = item.Count.ToString();
-
-                    text = itemRectTransform.Find("Price").GetComponent<Text>();
-                    text.text = item.ItemType.Price.ToString();
-
-                    Button_Sell sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
-                    sellbutton.RegisterPlayerController(playerController);
-                    sellbutton.ItemType = item.ItemType;
-
-                    y--;
-                }
-                else if (item.ItemType.ItemType == 2)
-                {
-                    RectTransform itemRectTransform = Instantiate(ItemSlot_Consumable, ItemScroll_Consumable).GetComponent<RectTransform>();
-                    itemRectTransform.gameObject.SetActive(true);
-
-                    itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSize, y * itemSlotSize);
-
-                    Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
-                    image.sprite = item.ItemType.ItemSprite;
-
-                    Text text = itemRectTransform.Find("Count").GetComponent<Text>();
-                    text.text = item.Count.ToString();
-
-                    text = itemRectTransform.Find("Price").GetComponent<Text>();
-                    text.text = item.ItemType.Price.ToString();
-
-                    Button_Sell sellbutton = itemRectTransform.Find("Button_Sell").GetComponent<Button_Sell>();
-                    sellbutton.RegisterPlayerController(playerController);
-                    sellbutton.ItemType = item.ItemType;
-
-                    y--;
-                }
-            }
-        }
-    }
-     */
-
     public void PoiPopupActive()
     {
         //PoiPopup.SetActive(playerController.PoiPopUp);
@@ -484,6 +388,25 @@ public class CanvasController : MonoBehaviourPunCallbacks
             SeletRecipe Recipebutton = RecipeRectTransform.GetComponent<SeletRecipe>();
             Recipebutton.RegisterStationController(playerController.UISelectedPOIController);
             Recipebutton.SelectableRecipe = SelectableRecipes[i];
+
+            Button button = RecipeRectTransform.GetComponent<Button>();
+            if (playerController.UISelectedPOIController.TempertureLimit < SelectableRecipes[i].Temperture)
+            {
+                button.interactable = false;
+            }
+
+            if (SelectableRecipes[i].RequireUnlock)
+            {
+                bool unlockedRecipe = false;
+                for (int j = 0; j < playerController.UnlockableRecipes.Length; j++)
+                {
+                    if (playerController.UnlockableRecipes[j] == SelectableRecipes[i])
+                    {
+                        unlockedRecipe = playerController.UnlockedRecipe[i];
+                    }
+                }
+                button.interactable = unlockedRecipe;
+            }
 
             x++;
             if (x > 1)

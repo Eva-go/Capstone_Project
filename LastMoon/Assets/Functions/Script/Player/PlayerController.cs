@@ -95,6 +95,9 @@ public class PlayerController : MonoBehaviour
     public Inventory PlayerInventory = new Inventory { };
     public Item[] RPOI_PortalInventory = new Item[4];
 
+    public ScriptableObject_Recipe[] UnlockableRecipes;
+    public bool[] UnlockedRecipe;
+
     public ScriptableObject_Item Seawater;
 
     //[SerializeField] private UI_Inventory ui_Inventory;

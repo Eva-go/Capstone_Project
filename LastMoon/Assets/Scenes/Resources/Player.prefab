@@ -1630,6 +1630,13 @@ MonoBehaviour:
   nodeItiems: 000000000000000000000000000000000000000000000000
   mixItiems: 000000000000000000000000000000000000000000000000
   nodeCounts: 000000000000000000000000000000000000000000000000
+  UnlockableRecipes:
+  - {fileID: 11400000, guid: 23b173532216a034eace3db94d5021dd, type: 2}
+  - {fileID: 11400000, guid: a6233e874cef2db46bb05ef8fc37883b, type: 2}
+  - {fileID: 11400000, guid: 40a24b90cdf7d624eb244408f875a8a0, type: 2}
+  - {fileID: 11400000, guid: df8283352dcc21f48a7d5f7581b024ed, type: 2}
+  - {fileID: 11400000, guid: f4eb11465451e8147824a2e4a1c6eebe, type: 2}
+  UnlockedRecipe: 0000000000
   Seawater: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
   UISelectedPOIController: {fileID: 0}
   StationActive: 0
@@ -1647,7 +1654,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6193c19b58e94ba419a7aea3fd0a7855, type: 2}
   - {fileID: 11400000, guid: 108ac1c0a5487ff4ea8903644788581e, type: 2}
   - {fileID: 11400000, guid: c435b3679c1267e40855794536b8479c, type: 2}
-  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  - {fileID: 11400000, guid: 00a932406cb906f4ca7788210e2fea3d, type: 2}
   positionLerpSpeed: 8
   rotationLerpSpeed: 8
   ShopActive: 0
@@ -1770,6 +1777,7 @@ MonoBehaviour:
   NullSprite: {fileID: 21300000, guid: b78f4166d1b040e4099cc811791aa7fa, type: 3}
   EmptySprite: {fileID: 21300000, guid: 4891d9f75097e4146b72238b97c32712, type: 3}
   DisabledSprite: {fileID: 21300000, guid: 3b9da1d0162b165468fc96cce899c9a2, type: 3}
+  Rotation: 0
 --- !u!114 &725141506427028762
 MonoBehaviour:
   m_ObjectHideFlags: 0

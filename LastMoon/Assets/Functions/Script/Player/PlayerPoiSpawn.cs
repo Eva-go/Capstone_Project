@@ -55,6 +55,10 @@ public class PlayerPoiSpawn : MonoBehaviour
     public Sprite DisabledSprite;
 
 
+    public int Rotation;
+
+
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -102,11 +106,13 @@ public class PlayerPoiSpawn : MonoBehaviour
                 // Rotate the preview object
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    RotatePreview(90f); // Rotate 90 degrees clockwise
+                    Rotation = (Rotation + 1) % 4;
+                    RotatePreview(); // Rotate 90 degrees clockwise
                 }
                 else if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    RotatePreview(-90f); // Rotate 90 degrees counterclockwise
+                    Rotation = (Rotation + 3) % 4;
+                    RotatePreview(); // Rotate 90 degrees counterclockwise
                 }
             }
 
@@ -220,6 +226,7 @@ public class PlayerPoiSpawn : MonoBehaviour
             {
                 // Instantiate a new preview object if none exists
                 previewObjectInstance = Instantiate(PreviewPoi_green[slotNumber], _location, Quaternion.identity);
+                RotatePreview();
             }
 
             // Check for collision and update preview object
@@ -232,6 +239,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                         isColliding = true;
                         Destroy(previewObjectInstance); // Destroy current preview object
                         previewObjectInstance = Instantiate(PreviewPoi_red[slotNumber], _location, Quaternion.identity);
+                        RotatePreview();
                     }
                 }
                 else
@@ -241,6 +249,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                         isColliding = false;
                         Destroy(previewObjectInstance); // Destroy current preview object
                         previewObjectInstance = Instantiate(PreviewPoi_green[slotNumber], _location, Quaternion.identity);
+                        RotatePreview();
                     }
                 }
             }
@@ -251,6 +260,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                     isColliding = false;
                     Destroy(previewObjectInstance); // Destroy current preview object
                     previewObjectInstance = Instantiate(PreviewPoi_green[slotNumber], _location, Quaternion.identity);
+                    RotatePreview();
                 }
             }
         }
@@ -272,21 +282,29 @@ public class PlayerPoiSpawn : MonoBehaviour
             {
                 // Instantiate a new preview object if none exists
                 previewObjectInstance = Instantiate(PreviewPoi_red[slotNumber], _location, Quaternion.identity);
+                RotatePreview();
             }
             if (!isColliding)
             {
                 isColliding = true;
                 Destroy(previewObjectInstance); // Destroy current preview object
                 previewObjectInstance = Instantiate(PreviewPoi_red[slotNumber], _location, Quaternion.identity);
+                RotatePreview();
             }
         }
     }
 
-    private void RotatePreview(float angle)
+    private void RotatePreview()
     {
         if (previewObjectInstance != null)
         {
-            previewObjectInstance.transform.Rotate(Vector3.up, angle); // Rotate the preview object around the Y-axis
+            previewObjectInstance.transform.eulerAngles = new Vector3
+            {
+                x = previewObjectInstance.transform.eulerAngles.x,
+                y = Rotation * 90f,
+                z = previewObjectInstance.transform.eulerAngles.z
+            };
+            //previewObjectInstance.transform.Rotate(Vector3.up, Rotation * 90f); // Rotate the preview object around the Y-axis
 
         }
     }

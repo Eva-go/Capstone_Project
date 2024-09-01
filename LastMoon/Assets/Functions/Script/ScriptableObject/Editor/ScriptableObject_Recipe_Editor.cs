@@ -101,6 +101,7 @@ public class ScriptableObject_Recipe_Editor : Editor
 
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("RequireUnlock"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("ProgressTime"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Temperture"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Coolent"), true);
