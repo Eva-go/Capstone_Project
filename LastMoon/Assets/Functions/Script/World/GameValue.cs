@@ -77,7 +77,6 @@ public class GameValue : MonoBehaviourPunCallbacks
         inside = false;
         nodeMoney = 0;
         mixMoney = 0;
-        Round = 1;
        
     }
 

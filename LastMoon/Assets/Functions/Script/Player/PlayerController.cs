@@ -746,7 +746,7 @@ public class PlayerController : MonoBehaviour
             switch (hitInfo.collider.tag)
             {
                 case "Door":
-                    if(hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<HouseInformation>().index==NetworkManager.PlayerID&&HouseKey==1)
+                    if(hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<HouseInformation>().index==NetworkManager.PlayerID&&HouseKey==1&&GameValue.Round<=5)
                     {
                         myRigid.isKinematic = true;
                         insideActive = true;

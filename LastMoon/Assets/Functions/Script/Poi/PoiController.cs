@@ -88,6 +88,9 @@ public class PoiController : MonoBehaviour
     public GameObject item;
     public Transform OutputTransform;
 
+    //파이프 감지 변수
+    public float PipeRayRadius = 1f;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -121,7 +124,7 @@ public class PoiController : MonoBehaviour
     {
         ActivationEffect();
         tick_ck();
-        GiveItem(1);
+        PipeRaycast();
 
     }
 
@@ -131,6 +134,19 @@ public class PoiController : MonoBehaviour
         {
             isTick = true;
             TickTimer.OnTick += TimeTickSystem_OnTick;
+        }
+    }
+
+    public void PipeRaycast()
+    {
+        Vector3 pipeCenter = OutputTransform.position;
+        Collider[] collider = Physics.OverlapSphere(pipeCenter, PipeRayRadius);
+        foreach (var hitCollder in collider)
+        {
+            if (hitCollder.CompareTag("Pipe"))
+            {
+                GiveItem(1);
+            }
         }
     }
 
