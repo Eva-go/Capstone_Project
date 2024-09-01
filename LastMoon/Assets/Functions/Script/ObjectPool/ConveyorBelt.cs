@@ -80,8 +80,10 @@ public class ConveyorBelt : MonoBehaviour
         return false;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
+        collision.gameObject.GetComponent<Rigidbody>().useGravity = false;
+        collision.gameObject.GetComponent<BoxCollider>().isTrigger = true;
         // 물체가 벨트와 충돌했을 때
         if (collision.gameObject != null && !onBelt.Contains(collision.gameObject))
         {
@@ -96,12 +98,21 @@ public class ConveyorBelt : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerStay(Collider collision)
     {
-        
-        //collision.gameObject.GetComponent<Rigidbody>().useGravity = true;
+        collision.gameObject.GetComponent<Rigidbody>().useGravity = false;
+        collision.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+    }       
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (boxCollider != null && !boxCollider.bounds.Intersects(collision.bounds))
+        {
+            Debug.Log("테스트");
+            collision.gameObject.GetComponent<Rigidbody>().useGravity = true;
+            collision.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+        }
         onBelt.Remove(collision.gameObject);
-        
     }
 
     private void UpdateBeltDirection(Vector3 eulerAngles)

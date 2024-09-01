@@ -87,31 +87,9 @@ MonoBehaviour:
   ObjectlessSlot: 000101000101010101
   InputSlotType: 020000000100000000000000
   OutputSlotType: 020000000100000000000000
-  StationBases:
-  - {fileID: 8573461314253515776}
-  - {fileID: 242801689122412108}
-  - {fileID: 2941652005405581425}
-  - {fileID: 3612501998913458950}
-  - {fileID: 2662496777022770347}
-  StationFixes:
-  - {fileID: 1523322935789511732}
-  StationAuxes:
-  - {fileID: 3580376780094503238}
-  - {fileID: 7532546370677076600}
-  StationCons:
-  - Count:
-    - {fileID: 8303805384866826536}
-  - Count:
-    - {fileID: 8573461314253515776}
   Debug_Filler: {fileID: 0}
   Debug_Fuel: {fileID: 11400000, guid: 3cd8bfa6b525e5d4d898971bc6b76ae7, type: 2}
   Debug_Coolent: {fileID: 11400000, guid: 26321197f5d08514c9c6750f476d66f3, type: 2}
-  StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
-  StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
-  StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
-  StationConMat:
-  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
-  - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   InputSlot:
   - Count:
     - {fileID: 2071056990504970571}
@@ -142,6 +120,7 @@ MonoBehaviour:
   HasAnimation: 0
   item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
   OutputTransform: {fileID: 4251807302551783536}
+  PipeRayRadius: 1
 --- !u!114 &1902848139348021237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +162,14 @@ MonoBehaviour:
   StationConMat:
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  Obj_Slot_Input: []
+  Obj_Slot_Output: []
+  Obj_SlotType: 
+  Obj_Slot_Fuel: []
+  Obj_Slot_FuelWick: []
+  Obj_Slot_Coolent: []
+  Obj_Slot_Temperture: []
+  Obj_Additional: 
 --- !u!65 &8337333612337844824
 BoxCollider:
   m_ObjectHideFlags: 0

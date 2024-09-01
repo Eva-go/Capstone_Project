@@ -117,6 +117,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  Obj_Slot_Input: []
+  Obj_Slot_Output: []
+  Obj_SlotType: 
+  Obj_Slot_Fuel: []
+  Obj_Slot_FuelWick: []
+  Obj_Slot_Coolent: []
+  Obj_Slot_Temperture: []
+  Obj_Additional: 
 --- !u!1 &9126491276600075586
 GameObject:
   m_ObjectHideFlags: 0
@@ -5002,7 +5010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 339c3f214269694468883b32aa11b4d7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5075,8 +5083,12 @@ PrefabInstance:
       value: LastLuna_Model_Station_Pipe_Curve
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5091,6 +5103,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2154735748577301164}
+    - targetCorrespondingSourceObject: {fileID: -4000833399127439973, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3774677604672769669}
+    - targetCorrespondingSourceObject: {fileID: -4000833399127439973, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6447874240721045075}
   m_SourcePrefab: {fileID: 100100000, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
 --- !u!1 &473789168180416063 stripped
 GameObject:
@@ -5117,6 +5135,48 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -4000833399127439973, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
   m_PrefabInstance: {fileID: 9118880985619342147}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &3774677604672769669
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3960611074811242200}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5486264, y: 0.40330222, z: 0.09849012}
+  m_Center: {x: -0.03348548, y: -4.176262e-16, z: 0.3721168}
+--- !u!65 &6447874240721045075
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3960611074811242200}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5486264, y: 0.40330222, z: 0.09849012}
+  m_Center: {x: -0.033, y: 0, z: 0.15}
 --- !u!1 &8236428549870493202 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ac65516e80fe644faba9ade6adbc8ea, type: 3}
@@ -5137,7 +5197,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -5158,11 +5218,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.55, y: 0.00999999, z: 0.2}
+  m_Size: {x: 0.56, y: 0.001, z: 0.2}
   m_Center: {x: -0.25, y: 0.45, z: 0}
 --- !u!114 &2154735748577301164
 MonoBehaviour:
