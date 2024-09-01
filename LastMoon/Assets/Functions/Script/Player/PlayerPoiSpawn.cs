@@ -51,6 +51,8 @@ public class PlayerPoiSpawn : MonoBehaviour
 
 
     public Sprite NullSprite;
+    public Sprite EmptySprite;
+    public Sprite DisabledSprite;
 
 
     void Start()
@@ -427,16 +429,34 @@ public class PlayerPoiSpawn : MonoBehaviour
                 Image image;
                 Button button;
                 button = StationInfoTab.transform.GetChild(3).GetComponent<Button>();
+                text = StationInfoTab.transform.GetChild(3).GetChild(1).GetComponent<Text>();
                 image = StationInfoTab.transform.GetChild(3).GetChild(0).GetComponent<Image>();
                 button.interactable = SelectedStation.StationAux;
                 if (!SelectedStation.StationAux)
-                image.sprite = NullSprite;
+                {
+                    text.text = "";
+                    image.sprite = DisabledSprite;
+                }
+                else
+                {
+                    text.text = "Aux";
+                    image.sprite = EmptySprite;
+                }
 
                 button = StationInfoTab.transform.GetChild(4).GetComponent<Button>();
+                text = StationInfoTab.transform.GetChild(4).GetChild(1).GetComponent<Text>();
                 image = StationInfoTab.transform.GetChild(4).GetChild(0).GetComponent<Image>();
                 button.interactable = SelectedStation.StationFix;
                 if (!SelectedStation.StationFix)
-                    image.sprite = NullSprite;
+                {
+                    text.text = "";
+                    image.sprite = DisabledSprite;
+                }
+                else
+                {
+                    text.text = "Fix";
+                    image.sprite = EmptySprite;
+                }
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -469,12 +489,13 @@ public class PlayerPoiSpawn : MonoBehaviour
                         }
                         if (SelectedStation.TempertureSensitive[i]) text.color = new Color { r = 1f, g = 0f, b = 0f, a = 1f };
                         else text.color = new Color { r = 1f, g = 1f, b = 1f, a = 1f };
+                        image.sprite = EmptySprite;
                     }
                     else
                     {
                         button.interactable = false;
                         text.text = "";
-                        image.sprite = NullSprite;
+                        image.sprite = DisabledSprite;
                     }
                 }
             }
@@ -493,14 +514,18 @@ public class PlayerPoiSpawn : MonoBehaviour
                 Image image;
                 Button button;
                 button = StationInfoTab.transform.GetChild(3).GetComponent<Button>();
+                text = StationInfoTab.transform.GetChild(3).GetChild(1).GetComponent<Text>();
                 image = StationInfoTab.transform.GetChild(3).GetChild(0).GetComponent<Image>();
                 button.interactable = false;
-                image.sprite = NullSprite;
+                text.text = "";
+                image.sprite = DisabledSprite;
 
                 button = StationInfoTab.transform.GetChild(4).GetComponent<Button>();
+                text = StationInfoTab.transform.GetChild(4).GetChild(1).GetComponent<Text>();
                 image = StationInfoTab.transform.GetChild(4).GetChild(0).GetComponent<Image>();
                 button.interactable = false;
-                image.sprite = NullSprite;
+                text.text = "";
+                image.sprite = DisabledSprite;
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -509,7 +534,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                     image = StationInfoTab.transform.GetChild(5 + i).GetChild(0).GetComponent<Image>();
                     button.interactable = false;
                     text.text = "";
-                    image.sprite = NullSprite;
+                    image.sprite = DisabledSprite;
                 }
             }
 
