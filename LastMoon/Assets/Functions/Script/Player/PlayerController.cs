@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,16 +10,12 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
     public GameObject currentPlayer { get; private set; }
-
-
-
     public PhotonView pv;
     public string nickName;
     public static float Hp = 100f;
     public GameObject cam;
     public GameObject RespawnCam;
     public bool isRespawn;
-    //public GameObject RespawnCamera;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -85,7 +81,6 @@ public class PlayerController : MonoBehaviour
 
     private string[] nodeName = { "Dirt", "Concrete", "Driftwood", "Sand", "Planks", "Scrap" };
     private string[] poiName = { "Poi_Distiller", "Poi_Dryer", "Poi_Filter", "Poi_Grinder", "Poi_Heater", "Poi_Smelter" };
-    private string[] rpoiName = { "RPOI_Boat", "RPOI_Car", "RPOI_Container", "RPOI_Wooden_Boat" };
     public int[] nodeItiems = new int[6];
     public int[] mixItiems = new int[6];
     public int[] nodeCounts = new int[6];
@@ -94,6 +89,8 @@ public class PlayerController : MonoBehaviour
     public static int[] mixSell = new int[6];
 
     public event Action OnInventoryChanged;
+
+    public Inventory ConstInventory = new Inventory { };
 
     public Inventory PlayerInventory = new Inventory { };
     public Item[] RPOI_PortalInventory = new Item[4];
@@ -105,33 +102,29 @@ public class PlayerController : MonoBehaviour
     public bool StationActive;
 
     [SerializeField] private ScriptableObject_Item[] InitalItems;
+    [SerializeField] private ScriptableObject_Item[] DebugItems;
 
 
     public float positionLerpSpeed = 8f;
     public float rotationLerpSpeed = 8f;
 
     private Vector3 networkPosition;
-    private Quaternion networkRotation;
+    //private Quaternion networkRotation;
 
     public bool ShopActive;
 
-    //ÃßÃâ º¯¼ö
+    //ì¶”ì¶œ ë³€ìˆ˜
     public bool Extract;
 
-    //¸®½ºÆù °ü·Ã º¯¼ö
+    //ë¦¬ìŠ¤í° ê´€ë ¨ ë³€ìˆ˜
     private static GameObject player;
     public Transform oldTransform;
     public Transform AptTransform;
 
-    //¾ÆÆÄÆ® ÁøÀÔº¯¼ö
-    private bool isInside;
-    private bool isOutside;
+    //ì•„íŒŒíŠ¸ ì§„ì…ë³€ìˆ˜
     public int inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
-    private bool oldPosState = false; // »óÅÂ¸¦ ÃßÀûÇÏ±â À§ÇÑ º¯¼ö
-    private bool insideState = false; // »óÅÂ¸¦ ÃßÀûÇÏ±â À§ÇÑ º¯¼ö
-    Transform parentTransform;
 
     private Dictionary<string, Vector3> doorPositions = new Dictionary<string, Vector3>();
     private Dictionary<string, Quaternion> doorRotations = new Dictionary<string, Quaternion>();
@@ -139,7 +132,12 @@ public class PlayerController : MonoBehaviour
     private bool Bagdrop = false;
     public bool Godmode = false;
 
-    //InteractableObject¸¦ À§ÇÑ ÄÚµå
+    //ì§‘ ì§„ì…ë³€ìˆ˜
+    public int HouseKey { get; set; } = 0;
+    public bool APT_in { get; set; } = false;
+
+    public bool UpdateAPT = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -158,7 +156,7 @@ public class PlayerController : MonoBehaviour
     {
         currentPlayer = player;
     }
-    //InteractableObject¸¦ À§ÇÑ ÄÚµå ³¡
+    //InteractableObjectë¥¼ ìœ„í•œ ì½”ë“œ ë
 
     public void InvokeInventoryChanged()
     {
@@ -167,10 +165,10 @@ public class PlayerController : MonoBehaviour
 
     public void EnterDoor(Transform doorTransform)
     {
-        string doorName = doorTransform.name; // ¹® ÀÌ¸§À» »ç¿ëÇÏ¿© °íÀ¯ ½Äº°ÀÚ·Î »ç¿ë
+        string doorName = doorTransform.name; // ë¬¸ ì´ë¦„ì„ ì‚¬ìš©í•˜ì—¬ ê³ ìœ  ì‹ë³„ìë¡œ ì‚¬ìš©
         lastDoorEntered = doorName;
 
-        // ¹® À§Ä¡¿Í È¸Àü ÀúÀå
+        // ë¬¸ ìœ„ì¹˜ì™€ íšŒì „ ì €ì¥
         if (!doorPositions.ContainsKey(doorName))
         {
             doorPositions[doorName] = doorTransform.position;
@@ -210,6 +208,10 @@ public class PlayerController : MonoBehaviour
             StationActive = false;
 
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
+            for (int i = 0; i < InitalItems.Length; i++)
+            {
+                PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+            }
 
             Hp = 100;
         }
@@ -265,6 +267,15 @@ public class PlayerController : MonoBehaviour
                 Attack();
                 Switching();
                 WaveTic();
+                if(UpdateAPT)
+                {
+                    GameObject[] aptObject = GameObject.FindGameObjectsWithTag("APT");
+                    for(int i=0;i<aptObject.Length;i++)
+                    {
+                        aptObject[i].GetComponent<APTInformation>().Use_player(this);
+                    }
+                    UpdateAPT = false;
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.F2))
@@ -298,6 +309,10 @@ public class PlayerController : MonoBehaviour
                 {
                     PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
                 }
+                for (int i = 0; i < DebugItems.Length; i++)
+                {
+                    PlayerInventory.AddItem(new Item { ItemType = DebugItems[i], Count = 10 });
+                }
                 PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
             }
             if (Input.GetKeyDown(KeyCode.F9))
@@ -313,43 +328,16 @@ public class PlayerController : MonoBehaviour
             {
                 DeathPPSVolume.SetActive(false);
             }
-            //if (insideActive && InsideFillHandler.fillValue >= 100)
-            //{
-            //    Debug.Log("ÀÎ»çÀÌµå" + inside);
-            //    InsideFillHandler.fillValue = 0;
-            //    InsideUpdate();
-            //    keydowns = false;
-            //    myRigid.isKinematic = false;
-            //}
             if (GameValue.exit)
             {
                 Destroy(gameObject);
             }
+            if(Input.GetKeyDown(KeyCode.F12))
+            {
+                HouseKey += 1;
+            }
         }
     }
-
-    /*public void InsideUpdate()
-    {
-        switch(inside)
-        {
-            case 0:
-                gameObject.transform.position = parentTransform.position;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 1:
-                gameObject.transform.position = PlayerAPT.playerPoint;
-                gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                break;
-            case 2:
-                if (doorPositions.ContainsKey(lastDoorEntered))
-                {
-                    gameObject.transform.position = doorPositions[lastDoorEntered]; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹® À§Ä¡·Î ÀÌµ¿
-                    gameObject.transform.rotation = doorRotations[lastDoorEntered]; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹®ÀÇ È¸Àü °ªÀ¸·Î ¼³Á¤
-                }
-                break;
-
-        }
-    }*/
 
     public int Sell()
     {
@@ -424,20 +412,24 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
+        if (!pv.IsMine) return;
+        pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
         if (pv.IsMine)
         {
             if (!Bagdrop)
             {
                 Bagdrop = true;
-                // Bag »ı¼º
+                // Bag
                 GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
                 BagController bagScript = bag.GetComponent<BagController>();
                 if (bagScript != null)
                 {
-                    // ¾ÆÀÌÅÛ µ¥ÀÌÅÍ Àü¼Û
+
                     foreach (Item item in PlayerInventory.GetItems())
                     {
-                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.ItemType.ItemName, item.Count);
+                        bagScript.BagInventory.AddItem(item);
+
+                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.Count);
                     }
                     PlayerInventory.ClearInventory();
                 }
@@ -445,7 +437,6 @@ public class PlayerController : MonoBehaviour
             }
             InvokeInventoryChanged();
             Hp = 0;
-            //RespawnAcive = true;
             if (live)
             {
                 RespawnCam.SetActive(true);
@@ -453,87 +444,44 @@ public class PlayerController : MonoBehaviour
                 gameObject.transform.GetChild(3).gameObject.SetActive(false);
                 gameObject.transform.GetChild(4).gameObject.SetActive(false);
                 gameObject.transform.GetChild(5).gameObject.SetActive(false);
-                live = false;
             }
-            //else if (RespawnFillHandler.fillValue >= 100)
-            //{
-            //    Bagdrop = false;
-            //    respawnTick = false;
-            //    RespawnAcive = false;
-            //    RespawnCamera.SetActive(false);
-            //    RespawnFillHandler.fillValue = 0; 
-            //}
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) && Hp <= 0)
             {
+                live = false;
+                Hp = 100;
                 RespawnCam.SetActive(false);
-                live = false;
-                isRespawn = false;
-                PhotonNetwork.Destroy(gameObject);
-                reSpwan();
+                gameObject.transform.GetChild(2).gameObject.SetActive(true);
+                gameObject.transform.GetChild(3).gameObject.SetActive(true);
+                gameObject.transform.GetChild(4).gameObject.SetActive(true);
+                //PhotonNetwork.Destroy(gameObject);
+                //reSpwan();
+                myRigid.position = PlayerAPT.playerPoint;
+                Bagdrop = false;
             }
+        }
+        if (isRespawn && !live)
+        {
+            if (!pv.IsMine) return;
+            pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
+            isRespawn = false;
+            live = true;
         }
     }
-
-    private void reSpwan()
+    [PunRPC]
+    public void RPC_Alive()
     {
-        if (pv.IsMine && !live)
-        {
-            Transform parentTransform = GameObject.Find("SpawnPoint").transform;
-            List<Transform> directChildren = new List<Transform>();
-
-            for (int i = 0; i < parentTransform.childCount; i++)
-            {
-                Transform child = parentTransform.GetChild(i);
-                directChildren.Add(child);
-            }
-
-            if (directChildren.Count > 0)
-            {
-
-                int idx = UnityEngine.Random.Range(0, directChildren.Count);
-                SpawnPlayer(idx, directChildren[idx]);
-
-            }
-            else
-            {
-                Debug.LogError("½ºÆù Æ÷ÀÎÆ®°¡ ¾ø½À´Ï´Ù.");
-            }
-        }
+        gameObject.transform.GetChild(1).gameObject.SetActive(true);
+        gameObject.transform.GetChild(5).gameObject.SetActive(true);
     }
 
-    public void SpawnPlayer(int idx, Transform points)
+    [PunRPC]
+    public void RPC_PlayerDied()
     {
-        if (pv.IsMine)
-        {
-            player = PhotonNetwork.Instantiate("Player", PlayerAPT.playerPoint, Quaternion.Euler(PlayerAPT.playerrotation));
-            if (player != null)
-            {
-                player.name = PhotonNetwork.LocalPlayer.NickName;
-                Transform OtherPlayer = player.transform.Find("OtherPlayer");
-                Transform LocalPlayer = player.transform.Find("LocalPlayer");
-                Transform Tool = player.transform.Find("Player001");
-                Transform T_LocalPlayerTool = player.transform.Find("ToolCamera");
-
-                if (OtherPlayer != null) OtherPlayer.gameObject.SetActive(false);
-                if (LocalPlayer != null) LocalPlayer.gameObject.SetActive(true);
-                if (Tool != null) Tool.gameObject.SetActive(false);
-                if (T_LocalPlayerTool != null) T_LocalPlayerTool.gameObject.SetActive(true);
-
-                PhotonView photonView = player.GetComponent<PhotonView>();
-                photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-                Debug.Log("Player spawned and ownership transferred.");
-            }
-            Debug.Log("ÇÃ·¹ÀÌ¾î È®ÀÎ" + GameObject.Find(player.name));
-            //if(PhotonNetwork.LocalPlayer.NickName != GameObject.Find(player.name).ToString())
-            //{
-            //    Debug.Log("ÇÃ·¹ÀÌ¾î ¾øÀ½");
-            //    reSpwan();
-            //}
-        }
-        //PlayerSpawn playerSpawn = GameObject.Find("PlayerSpwan").GetComponent<PlayerSpawn>();
-        //playerSpawn.OnBuildingCreated();
-
-
+        // ë¡œì»¬ í”Œë ˆì´ì–´ì˜ GameObject ë¹„í™œì„±í™”
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(3).gameObject.SetActive(false);
+        gameObject.transform.GetChild(4).gameObject.SetActive(false);
+        gameObject.transform.GetChild(5).gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -584,7 +532,7 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("RPC_UpdatePosition", RpcTarget.AllBuffered, transform.position);
             }
         }
     }
@@ -671,7 +619,7 @@ public class PlayerController : MonoBehaviour
             }
             if (pv.IsMine)
             {
-                pv.RPC("RPC_UpdatePositionAndRotation", RpcTarget.AllBuffered, transform.position, transform.rotation);
+                pv.RPC("RPC_UpdatePosition", RpcTarget.AllBuffered, transform.position);
             }
         }
     }
@@ -798,38 +746,122 @@ public class PlayerController : MonoBehaviour
             switch (hitInfo.collider.tag)
             {
                 case "Door":
-                    myRigid.isKinematic = true;
-                    insideActive = true;
-                    // ¹®À» Åë°úÇÏ¿© ¾ÆÆÄÆ®·Î µé¾î°¡´Â °æ¿ì
-                    EnterDoor(hitInfo.collider.transform); // ¹® À§Ä¡¸¦ ÀúÀå
-
-                    if (InsideFillHandler.fillValue >= 100)
+                    if(hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<HouseInformation>().index==NetworkManager.PlayerID&&HouseKey==1&&GameValue.Round<=5)
                     {
-                        inside = 1;
-                        keydowns = false;
-                        insideActive = false;
-                        //InsideUpdate();
-                        gameObject.transform.position = PlayerAPT.playerPoint;
-                        Debug.Log("pos2" + gameObject.transform.position);
-                        gameObject.transform.rotation = Quaternion.Euler(PlayerAPT.playerrotation);
-                        myRigid.isKinematic = false;
-                        isInside = true;
-                        InsideFillHandler.fillValue = 0;
-                    }
-                    if (isInside)
-                    {
-                        InsideFillHandler.fillValue = 0;
-                        if (gameObject.transform.position != PlayerAPT.playerPoint)
+                        myRigid.isKinematic = true;
+                        insideActive = true;
+                        // ë¬¸ì„ í†µê³¼í•˜ì—¬ ì•„íŒŒíŠ¸ë¡œ ë“¤ì–´ê°€ëŠ” ê²½ìš°
+                        EnterDoor(hitInfo.collider.transform); // ë¬¸ ìœ„ì¹˜ë¥¼ ì €ì¥
+                        if (InsideFillHandler.fillValue >= 100)
                         {
-                            gameObject.transform.position = PlayerAPT.playerPoint;
-                            Debug.Log("pos1" + gameObject.transform.position);
-                            isInside = false;
+                            keydowns = false;
+                            insideActive = false;
+                            myRigid.position = PlayerAPT.playerPoint;
+                            InsideFillHandler.fillValue = 0;
                         }
                     }
+                    break;
+                case "APTDoor":
+                    var aptInfo = hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<APTInformation>();
 
+                    if (aptInfo.color == APTInformation.Color.Yellow)
+                    {
+                        bool HasKey = false;
+                        switch (aptInfo.BuildingType)
+                        {
+                            case 0:
+                                HasKey = PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 50 });
+                                break;
+                            case 1:
+                                HasKey = (
+                                    PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 100 })
+                                    && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 50 })
+                                );
+                                break;
+                            case 2:
+                                HasKey = (
+                                    PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 150 })
+                                    && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 100 })
+                                    && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key3, Count = 50 })
+                                );
+                                break;
+                        }
+
+                        if (HasKey)
+                        {
+                            myRigid.isKinematic = true;
+                            insideActive = true;
+                            // ë¬¸ì„ í†µê³¼í•˜ì—¬ ì•„íŒŒíŠ¸ë¡œ ë“¤ì–´ê°€ëŠ” ê²½ìš°
+                            EnterDoor(hitInfo.collider.transform); // ë¬¸ ìœ„ì¹˜ë¥¼ ì €ì¥
+                            if (InsideFillHandler.fillValue >= 100)
+                            {
+                                aptInfo.APT_use = true;
+                                APT_in = true;
+                                keydowns = false;
+                                insideActive = false;
+                                myRigid.position = PlayerAPT.playerPoint;
+                                InsideFillHandler.fillValue = 0;
+                            }
+                            if (APT_in)
+                            {
+                                HouseKey = aptInfo.BuildingType + 2;
+                                aptInfo.Use_player(this);
+                                switch (aptInfo.BuildingType)
+                                {
+                                    case 0:
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key1, Count = 50 });
+                                        break;
+                                    case 1:
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key1, Count = 100 });
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key2, Count = 50 });
+                                        break;
+                                    case 2:
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key1, Count = 150 });
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key2, Count = 100 });
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key2, Count = 50 });
+                                        break;
+                                }
+                                aptInfo.Request_APT(this);
+                                UpdateAPT = true;
+                            }
+                        }
+                    }
+                    else if (aptInfo.color == APTInformation.Color.Green)
+                    {
+                        myRigid.isKinematic = true;
+                        insideActive = true;
+                        // ë¬¸ì„ í†µê³¼í•˜ì—¬ ì•„íŒŒíŠ¸ë¡œ ë“¤ì–´ê°€ëŠ” ê²½ìš°
+                        EnterDoor(hitInfo.collider.transform); // ë¬¸ ìœ„ì¹˜ë¥¼ ì €ì¥
+                        if (InsideFillHandler.fillValue >= 100)
+                        {
+                            aptInfo.APT_use = true;
+                            APT_in = true;
+                            keydowns = false;
+                            insideActive = false;
+                            myRigid.position = PlayerAPT.playerPoint;
+                            InsideFillHandler.fillValue = 0;
+                        }
+                        if (APT_in)
+                        {
+                            aptInfo.Use_player(this);
+                            aptInfo.Request_APT(this);
+                            UpdateAPT = true;
+                        }
+                    }
+                    
                     break;
 
                 case "ReturnDoor":
+                    insideActive = true;
+                    if (lastDoorEntered != null && InsideFillHandler.fillValue >= 100)
+                    {
+                        //myRigid.position = doorPositions[lastDoorEntered]; // ë§ˆì§€ë§‰ìœ¼ë¡œ ë“¤ì–´ê°”ë˜ ë¬¸ ìœ„ì¹˜ë¡œ ì´ë™
+                        myRigid.position=doorPositions[lastDoorEntered];
+                        InsideFillHandler.fillValue = 0;
+                        insideActive = false;
+                    }
+                    else if (lastDoorEntered == null && InsideFillHandler.fillValue >= 100)
+                    {
                         Transform parentTransform = GameObject.Find("SpawnPoint").transform;
                         List<Transform> directChildren = new List<Transform>();
 
@@ -838,89 +870,58 @@ public class PlayerController : MonoBehaviour
                             Transform child = parentTransform.GetChild(i);
                             directChildren.Add(child);
                         }
-
-                        if (directChildren.Count > 0)
-                        {
-                            idx = UnityEngine.Random.Range(0, directChildren.Count);
-                        }
-                        isOutside = false;
-                        myRigid.isKinematic = true;
-                        //insideActive = true;
-                        
-                            if (lastDoorEntered != null)
-                            {
-                                gameObject.transform.position = doorPositions[lastDoorEntered]; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹® À§Ä¡·Î ÀÌµ¿
-                                gameObject.transform.rotation = doorRotations[lastDoorEntered]; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹®ÀÇ È¸Àü °ªÀ¸·Î ¼³Á¤
-                            }
-                            else
-                            {
-                                gameObject.transform.position = directChildren[idx].position; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹® À§Ä¡·Î ÀÌµ¿
-                                gameObject.transform.rotation = directChildren[idx].rotation; // ¸¶Áö¸·À¸·Î µé¾î°¬´ø ¹®ÀÇ È¸Àü °ªÀ¸·Î ¼³Á¤
-                            }
-                            myRigid.isKinematic = false;
-                            isOutside = true;
-                            //InsideFillHandler.fillValue = 0;
+                        myRigid.position = directChildren[NetworkManager.PlayerID].position;
+                        InsideFillHandler.fillValue = 0;
+                        insideActive = false;
+                    }
                     break;
-
-                case "RPoi":
-                    RaycastHit hit;
-                    if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
+                /*
+            case "RPoi":
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
+                {
+                    PoiController poiController = hit.collider.GetComponent<PoiController>();
+                    if (poiController != null)
                     {
-                        // È÷Æ®µÈ ¿ÀºêÁ§Æ®ÀÇ ÀÌ¸§ÀÌ rpoiName ¹è¿­¿¡ ÀÖ´ÂÁö È®ÀÎ
-                        string hitObjectName = hit.collider.gameObject.name;
-                        for (int i = 0; i < rpoiName.Length; i++)
+                        for (int i = 0; i < 4; i++)
                         {
-                            if (hitObjectName.Contains(rpoiName[i])) // ÀÌ¸§ÀÌ Æ÷ÇÔµÈ °æ¿ì »óÈ£ÀÛ¿ë
+                            if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
                             {
-                                InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
-                                if (interactableObject != null)
+                                bool isActive = true;
+                                poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
+                                if (poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf == false)
                                 {
-                                    bool isActive = true;
-                                    hit.collider.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(false);
-                                    if (!hit.collider.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.activeSelf)
+                                    isActive = false;
+                                }
+                                else
+                                {
+                                    isActive = true;
+                                }
+                                PhotonView pv = poiController.GetComponent<PhotonView>();
+                                InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
+                                if (pv != null)
+                                {
+                                    pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
+                                    int playerId = NetworkManager.PlayerID + 1;
+
+                                    if (interactableObject.GetInteractingPlayerId() != playerId)
                                     {
-                                        isActive = false;
+                                        // ë‹¤ë¥¸ í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš©í•˜ê³  ìˆìœ¼ë©´ ì†Œìœ ê¶Œì„ ë„˜ê²¨ì£¼ê³  ì¹´ìš´íŠ¸ë¥¼ ì´ˆê¸°í™”
+                                        interactableObject.SetInteractingPlayerId(playerId); // ìƒˆ í”Œë ˆì´ì–´ì—ê²Œ ì†Œìœ ê¶Œ ë¶€ì—¬
+                                        pv.RPC("ResetOwnership", RpcTarget.OthersBuffered, isActive);
                                     }
-
-                                    PhotonView pv = hit.collider.GetComponent<PhotonView>();
-
-                                    if (pv != null)
+                                    else
                                     {
-                                        int playerId = NetworkManager.PlayerID + 1;
-
-                                        if (interactableObject.GetInteractingPlayerId() != playerId)
-                                        {
-                                            // ´Ù¸¥ ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ëÇÏ°í ÀÖÀ¸¸é ¼ÒÀ¯±ÇÀ» ³Ñ°ÜÁÖ°í Ä«¿îÆ®¸¦ ÃÊ±âÈ­
-                                            interactableObject.SetInteractingPlayerId(playerId); // »õ ÇÃ·¹ÀÌ¾î¿¡°Ô ¼ÒÀ¯±Ç ºÎ¿©
-                                            pv.RPC("ResetOwnership", RpcTarget.OthersBuffered, isActive);
-                                        }
-                                        else
-                                        {
-                                            // ÀÌ¹Ì ¼ÒÀ¯ÇÏ°í ÀÖ´Â ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ëÇÒ °æ¿ì ³»ºÎ ÀÎº¥Åä¸®¿¡¼­ ¾ÆÀÌÅÛ °¡Á®¿À±â
-                                            Item itemFromRPoi = interactableObject.RPOI_PortalInventory[i];
-
-                                            if (itemFromRPoi != null && itemFromRPoi.Count > 0)
-                                            {
-                                                // ÇÃ·¹ÀÌ¾î ÀÎº¥Åä¸®¿¡ ¾ÆÀÌÅÛ Ãß°¡
-                                                interactableObject.AddItemToPlayerInventory(itemFromRPoi.ItemType, itemFromRPoi.Count);
-
-                                                // RPoi ³»ºÎ ÀÎº¥Åä¸®¿¡¼­ ¾ÆÀÌÅÛ Á¦°Å
-                                                itemFromRPoi.ClearItem();
-
-                                                Debug.Log("Player " + playerId + " took " + itemFromRPoi.Count + " of " + itemFromRPoi.ItemType.ItemName + " from RPoi.");
-                                            }
-                                        }
-
-                                        pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
+                                        // ì´ë¯¸ ì†Œìœ í•˜ê³  ìˆëŠ” í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš©í•  ê²½ìš°
+                                        interactableObject.IncreaseCount(playerId); // ì¹´ìš´íŠ¸ ì¦ê°€
                                     }
                                 }
-                                break; // ÀÏÄ¡ÇÏ´Â ÀÌ¸§À» Ã£¾ÒÀ¸¹Ç·Î ·çÇÁ Å»Ãâ
                             }
                         }
                     }
-                    break;
-
-
+                }
+                break;
+                 */
                 default:
                     myRigid.isKinematic = false;
                     insideActive = false;
@@ -1024,25 +1025,25 @@ public class PlayerController : MonoBehaviour
                     bagPhotonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage, pv.ViewID);
                 }
             }
-            else if (hit.collider.CompareTag("Poi"))
+            else if (hit.collider.CompareTag("Poi") || hit.collider.CompareTag("Pipe"))
             {
                 PoiController poiController = hit.collider.GetComponent<PoiController>();
-                if (poiController != null)
+                StationMatController stationMatController = hit.collider.GetComponent<StationMatController>();
+
+                if (stationMatController != null)
                 {
-                    if (poiController.ConstructionProgress >= 100 && poiController.hp > 0)
+                    if (stationMatController.ConstructionProgress >= 100 && stationMatController.Health > 0)
                     {
-                        if (poiController.hp - 10 <= 0)
+                        if (stationMatController.Health - 10 <= 0)
                         {
-                            ExtractStation(poiController, 0);
+                            if (poiController != null) ExtractStation(poiController, 0);
+                            foreach (Item item in stationMatController.StationConstInv.GetItems())
+                            {
+                                PlayerInventory.AddItem(item);
+                            }
                         }
-                        poiController.hp -= 10;
-                        poiController.animator.SetTrigger("isHit");
-                        /*
-                        if (poiController.hp < 0)
-                        {
-                            Destroy(poiController.gameObject);
-                        }
-                        */
+                        stationMatController.Health -= 10;
+                        if (poiController != null && poiController.animator != null) poiController.animator.SetTrigger("isHit");
                     }
                 }
             }
@@ -1260,31 +1261,19 @@ public class PlayerController : MonoBehaviour
             case 0:
                 if (Station.Inv_Fuel != null)
                 {
-                    PlayerInventory.AddItem(new Item
-                    {
-                        ItemType = Station.Inv_Fuel.ItemType,
-                        Count = Station.Inv_Fuel.Count
-                    });
+                    PlayerInventory.AddItem(Station.Inv_Fuel);
                     Station.EmptyItem(0, 2);
                 }
                 if (Station.Inv_Coolent != null)
                 {
-                    PlayerInventory.AddItem(new Item
-                    {
-                        ItemType = Station.Inv_Coolent.ItemType,
-                        Count = Station.Inv_Coolent.Count
-                    });
+                    PlayerInventory.AddItem(Station.Inv_Coolent);
                     Station.EmptyItem(0, 3);
                 }
                 for (int i = 0; i < Station.SelectedRecipe.InputCount; i++)
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1292,11 +1281,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1306,11 +1291,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1318,11 +1299,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1332,11 +1309,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Output[i].ItemType,
-                            Count = Station.Inv_Output[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Output[i]);
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1346,11 +1319,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(new Item
-                        {
-                            ItemType = Station.Inv_Input[i].ItemType,
-                            Count = Station.Inv_Input[i].Count
-                        });
+                        PlayerInventory.AddItem(Station.Inv_Input[i]);
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1385,10 +1354,10 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    private void RPC_UpdatePositionAndRotation(Vector3 position, Quaternion rotation)
+    private void RPC_UpdatePosition(Vector3 position)
     {
         networkPosition = position;
-        networkRotation = rotation;
+        //networkRotation = rotation;
     }
 
     [PunRPC]
@@ -1402,6 +1371,32 @@ public class PlayerController : MonoBehaviour
             {
                 targetPlayer.TakeDamage(damage);
             }
+        }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ì±„ë ¥ ì •ë³´ë¥¼ ë³´ë‚´ê¸°
+            stream.SendNext(Hp);
+        }
+        else
+        {
+            // ë‹¤ë¥¸ í´ë¼ì´ì–¸íŠ¸ë¡œë¶€í„° ì±„ë ¥ ì •ë³´ë¥¼ ë°›ê¸°
+            Hp = (float)stream.ReceiveNext();
+        }
+    }
+
+    [PunRPC]
+    
+    private void RPC_RecoverHp(float amount)
+    {
+        if (pv.IsMine)
+        {
+            Hp += amount;
+            Hp = Mathf.Min(Hp, 100f); // ìµœëŒ€ ì²´ë ¥ ì œí•œ
         }
     }
 
@@ -1533,7 +1528,7 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < nodeItiems.Length; i++)
             {
                 nodeItiems[i] += 10;
-              
+
             }
             OnInventoryChanged?.Invoke();
         }

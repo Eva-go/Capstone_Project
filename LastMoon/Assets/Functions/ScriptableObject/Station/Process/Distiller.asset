@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd03877c80f8a154c8b70df7eea5170b, type: 3}
+  m_Name: Distiller
+  m_EditorClassIdentifier: 
+  SelectableRecipes:
+  - {fileID: 11400000, guid: df891cc5d3cb92644bce9054add690c9, type: 2}
+  - {fileID: 11400000, guid: 6caa5cd50fc752e4cb11c1ef8e0227b8, type: 2}
+  - {fileID: 11400000, guid: 32db8ed60ae7e494890a0c539eaeff80, type: 2}
+  - {fileID: 11400000, guid: 434cf45a383f24b458f4cfa6dd7207f3, type: 2}
+  - {fileID: 11400000, guid: e3b012fb2bd845d4fa279e16393b3792, type: 2}
+  StationIcon: {fileID: 21300000, guid: 465922df57bc89a459ed3ac4a4d7442c, type: 3}
+  StationMaterialCount: 4
+  StationMatType: 01000000040000000500000002000000
+  TempertureSensitive: 01000000
+  StationAux: 1
+  StationFix: 1
+  StationCoolent: 1
+  StationFuel: 1
+  StationThermometer: 1

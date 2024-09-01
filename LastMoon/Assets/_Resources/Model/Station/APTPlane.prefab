@@ -29418,6 +29418,37 @@ Transform:
   - {fileID: 1578034740894358370}
   m_Father: {fileID: 7832178554574821635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6481006953015997500
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 911861699861356398}
+  m_Layer: 0
+  m_Name: OutputTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &911861699861356398
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6481006953015997500}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2, y: 0.5, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7832178554574821635}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6595283741257893453
 GameObject:
   m_ObjectHideFlags: 0
@@ -29427,6 +29458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7832178554574821635}
+  - component: {fileID: 7897382015393251519}
   m_Layer: 0
   m_Name: APTPlane
   m_TagString: APTPlane
@@ -29456,8 +29488,26 @@ Transform:
   - {fileID: 5682752415268492247}
   - {fileID: 8605541993300604642}
   - {fileID: 8683942911479771963}
+  - {fileID: 911861699861356398}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7897382015393251519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6595283741257893453}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05949e7ee4ccb5043b3ed38bf89bbbe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tick: 0
+  tickMax: 0
+  stop: 0
+  item: {fileID: 6824193463719887995, guid: 22d1596d17f66464a90887216b6c9410, type: 3}
+  OutputTransform: {fileID: 911861699861356398}
 --- !u!1 &6875256446779816422
 GameObject:
   m_ObjectHideFlags: 0

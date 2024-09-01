@@ -28,28 +28,13 @@ public class PoiController : MonoBehaviour
     private string playerName = " ";
     private bool processing = false;
 
-    public float ConstructionProgress; 
-
-    public GameObject StationConstructionMesh;
-    public GameObject StationConstructionParts;
-
     public bool[] ObjectlessSlot = new bool[9];
     public int[] InputSlotType = new int[3];
     public int[] OutputSlotType = new int[3];
 
-    public GameObject[] StationBases;
-    public GameObject[] StationFixes;
-    public GameObject[] StationAuxes;
-    public ObjArray[] StationCons;
-
     public ScriptableObject_Item Debug_Filler;
     public ScriptableObject_Item Debug_Fuel;
     public ScriptableObject_Item Debug_Coolent;
-
-    public ScriptableObject_Item StationBaseMat;
-    public ScriptableObject_Item StationAuxMat;
-    public ScriptableObject_Item StationFixMat;
-    public ScriptableObject_Item[] StationConMat;
 
     private MaterialPropertyBlock propertyBlock;
 
@@ -61,8 +46,8 @@ public class PoiController : MonoBehaviour
     public GameObject[] Obj_Coolent;
     public GameObject[] Obj_Temperture;
 
-    public ScriptableObject_Station[] SelectableRecipes;
-    public ScriptableObject_Station SelectedRecipe;
+    public ScriptableObject_Recipe[] SelectableRecipes;
+    public ScriptableObject_Recipe SelectedRecipe;
 
     public Item[] Inv_Input = new Item[3];
     public Item[] Inv_Output = new Item[3];
@@ -84,32 +69,28 @@ public class PoiController : MonoBehaviour
 
     private bool ActivationType_Heating;
 
+    public float MaxHealth = 10;
+    public float ProcessEfficiency = 1;
+    public float TempertureLimit = 100;
+
     //tick  관련 변수
     public int tick;
-    public int tickMax;
-    public bool isConstructing;
+    public bool isTick;
     public bool stop;
-
-
 
     //레시피 관련 변수
     private int slotNumber; // 현재 슬롯 번호
 
-    //파괴 변수
-    public int hp = 30;
-
+    public bool Constructed;
+    public bool HasAnimation;
 
     //출력 변수
-    /*
-    public GameObject itme;
+    public GameObject item;
     public Transform OutputTransform;
 
-    public bool isOutput;
-    public bool Ountput_stop;
-    public int tickMaxOUtput;
-    public int OutputTick;
-    public bool test_ck;
-     */
+    //파이프 감지 변수
+    public float PipeRayRadius = 1f;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -125,13 +106,12 @@ public class PoiController : MonoBehaviour
             itemData.nodeItemCount[i] = 0;
             itemData.mixItemCount[i] = 0;
         }
-        hp = 30;
         StationProgress = 0;
-        Inv_Fuel = new Item { ItemType = new ScriptableObject_Item {}, Count = 0 };
+        Inv_Fuel = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
         Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
         //test_ck = false;
 
-        isConstructing = false;
+        isTick = false;
 
         Activation = false;
         Heating = false;
@@ -139,58 +119,89 @@ public class PoiController : MonoBehaviour
         CoolentDrain = 0;
     }
 
+    //TODO 업데이트
     private void Update()
     {
         ActivationEffect();
-        tick_ck(1);
+        tick_ck();
+        PipeRaycast();
 
     }
 
-    public void ConstructionAnimation()
+    public void tick_ck()
     {
-        if (!StationConstructionMesh.activeSelf)
+        if (!isTick)
         {
-            StationConstructionParts.SetActive(false);
-            StationConstructionMesh.SetActive(true);
+            isTick = true;
+            TickTimer.OnTick += TimeTickSystem_OnTick;
         }
-
-        ConstructionProgress += 2;
-
-        propertyBlock = new MaterialPropertyBlock();
-        propertyBlock.SetFloat("_Construction_Progress", ConstructionProgress / 100f);
-        propertyBlock.SetInt("_IsConstuction", 1);
-        StationConstructionMesh.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
-    }
-    public void DestroyAnimation()
-    {
-        if (!StationConstructionMesh.activeSelf)
-        {
-            StationConstructionParts.SetActive(false);
-            StationConstructionMesh.SetActive(true);
-        }
-
-        ConstructionProgress -= 3;
-
-        propertyBlock = new MaterialPropertyBlock();
-        propertyBlock.SetFloat("_Construction_Progress", ConstructionProgress / 100f);
-        propertyBlock.SetInt("_IsConstuction", 0);
-        StationConstructionMesh.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
 
-    public void TakeDamage(float Damage)
+    public void PipeRaycast()
     {
-        hp -= (int)Damage;
-        if (hp > 0)
+        Vector3 pipeCenter = OutputTransform.position;
+        Collider[] collider = Physics.OverlapSphere(pipeCenter, PipeRayRadius);
+        foreach (var hitCollder in collider)
         {
-            animator.SetTrigger("isHit");
-
-        }
-        else if (hp <= 0)
-        {
-            if (!StationConstructionMesh.activeSelf)
+            if (hitCollder.CompareTag("Pipe"))
             {
-                StationConstructionParts.SetActive(false);
-                StationConstructionMesh.SetActive(true);
+                GiveItem(1);
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        TickTimer.OnTick -= TimeTickSystem_OnTick;
+    }
+
+
+    private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
+    {
+        if (isTick && !stop)
+        {
+            tick = e.tick % 1;
+            if (tick >= 0)
+            {
+                if (Constructed)
+                {
+                    if (SelectedRecipe != null)
+                    {
+                        CheckRecipe();
+                        HeatingManage();
+
+                        if (!Activation || Refilling)
+                        {
+                            if (ActivationType_Heating)
+                            {
+                                Inv_Fuel = AddItem(Inv_Fuel, Debug_Fuel, 1);
+                                if (!ObjectlessSlot[6])
+                                {
+                                    for (int i = 0; i < FuelSlot.Length; i++)
+                                    {
+                                        if (FuelSlot[i] != null) UpdateMatInventory(FuelSlot[i], Inv_Fuel);
+                                        if (FuelWick[i] != null) UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
+                                    }
+                                }
+                            }
+                            if (SelectedRecipe.Coolent > 0)
+                            {
+                                Inv_Coolent = AddItem(Inv_Coolent, Debug_Coolent, 1);
+                                if (Obj_Coolent != null)
+                                {
+                                    for (int i = 0; i < Obj_Coolent.Length; i++)
+                                    {
+                                        UpdateMatInventory(Obj_Coolent[i], Inv_Coolent);
+                                    }
+                                }
+                            }
+                        }
+                        if ((!ActivationType_Heating || Inv_Fuel.Count >= 75) &&
+                            (SelectedRecipe.Coolent <= 0 || Inv_Coolent.Count >= 75))
+                            Refilling = false;
+                    }
+                }
+                isTick = false;
             }
         }
     }
@@ -201,118 +212,14 @@ public class PoiController : MonoBehaviour
     }
     public void onClickStart(int _slotNumber)
     {
-        for(int i=0; i< SelectableRecipes.Length; i++)
+        for (int i = 0; i < SelectableRecipes.Length; i++)
         {
-            if(i == _slotNumber)
+            if (i == _slotNumber)
             {
                 SelectedRecipe = SelectableRecipes[i];
             }
         }
     }
-    private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
-    {
-        if (isConstructing&&!stop)
-        {
-            tick = e.tick % tickMax;
-            if (tick >= tickMax - 1)
-            {
-                if (hp > 0)
-                {
-                    if (ConstructionProgress < 100)
-                    {
-                        if (StationConstructionMesh != null) ConstructionAnimation();
-                    }
-                    else
-                    {
-                        if (StationConstructionMesh != null && StationConstructionMesh.activeSelf)
-                        {
-                            StationConstructionParts.SetActive(true);
-                            StationConstructionMesh.SetActive(false);
-                        }
-
-                        if (SelectedRecipe != null)
-                        {
-                            CheckRecipe();
-                            HeatingManage();
-
-                            if (!Activation || Refilling)
-                            {
-                                if (ActivationType_Heating)
-                                {
-                                    Inv_Fuel = AddItem(Inv_Fuel, Debug_Fuel, 1);
-                                    if (!ObjectlessSlot[6])
-                                    {
-                                        for (int i = 0; i < FuelSlot.Length; i++)
-                                        {
-                                            if (FuelSlot[i] != null) UpdateMatInventory(FuelSlot[i], Inv_Fuel);
-                                            if (FuelWick[i] != null) UpdateMatFill(FuelWick[i], (float)Inv_Fuel.Count / (float)Inv_Fuel.ItemType.MaxCount);
-                                        }
-                                    }
-                                }
-                                if (SelectedRecipe.Coolent > 0)
-                                {
-                                    Inv_Coolent = AddItem(Inv_Coolent, Debug_Coolent, 1);
-                                    if (Obj_Coolent != null)
-                                    {
-                                        for (int i = 0; i < Obj_Coolent.Length; i++)
-                                        {
-                                            UpdateMatInventory(Obj_Coolent[i], Inv_Coolent);
-                                        }
-                                    }
-                                }
-                            }
-                            if ((!ActivationType_Heating || Inv_Fuel.Count >= 75) && 
-                                (SelectedRecipe.Coolent <= 0 || Inv_Coolent.Count >= 75))
-                                Refilling = false;
-                        }
-                    }
-                }
-                else
-                {
-                    DestroyAnimation();
-                    if (ConstructionProgress < 0)
-                    {
-                        Destroy(gameObject);
-                    }
-                }
-                //Ountput(0);
-                isConstructing = false;
-            }
-            else
-            {
-
-                //Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
-            }
-
-        }
-    }
-    /*
-    private void TimeTickSystem_OnTick_OutPut(object sender, TickTimer.OnTickEventArgs e)
-    {
-        if (isOutput && Ountput_stop)
-        {
-            OutputTick = e.tick % tickMaxOUtput;
-            if (OutputTick >= tickMaxOUtput - 1)
-            {
-                Ountput(0);
-                isOutput = false;
-            }
-            else
-            {
-
-                //Debug.Log("Tick tick true" + tick + ":"+tickMax+" "+ PhotonNetwork.Time);
-            }
-
-        }
-    }
-     */
-
-    /*
-    public void Ountput(int index)
-    {
-        Instantiate(itme, OutputTransform.position, Quaternion.identity);
-    }
-     */
 
     public Item AddItem(Item item, ScriptableObject_Item Type, int Count)
     {
@@ -332,17 +239,6 @@ public class PoiController : MonoBehaviour
         return item;
     }
 
-
-    public void UpdateMatStation()
-    {
-        UpdateObjMat(StationBases, StationBaseMat);
-        UpdateObjMat(StationFixes, StationFixMat);
-        UpdateObjMat(StationAuxes, StationAuxMat);
-        for (int i = 0; i< StationConMat.Length; i++)
-        {
-            UpdateObjMat(StationCons[i].Count, StationConMat[i]);
-        }
-    }
     public void UpdateMatInventories()
     {
         for (int i = 0; i < InputSlot.Length; i++)
@@ -420,26 +316,6 @@ public class PoiController : MonoBehaviour
         MatObj.GetComponent<MeshRenderer>().SetPropertyBlock(propertyBlock);
     }
 
-    public void tick_ck(int ticksToConstruct)
-    {
-        if (!isConstructing)
-        {
-            tickMax = ticksToConstruct;
-            isConstructing = true;
-            TickTimer.OnTick += TimeTickSystem_OnTick;
-        }
-    }
-    /*
-    public void tick_OutPut(int ticksToConstruct)
-    {
-        if (!isOutput)
-        {
-            tickMaxOUtput = ticksToConstruct;
-            isOutput = true;
-            TickTimer.OnTick += TimeTickSystem_OnTick_OutPut;
-        }
-    }
-     */
 
 
 
@@ -495,11 +371,10 @@ public class PoiController : MonoBehaviour
 
         if (Activation)
         {
-            StationProgress++;
+            StationProgress += ProcessEfficiency;
             if (StationProgress >= SelectedRecipe.ProgressTime)
             {
                 StationProgress = 0;
-                if (hp < 30) hp++;
                 if (SelectedRecipe.Coolent > 0) CoolentDrain = (int)SelectedRecipe.Coolent;
                 for (int i = 0; i < SelectedRecipe.InputCount; i++)
                 {
@@ -526,7 +401,7 @@ public class PoiController : MonoBehaviour
 
             }
         }
-        
+
     }
     public void HeatingManage()
     {
@@ -604,7 +479,7 @@ public class PoiController : MonoBehaviour
 
     public void InputItems(int ItemRequireCount)
     {
-        for (int i = 0; i < SelectedRecipe.InputCount; i++) 
+        for (int i = 0; i < SelectedRecipe.InputCount; i++)
         {
             Inv_Input[i] = AddItem(Inv_Input[i], SelectedRecipe.Input[i], ItemRequireCount);
             if (i < InputSlot.Length && InputSlot[i].Count != null)
@@ -676,6 +551,28 @@ public class PoiController : MonoBehaviour
     }
 
 
+    // 맞는 유형 아이템 받기
+    public void TakeItem(Item InputItem)
+    {
+        int activeSlot = -1;
+        if (SelectedRecipe != null)
+        {
+            for (int i = 0; i < SelectedRecipe.InputCount; i++)
+            {
+                if (SelectedRecipe.Input[i] == InputItem.ItemType && activeSlot == -1)
+                {
+                    activeSlot = i;
+                }
+            }
+        }
+        if (activeSlot != -1)
+        {
+            Debug.Log("충돌4");
+            Item_Input(activeSlot, 0, InputItem.ItemType, InputItem.Count);
+        }
+    }
+
+
     public void Item_Input(int Inv_Slot, int SlotType, ScriptableObject_Item ItemType, int Count)
     {
         switch (SlotType) // 0 - Input, 1 - Output, 2 - Fuel, 3 - Coolent
@@ -723,6 +620,20 @@ public class PoiController : MonoBehaviour
                 break;
         }
     }
+   
+
+    public void GiveItem(int OutputNum)
+    {
+        if (Inv_Output[OutputNum] != null && Inv_Output[OutputNum].Count > 0) 
+        {
+           
+            GameObject nodeItem = Instantiate(item, OutputTransform.position, Quaternion.identity);
+            NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
+            nodeDestroy.Inv_Input = new Item { ItemType = Inv_Output[OutputNum].ItemType, Count = 1 };
+            Item_Extract(OutputNum, 1, 1);
+        }
+    }
+
 
     public void Item_Extract(int Inv_Slot, int SlotType, int Count)
     {
@@ -770,35 +681,6 @@ public class PoiController : MonoBehaviour
                 }
                 break;
         }
-    }
-
-
-    [PunRPC]
-    public void ReceiveData()
-    {
-        //InputItem();
-
-        //=== Old Recipe -V
-        /*
-        if (itemData.nodeName[i].Equals(nodeName) && nodeItemCount >= 0)
-        {
-            if (playerName == " ")
-            {
-                SetnodeCount = nodeItemCount;
-                itemData.nodeItemCount[i]++;
-                playerName = playerNickName;
-            }
-            else if (playerName == playerNickName)
-            {
-                itemData.nodeItemCount[i]++;
-            }
-
-            if (!processing)
-            {
-                StartCoroutine(ProcessItems(i));
-            }
-        }
-         */
     }
 
     private IEnumerator ProcessItems(int i)

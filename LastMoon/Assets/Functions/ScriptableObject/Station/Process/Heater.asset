@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd03877c80f8a154c8b70df7eea5170b, type: 3}
+  m_Name: Heater
+  m_EditorClassIdentifier: 
+  SelectableRecipes:
+  - {fileID: 11400000, guid: b5911645094b1474a89d9608b530f74c, type: 2}
+  - {fileID: 11400000, guid: 40391c793ec57714683dd022348841be, type: 2}
+  - {fileID: 11400000, guid: 369ef0c02fbf72543b67509bf7b6a82a, type: 2}
+  - {fileID: 11400000, guid: 1b7d7f6c5492d1840bfb106e35e7650b, type: 2}
+  - {fileID: 11400000, guid: 52523afad698f774caecaf178b266acb, type: 2}
+  - {fileID: 11400000, guid: c5e48e7849df6bc46bba11b3bdf0a313, type: 2}
+  StationIcon: {fileID: 21300000, guid: 643e9925fd87bf04ea5c2e6f464b133c, type: 3}
+  StationMaterialCount: 2
+  StationMatType: 0300000004000000
+  TempertureSensitive: 0100
+  StationAux: 1
+  StationFix: 1
+  StationCoolent: 0
+  StationFuel: 1
+  StationThermometer: 0

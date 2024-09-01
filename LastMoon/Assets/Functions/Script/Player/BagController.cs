@@ -15,17 +15,6 @@ public class BagController : MonoBehaviourPunCallbacks
     [PunRPC]
     public void GetItem(string ItemType, int ItemCount)
     {
-        //BagInventory.OverrideInventory(inventory);
-        /*
-        foreach (Item item in inventory.GetItems())
-        {
-            BagInventory.AddItem(item);
-            health += item.Count * 5;
-        }
-         */
-        //BagInventory.AddItem(item);
-        //health += item.Count * 5;
-
         BagInventory.AddItem(new Item { ItemType = Itemlist.FindListByIDMatch(ItemType), Count = ItemCount });
         if (health < 100)
         {
@@ -59,9 +48,16 @@ public class BagController : MonoBehaviourPunCallbacks
                     playerController.PlayerInventory.AddItem(item);
                     playerController.TakeDamage(5f);
                 }
-
-                // 인벤토리 변경 이벤트 호출
-                playerController.InvokeInventoryChanged();
+                /*
+                for (int i = 0; i < nodeItems.Length; i++)
+                {
+                    playerController.nodeItiems[i] += nodeItems[i];
+                }
+                for (int i = 0; i < mixItems.Length; i++)
+                {
+                    playerController.mixItiems[i] += mixItems[i];
+                }
+                 */
             }
         }
         if (PhotonNetwork.IsMasterClient || photonView.IsMine)
