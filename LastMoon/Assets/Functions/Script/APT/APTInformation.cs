@@ -15,7 +15,7 @@ public class APTInformation : MonoBehaviourPun
     public PhotonView pv;
     public PlayerController UsePlayer;
 
-    public int BuildingType;
+    public int BuildingType; // 0 - 아파트, 1 - 마천루, 2 - 벙커
     public ScriptableObject_Item Key1;
     public ScriptableObject_Item Key2;
     public ScriptableObject_Item Key3;
@@ -50,6 +50,26 @@ public class APTInformation : MonoBehaviourPun
         }
     }
 
+    public void Use_Item(PlayerController player)
+    {
+        switch (BuildingType)
+        {
+            case 0:
+                player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 50 });
+                break;
+            case 1:
+                player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 100 });
+                player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
+                break;
+            case 2:
+                player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 150 });
+                player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 100 });
+                player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
+                break;
+        }
+    }
+
+
     public void Use_player(PlayerController player)
     {
         UsePlayer = player;
@@ -58,31 +78,20 @@ public class APTInformation : MonoBehaviourPun
         switch (BuildingType)
         {
             case 0:
-                HasKey = player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 50 });
+                HasKey = player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 50 });
                 break;
             case 1:
-                if (
+                HasKey = (
                     player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 100 })
                     && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 50 })
-                ) 
-                {
-                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 100 });
-                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
-                    HasKey = true;
-                }
+                );
                 break;
             case 2:
-                if (
+                HasKey = (
                     player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 150 })
                     && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 100 })
-                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 50 })
-                )
-                {
-                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 150 });
-                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 100 });
-                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
-                    HasKey = true;
-                }
+                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key3, Count = 50 })
+                );
                 break;
         }
 
@@ -90,6 +99,7 @@ public class APTInformation : MonoBehaviourPun
         {
             for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
             {
+                player.HouseKey = BuildingType + 2;
                 Icon = gameObject.transform.GetChild(0).GetChild(j).GetComponent<MeshRenderer>();
                 Icon.material = GreenMaterial;
                 color = Color.Green;

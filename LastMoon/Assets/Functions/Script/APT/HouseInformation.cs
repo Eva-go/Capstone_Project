@@ -28,7 +28,7 @@ public class HouseInformation : MonoBehaviourPun
             if (spawnPointTransform.GetChild(i) == pointTransform)
             {
                 index = i;
-                if (index== PlayerID)
+                if (index == PlayerID)
                 {
                     for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
                     {

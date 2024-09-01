@@ -763,7 +763,29 @@ public class PlayerController : MonoBehaviour
                     break;
                 case "APTDoor":
                     var aptInfo = hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<APTInformation>();
-                    if (HouseKey == 2)
+                    bool HasKey = false;
+
+                    switch (aptInfo.BuildingType)
+                    {
+                        case 0:
+                            HasKey = PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 50 });
+                            break;
+                        case 1:
+                            HasKey = (
+                                PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 100 })
+                                && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 50 })
+                            );
+                            break;
+                        case 2:
+                            HasKey = (
+                                PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 150 })
+                                && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 100 })
+                                && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key3, Count = 50 })
+                            );
+                            break;
+                    }
+
+                    if (HasKey)
                     {
                         if (aptInfo.color != APTInformation.Color.Red)
                         {
@@ -783,6 +805,7 @@ public class PlayerController : MonoBehaviour
                             if(APT_in)
                             {
                                 aptInfo.Use_player(this);
+                                aptInfo.Use_Item(this);
                                 aptInfo.Request_APT(this);
                                 UpdateAPT = true;
                             }
