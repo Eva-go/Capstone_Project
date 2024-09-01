@@ -14,6 +14,12 @@ public class APTInformation : MonoBehaviourPun
     public Color color;
     public PhotonView pv;
     public PlayerController UsePlayer;
+
+    public int BuildingType;
+    public ScriptableObject_Item Key1;
+    public ScriptableObject_Item Key2;
+    public ScriptableObject_Item Key3;
+
     void Start()
     {
         pv = GetComponent<PhotonView>();
@@ -47,7 +53,40 @@ public class APTInformation : MonoBehaviourPun
     public void Use_player(PlayerController player)
     {
         UsePlayer = player;
-        if (player.HouseKey == 2 && player.APT_in && APT_use)
+        bool HasKey = false;
+
+        switch (BuildingType)
+        {
+            case 0:
+                HasKey = player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 50 });
+                break;
+            case 1:
+                if (
+                    player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 100 })
+                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 50 })
+                ) 
+                {
+                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 100 });
+                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
+                    HasKey = true;
+                }
+                break;
+            case 2:
+                if (
+                    player.PlayerInventory.CheckItem(new Item { ItemType = Key1, Count = 150 })
+                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 100 })
+                    && player.PlayerInventory.CheckItem(new Item { ItemType = Key2, Count = 50 })
+                )
+                {
+                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key1, Count = 150 });
+                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 100 });
+                    player.PlayerInventory.RemoveItem(new Item { ItemType = Key2, Count = 50 });
+                    HasKey = true;
+                }
+                break;
+        }
+
+        if (HasKey && player.APT_in && APT_use)
         {
             for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
             {
@@ -57,7 +96,7 @@ public class APTInformation : MonoBehaviourPun
                 photonView.RPC("APT_cloes", RpcTarget.OthersBuffered, Color.Red.ToString(), APT_use);
             }
         }
-        else if (player.HouseKey == 2 && player.APT_in && !APT_use)
+        else if (HasKey && player.APT_in && !APT_use)
         {
             for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
             {

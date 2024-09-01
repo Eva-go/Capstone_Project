@@ -51,6 +51,22 @@ public class Inventory
         return RemovedItem;
     }
 
+    public bool CheckItem(Item item)
+    {
+        bool HasItem = false;
+        foreach (Item inventoryItem in itemList)
+        {
+            if (inventoryItem.ItemType == item.ItemType)
+            {
+                if (inventoryItem.Count >= item.Count)
+                {
+                    HasItem = true;
+                }
+            }
+        }
+        return HasItem;
+    }
+
     public int ClearItem(ScriptableObject_Item itemType)
     {
         Item SelectedItem = null;
