@@ -24,12 +24,6 @@ public class EscapeMenu : MonoBehaviour
     void Start()
     {
         inEscapeMenu = false;
-        //AudioMixerController.GetFloat("Master", out Volume_Master);
-        //AudioMixerController.GetFloat("GamePlay", out Volume_GamePlay);
-        //AudioMixerController.GetFloat("Music", out Volume_Music);
-        //VolumeSlider_Master.value = 20 - Volume_Master / 20;
-        //VolumeSlider_GamePlay.value = 20 - Volume_GamePlay / 20;
-        //VolumeSlider_Music.value = 20 - Volume_Music / 20;
     }
 
 

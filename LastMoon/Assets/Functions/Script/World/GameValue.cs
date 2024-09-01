@@ -64,6 +64,8 @@ public class GameValue : MonoBehaviourPunCallbacks
     public static bool TideChange = false;
     public static float TideChangeProgress = 0;
 
+    //게임종료
+    public static bool is_Winner;
     private void Awake()
     {
         exit = false;
@@ -77,7 +79,7 @@ public class GameValue : MonoBehaviourPunCallbacks
         inside = false;
         nodeMoney = 0;
         mixMoney = 0;
-       
+        is_Winner = false;
     }
 
 

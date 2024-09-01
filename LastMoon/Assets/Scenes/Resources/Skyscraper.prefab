@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8672833640372738804}
   m_Layer: 0
   m_Name: exit_Door
-  m_TagString: SkyDoor
+  m_TagString: APTDoor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -70,10 +70,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7195436523061118743}
   - component: {fileID: 8056036098334198741}
+  - component: {fileID: 1958599917801058143}
   - component: {fileID: 6448281111847886698}
   m_Layer: 0
   m_Name: Skyscraper
-  m_TagString: PLANE
+  m_TagString: APT
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -118,6 +119,29 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8588708200853460057, guid: 416b7d1d1fe7fa84a8c119ce45e10a3c, type: 3}
+--- !u!114 &1958599917801058143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2470402126456181400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2b2cc8a3293cbb46910ce47dc971dae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  GreenMaterial: {fileID: 2100000, guid: 2900fca6d80c14d47bd543c4def20386, type: 2}
+  RedMaterial: {fileID: 2100000, guid: 00e0c986ce1368f469169ee36edda680, type: 2}
+  APT_use: 0
+  color: 0
+  pv: {fileID: 0}
+  UsePlayer: {fileID: 0}
+  BuildingType: 1
+  Key1: {fileID: 11400000, guid: 6193c19b58e94ba419a7aea3fd0a7855, type: 2}
+  Key2: {fileID: 11400000, guid: 108ac1c0a5487ff4ea8903644788581e, type: 2}
+  Key3: {fileID: 11400000, guid: c435b3679c1267e40855794536b8479c, type: 2}
 --- !u!114 &6448281111847886698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +222,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4a321d650bd2ab64e86c2714d619fa71, type: 3}
       propertyPath: m_TagString
-      value: SkyDoor
+      value: APTDoor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -299,7 +323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4a321d650bd2ab64e86c2714d619fa71, type: 3}
       propertyPath: m_TagString
-      value: SkyDoor
+      value: APTDoor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -400,7 +424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4a321d650bd2ab64e86c2714d619fa71, type: 3}
       propertyPath: m_TagString
-      value: SkyDoor
+      value: APTDoor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -563,7 +587,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4a321d650bd2ab64e86c2714d619fa71, type: 3}
       propertyPath: m_TagString
-      value: SkyDoor
+      value: APTDoor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -730,7 +754,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4a321d650bd2ab64e86c2714d619fa71, type: 3}
       propertyPath: m_TagString
-      value: SkyDoor
+      value: APTDoor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

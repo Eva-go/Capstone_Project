@@ -302,6 +302,11 @@ public class PoiController : MonoBehaviour
 
     public void UpdateMatInventory(GameObject MatObj, Item InvItem)
     {
+        if (MatObj == null)
+        {
+            Debug.Log("MatObj is null, skipping update.");
+            return;
+        }
         float InvAmount;
         Texture InvLU;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Pun.Demo.PunBasics;
-
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController Instance { get; private set; }
@@ -137,16 +137,20 @@ public class PlayerController : MonoBehaviour
 
     //집 진입변수
     public int HouseKey { get; set; } = 0;
-    public bool APT_in { get; set; } = false;
+    //public bool APT_in { get; set; } = false;
+
+    //public bool SKT_in { get; set; } = false;
 
     public bool UpdateAPT = false;
+
+    public bool GameEnd = false;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
 
         }
         else
@@ -739,6 +743,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
     private void Interaction()
     {
         Ray ray = theCamera.ScreenPointToRay(Input.mousePosition);
@@ -799,16 +804,15 @@ public class PlayerController : MonoBehaviour
                             if (InsideFillHandler.fillValue >= 100)
                             {
                                 aptInfo.APT_use = true;
-                                APT_in = true;
                                 keydowns = false;
                                 insideActive = false;
                                 myRigid.position = PlayerAPT.playerPoint;
-                                InsideFillHandler.fillValue = 0;
-                            }
-                            if (APT_in)
-                            {
                                 HouseKey = aptInfo.BuildingType + 2;
                                 aptInfo.Use_player(this);
+                                if(aptInfo.BuildingType==2)
+                                {
+                                    GameValue.is_Winner = true;
+                                }
                                 switch (aptInfo.BuildingType)
                                 {
                                     case 0:
@@ -826,6 +830,8 @@ public class PlayerController : MonoBehaviour
                                 }
                                 aptInfo.Request_APT(this);
                                 UpdateAPT = true;
+                                
+                                InsideFillHandler.fillValue = 0;
                             }
                         }
                     }
@@ -838,18 +844,17 @@ public class PlayerController : MonoBehaviour
                         if (InsideFillHandler.fillValue >= 100)
                         {
                             aptInfo.APT_use = true;
-                            APT_in = true;
+                            
                             keydowns = false;
                             insideActive = false;
                             myRigid.position = PlayerAPT.playerPoint;
                             InsideFillHandler.fillValue = 0;
-                        }
-                        if (APT_in)
-                        {
+
                             aptInfo.Use_player(this);
                             aptInfo.Request_APT(this);
                             UpdateAPT = true;
                         }
+                        
                     }
                     
                     break;
@@ -962,6 +967,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
 
     public void Attack_Time()
     {
