@@ -5104,23 +5104,19 @@ MonoBehaviour:
   - {fileID: 5083290219700720759}
   - {fileID: 7613548349364938941}
   - {fileID: 8412813372865798611}
-  - {fileID: 8902464700174752461}
-  - {fileID: 2395224563682536958}
-  - {fileID: 8808993372593292613}
-  - {fileID: 3098417751903846554}
-  - {fileID: 8524817465814115152}
-  - {fileID: 6952700156936916805}
-  - {fileID: 6270533673667098447}
   - {fileID: 3149699337777015541}
   Obj_Auxes:
   - {fileID: 7944299148859370659}
   - {fileID: 6572078313125849259}
   - {fileID: 3418975561561519642}
   - {fileID: 6909958827066878994}
-  - {fileID: 116512227881828551}
   Obj_Fixes:
-  - {fileID: 436434285193352563}
-  - {fileID: 2669018209498061720}
+  - {fileID: 8902464700174752461}
+  - {fileID: 2395224563682536958}
+  - {fileID: 6952700156936916805}
+  - {fileID: 6270533673667098447}
+  - {fileID: 8808993372593292613}
+  - {fileID: 3098417751903846554}
   Obj_Cons:
   - Count:
     - {fileID: 624533891114426281}
@@ -5141,6 +5137,13 @@ MonoBehaviour:
     - {fileID: 3564936057933076243}
     - {fileID: 3464067575524137969}
     - {fileID: 3112506343409804425}
+  Obj_AuxFix:
+  - {fileID: 436434285193352563}
+  - {fileID: 2669018209498061720}
+  - {fileID: 8524817465814115152}
+  - {fileID: 116512227881828551}
+  Obj_AuxLUT:
+  - {fileID: 8598193939965106894}
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
@@ -11014,6 +11017,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de9165bea070d2846b27282b731f08e3, type: 3}
+--- !u!1 &8598193939965106894 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: de9165bea070d2846b27282b731f08e3, type: 3}
+  m_PrefabInstance: {fileID: 8904603844777109407}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8942243929608749172 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: de9165bea070d2846b27282b731f08e3, type: 3}
