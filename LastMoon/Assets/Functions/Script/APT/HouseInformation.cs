@@ -44,7 +44,12 @@ public class HouseInformation : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        if(index==PlayerID&&!HouseKey)
+        if (GameValue.TideCycle>5)
+        {
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(true);
+        }
+        if (index==PlayerID&&!HouseKey)
         {
             foreach (PhotonView photonView in FindObjectsOfType<PhotonView>())
             {

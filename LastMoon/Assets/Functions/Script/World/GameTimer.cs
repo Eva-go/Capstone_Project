@@ -28,10 +28,11 @@ public class GameTimer : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        GameValue.Round = 0;
         Wave_Time_Active_LT.SetActive(true);
         switchingTime = false;
         GameValue.RoundEnd = false;
-        totalTime = 0.5f * (GameValue.Round - 1) * 60f / GameValue.MaxRound * 60f + (GameValue.setMaxtime * 60f);
+        totalTime = 0.5f * (GameValue.Round) * 60f / GameValue.MaxRound * 60f + (GameValue.setMaxtime * 60f);
         currentTime = totalTime;
         timerImage.localPosition = new Vector3(initialPosX, timerImage.localPosition.y, timerImage.localPosition.z);
         timerImageFill_LT.fillAmount = 1;
@@ -43,7 +44,6 @@ public class GameTimer : MonoBehaviourPunCallbacks
         GameValue.TideCycle = 1;
         GameValue.TideChange = false;
         GameValue.TideChangeProgress = 0;
-        
         GameValue.DNCycle = 0;
 
         TideChangeProgress = 0;
@@ -105,6 +105,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
         if (GameValue.insideUser >= GameValue.MaxUser)
         {
             currentTime = 0;
+           
             HandleTimeChange(); // Ensure time change handling if insideUser reaches max
         }
     }

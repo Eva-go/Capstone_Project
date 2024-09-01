@@ -31,7 +31,17 @@ public class APTInformation : MonoBehaviourPun
 
     void Update()
     {
-       
+       if(GameValue.Round>5)
+        {
+            gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
+            {
+                Icon = gameObject.transform.GetChild(0).GetChild(j).GetComponent<MeshRenderer>();
+                Icon.material = RedMaterial;
+                color = Color.Red;
+            }
+        }
     }
 
     public void Use_player(PlayerController player)
