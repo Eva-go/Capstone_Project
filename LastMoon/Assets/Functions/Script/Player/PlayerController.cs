@@ -763,31 +763,31 @@ public class PlayerController : MonoBehaviour
                     break;
                 case "APTDoor":
                     var aptInfo = hitInfo.collider.gameObject.transform.parent.gameObject.transform.parent.GetComponent<APTInformation>();
-                    bool HasKey = false;
 
-                    switch (aptInfo.BuildingType)
+                    if (aptInfo.color == APTInformation.Color.Yellow)
                     {
-                        case 0:
-                            HasKey = PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 50 });
-                            break;
-                        case 1:
-                            HasKey = (
-                                PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 100 })
-                                && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 50 })
-                            );
-                            break;
-                        case 2:
-                            HasKey = (
-                                PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 150 })
-                                && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 100 })
-                                && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key3, Count = 50 })
-                            );
-                            break;
-                    }
+                        bool HasKey = false;
+                        switch (aptInfo.BuildingType)
+                        {
+                            case 0:
+                                HasKey = PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 50 });
+                                break;
+                            case 1:
+                                HasKey = (
+                                    PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 100 })
+                                    && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 50 })
+                                );
+                                break;
+                            case 2:
+                                HasKey = (
+                                    PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key1, Count = 150 })
+                                    && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key2, Count = 100 })
+                                    && PlayerInventory.CheckItem(new Item { ItemType = aptInfo.Key3, Count = 50 })
+                                );
+                                break;
+                        }
 
-                    if (HasKey)
-                    {
-                        if (aptInfo.color != APTInformation.Color.Red)
+                        if (HasKey)
                         {
                             myRigid.isKinematic = true;
                             insideActive = true;
@@ -802,15 +802,53 @@ public class PlayerController : MonoBehaviour
                                 myRigid.position = PlayerAPT.playerPoint;
                                 InsideFillHandler.fillValue = 0;
                             }
-                            if(APT_in)
+                            if (APT_in)
                             {
+                                HouseKey = aptInfo.BuildingType + 2;
                                 aptInfo.Use_player(this);
-                                aptInfo.Use_Item(this);
+                                switch (aptInfo.BuildingType)
+                                {
+                                    case 0:
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key1, Count = 50 });
+                                        break;
+                                    case 1:
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key1, Count = 100 });
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key2, Count = 50 });
+                                        break;
+                                    case 2:
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key1, Count = 150 });
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key2, Count = 100 });
+                                        PlayerInventory.RemoveItem(new Item { ItemType = aptInfo.Key2, Count = 50 });
+                                        break;
+                                }
                                 aptInfo.Request_APT(this);
                                 UpdateAPT = true;
                             }
                         }
                     }
+                    else if (aptInfo.color == APTInformation.Color.Green)
+                    {
+                        myRigid.isKinematic = true;
+                        insideActive = true;
+                        // 문을 통과하여 아파트로 들어가는 경우
+                        EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
+                        if (InsideFillHandler.fillValue >= 100)
+                        {
+                            aptInfo.APT_use = true;
+                            APT_in = true;
+                            keydowns = false;
+                            insideActive = false;
+                            myRigid.position = PlayerAPT.playerPoint;
+                            InsideFillHandler.fillValue = 0;
+                        }
+                        if (APT_in)
+                        {
+                            aptInfo.Use_player(this);
+                            aptInfo.Request_APT(this);
+                            UpdateAPT = true;
+                        }
+                    }
+                    
                     break;
 
                 case "ReturnDoor":
