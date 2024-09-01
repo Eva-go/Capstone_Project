@@ -311,6 +311,15 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     public void BuildButtonPressed()
     {
+        if (BuildableTest())
+        {
+            onClickStart();
+        }
+    }
+
+    public bool BuildableTest()
+    {
+        bool isBuildable = false;
         if (SelectedStation != null)
         {
             if (
@@ -328,10 +337,13 @@ public class PlayerPoiSpawn : MonoBehaviour
                 }
                 if (itemSelected)
                 {
-                    onClickStart();
+                    isBuildable = true;
                 }
             }
         }
+        Button button = BuildButton.GetComponent<Button>();
+        button.interactable = isBuildable;
+        return isBuildable;
     }
     
     public void SlotClick(int _slotNumber)
@@ -576,6 +588,11 @@ public class PlayerPoiSpawn : MonoBehaviour
 
     public void StationValueCaculate()
     {
+        BuildableTest();
+        MaxHealth = 10;
+        TempertureLimit = 100;
+        ProcessEfficiency = 1;
+
         bool TempApplied = false;
         for (int i = 0; i < SelectedStation.StationMaterialCount; i++)
         {
