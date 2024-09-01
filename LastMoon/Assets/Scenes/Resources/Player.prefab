@@ -1440,6 +1440,7 @@ GameObject:
   - component: {fileID: 4093038744633329134}
   - component: {fileID: 4323000284422157701}
   - component: {fileID: 725141506427028762}
+  - component: {fileID: 3414631549270387245}
   - component: {fileID: 4093038744633329122}
   - component: {fileID: 4093038744633329123}
   - component: {fileID: 4093038744633329124}
@@ -1784,6 +1785,26 @@ MonoBehaviour:
   APTPlane: {fileID: 6595283741257893453, guid: 80d431a8d5ca53e4b8a9604fbc67857c, type: 3}
   playerPoint: {x: 0, y: 0, z: 0}
   playerrotation: {x: 0, y: 0, z: 0}
+--- !u!114 &3414631549270387245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750386731104008374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b83a541e68907419bbf74d49cd6a31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableMaterials:
+  - {fileID: 2100000, guid: 22f9ec99bac660a47a7fd354604fe32b, type: 2}
+  - {fileID: 2100000, guid: 24016f717f95ae947b1d33928a0a6f46, type: 2}
+  - {fileID: 2100000, guid: 55ae0823a66270744861a69edb448b3e, type: 2}
+  - {fileID: 2100000, guid: 626ccfcc66223984b831e0708fbded58, type: 2}
+  - {fileID: 2100000, guid: 9c8afb4f1cd95004593016ea1f917d2c, type: 2}
+  - {fileID: 2100000, guid: 891a63b4f83b0be4db6757ec4e62399e, type: 2}
+  otherPlayerObject: {fileID: 1418465764589235488}
 --- !u!114 &4093038744633329122
 MonoBehaviour:
   m_ObjectHideFlags: 0
