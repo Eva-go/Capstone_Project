@@ -58,17 +58,17 @@ public class PlacePoiBuild : MonoBehaviour
         {
             for (int x = 12; x < width; x += 24)
             {
-                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed\
+                Vector3 position = new Vector3(x - (int)(width / 2f), 0, y - (int)(height / 2f)); // Adjust the y value if needed\
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
                     GameObject prefabToPlace = null;
-                    float height = hit.point.y;
-                    if (height > BuildingYMin)
+                    float heightY = hit.point.y;
+                    if (heightY > BuildingYMin)
                     {
-                        if (height <= BuildingYMax)
+                        if (heightY <= BuildingYMax)
                         {
-                            position = new Vector3(x - 120, height, y - 120);
+                            position = new Vector3(x - (int)(width / 2f), heightY, y - (int)(height / 2f));
                             if (noiseMap[x, y] > BuildingThreshold1)
                             {
                                 prefabToPlace = highNoisePrefabs[prng.Next(highNoisePrefabs.Length)];
@@ -102,17 +102,17 @@ public class PlacePoiBuild : MonoBehaviour
         {
             for (int x = 0; x < width; x += 10)
             {
-                Vector3 position = new Vector3(x - 120, 0, y - 120); // Adjust the y value if needed
+                Vector3 position = new Vector3(x - (int)(width / 2f), 0, y - (int)(height / 2f)); // Adjust the y value if needed
 
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
                     GameObject prefabToPlace = null;
-                    float height = hit.point.y;
-                    position = new Vector3(x - 120, height, y - 120);
-                    if (height > POIYMin)
+                    float heightY = hit.point.y;
+                    position = new Vector3(x - (int)(width / 2f), heightY, y - (int)(height / 2f));
+                    if (heightY > POIYMin)
                     {
-                        if (height <= POIYMax)
+                        if (heightY <= POIYMax)
                         {
 
                             if (noiseMap[x, y] > POIThreshold1)
