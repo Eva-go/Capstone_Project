@@ -21,7 +21,7 @@ public class ConveyorBelt : MonoBehaviour
 
     private void Start()
     {
-        UpdateBeltDirection(direction);
+        UpdateBeltDirection(gameObject.transform.parent.transform.rotation.eulerAngles);
     }
 
     private Vector3 NormalizeEulerAngles(Vector3 eulerAngles)
@@ -60,7 +60,7 @@ public class ConveyorBelt : MonoBehaviour
                 {
                     onBelt[i].GetComponent<Rigidbody>().velocity = direction;
                 }
-                Debug.Log("충돌벨롭" + onBelt[i].GetComponent<Rigidbody>().velocity);
+                
             }
         }
     }
@@ -108,7 +108,11 @@ public class ConveyorBelt : MonoBehaviour
     {
         if (boxCollider != null && !boxCollider.bounds.Intersects(collision.bounds))
         {
-            Debug.Log("테스트");
+            collision.gameObject.GetComponent<Rigidbody>().useGravity = true;
+            collision.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+        }
+        else if(boxCollider==null)
+        {
             collision.gameObject.GetComponent<Rigidbody>().useGravity = true;
             collision.gameObject.GetComponent<BoxCollider>().isTrigger = false;
         }
@@ -120,7 +124,7 @@ public class ConveyorBelt : MonoBehaviour
         // 오일러 각도를 360도 범위로 변환합니다.
         eulerAngles = NormalizeEulerAngles(eulerAngles);
         eulerAngles.y = Mathf.Round(eulerAngles.y);
-
+        Debug.Log("로테이션" + eulerAngles.y);
         // 오일러 각도에 따라 direction을 설정합니다.
         if (eulerAngles.y == 0f || eulerAngles.y == 360f)
         {
