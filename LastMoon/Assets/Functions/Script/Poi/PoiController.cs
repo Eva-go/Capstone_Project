@@ -86,7 +86,7 @@ public class PoiController : MonoBehaviour
 
     //출력 변수
     public GameObject item;
-    public Transform OutputTransform;
+    public Transform[] OutputTransform;
 
     //파이프 감지 변수
     public float PipeRayRadius = 1f;
@@ -139,13 +139,17 @@ public class PoiController : MonoBehaviour
 
     public void PipeRaycast()
     {
-        Vector3 pipeCenter = OutputTransform.position;
-        Collider[] collider = Physics.OverlapSphere(pipeCenter, PipeRayRadius);
-        foreach (var hitCollder in collider)
+        Vector3 pipeCenter;
+        for (int i = 0; i < 3; i++)
         {
-            if (hitCollder.CompareTag("Pipe"))
+            pipeCenter = OutputTransform[i].position;
+            Collider[] collider = Physics.OverlapSphere(pipeCenter, PipeRayRadius);
+            foreach (var hitCollder in collider)
             {
-                GiveItem(1);
+                if (hitCollder.CompareTag("Pipe"))
+                {
+                    GiveItem(i);
+                }
             }
         }
     }
@@ -627,7 +631,7 @@ public class PoiController : MonoBehaviour
         if (Inv_Output[OutputNum] != null && Inv_Output[OutputNum].Count > 0) 
         {
            
-            GameObject nodeItem = Instantiate(item, OutputTransform.position, Quaternion.identity);
+            GameObject nodeItem = Instantiate(item, OutputTransform[OutputNum].position, Quaternion.identity);
             NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
             nodeDestroy.Inv_Input = new Item { ItemType = Inv_Output[OutputNum].ItemType, Count = 1 };
             Item_Extract(OutputNum, 1, 1);
