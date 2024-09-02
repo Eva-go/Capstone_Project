@@ -24,6 +24,8 @@ public class NodeDestroy : MonoBehaviour
                 }
             }
         }
+        if (Inv_Input.ItemType.Liquid)
+            gameObject.GetComponent<Rigidbody>().useGravity = true;
     }
 
     private void OnCollisionEnter(Collision collision)

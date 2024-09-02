@@ -97,6 +97,11 @@ public class CanvasController : MonoBehaviourPunCallbacks
     //인벤토리
     public Inventory PlayerInventory;
 
+
+    //유령모드
+    public GameObject hpbar;
+    public GameObject toolbar;
+
     void Awake()
     {
         isItme = false;
@@ -174,6 +179,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
         Station_Manageing();
         RespawnSet();
         Respawn_T();
+        //유령시
+        Ghost();
         //아이템 업데이트
         if (isItme)
         {
@@ -196,8 +203,18 @@ public class CanvasController : MonoBehaviourPunCallbacks
             Alive.SetActive(true);
             Cursor.lockState = CursorLockMode.Confined;
         }
-}
+    }
 
+
+    public void Ghost()
+    {
+        if(playerController.GhostRespawn)
+        {
+            hpbar.SetActive(false);
+            toolbar.SetActive(false);
+            money.SetActive(false);
+        }
+    }
     [PunRPC]
     void GoToAliveScene()
     {
