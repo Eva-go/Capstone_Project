@@ -27,5 +27,6 @@ public class Button_Sell : MonoBehaviour
                 TotalSell = playerController.Sell_Item(ItemType, ItemCount);
             GameValue.GetMomey(TotalSell);
         }
+        playerController.InvokeInventoryChanged();
     }
 }

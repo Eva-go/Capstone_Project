@@ -168,6 +168,9 @@ MonoBehaviour:
   MaxHealth: 10
   ProcessEfficiency: 1
   TempertureLimit: 100
+  hasCool: 0
+  hasFuel: 1
+  SelectedFuel: {fileID: 0}
   tick: 0
   isTick: 0
   stop: 0
@@ -218,6 +221,7 @@ MonoBehaviour:
     - {fileID: 6194822120746484907}
   Obj_AuxFix:
   - {fileID: 8439094456729854360}
+  Obj_AuxLUT: []
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}

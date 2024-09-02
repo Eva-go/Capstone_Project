@@ -73,6 +73,12 @@ public class PoiController : MonoBehaviour
     public float ProcessEfficiency = 1;
     public float TempertureLimit = 100;
 
+    private int HeatBuffer = 0;
+
+    public bool hasCool;
+    public bool hasFuel;
+    public ScriptableObject_Item SelectedFuel;
+
     //tick  관련 변수
     public int tick;
     public bool isTick;
@@ -107,8 +113,8 @@ public class PoiController : MonoBehaviour
             itemData.mixItemCount[i] = 0;
         }
         StationProgress = 0;
-        Inv_Fuel = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
-        Inv_Coolent = new Item { ItemType = new ScriptableObject_Item { }, Count = 0 };
+        Inv_Fuel = new Item { ItemType = Debug_Fuel, Count = 0 };
+        Inv_Coolent = new Item { ItemType = Debug_Coolent, Count = 0 };
         //test_ck = false;
 
         isTick = false;
@@ -176,6 +182,7 @@ public class PoiController : MonoBehaviour
 
                         if (!Activation || Refilling)
                         {
+                            /*
                             if (ActivationType_Heating)
                             {
                                 Inv_Fuel = AddItem(Inv_Fuel, Debug_Fuel, 1);
@@ -188,6 +195,7 @@ public class PoiController : MonoBehaviour
                                     }
                                 }
                             }
+                             */
                             if (SelectedRecipe.Coolent > 0)
                             {
                                 Inv_Coolent = AddItem(Inv_Coolent, Debug_Coolent, 1);
@@ -199,8 +207,8 @@ public class PoiController : MonoBehaviour
                                     }
                                 }
                             }
-                        }
-                        if ((!ActivationType_Heating || Inv_Fuel.Count >= 75) &&
+                        }//(!ActivationType_Heating || Inv_Fuel.Count >= 75) &&
+                        if (
                             (SelectedRecipe.Coolent <= 0 || Inv_Coolent.Count >= 75))
                             Refilling = false;
                     }
@@ -421,10 +429,11 @@ public class PoiController : MonoBehaviour
             {
                 if (StationTemperture < SelectedRecipe.Temperture + 5)
                 {
-                    if (Inv_Fuel.Count > 0)
+                    if (Inv_Fuel.Count > 0 && HeatBuffer <= 0)
                     {
                         Heating = true;
                         StationTemperture += Inv_Fuel.ItemType.Heating;
+                        HeatBuffer += 100;
                         Inv_Fuel.SubtractItem(1);
                         if (Inv_Fuel.Count <= 0) Refilling = true;
                         if (!ObjectlessSlot[6])
@@ -440,9 +449,14 @@ public class PoiController : MonoBehaviour
                 }
             }
             else Heating = false;
-            if (StationTemperture > 25)
+            if (StationTemperture > 25 && HeatBuffer <= 0)
             {
                 StationTemperture--;
+            }
+            else
+            {
+                StationTemperture += Inv_Fuel.ItemType.Heating;
+                HeatBuffer--;
             }
             if (!ObjectlessSlot[8])
             {
@@ -563,21 +577,28 @@ public class PoiController : MonoBehaviour
     // 맞는 유형 아이템 받기
     public void TakeItem(Item InputItem)
     {
-        int activeSlot = -1;
-        if (SelectedRecipe != null)
+        if (SelectedFuel == InputItem.ItemType)
         {
-            for (int i = 0; i < SelectedRecipe.InputCount; i++)
+            Item_Input(0, 2, InputItem.ItemType, InputItem.Count);
+        }
+        else
+        {
+            int activeSlot = -1;
+            if (SelectedRecipe != null)
             {
-                if (SelectedRecipe.Input[i] == InputItem.ItemType && activeSlot == -1)
+                for (int i = 0; i < SelectedRecipe.InputCount; i++)
                 {
-                    activeSlot = i;
+                    if (SelectedRecipe.Input[i] == InputItem.ItemType && activeSlot == -1)
+                    {
+                        activeSlot = i;
+                    }
                 }
             }
-        }
-        if (activeSlot != -1)
-        {
-            Debug.Log("충돌4");
-            Item_Input(activeSlot, 0, InputItem.ItemType, InputItem.Count);
+            if (activeSlot != -1)
+            {
+                Debug.Log("충돌4");
+                Item_Input(activeSlot, 0, InputItem.ItemType, InputItem.Count);
+            }
         }
     }
 
