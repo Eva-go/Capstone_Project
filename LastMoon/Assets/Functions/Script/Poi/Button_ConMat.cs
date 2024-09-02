@@ -21,8 +21,29 @@ public class Button_ConMat : MonoBehaviour
 
     public PlayerPoiSpawn Station_Construction_Master;
 
+    public bool Opened;
+
     public void OpenTab()
     {
+        if (!ItemTab.activeSelf)
+        {
+            Opened = true;
+            ItemTab.SetActive(true);
+        }
+        else
+        {
+            if (Opened)
+            {
+                ItemTab.SetActive(false);
+                Station_Construction_Master.BtnConMat_CloseAllTab();
+            }
+            else
+            {
+                Station_Construction_Master.BtnConMat_CloseAllTab();
+                Opened = true;
+            }
+        }
+
         ItemTab.transform.GetChild(1).gameObject.SetActive(false);
         ItemTab.transform.GetChild(2).gameObject.SetActive(false);
 
@@ -42,7 +63,6 @@ public class Button_ConMat : MonoBehaviour
                 image.sprite = SubTabSelectableItems[i].ItemSprite;
             }
         }
-        if (!ItemTab.activeSelf) ItemTab.SetActive(true);
 
         for (int i = 0; i < ItemSelect.Length; i++)
         {
