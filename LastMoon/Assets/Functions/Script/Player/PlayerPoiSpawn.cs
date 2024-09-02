@@ -454,6 +454,10 @@ public class PlayerPoiSpawn : MonoBehaviour
                 StationValueCaculate();
             }
         }
+
+        BtnConMat_CloseAllTab();
+        StationInfoTab.transform.GetChild(3).gameObject.GetComponent<Button_ConMat>().ItemTab.SetActive(false);
+
     }
 
     public void ApplySelectedStationInfo()
@@ -628,5 +632,13 @@ public class PlayerPoiSpawn : MonoBehaviour
             ProcessEfficiency *= FixMat.ProcessEfficiency;
         }
         StationInfoUpdate();
+    }
+
+    public void BtnConMat_CloseAllTab()
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            StationInfoTab.transform.GetChild(3 + i).gameObject.GetComponent<Button_ConMat>().Opened = false;
+        }
     }
 }
