@@ -186,7 +186,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-
+           
             // 목표 인원 수 채웠으면, 맵 이동을 한다. 권한은 마스터 클라이언트만.
             if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
             {
@@ -203,6 +203,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 Debug.Log("게임시간 :" + maxTime);
 
                 PhotonNetwork.LoadLevel("Map");
+                mbutton_Start.GetComponent<Button>().interactable = false;
             }
         }
     }

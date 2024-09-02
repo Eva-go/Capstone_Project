@@ -145,6 +145,11 @@ public class PlayerController : MonoBehaviour
 
     public bool GameEnd = false;
 
+
+    //유령모드
+    public bool Ghost = false;
+    public bool GhostRespawn = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -188,8 +193,10 @@ public class PlayerController : MonoBehaviour
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
+            Ghost = false;
             RespawnCam.SetActive(false);
             isRespawn = false;
+            GhostRespawn = false;
             idx = 0;
             myRigid = GetComponent<Rigidbody>();
             myCollider = GetComponent<CapsuleCollider>();
@@ -257,32 +264,67 @@ public class PlayerController : MonoBehaviour
             {
                 if (Cursor.lockState != CursorLockMode.Confined)
                 {
+                    if(!GhostRespawn)
+                    {
+                        if (!isRunning)
+                        {
+                            Crouch();
+                        }
+                        Jump();
+                        if (!isCrouching)
+                        {
+                            Run();
+                        }
+                    }
+                    
+                    else if (GhostRespawn)
+                    {
+                        walkSpeed = runSpeed;
+                        if (Input.GetKey(KeyCode.Space))
+                        {
+                            myRigid.velocity = new Vector3(myRigid.velocity.x, walkSpeed, myRigid.velocity.z);
+                        }
+                        // y축 아래로 이동 (스페이스바)
+                        else if (Input.GetKey(KeyCode.LeftControl))
+                        {
+                            myRigid.velocity = new Vector3(myRigid.velocity.x, -walkSpeed, myRigid.velocity.z);
+                        }
+                        // 움직임이 없을 때 y축 속도를 0으로 설정
+                        else
+                        {
+                            myRigid.velocity = new Vector3(myRigid.velocity.x, 0, myRigid.velocity.z);
+                        }
+                    }
                     Move();
-                    if (!isRunning)
-                    {
-                        Crouch();
-                    }
-                    if (!isCrouching)
-                    {
-                        Run();
-                    }
                     CameraRotation();
                     CharacterRotation();
-                    Jump();
                 }
-
-                Interaction();
-                Attack();
-                Switching();
-                WaveTic();
-                if(UpdateAPT)
+                if(!GhostRespawn)
                 {
-                    GameObject[] aptObject = GameObject.FindGameObjectsWithTag("APT");
-                    for(int i=0;i<aptObject.Length;i++)
+                    Interaction();
+                    Attack();
+                    Switching();
+                    if (UpdateAPT)
                     {
-                        aptObject[i].GetComponent<APTInformation>().Use_player(this);
+                        GameObject[] aptObject = GameObject.FindGameObjectsWithTag("APT");
+                        for (int i = 0; i < aptObject.Length; i++)
+                        {
+                            aptObject[i].GetComponent<APTInformation>().Use_player(this);
+                        }
+                        UpdateAPT = false;
                     }
-                    UpdateAPT = false;
+                }
+                WaveTic();
+                              
+                if(GameValue.TideCycle > 5&&HouseKey<2&& !GhostRespawn)
+                {
+                    Ghost = true;
+                    Die();
+                }
+                else if(GameValue.TideCycle>11&&HouseKey<3&&!GhostRespawn)
+                {
+                    Ghost = true;
+                    Die();
                 }
             }
 
@@ -342,7 +384,7 @@ public class PlayerController : MonoBehaviour
             }
             if(Input.GetKeyDown(KeyCode.F12))
             {
-                HouseKey += 1;
+                GameValue.TideCycle += 5;
             }
         }
     }
@@ -420,59 +462,92 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        if (!pv.IsMine) return;
-        pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
-        if (pv.IsMine)
-        {
-            if (!Bagdrop)
-            {
-                Bagdrop = true;
-                // Bag
-                GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
-                BagController bagScript = bag.GetComponent<BagController>();
-                if (bagScript != null)
-                {
-
-                    foreach (Item item in PlayerInventory.GetItems())
-                    {
-                        //bagScript.BagInventory.AddItem(item);
-
-                        bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.ItemType.ItemName, item.Count);
-                    }
-                    PlayerInventory.ClearInventory();
-                }
-                isRespawn = true;
-            }
-            InvokeInventoryChanged();
-            Hp = 0;
-            if (live)
-            {
-                RespawnCam.SetActive(true);
-                gameObject.transform.GetChild(1).gameObject.SetActive(false);
-                gameObject.transform.GetChild(3).gameObject.SetActive(false);
-                gameObject.transform.GetChild(4).gameObject.SetActive(false);
-                gameObject.transform.GetChild(5).gameObject.SetActive(false);
-            }
-            if (Input.GetKeyDown(KeyCode.R) && Hp <= 0)
-            {
-                live = false;
-                Hp = 100;
-                RespawnCam.SetActive(false);
-                gameObject.transform.GetChild(2).gameObject.SetActive(true);
-                gameObject.transform.GetChild(3).gameObject.SetActive(true);
-                gameObject.transform.GetChild(4).gameObject.SetActive(true);
-                //PhotonNetwork.Destroy(gameObject);
-                //reSpwan();
-                myRigid.position = PlayerAPT.playerPoint;
-                Bagdrop = false;
-            }
-        }
-        if (isRespawn && !live)
+        if(!Ghost)
         {
             if (!pv.IsMine) return;
-            pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
-            isRespawn = false;
-            live = true;
+            pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
+            if (pv.IsMine)
+            {
+                if (!Bagdrop)
+                {
+                    Bagdrop = true;
+                    // Bag
+                    GameObject bag = PhotonNetwork.Instantiate("Bag", transform.position, transform.rotation, 0);
+                    BagController bagScript = bag.GetComponent<BagController>();
+                    if (bagScript != null)
+                    {
+
+                        foreach (Item item in PlayerInventory.GetItems())
+                        {
+                            bagScript.BagInventory.AddItem(item);
+
+                            bagScript.photonView.RPC("GetItem", RpcTarget.AllBuffered, item.Count);
+                        }
+                        PlayerInventory.ClearInventory();
+                    }
+                    isRespawn = true;
+                }
+                InvokeInventoryChanged();
+                Hp = 0;
+                if (live)
+                {
+                    RespawnCam.SetActive(true);
+                    gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                    gameObject.transform.GetChild(3).gameObject.SetActive(false);
+                    gameObject.transform.GetChild(4).gameObject.SetActive(false);
+                    gameObject.transform.GetChild(5).gameObject.SetActive(false);
+                }
+                if (Input.GetKeyDown(KeyCode.R) && Hp <= 0)
+                {
+                    live = false;
+                    Hp = 100;
+                    RespawnCam.SetActive(false);
+                    gameObject.transform.GetChild(2).gameObject.SetActive(true);
+                    gameObject.transform.GetChild(3).gameObject.SetActive(true);
+                    gameObject.transform.GetChild(4).gameObject.SetActive(true);
+
+                    myRigid.position = PlayerAPT.playerPoint;
+                    Bagdrop = false;
+                }
+            }
+            if (isRespawn && !live)
+            {
+                if (!pv.IsMine) return;
+                pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
+                isRespawn = false;
+                live = true;
+            }
+        }
+       else if(Ghost)
+       {
+            if (!pv.IsMine) return;
+            pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
+            if (pv.IsMine)
+            {
+                if (!GhostRespawn)
+                {
+                    isRespawn = true;
+                    RespawnCam.SetActive(true);
+                    gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                    gameObject.transform.GetChild(3).gameObject.SetActive(false);
+                    gameObject.transform.GetChild(4).gameObject.SetActive(false);
+                    gameObject.transform.GetChild(5).gameObject.SetActive(false);
+                    Debug.Log("유령죽음");
+                }
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    Debug.Log("유령부활");
+                    Hp = 100;
+                    RespawnCam.SetActive(false); 
+                    gameObject.transform.GetChild(3).gameObject.SetActive(true);
+                    myRigid.position = new Vector3(0, 0, 0);
+                    myRigid.useGravity = false;
+                    isRespawn = false;
+                    Godmode = true;
+                    GhostRespawn = true;
+                }
+            }
+
         }
     }
     [PunRPC]
