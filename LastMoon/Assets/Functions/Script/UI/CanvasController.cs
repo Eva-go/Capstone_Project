@@ -832,7 +832,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void PoiActive()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             SetPoi = !SetPoi;
             if (SetPoi)
