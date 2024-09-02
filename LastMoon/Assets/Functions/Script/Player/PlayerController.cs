@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private ScriptableObject_Item[] InitalItems;
     [SerializeField] private ScriptableObject_Item[] DebugItems;
-
+    public ScriptableObject_Item MoonRock;
 
     public float positionLerpSpeed = 8f;
     public float rotationLerpSpeed = 8f;
@@ -219,6 +219,7 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
             }
+            PlayerInventory.AddItem(new Item { ItemType = MoonRock, Count = 1 });
 
             Hp = 100;
         }
@@ -1009,6 +1010,8 @@ public class PlayerController : MonoBehaviour
                         nodeController.TakeDamage(5f * selectedWeaponStrength * CombatSwingMult, false);
                     }
                     PlayerInventory.AddItem(new Item { ItemType = nodeController.NodeItemType, Count = nodeController.nodeCount });
+                    float MoonRockDrop = UnityEngine.Random.value;
+                    if (MoonRockDrop > 0.875) PlayerInventory.AddItem(new Item { ItemType = MoonRock, Count = 1 });
 
                     for (int i = 0; i < 6; i++)
                     {

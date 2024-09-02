@@ -230,12 +230,12 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
         if (playerController != null) SetInventory(playerController.PlayerInventory);
         int x = 0;
-        int y = 6;
+        int y = 19;
         float itemSlotSize = 150f;
         int x_Construction = 0;
-        int y_Construction = 6;
+        int y_Construction = 19;
         int x_Consumable = 0;
-        int y_Consumable = 6;
+        int y_Consumable = 19;
 
         if (UIinventory != null)
         {
@@ -420,7 +420,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
                 {
                     if (playerController.UnlockableRecipes[j] == SelectableRecipes[i])
                     {
-                        unlockedRecipe = playerController.UnlockedRecipe[i];
+                        unlockedRecipe = playerController.UnlockedRecipe[j];
                     }
                 }
                 button.interactable = unlockedRecipe;
