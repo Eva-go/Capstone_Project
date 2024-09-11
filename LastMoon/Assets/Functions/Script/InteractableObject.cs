@@ -4,13 +4,21 @@ using UnityEngine;
 public class InteractableObject : MonoBehaviour
 {
     private PhotonView photonView;
+
     public Item[] RPOI_PortalInventory = new Item[4]; // 내부 인벤토리 배열
     public ScriptableObject_Item[] RPOI_Items; // 다수의 아이템을 담는 ScriptableObject_Item 배열
+    public int[] itemCounts; // 각 아이템 별로 개수를 설정하는 배열
     private int interactingPlayerId = -1;
 
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
+
+        // 아이템 개수 배열을 아이템 배열의 크기에 맞게 초기화
+        if (itemCounts == null || itemCounts.Length != RPOI_Items.Length)
+        {
+            itemCounts = new int[RPOI_Items.Length];
+        }
 
         // RPOI_Items 배열을 사용하여 RPOI_PortalInventory 초기화
         InitializeRPOIInventory();
@@ -23,7 +31,7 @@ public class InteractableObject : MonoBehaviour
         {
             if (i < RPOI_Items.Length && RPOI_Items[i] != null)
             {
-                RPOI_PortalInventory[i] = new Item { ItemType = RPOI_Items[i], Count = RPOI_Items[i].MaxCount };
+                RPOI_PortalInventory[i] = new Item { ItemType = RPOI_Items[i], Count = itemCounts[i] }; // 개수 반영
             }
             else
             {
@@ -32,18 +40,25 @@ public class InteractableObject : MonoBehaviour
         }
     }
 
-    // 상호작용 시 플레이어의 인벤토리에 아이템을 추가하는 메서드
-    public void IncreaseItem(ScriptableObject_Item itemType, int addCount, int playerId)
+    // 각 아이템을 플레이어의 인벤토리에 추가
+    public void IncreaseAllItems(int playerId)
     {
         if (interactingPlayerId == -1 || interactingPlayerId == playerId)
         {
             interactingPlayerId = playerId;
 
-            // 플레이어의 인벤토리에 아이템 추가
-            AddItemToPlayerInventory(itemType, addCount);
+            // 각 아이템을 플레이어 인벤토리에 추가
+            for (int i = 0; i < RPOI_Items.Length; i++)
+            {
+                if (RPOI_Items[i] != null)
+                {
+                    // 플레이어의 인벤토리에 아이템 추가
+                    AddItemToPlayerInventory(RPOI_Items[i], itemCounts[i]);
 
-            // 네트워크 상에서 동기화된 플레이어들에게 카운트를 증가시키고 인벤토리 상태를 업데이트
-            photonView.RPC("UpdateCountAndInventory", RpcTarget.AllBuffered, itemType.name, addCount, playerId);
+                    // 네트워크 상에서 동기화된 플레이어들에게 카운트를 증가시키고 인벤토리 상태를 업데이트
+                    photonView.RPC("UpdateCountAndInventory", RpcTarget.AllBuffered, RPOI_Items[i].name, itemCounts[i], playerId);
+                }
+            }
         }
     }
 
