@@ -143,8 +143,13 @@ public class PlaceNode : MonoBehaviour
                         )
                     {
                         position = new Vector3(Clumpx + x, heightY, Clumpy + y);
+
+                        GameObject newNode = Instantiate(prefabToPlace, position, Quaternion.identity);
+                        newNode.transform.SetParent(parentTransform);
+                        /*
                         GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
                         newNode.transform.SetParent(parentTransform);
+                        */
                     }
                 }
             }

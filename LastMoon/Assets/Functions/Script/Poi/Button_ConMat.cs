@@ -23,6 +23,7 @@ public class Button_ConMat : MonoBehaviour
 
     public bool Opened;
 
+
     public void OpenTab()
     {
         if (!ItemTab.activeSelf)
@@ -43,7 +44,6 @@ public class Button_ConMat : MonoBehaviour
                 Opened = true;
             }
         }
-
         ItemTab.transform.GetChild(1).gameObject.SetActive(false);
         ItemTab.transform.GetChild(2).gameObject.SetActive(false);
 

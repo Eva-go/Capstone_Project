@@ -457,6 +457,7 @@ public class PlayerPoiSpawn : MonoBehaviour
 
         BtnConMat_CloseAllTab();
         StationInfoTab.transform.GetChild(3).gameObject.GetComponent<Button_ConMat>().ItemTab.SetActive(false);
+
     }
 
     public void ApplySelectedStationInfo()
@@ -632,6 +633,7 @@ public class PlayerPoiSpawn : MonoBehaviour
         }
         StationInfoUpdate();
     }
+
     public void BtnConMat_CloseAllTab()
     {
         for (int i = 0; i < 7; i++)
