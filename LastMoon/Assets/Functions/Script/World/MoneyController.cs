@@ -30,7 +30,7 @@ public class MoneyController : MonoBehaviour
         
     public Sprite[] ToolIcons;
     public Image AxeIcon, PickaxeIcon, ShovelIcon;
-
+    public PlayerController player;
     private void Start()
     {
         Money.text = GameValue.MoneyUpdate().ToString();
@@ -42,9 +42,11 @@ public class MoneyController : MonoBehaviour
         int_ShovelMoney = int.Parse(ShovelMoney.text);
         GameValue.toolSwitching = true;
         GameValue.insideUser = 0;
+        player = GameObject.Find(GameValue.nickName).GetComponent<PlayerController>();
     }
     private void Update()
     {
+       
         if (Input.GetKeyDown(KeyCode.F5))
         {
             GameValue.GetMomey(1000);
@@ -127,9 +129,11 @@ public class MoneyController : MonoBehaviour
 
     public void AxeButton()
     {
+        player.weapons[0].SetActive(false);
         Bt_Axe += 1;
         total_Money -= int_AxeMoney;
         GameValue.UseMoney(int_AxeMoney);
+        GameValue.Axe = Bt_Axe;
     }
 
     public void PickaxeButton()
@@ -137,6 +141,7 @@ public class MoneyController : MonoBehaviour
         Bt_Pickaxe += 1;
         total_Money -= int_PickaxeMoney;
         GameValue.UseMoney(int_PickaxeMoney);
+        GameValue.Pickaxe = Bt_Pickaxe;
     }
 
     public void ShovelButton()
@@ -144,6 +149,7 @@ public class MoneyController : MonoBehaviour
         Bt_Shovel += 1;
         total_Money -= int_ShovelMoney;
         GameValue.UseMoney(int_ShovelMoney);
+        GameValue.Shovel = Bt_Shovel;
     }
 
 }

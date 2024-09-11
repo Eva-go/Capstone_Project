@@ -327,7 +327,7 @@ public class PlayerController : MonoBehaviour
                     Die();
                 }
             }
-
+          
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 Hp = 100;
@@ -1515,14 +1515,13 @@ public class PlayerController : MonoBehaviour
         if (GameValue.Axe == 1)
         {
             weapons[0] = weaponsSwitching[0];
-
-
         }
         else if (GameValue.Axe == 2)
         {
             weapons[0] = weaponsSwitching[3];
 
         }
+        
         if (GameValue.Pickaxe == 1)
         {
             weapons[1] = weaponsSwitching[1];

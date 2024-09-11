@@ -12,6 +12,7 @@ public class ToolController : MonoBehaviour
     public GameObject[] Tools;
     public GameObject[] ToolSwitching;
     private int selectedToolIndex = 0;
+    public PlayerController player;
 
 
     private void Start()
@@ -19,10 +20,13 @@ public class ToolController : MonoBehaviour
         Switching();
         GameObject ToolInstance = Instantiate(Tools[0], gameObject.transform.position, gameObject.transform.rotation);
         ToolInstance.transform.SetParent(gameObject.transform);
+        player = gameObject.GetComponent<PlayerController>();
     }
     private void Update()
     {
+
         Switching();
+        
     }
     private void Switching()
     {
@@ -30,7 +34,6 @@ public class ToolController : MonoBehaviour
         if (GameValue.Axe == 1)
         {
             Tools[0] = ToolSwitching[0];
-
         }
         else if (GameValue.Axe == 2)
         {
