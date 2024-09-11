@@ -57,9 +57,9 @@ public class PlaceNode : MonoBehaviour
 
         bool IsSand = false;
 
-        for (int y = 0; y < height; y += 5)
+        for (int y = 0; y < height; y += 10)
         {
-            for (int x = 0; x < width; x += 5)
+            for (int x = 0; x < width; x += 10)
             {
                 Vector3 position = new Vector3(x - (int)(width / 2f), 0, y - (int)(height / 2f)); // Adjust the y value if needed
 
@@ -108,11 +108,11 @@ public class PlaceNode : MonoBehaviour
                     if (prefabToPlace != null)
                     {
                         if (IsSand)
-                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 5,
+                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 10,
                                 x, y,
                                 prefabToPlace, NodesandYMin, NodesandYMax, 0.9f);
                         else
-                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 5,
+                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 10,
                                 x, y,
                                 prefabToPlace, NodedirtYMin, NodedirtYMax, 0.9f);
 
@@ -129,9 +129,9 @@ public class PlaceNode : MonoBehaviour
         int noisex, int noisey,
         GameObject prefabToPlace, float HeightMin, float HeightMax, float NoiseLimit)
     {
-        for (int x = 0; x < Distance; x++)
+        for (int x = 0; x < Distance; x += 2)
         {
-            for (int y = 0; y < Distance; y++)
+            for (int y = 0; y < Distance; y += 2)
             {
                 Vector3 position = new Vector3(Clumpx + x, 0, Clumpy + y);
                 RaycastHit hit;

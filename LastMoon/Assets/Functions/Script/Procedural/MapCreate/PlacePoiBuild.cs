@@ -154,6 +154,16 @@ public class PlacePoiBuild : MonoBehaviour
                         {
                             GameObject newPOI = Instantiate(prefabToPlace, position, Quaternion.identity);
                             newPOI.transform.SetParent(parentTransform);
+                            
+                            int randomRotation = (int)Mathf.Floor(Random.value * 4);
+
+                            newPOI.transform.eulerAngles = new Vector3
+                            {
+                                x = newPOI.transform.eulerAngles.x,
+                                y = randomRotation * 90f,
+                                z = newPOI.transform.eulerAngles.z
+                            };
+
                         }
                     }
                 }
