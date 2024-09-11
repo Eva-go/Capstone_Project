@@ -24,7 +24,7 @@ public class Inventory
                     AlreadyHas = true;
                 }
             }
-            if (!AlreadyHas) itemList.Add(item);
+            if (!AlreadyHas) itemList.Add(new Item { ItemType = item.ItemType, Count = item.Count });
         }
     }
 
