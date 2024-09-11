@@ -65,22 +65,21 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
                 currentHealth = 0;
                 gameObject.GetComponent<BoxCollider>().enabled = false;
                 //GameValue.GetMomey(PlayerController.getMoney);
-                //photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest");
-                animator.SetTrigger("Harvest");
+                photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest");
                 // 애니메이션 끝날 때 오브젝트 삭제
                 nodeName = gameObject.name;
                 nodeCount++;
             }
             else
             {
-                //photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Destroy");
-                animator.SetTrigger("Destroy");
+                photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Destroy");
+               
             }
 
         }
 
         // 포톤 네트워크를 통해 HP 동기화
-        //photonView.RPC("SyncHealth", RpcTarget.OthersBuffered, currentHealth);
+        photonView.RPC("SyncHealth", RpcTarget.OthersBuffered, currentHealth);
     }
     [PunRPC]
     void SyncHealth(float health)
@@ -98,8 +97,8 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     public void OnDestroyAnimationEnd()
     {
         // 마스터 클라이언트가 오브젝트를 삭제하도록 요청
-        //photonView.RPC("RPC_DestroyNode", RpcTarget.MasterClient);
-        Destroy(gameObject);
+        photonView.RPC("RPC_DestroyNode", RpcTarget.MasterClient);
+        
     }
 
     [PunRPC]
