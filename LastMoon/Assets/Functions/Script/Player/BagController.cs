@@ -46,18 +46,7 @@ public class BagController : MonoBehaviourPunCallbacks
                 foreach (Item item in BagInventory.GetItems())
                 {
                     playerController.PlayerInventory.AddItem(item);
-                    playerController.TakeDamage(5f);
                 }
-                /*
-                for (int i = 0; i < nodeItems.Length; i++)
-                {
-                    playerController.nodeItiems[i] += nodeItems[i];
-                }
-                for (int i = 0; i < mixItems.Length; i++)
-                {
-                    playerController.mixItiems[i] += mixItems[i];
-                }
-                 */
             }
         }
         if (PhotonNetwork.IsMasterClient || photonView.IsMine)

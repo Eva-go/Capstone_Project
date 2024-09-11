@@ -43,6 +43,12 @@ public class CanvasController : MonoBehaviourPunCallbacks
     private Transform Recipe_Slot;
     public Transform Recipe_Scroll;
 
+    public Transform Fuel_Tab;
+    private Transform Fuel_Slot;
+    private Transform Fuel_Scroll;
+
+    public Transform RecipeManage_Tab;
+
     private int keyTabCode = 2;
     private bool inventory_ck;
     private int TotalSell = 0;
@@ -91,6 +97,11 @@ public class CanvasController : MonoBehaviourPunCallbacks
     //인벤토리
     public Inventory PlayerInventory;
 
+
+    //유령모드
+    public GameObject hpbar;
+    public GameObject toolbar;
+
     void Awake()
     {
         isItme = false;
@@ -119,6 +130,9 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
         Recipe_Scroll = Recipe_Tab.GetChild(0).GetChild(0);
         Recipe_Slot = Recipe_Scroll.GetChild(0);
+
+        Fuel_Scroll = Fuel_Tab.GetChild(0).GetChild(0);
+        Fuel_Slot = Fuel_Scroll.GetChild(0);
 
     }
 
@@ -165,6 +179,8 @@ public class CanvasController : MonoBehaviourPunCallbacks
         Station_Manageing();
         RespawnSet();
         Respawn_T();
+        //유령시
+        Ghost();
         //아이템 업데이트
         if (isItme)
         {
@@ -187,8 +203,18 @@ public class CanvasController : MonoBehaviourPunCallbacks
             Alive.SetActive(true);
             Cursor.lockState = CursorLockMode.Confined;
         }
-}
+    }
 
+
+    public void Ghost()
+    {
+        if(playerController.GhostRespawn)
+        {
+            hpbar.SetActive(false);
+            toolbar.SetActive(false);
+            money.SetActive(false);
+        }
+    }
     [PunRPC]
     void GoToAliveScene()
     {
@@ -230,12 +256,12 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
         if (playerController != null) SetInventory(playerController.PlayerInventory);
         int x = 0;
-        int y = 6;
+        int y = 19;
         float itemSlotSize = 150f;
         int x_Construction = 0;
-        int y_Construction = 6;
+        int y_Construction = 19;
         int x_Consumable = 0;
-        int y_Consumable = 6;
+        int y_Consumable = 19;
 
         if (UIinventory != null)
         {
@@ -380,6 +406,11 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         ScriptableObject_Recipe[] SelectableRecipes = playerController.UISelectedPOIController.SelectableRecipes;
 
+        Button button = RecipeManage_Tab.GetChild(1).GetComponent<Button>();
+        button.interactable = playerController.UISelectedPOIController.hasFuel;
+        button = RecipeManage_Tab.GetChild(2).GetComponent<Button>();
+        button.interactable = playerController.UISelectedPOIController.hasCool;
+
         foreach (Transform child in Recipe_Scroll)
         {
             if (child == Recipe_Slot) continue;
@@ -407,7 +438,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             Recipebutton.RegisterStationController(playerController.UISelectedPOIController);
             Recipebutton.SelectableRecipe = SelectableRecipes[i];
 
-            Button button = RecipeRectTransform.GetComponent<Button>();
+            button = RecipeRectTransform.GetComponent<Button>();
             if (playerController.UISelectedPOIController.TempertureLimit < SelectableRecipes[i].Temperture)
             {
                 button.interactable = false;
@@ -420,7 +451,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
                 {
                     if (playerController.UnlockableRecipes[j] == SelectableRecipes[i])
                     {
-                        unlockedRecipe = playerController.UnlockedRecipe[i];
+                        unlockedRecipe = playerController.UnlockedRecipe[j];
                     }
                 }
                 button.interactable = unlockedRecipe;
@@ -434,6 +465,76 @@ public class CanvasController : MonoBehaviourPunCallbacks
             }
         }
     }
+
+
+    public void RecipeFuelSelect()
+    {
+        foreach (Transform child in Fuel_Scroll)
+        {
+            if (child == Fuel_Slot) continue;
+            Destroy(child.gameObject);
+        }
+        if (playerController != null && playerController.UISelectedPOIController != null)
+        {
+            SetInventory(playerController.PlayerInventory);
+            ScriptableObject_Recipe SelectedRecipe = playerController.UISelectedPOIController.SelectedRecipe;
+            int x = 0;
+            int y = 1;
+            float itemSlotSizeX = 450f;
+            float itemSlotSizeY = 150f;
+
+            if (UIinventory != null)
+            {
+                foreach (Item item in UIinventory.GetItems())
+                {
+                    if (item.ItemType.Heating > 0)
+                    {
+                        RectTransform itemRectTransform = Instantiate(Fuel_Slot, Fuel_Scroll).GetComponent<RectTransform>();
+                        itemRectTransform.gameObject.SetActive(true);
+
+                        itemRectTransform.anchoredPosition = new Vector2(x * itemSlotSizeX - 225f, y * itemSlotSizeY + 760f);
+
+                        Image image = itemRectTransform.Find("Icon").GetComponent<Image>();
+                        image.sprite = item.ItemType.ItemSprite;
+
+                        Text text = itemRectTransform.Find("Count").GetComponent<Text>();
+                        text.text = item.Count.ToString();
+
+                        text = itemRectTransform.Find("Heating").GetComponent<Text>();
+                        text.text = item.ItemType.Price.ToString();
+
+                        SelectFuel Fuelbutton = itemRectTransform.GetComponent<SelectFuel>();
+                        Fuelbutton.RegisterStationController(playerController.UISelectedPOIController);
+                        Fuelbutton.RegisterPlayerController(playerController);
+                        Fuelbutton.SelectableFuel = item.ItemType;
+
+                        Button button = itemRectTransform.GetComponent<Button>();
+
+                        if (item.ItemType != SelectedRecipe.Input[0]
+                            && item.ItemType != SelectedRecipe.Input[1]
+                            && item.ItemType != SelectedRecipe.Input[2])
+                        {
+                            button.interactable = true;
+                        }
+                        else
+                        {
+                            button.interactable = false;
+                        }
+
+                        x++;
+                        if (x > 1)
+                        {
+                            x = 0;
+                            y--;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
     private void SelectedRecipeInfo(ScriptableObject_Recipe SelectedRecipe)
     {
         Text text = Recipe_Info.Find("Recipe_Temperture").GetChild(0).GetComponent<Text>();
@@ -832,7 +933,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void PoiActive()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             SetPoi = !SetPoi;
             if (SetPoi)
@@ -913,6 +1014,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             playerController.OnInventoryChanged -= nodeCountUpdate;
             playerController.OnInventoryChanged -= RefreshInventory;
             playerController.OnInventoryChanged -= ConMatUpdate;
+            playerController.OnInventoryChanged -= RecipeFuelSelect;
         }
 
         playerController = player;
@@ -923,6 +1025,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             playerController.OnInventoryChanged += nodeCountUpdate;
             playerController.OnInventoryChanged += RefreshInventory;
             playerController.OnInventoryChanged += ConMatUpdate;
+            playerController.OnInventoryChanged += RecipeFuelSelect;
             nodeCountUpdate(); // 플레이어 등록 후 초기 인벤토리 업데이트
             RefreshInventory();
             ConMatUpdate();
