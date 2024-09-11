@@ -24,12 +24,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Texture_end_Black
-  m_Shader: {fileID: -6465566751694194690, guid: c9f6b337a8addb1499554bbfe6b03abe, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 1d679b6a99c17544dbefbf450be88b6e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _MAIN_LIGHT_SHADOWS_CASCADE
-  - _SHADOWS_SOFT
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -215,6 +213,7 @@ Material:
     - _BlendMode: 0
     - _BumpScale: 1
     - _CastShadows: 1
+    - _Celling: 1
     - _CoatMask: 0
     - _Cull: 2
     - _CullMode: 2
@@ -319,6 +318,7 @@ Material:
     - _StencilWriteMaskDepth: 9
     - _StencilWriteMaskGBuffer: 15
     - _StencilWriteMaskMV: 41
+    - _Step: 4
     - _SubsurfaceMask: 1
     - _SupportDecals: 1
     - _Surface: 0
@@ -348,10 +348,11 @@ Material:
     - _ZTestTransparent: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
+    - _add: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseColorMap_MipInfo: {r: 0, g: 0, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _DiffusionProfileAsset: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
@@ -363,6 +364,7 @@ Material:
     - _RL_Color: {r: 1, g: 1, b: 1, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _Specular_Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Sub_Color: {r: 0, g: 0, b: 0, a: 1}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _TransmittanceColor: {r: 1, g: 1, b: 1, a: 1}
