@@ -1627,5 +1627,6 @@ public class PlayerController : MonoBehaviour
 
         GameObject weaponInstance = Instantiate(weapons[index], weaponHoldPoint.position, weaponHoldPoint.rotation);
         weaponInstance.transform.SetParent(weaponHoldPoint);
+        weaponInstance.SetActive(true);
     }
 }
