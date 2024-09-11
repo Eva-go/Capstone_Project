@@ -64,7 +64,7 @@ public class GameTimer : MonoBehaviourPunCallbacks
 
             if (!GameValue.TideChange)
             {
-                currentTime -= Time.deltaTime;
+                currentTime -= Time.deltaTime*5;
 
                 // 타이머가 0 이하로 떨어지면 이미지 변경 처리
                 if (currentTime < 0)
