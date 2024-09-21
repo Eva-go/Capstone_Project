@@ -1,10 +1,12 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlaceNode : MonoBehaviour
 {
+    public static int nodeID = 0;  // 노드에 ID를 부여하기 위한 변수
 
     public Transform parent;
 
@@ -24,7 +26,6 @@ public class PlaceNode : MonoBehaviour
     public float NodesandYMin;
     public float NodesandYMax;
 
-
     [Range(0, 1)]
     public float NodedirtThreshold1 = 0.9975f;
     [Range(0, 1)]
@@ -40,18 +41,14 @@ public class PlaceNode : MonoBehaviour
     public GameObject[] sandmediumNodePrefabs;
     public GameObject[] sandhighNodePrefabs;
 
-
     public int width;
     public int height;
     public int seed;
-
-    //public GameObject selectedPrefab;
 
     public Transform parentTransform;
     public float groundThreshold = 10.0f;
 
     public NoiseData noiseData;
-
 
     void PlaceDirtNodes(float[,] noiseMap)
     {
@@ -106,29 +103,20 @@ public class PlaceNode : MonoBehaviour
                             prefabToPlace = sandhighNodePrefabs[prng.Next(sandhighNodePrefabs.Length)];
                         }
                     }
-                    
+
                     if (prefabToPlace != null)
                     {
                         if (IsSand)
-                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 5,
-                                x, y,
-                                prefabToPlace, NodesandYMin, NodesandYMax, 0.9f);
+                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 5, x, y, prefabToPlace, NodesandYMin, NodesandYMax, 0.9f);
                         else
-                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 5,
-                                x, y,
-                                prefabToPlace, NodedirtYMin, NodedirtYMax, 0.9f);
-
-                      
+                            PlaceNodeClump(noiseMap, (int)position.x, (int)position.z, 5, x, y, prefabToPlace, NodedirtYMin, NodedirtYMax, 0.9f);
                     }
                 }
             }
         }
     }
 
-
-    void PlaceNodeClump(float[,] noiseMap, int Clumpx, int Clumpy, int Distance,
-        int noisex, int noisey,
-        GameObject prefabToPlace, float HeightMin, float HeightMax, float NoiseLimit)
+    void PlaceNodeClump(float[,] noiseMap, int Clumpx, int Clumpy, int Distance, int noisex, int noisey, GameObject prefabToPlace, float HeightMin, float HeightMax, float NoiseLimit)
     {
         for (int x = 0; x < Distance; x++)
         {
@@ -139,23 +127,46 @@ public class PlaceNode : MonoBehaviour
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
                     float heightY = hit.point.y;
-                    if (heightY > HeightMin && heightY <= HeightMax
-                        && noiseMap[noisex + x, noisey + y] > NoiseLimit
-                        )
+                    if (heightY > HeightMin && heightY <= HeightMax && noiseMap[noisex + x, noisey + y] > NoiseLimit)
                     {
                         position = new Vector3(Clumpx + x, heightY, Clumpy + y);
 
-                        GameObject newNode = Instantiate(prefabToPlace,this.transform);
+                        // 새로운 노드를 항상 생성하여 여러 개의 노드를 생성
+                        GameObject newNode = Instantiate(prefabToPlace, this.transform);
                         newNode.transform.position = position;
-                       
 
+                        // ID와 PhotonView 할당
+                        AssignIDAndPhotonView(newNode, position);
                     }
                 }
             }
         }
     }
 
+    void AssignIDAndPhotonView(GameObject node, Vector3 position)
+    {
+        node.name = "Node_" + nodeID;
+        nodeID++;
 
+        // PhotonView가 없는 경우 추가하고, 없으면 기존 PhotonView 사용
+        PhotonView photonView = node.GetComponent<PhotonView>();
+        if (photonView == null)
+        {
+            photonView = node.AddComponent<PhotonView>();
+            photonView.OwnershipTransfer = OwnershipOption.Takeover;
+            photonView.Synchronization = ViewSynchronization.UnreliableOnChange;
+        }
+
+        // 고유한 ViewID 확인 (Photon에서 자동 부여됨)
+        Debug.Log("PhotonView ID: " + photonView.ViewID);
+
+        // PhotonAnimatorView 추가 (필요시)
+        PhotonAnimatorView animatorView = node.GetComponent<PhotonAnimatorView>();
+        if (animatorView == null)
+        {
+            animatorView = node.AddComponent<PhotonAnimatorView>();
+        }
+    }
 
     void Start()
     {

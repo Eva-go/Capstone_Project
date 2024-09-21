@@ -19,6 +19,8 @@ public class InteractableObject : MonoBehaviour
             drillBody.SetActive(false);  // Drill_Body001 비활성화
         }
         InitializeRPOIInventory();
+        // 초기 아이템 설정
+        SetInitialItems();
     }
 
     // RPOI_PortalInventory 초기화
@@ -36,6 +38,31 @@ public class InteractableObject : MonoBehaviour
             }
         }
     }
+    private void SetInitialItems()
+    {
+        if (RPOI_PortalInventory.Length > 0)
+        {
+            RPOI_PortalInventory[0] = new Item { ItemType = RPOI_Items[0], Count = 1 }; // 첫 번째 아이템
+            RPOI_PortalInventory[1] = new Item { ItemType = RPOI_Items[1], Count = 2 }; // 두 번째 아이템
+            RPOI_PortalInventory[2] = new Item { ItemType = RPOI_Items[2], Count = 3 }; // 세 번째 아이템
+            RPOI_PortalInventory[3] = new Item { ItemType = RPOI_Items[3], Count = 4 }; // 네 번째 아이템
+        }
+    }
+
+    // RPOI_PortalInventory에 아이템을 추가하는 메서드
+    public void AddItemToPortalInventory(Item item, int index)
+    {
+        if (index >= 0 && index < RPOI_PortalInventory.Length)
+        {
+            RPOI_PortalInventory[index] = item; // 특정 인덱스에 아이템 추가
+            Debug.Log($"{item.ItemType.ItemName} added to portal inventory at index {index}. Current count: {item.Count}");
+        }
+        else
+        {
+            Debug.LogError("Index out of bounds for RPOI_PortalInventory.");
+        }
+    }
+
 
     // RPOI 아이템을 플레이어 인벤토리로 옮기는 메서드
     public void TransferItemsToPlayer(Inventory playerInventory)

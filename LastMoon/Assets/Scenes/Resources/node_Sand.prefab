@@ -4901,8 +4901,6 @@ GameObject:
   - component: {fileID: 9002773697700322750}
   - component: {fileID: 3810163153771005796}
   - component: {fileID: 3287341426330684175}
-  - component: {fileID: 721811931036509832}
-  - component: {fileID: 8183080334479304007}
   - component: {fileID: 995367703043130432}
   m_Layer: 9
   m_Name: node_Sand
@@ -4995,57 +4993,6 @@ MonoBehaviour:
   HitParticle: {fileID: 1639077674484835795}
   nodeCount: 0
   NodeItemType: {fileID: 11400000, guid: 85f839ab0ba31ff4d9d3c031148573dc, type: 2}
---- !u!114 &721811931036509832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4383904846621012237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 3287341426330684175}
-  - {fileID: 8183080334479304007}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &8183080334479304007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4383904846621012237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 0
-    Name: Destroy
-  - Type: 9
-    SynchronizeType: 0
-    Name: Harvest
-  - Type: 9
-    SynchronizeType: 0
-    Name: Hit
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
 --- !u!82 &995367703043130432
 AudioSource:
   m_ObjectHideFlags: 0
