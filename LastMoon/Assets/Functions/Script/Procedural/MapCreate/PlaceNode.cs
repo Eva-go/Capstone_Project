@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlaceNode : MonoBehaviour
+public class PlaceNode : MonoBehaviourPunCallbacks
 {
 
     public Transform parent;
@@ -51,8 +51,8 @@ public class PlaceNode : MonoBehaviour
     public float groundThreshold = 10.0f;
 
     public NoiseData noiseData;
-
-
+    public GameObject[] nodes;
+    public int currentNodeID = 0;
     void PlaceDirtNodes(float[,] noiseMap)
     {
         System.Random prng = new System.Random(seed); // Initialize random number generator with the same seed
@@ -144,9 +144,15 @@ public class PlaceNode : MonoBehaviour
                         )
                     {
                         position = new Vector3(Clumpx + x, heightY, Clumpy + y);
-
-                        GameObject newNode = Instantiate(prefabToPlace,this.transform);
+                        // 새로운 노드 생성
+                        GameObject newNode = Instantiate(prefabToPlace, this.transform);
                         newNode.transform.position = position;
+
+                        // 고유한 nodeID 할당
+                        newNode.GetComponent<NodeController>().nodeID = currentNodeID;
+                        nodes[currentNodeID] = newNode;
+                        currentNodeID++; // nodeID 카운터 증가
+
                         newNode.GetComponent<Animator>().enabled = false;
                         //newNode.gameObject.transform.GetChild(0).gameObject.SetActive(false);
                         //newNode.gameObject.transform.GetChild(1).gameObject.SetActive(false);
@@ -160,17 +166,96 @@ public class PlaceNode : MonoBehaviour
 
     void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
+        nodes= new GameObject[10000];
+        if (nodePrefabs.Length > 0)
         {
-            if (nodePrefabs.Length > 0)
-            {
-                float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
-                PlaceDirtNodes(irregularNoiseMap);
-            }
-            else
-            {
-                Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
-            }
+            float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
+            PlaceDirtNodes(irregularNoiseMap);
+        }
+        else
+        {
+            Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+        }
+        //if (PhotonNetwork.IsMasterClient)
+        //{
+        //    if (nodePrefabs.Length > 0)
+        //    {
+        //        float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
+        //        PlaceDirtNodes(irregularNoiseMap);
+        //    }
+        //    else
+        //    {
+        //        Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
+        //    }
+        //}
+    }
+
+    public void Ani_Hit(int id)
+    {
+        photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Hit",id);
+    }
+
+    public void Ani_Harvest(int id)
+    {
+        photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Harvest",id);
+    }
+
+    public void Ani_Destory(int id)
+    {
+        photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Destroy", id);
+    }
+
+    public void node_Hp(int id)
+    {
+        photonView.RPC("SyncHealth", RpcTarget.OthersBuffered, nodes[id].GetComponent<NodeController>().currentHealth,id);
+    }
+
+    public void node_Destory(int id)
+    {
+        photonView.RPC("RPC_DestroyNode", RpcTarget.AllBuffered, id);
+    }
+
+
+    [PunRPC]
+    void SyncHealth(float health,int id)
+    {
+        if (nodes[id] != null)
+        {
+            nodes[id].GetComponent<NodeController>().currentHealth = health;
+        }
+    }
+
+    [PunRPC]
+    void RPC_SetTrigger(string triggerName,int id)
+    {
+        if (nodes[id] != null)
+        {
+            nodes[id].GetComponent<NodeController>().animator.SetTrigger(triggerName);
+        }
+    }
+
+    [PunRPC]
+    void RPC_DestroyNode(int id)
+    {
+        if (id >= 0 && id < nodes.Length && nodes[id] != null)
+        {
+            Destroy(nodes[id]);
+            nodes[id] = null; // 배열에서 참조를 제거
+        }
+    }
+
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info , int id)
+    {
+        if (stream.IsWriting)
+        {
+            // 포톤 네트워크를 통해 HP 값을 전송
+            stream.SendNext(nodes[id].GetComponent<NodeController>().currentHealth);
+        }
+        else
+        {
+            // 다른 플레이어로부터 HP 값을 수신
+            nodes[id].GetComponent<NodeController>().currentHealth = (float)stream.ReceiveNext();
         }
     }
 }
