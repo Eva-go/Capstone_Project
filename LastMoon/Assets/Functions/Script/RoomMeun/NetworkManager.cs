@@ -202,7 +202,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 gameValue.setTimer(maxTime);
                 Debug.Log("게임시간 :" + maxTime);
 
-                PhotonNetwork.LoadLevel("Loding");
+                PhotonNetwork.LoadLevel("Map");
                 mbutton_Start.GetComponent<Button>().interactable = false;
             }
         }
