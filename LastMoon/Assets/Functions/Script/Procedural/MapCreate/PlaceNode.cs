@@ -53,6 +53,9 @@ public class PlaceNode : MonoBehaviour
     public NoiseData noiseData;
 
 
+    public float activationRadius = 50f; // 노드 활성화 반경
+    private Transform playerTransform;
+    private List<GameObject> nearbyNodes = new List<GameObject>();
     void PlaceDirtNodes(float[,] noiseMap)
     {
         System.Random prng = new System.Random(seed); // Initialize random number generator with the same seed
@@ -147,8 +150,6 @@ public class PlaceNode : MonoBehaviour
 
                         GameObject newNode = Instantiate(prefabToPlace,this.transform);
                         newNode.transform.position = position;
-                       
-
                     }
                 }
             }
@@ -171,5 +172,57 @@ public class PlaceNode : MonoBehaviour
                 Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
             }
         }
+        if (PhotonNetwork.LocalPlayer.TagObject != null)
+        {
+            playerTransform = PhotonNetwork.LocalPlayer.TagObject as Transform;
+        }
     }
+
+
+    public void Update()
+    {
+        if (playerTransform == null)
+        {
+            // Player가 생성되었는지 확인
+            if (PhotonNetwork.LocalPlayer.TagObject != null)
+            {
+                playerTransform = PhotonNetwork.LocalPlayer.TagObject as Transform;
+            }
+        }
+        else
+        {
+            CheckNearbyNodes();
+        }
+    }
+    void CheckNearbyNodes()
+    {
+        // 활성화 반경 내의 모든 콜라이더를 얻음
+        Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, activationRadius);
+        nearbyNodes.Clear();
+
+        foreach (Collider hitCollider in hitColliders)
+        {
+            GameObject node = hitCollider.gameObject;
+
+            // 노드인지 확인하고 이미 활성화되지 않았는지 확인
+            if (node.CompareTag("Node"))
+            {
+                if (!nearbyNodes.Contains(node)) // 리스트에 포함되어 있지 않으면 추가
+                {
+                    nearbyNodes.Add(node);
+                    node.SetActive(true); // 노드를 활성화
+                }
+            }
+        }
+
+        // 모든 노드 중 비활성화된 노드를 체크하여 비활성화
+        foreach (Transform node in transform)
+        {
+            if (!nearbyNodes.Contains(node.gameObject))
+            {
+                node.gameObject.SetActive(false); // 노드를 비활성화
+            }
+        }
+    }
+
 }

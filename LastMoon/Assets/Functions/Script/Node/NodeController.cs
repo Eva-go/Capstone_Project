@@ -1,9 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
 using Photon.Pun;
 
 public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    public float maxHealth = 30f;
+    public float maxHealth = 10f;
     [HideInInspector]
     public float currentHealth;
     public int Node_Type;
