@@ -4,7 +4,6 @@ using UnityEngine;
 public class InteractableObject : MonoBehaviour
 {
     private PhotonView photonView;
-
     public Item[] RPOI_PortalInventory = new Item[4]; // 내부 인벤토리 배열
     public ScriptableObject_Item[] RPOI_Items; // 다수의 아이템을 담는 ScriptableObject_Item 배열
     public int[] itemCounts; // 각 아이템 별로 개수를 설정하는 배열
@@ -13,14 +12,12 @@ public class InteractableObject : MonoBehaviour
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
-
-        // 아이템 개수 배열을 아이템 배열의 크기에 맞게 초기화
-        if (itemCounts == null || itemCounts.Length != RPOI_Items.Length)
+        // 처음에 Drill_Body001을 비활성화
+        GameObject drillBody = gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject;
+        if (drillBody != null)
         {
-            itemCounts = new int[RPOI_Items.Length];
+            drillBody.SetActive(false);  // Drill_Body001 비활성화
         }
-
-        // RPOI_Items 배열을 사용하여 RPOI_PortalInventory 초기화
         InitializeRPOIInventory();
     }
 
@@ -31,7 +28,7 @@ public class InteractableObject : MonoBehaviour
         {
             if (i < RPOI_Items.Length && RPOI_Items[i] != null)
             {
-                RPOI_PortalInventory[i] = new Item { ItemType = RPOI_Items[i], Count = itemCounts[i] }; // 개수 반영
+                RPOI_PortalInventory[i] = new Item { ItemType = RPOI_Items[i], Count = itemCounts[i] };
             }
             else
             {
@@ -40,54 +37,54 @@ public class InteractableObject : MonoBehaviour
         }
     }
 
-    // 각 아이템을 플레이어의 인벤토리에 추가
-    public void IncreaseAllItems(int playerId)
+    // RPOI 아이템을 플레이어 인벤토리로 옮기는 메서드
+    public void TransferItemsToPlayer(Inventory playerInventory)
     {
-        if (interactingPlayerId == -1 || interactingPlayerId == playerId)
+        // RPOI 내부에 있는 아이템을 플레이어 인벤토리로 전송
+        for (int i = 0; i < RPOI_Items.Length; i++)
         {
-            interactingPlayerId = playerId;
-
-            // 각 아이템을 플레이어 인벤토리에 추가
-            for (int i = 0; i < RPOI_Items.Length; i++)
+            if (RPOI_Items[i] != null && itemCounts[i] > 0)
             {
-                if (RPOI_Items[i] != null)
-                {
-                    // 플레이어의 인벤토리에 아이템 추가
-                    AddItemToPlayerInventory(RPOI_Items[i], itemCounts[i]);
+                // RPOI의 아이템과 개수를 플레이어 인벤토리로 추가
+                playerInventory.AddItem(new Item { ItemType = RPOI_Items[i], Count = itemCounts[i] });
 
-                    // 네트워크 상에서 동기화된 플레이어들에게 카운트를 증가시키고 인벤토리 상태를 업데이트
-                    photonView.RPC("UpdateCountAndInventory", RpcTarget.AllBuffered, RPOI_Items[i].name, itemCounts[i], playerId);
-                }
+                Debug.Log(RPOI_Items[i].ItemName + " x" + itemCounts[i] + " added to player inventory.");
             }
         }
     }
-
-    // 플레이어의 인벤토리에 아이템을 추가하는 메서드
-    public void AddItemToPlayerInventory(ScriptableObject_Item itemType, int addCount)
+    public void AddItemToPlayerInventory(ScriptableObject_Item itemType, int addCount, int playerId)
     {
-        PlayerRPOIInventory playerInventory = GetPlayerInventory(interactingPlayerId);
+        RPOIInventory playerInventory = GetPlayerInventory(playerId);
         if (playerInventory != null)
         {
             playerInventory.AddItem(itemType, addCount);
         }
     }
 
-    // 플레이어 인벤토리 가져오기 (플레이어 ID에 따라 가져옴)
-    private PlayerRPOIInventory GetPlayerInventory(int playerId)
+    // 플레이어 인벤토리 가져오기
+    private RPOIInventory GetPlayerInventory(int playerId)
     {
         foreach (var player in PhotonNetwork.PlayerList)
         {
             if (player.ActorNumber == playerId)
             {
-                // 해당 playerId와 연결된 플레이어 오브젝트를 찾아 PlayerRPOIInventory 컴포넌트를 반환
                 GameObject playerObject = PhotonView.Find(player.ActorNumber).gameObject;
-                return playerObject.GetComponent<PlayerRPOIInventory>();
+                return playerObject.GetComponent<RPOIInventory>();
             }
         }
-
         Debug.LogError("Player inventory not found for playerId: " + playerId);
         return null;
     }
+
+    // RPOI 인벤토리를 비우는 메서드
+    public void ClearRPOIInventory()
+    {
+        for (int i = 0; i < RPOI_PortalInventory.Length; i++)
+        {
+            RPOI_PortalInventory[i].Count = 0;
+        }
+    }
+
 
     [PunRPC]
     private void UpdateCountAndInventory(string itemName, int addCount, int playerId)
@@ -98,7 +95,7 @@ public class InteractableObject : MonoBehaviour
         ScriptableObject_Item itemType = FindItemByName(itemName);
         if (itemType != null)
         {
-            AddItemToPlayerInventory(itemType, addCount);
+            AddItemToPlayerInventory(itemType, addCount, playerId);
         }
     }
 

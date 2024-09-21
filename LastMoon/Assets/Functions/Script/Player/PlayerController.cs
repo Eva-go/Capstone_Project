@@ -962,46 +962,39 @@ public class PlayerController : MonoBehaviour
                     RaycastHit hit;
                     if (Physics.Raycast(transform.position, transform.forward, out hit, 3f))
                     {
-                        PoiController poiController = hit.collider.GetComponent<PoiController>();
-                        if (poiController != null)
+                        // Raycast로 충돌한 객체에서 InteractableObject를 가져옴
+                        InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
+                        RPOIInventory rpoiInventory = hit.collider.GetComponent<RPOIInventory>();
+                        if (interactableObject != null)
                         {
-                            for (int i = 0; i < 4; i++)
+                            // Drill_Body001 활성화/비활성화 처리
+                            GameObject drillBody = interactableObject.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject;
+                            bool isActive = drillBody.activeSelf;
+                            drillBody.SetActive(true);
+
+                            // PhotonView 가져오기
+                            PhotonView pv = interactableObject.GetComponent<PhotonView>();
+
+                            if (pv != null)
                             {
-                                if (poiController.poiName.Equals(poiName[i] + "(Clone)"))
+                                int playerId = NetworkManager.PlayerID + 1;
+
+                                if (interactableObject.GetInteractingPlayerId() != playerId)
                                 {
-                                    // Drill_Body001 활성화/비활성화 처리
-                                    GameObject drillBody = poiController.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject;
-                                    bool isActive = drillBody.activeSelf;
-                                    drillBody.SetActive(false);
-
-                                    // PhotonView 가져오기
-                                    PhotonView pv = poiController.GetComponent<PhotonView>();
-                                    InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
-
-                                    if (pv != null && interactableObject != null)
-                                    {
-                                        int playerId = NetworkManager.PlayerID + 1;
-
-                                        if (interactableObject.GetInteractingPlayerId() != playerId)
-                                        {
-                                            // 소유권 전환 및 초기화
-                                            pv.TransferOwnership(playerId);
-                                            interactableObject.SetInteractingPlayerId(playerId);
-                                            pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
-                                        }
-                                        else
-                                        {
-                                            // 상호작용한 플레이어가 이미 소유 중일 경우, 모든 아이템을 추가
-                                            // IncreaseAllItems 메서드를 호출하여 모든 아이템을 추가
-                                            interactableObject.IncreaseAllItems(playerId);
-                                        }
-                                    }
+                                    // 소유권 전환 및 초기화
+                                    pv.TransferOwnership(playerId);
+                                    interactableObject.SetInteractingPlayerId(playerId);
+                                    pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
+                                }
+                                else
+                                {
+                                    // 플레이어가 이미 소유 중일 경우, 모든 아이템을 플레이어 인벤토리에 추가
+                                    interactableObject.TransferItemsToPlayer(rpoiInventory.inventory);
                                 }
                             }
                         }
                     }
                     break;
-
                 default:
                     myRigid.isKinematic = false;
                     insideActive = false;
