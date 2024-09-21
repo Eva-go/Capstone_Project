@@ -220,7 +220,9 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 7680628998997913612}
+  - {fileID: 2171741150847436082}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -238,8 +240,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: Destroy
+  - Type: 9
+    SynchronizeType: 0
+    Name: Harvest
+  - Type: 9
+    SynchronizeType: 0
+    Name: Hit
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &2201561416523581235
 GameObject:
   m_ObjectHideFlags: 0
@@ -5231,6 +5244,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ba591f8eeb97ce64c8b72cf59b5be5db, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ba591f8eeb97ce64c8b72cf59b5be5db, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1865661662356663627, guid: ba591f8eeb97ce64c8b72cf59b5be5db, type: 3}
       propertyPath: m_Layer

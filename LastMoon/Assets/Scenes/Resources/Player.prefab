@@ -1435,11 +1435,13 @@ GameObject:
   - component: {fileID: 4559855521724277260}
   - component: {fileID: 7613318284708378742}
   - component: {fileID: 4093038744633329120}
+  - component: {fileID: -4685475881721536993}
   - component: {fileID: 4093038744633329121}
   - component: {fileID: 6234841288442632405}
   - component: {fileID: 4093038744633329134}
   - component: {fileID: 4323000284422157701}
   - component: {fileID: 725141506427028762}
+  - component: {fileID: 8900642802822135827}
   - component: {fileID: 3414631549270387245}
   - component: {fileID: 4093038744633329122}
   - component: {fileID: 4093038744633329123}
@@ -1525,6 +1527,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!135 &-4685475881721536993
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750386731104008374}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 30
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &4093038744633329121
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1798,6 +1821,25 @@ MonoBehaviour:
   APTPlane: {fileID: 6595283741257893453, guid: 80d431a8d5ca53e4b8a9604fbc67857c, type: 3}
   playerPoint: {x: 0, y: 0, z: 0}
   playerrotation: {x: 0, y: 0, z: 0}
+--- !u!114 &8900642802822135827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750386731104008374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17eb0042c8e8c6d4886c5d84b8671b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObjects:
+  - {fileID: 46765404269634581, guid: 7c438977b89a5b04bbb538c6e6ec81bc, type: 3}
+  - {fileID: 1067324668941804349, guid: c9f33f739c8d4164eb92dbe708f44cbd, type: 3}
+  - {fileID: 4760096997482513493, guid: 5b3e9a17e11f22042b6c0b03b50df4cd, type: 3}
+  - {fileID: 4397636451757101403, guid: 099c236559131ad41b0eaf450085837e, type: 3}
+  - {fileID: 4383904846621012237, guid: a80f4ba41c3bc1b41b2b2efe66b1ed2d, type: 3}
+  - {fileID: 1256879839655810891, guid: eb7c9bae9917b7b438b1bbbd8f9c2a5b, type: 3}
 --- !u!114 &3414631549270387245
 MonoBehaviour:
   m_ObjectHideFlags: 0
