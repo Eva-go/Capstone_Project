@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlaceNode : MonoBehaviour
 {
 
+    public Transform parent;
+
     public GameObject[] nodePrefabs;
 
     public MeshCollider placementArea;
@@ -116,8 +118,7 @@ public class PlaceNode : MonoBehaviour
                                 x, y,
                                 prefabToPlace, NodedirtYMin, NodedirtYMax, 0.9f);
 
-                        //GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        //newNode.transform.SetParent(parentTransform);
+                      
                     }
                 }
             }
@@ -143,8 +144,11 @@ public class PlaceNode : MonoBehaviour
                         )
                     {
                         position = new Vector3(Clumpx + x, heightY, Clumpy + y);
-                        GameObject newNode = PhotonNetwork.Instantiate(prefabToPlace.name, position, Quaternion.identity);
-                        newNode.transform.SetParent(parentTransform);
+
+                        GameObject newNode = Instantiate(prefabToPlace,this.transform);
+                        newNode.transform.position = position;
+                       
+
                     }
                 }
             }

@@ -54,7 +54,8 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
         currentHealth -= Damage;
         if (currentHealth > 0)
         {
-            photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Hit");
+            //photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Hit");
+            animator.SetTrigger("Hit");
 
         }
         else if (currentHealth <= 0)
@@ -72,6 +73,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
             else
             {
                 photonView.RPC("RPC_SetTrigger", RpcTarget.AllBuffered, "Destroy");
+               
             }
 
         }
@@ -88,7 +90,6 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     void RPC_SetTrigger(string triggerName)
     {
-        Debug.Log("RPC_SetTrigger: " + triggerName);
         animator.SetTrigger(triggerName);
     }
 
@@ -97,6 +98,7 @@ public class NodeController : MonoBehaviourPunCallbacks, IPunObservable
     {
         // 마스터 클라이언트가 오브젝트를 삭제하도록 요청
         photonView.RPC("RPC_DestroyNode", RpcTarget.MasterClient);
+        
     }
 
     [PunRPC]
