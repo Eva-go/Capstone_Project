@@ -147,8 +147,9 @@ public class PlaceNode : MonoBehaviour
 
                         GameObject newNode = Instantiate(prefabToPlace,this.transform);
                         newNode.transform.position = position;
-                        newNode.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-                        newNode.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                        newNode.GetComponent<Animator>().enabled = false;
+                        //newNode.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                        //newNode.gameObject.transform.GetChild(1).gameObject.SetActive(false);
                     }
                 }
             }

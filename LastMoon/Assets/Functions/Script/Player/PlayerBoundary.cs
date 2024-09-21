@@ -13,9 +13,9 @@ public class PlayerBoundary : MonoBehaviour
             string targetName = target.name + "(Clone)";
             if (other.name == targetName)
             {
-                Debug.Log("Æ®¸®°Å" + other.name + " : " + targetName);
-                other.gameObject.transform.GetChild(0).gameObject.SetActive(true);
-                other.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                other.gameObject.GetComponent<Animator>().enabled = true;
+                //other.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+                //other.gameObject.transform.GetChild(1).gameObject.SetActive(true);
                 break;
             }
         }
@@ -29,9 +29,10 @@ public class PlayerBoundary : MonoBehaviour
             string targetName = target.name + "(Clone)";
             if (other.name == targetName)
             {
-                other.gameObject.GetComponent<NodeController>().enabled = false;
-                other.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-                other.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                other.gameObject.GetComponent<Animator>().enabled = false;
+                //other.gameObject.GetComponent<NodeController>().enabled = false;
+                //other.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                //other.gameObject.transform.GetChild(1).gameObject.SetActive(false);
                 break;
             }
         }
