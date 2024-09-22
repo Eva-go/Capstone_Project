@@ -12,6 +12,7 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
@@ -80,7 +81,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: 484476636a8e9a54d986d4b97670b92b, type: 3}
+        m_Texture: {fileID: 2800000, guid: ee8775e644f7e6a449a7e3dd9afed053, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -182,6 +183,7 @@ Material:
     - _Height_Steps: 8
     - _Height_Strength: 0.02
     - _Look_Up_Mask_Value: 1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
     - _Normal_Map_Strength: 1
     - _Normal_Strength: 1

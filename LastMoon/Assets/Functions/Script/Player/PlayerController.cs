@@ -193,6 +193,7 @@ public class PlayerController : MonoBehaviour
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
+            PhotonNetwork.LocalPlayer.TagObject = transform;
             Ghost = false;
             RespawnCam.SetActive(false);
             isRespawn = false;

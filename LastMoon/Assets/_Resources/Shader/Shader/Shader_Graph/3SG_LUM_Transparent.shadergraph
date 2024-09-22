@@ -52,6 +52,9 @@
     "m_Keywords": [
         {
             "m_Id": "58312e75369e47649d31b1e5cd31736f"
+        },
+        {
+            "m_Id": "78649a4cd4224500be80bda6c99515e8"
         }
     ],
     "m_Dropdowns": [],
@@ -2468,6 +2471,31 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "78649a4cd4224500be80bda6c99515e8",
+    "m_Guid": {
+        "m_GuidSerialized": "cd4cbe51-9846-460a-a8a3-675c1aec5057"
+    },
+    "m_Name": "_MAIN_LIGHT_SHADOWS_CASCADE",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "_MAIN_LIGHT_SHADOWS_CASCADE",
+    "m_DefaultReferenceName": "_MAIN_LIGHT_SHADOWS_CASCADE",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 1,
+    "m_KeywordScope": 0,
+    "m_KeywordStages": 63,
+    "m_Entries": [],
+    "m_Value": 1,
+    "m_IsEditable": true
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "78a7761b8f6d46f1bd9dce6da3e68697",
@@ -4448,6 +4476,9 @@
     "m_ObjectId": "f347870511b54f7785632641b18fbdf4",
     "m_Name": "Shadow",
     "m_ChildObjectList": [
+        {
+            "m_Id": "78649a4cd4224500be80bda6c99515e8"
+        },
         {
             "m_Id": "58312e75369e47649d31b1e5cd31736f"
         },
