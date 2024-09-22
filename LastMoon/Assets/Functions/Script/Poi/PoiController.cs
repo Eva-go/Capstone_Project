@@ -95,7 +95,7 @@ public class PoiController : MonoBehaviour
     public Transform[] OutputTransform;
 
     //파이프 감지 변수
-    public float PipeRayRadius = 1f;
+    public float PipeRayRadius = 0.1f;
 
     void Start()
     {
@@ -130,7 +130,6 @@ public class PoiController : MonoBehaviour
     {
         ActivationEffect();
         tick_ck();
-        PipeRaycast();
 
     }
 
@@ -145,16 +144,16 @@ public class PoiController : MonoBehaviour
 
     public void PipeRaycast()
     {
-        Vector3 pipeCenter;
         for (int i = 0; i < 3; i++)
         {
-            pipeCenter = OutputTransform[i].position;
+            Vector3 pipeCenter = OutputTransform[i].position;
             Collider[] collider = Physics.OverlapSphere(pipeCenter, PipeRayRadius);
             foreach (var hitCollder in collider)
             {
                 if (hitCollder.CompareTag("Pipe"))
                 {
-                    GiveItem(i);
+                    bool Constructed = hitCollder.GetComponent<StationMatController>().Constructed;
+                    if (Constructed) GiveItem(i);
                 }
             }
         }
@@ -175,6 +174,7 @@ public class PoiController : MonoBehaviour
             {
                 if (Constructed)
                 {
+                    PipeRaycast();
                     if (SelectedRecipe != null)
                     {
                         CheckRecipe();
@@ -656,7 +656,6 @@ public class PoiController : MonoBehaviour
     {
         if (Inv_Output[OutputNum] != null && Inv_Output[OutputNum].Count > 0) 
         {
-           
             GameObject nodeItem = Instantiate(item, OutputTransform[OutputNum].position, Quaternion.identity);
             NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
             nodeDestroy.Inv_Input = new Item { ItemType = Inv_Output[OutputNum].ItemType, Count = 1 };

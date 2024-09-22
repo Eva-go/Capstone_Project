@@ -45,7 +45,7 @@ public class BagController : MonoBehaviourPunCallbacks
             {
                 foreach (Item item in BagInventory.GetItems())
                 {
-                    playerController.PlayerInventory.AddItem(item);
+                    playerController.PlayerInventory.AddItem(new Item { ItemType = item.ItemType, Count = item.Count });
                 }
             }
         }

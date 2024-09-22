@@ -179,6 +179,9 @@ MonoBehaviour:
   MaxHealth: 10
   ProcessEfficiency: 1
   TempertureLimit: 100
+  hasCool: 0
+  hasFuel: 0
+  SelectedFuel: {fileID: 0}
   tick: 0
   isTick: 0
   stop: 0
@@ -189,7 +192,7 @@ MonoBehaviour:
   - {fileID: 7069771047562307192}
   - {fileID: 9188678149323882169}
   - {fileID: 2186398858263638376}
-  PipeRayRadius: 1
+  PipeRayRadius: 0.1
 --- !u!114 &-6315921543941056466
 MonoBehaviour:
   m_ObjectHideFlags: 0

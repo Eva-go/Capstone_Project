@@ -5022,6 +5022,8 @@ MonoBehaviour:
     - {fileID: 3750273123917129223}
     - {fileID: 5875664289811813262}
     - {fileID: 9192833456594746163}
+  Obj_AuxFix: []
+  Obj_AuxLUT: []
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
@@ -5091,6 +5093,9 @@ MonoBehaviour:
   MaxHealth: 10
   ProcessEfficiency: 1
   TempertureLimit: 100
+  hasCool: 0
+  hasFuel: 0
+  SelectedFuel: {fileID: 0}
   tick: 0
   isTick: 0
   stop: 0
@@ -5101,7 +5106,7 @@ MonoBehaviour:
   - {fileID: 3068176167865136821}
   - {fileID: 1270967814358880612}
   - {fileID: 552322422190574077}
-  PipeRayRadius: 1
+  PipeRayRadius: 0.1
 --- !u!65 &4611769558836440013
 BoxCollider:
   m_ObjectHideFlags: 0

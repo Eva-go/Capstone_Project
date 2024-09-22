@@ -5072,6 +5072,7 @@ MonoBehaviour:
   TempertureLimit: 100
   hasCool: 1
   hasFuel: 1
+  SelectedFuel: {fileID: 0}
   tick: 0
   isTick: 0
   stop: 0
@@ -5082,7 +5083,7 @@ MonoBehaviour:
   - {fileID: 9184458541959611657}
   - {fileID: 4000112332913704269}
   - {fileID: 2094280702206928713}
-  PipeRayRadius: 1
+  PipeRayRadius: 0.1
 --- !u!114 &-1101958991553784801
 MonoBehaviour:
   m_ObjectHideFlags: 0

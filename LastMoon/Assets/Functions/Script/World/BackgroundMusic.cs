@@ -101,7 +101,7 @@ public class BackgroundMusic : MonoBehaviour
                 CurruntSceneID = 0;
             }
         }
-        else if (SceneName == "Map")
+        else if (SceneName == "Map" || SceneName == "LoadingScene")
         {
             if (CurruntSceneID != 1)
             {

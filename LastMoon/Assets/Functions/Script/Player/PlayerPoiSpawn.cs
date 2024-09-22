@@ -186,7 +186,11 @@ public class PlayerPoiSpawn : MonoBehaviour
 
                 foreach (Item item in playerController.ConstInventory.GetItems())
                 {
-                    if (stationMatController != null) stationMatController.StationConstInv.AddItem(item);
+                    if (stationMatController != null) 
+                        stationMatController.StationConstInv.AddItem(new Item {
+                            ItemType = item.ItemType,
+                            Count = item.Count,
+                        });
                     playerController.PlayerInventory.RemoveItem(item);
                 }
                 playerController.ConstInventory.ClearInventory();
