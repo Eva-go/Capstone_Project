@@ -12,6 +12,7 @@ public class GameOver : MonoBehaviour
     public GameObject Die;
     public GameObject Button;
     public bool Winner;
+    private bool Endmenu;
 
     public PlayableDirector EndingTimeline;
 
@@ -19,9 +20,10 @@ public class GameOver : MonoBehaviour
     void Start()
     {
         Alive.SetActive(false);
-        //Winner = GameValue.is_Winner;
+        Winner = GameValue.is_Winner;
         if(Winner)
         {
+            Endmenu = false;
             EndingTimeline.Play();
             Die.SetActive(false);
             Alive.SetActive(false);
@@ -75,9 +77,17 @@ public class GameOver : MonoBehaviour
         GameValue.TideChangeProgress = 0;
 }
 
+    private void Update()
+    {
+        if (Winner && !Endmenu && Input.GetKeyDown(KeyCode.Escape))
+        {
+            EndingMenu();
+        }
+    }
 
     public void EndingMenu()
     {
+        Endmenu = true;
         Alive.SetActive(true);
         Button.SetActive(true);
         EndingTimeline.Stop();
