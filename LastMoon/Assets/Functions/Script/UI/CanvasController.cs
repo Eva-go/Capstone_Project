@@ -218,7 +218,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     [PunRPC]
     void GoToAliveScene()
     {
-        PhotonNetwork.LoadLevel("Alive");
+        PhotonNetwork.LoadLevel("Last_Luna_Ending");
     }
     public void Alive_BT()
     {

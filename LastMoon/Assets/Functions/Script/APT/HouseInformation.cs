@@ -44,7 +44,7 @@ public class HouseInformation : MonoBehaviourPun
     // Update is called once per frame
     void Update()
     {
-        if (GameValue.TideCycle>5)
+        if (GameValue.TideCycle > 5)
         {
             gameObject.transform.GetChild(1).gameObject.SetActive(false);
             gameObject.transform.GetChild(2).gameObject.SetActive(true);
