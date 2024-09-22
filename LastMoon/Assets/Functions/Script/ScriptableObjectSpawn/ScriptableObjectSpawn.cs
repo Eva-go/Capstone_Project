@@ -33,6 +33,7 @@ public class ScriptableObjectSpawn : MonoBehaviour
         GameObject nodeItem = Instantiate(item, OutputTransform.position, Quaternion.identity);
         NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
         nodeDestroy.Inv_Input = new Item { ItemType = ItemType, Count = 1 };
+        nodeDestroy.GetComponent<BoxCollider>().isTrigger = false;
     }
 
     public void tick_ck(int ticksToConstruct)
@@ -42,7 +43,8 @@ public class ScriptableObjectSpawn : MonoBehaviour
         if(stop)
         {
             GiveItem();
-            stop = false;
+            tick = 0;
+            stop=false;
         }
     }
     private void TimeTickSystem_OnTick(object sender, TickTimer.OnTickEventArgs e)
