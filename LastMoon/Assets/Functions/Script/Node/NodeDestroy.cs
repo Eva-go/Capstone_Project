@@ -36,24 +36,27 @@ public class NodeDestroy : MonoBehaviour
         if (collision.gameObject.tag.Equals("Player"))
         {
             playerController = collision.gameObject.GetComponent<PlayerController>();
-            playerController.PlayerInventory.AddItem(Inv_Input);
+            playerController.PlayerInventory.AddItem(new Item { ItemType = Inv_Input.ItemType, Count = Inv_Input.Count });
             Destroy(gameObject);
         }
-        else if (collision.gameObject.tag=="Poi")
+        else if (collision.gameObject.tag == "Poi")
         {
-            poiController =  collision.gameObject.GetComponent<PoiController>();
+            poiController = collision.gameObject.GetComponent<PoiController>();
             poiController.TakeItem(Inv_Input);
             Destroy(gameObject);
         }
-        else if(collision.gameObject.tag!="Poi" && Inv_Input.ItemType.Liquid)
+        else if (collision.gameObject.tag != "Item")
         {
-            Destroy(gameObject);
+            if (Inv_Input.ItemType.Liquid)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject, 10f);
+            }
+
         }
-        else if (collision.gameObject.tag!="Poi"&&!Inv_Input.ItemType.Liquid)
-        {
-            Destroy(gameObject, 10f);
-        }
-      
     }
 
     private void Update()

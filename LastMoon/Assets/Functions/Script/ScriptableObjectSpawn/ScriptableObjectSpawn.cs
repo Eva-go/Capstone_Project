@@ -25,7 +25,7 @@ public class ScriptableObjectSpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        tick_ck(500);
+        tick_ck(1);
     }
 
     public void GiveItem()
@@ -35,6 +35,19 @@ public class ScriptableObjectSpawn : MonoBehaviour
         nodeDestroy.Inv_Input = new Item { ItemType = ItemType, Count = 1 };
         nodeDestroy.GetComponent<BoxCollider>().isTrigger = false;
     }
+    public void PipeRaycast()
+    {
+        Vector3 pipeCenter = OutputTransform.position;
+        Collider[] collider = Physics.OverlapSphere(pipeCenter, 0.1f);
+        foreach (var hitCollder in collider)
+        {
+            if (hitCollder.CompareTag("Pipe"))
+            {
+                bool Constructed = hitCollder.GetComponent<StationMatController>().Constructed;
+                if (Constructed) GiveItem();
+            }
+        }
+    }
 
     public void tick_ck(int ticksToConstruct)
     {
@@ -42,7 +55,7 @@ public class ScriptableObjectSpawn : MonoBehaviour
         TickTimer.OnTick += TimeTickSystem_OnTick;
         if(stop)
         {
-            GiveItem();
+            PipeRaycast();
             tick = 0;
             stop=false;
         }
