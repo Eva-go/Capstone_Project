@@ -3,23 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+
+using UnityEngine.Playables;
+
 public class GameOver : MonoBehaviour
 {
     public GameObject Alive;
     public GameObject Die;
+    public GameObject Button;
     public bool Winner;
+
+    public PlayableDirector EndingTimeline;
+
     // Start is called before the first frame update
     void Start()
     {
         Alive.SetActive(false);
-        Winner = GameValue.is_Winner;
+        //Winner = GameValue.is_Winner;
         if(Winner)
         {
+            EndingTimeline.Play();
             Die.SetActive(false);
-            Alive.SetActive(true);
+            Alive.SetActive(false);
+            //Button.SetActive(false);
         }
         else
+        {
             Die.SetActive(true);
+            Button.SetActive(true);
+        }
         Cursor.lockState = CursorLockMode.Confined;
 
         GameValue.exit = false;
@@ -62,6 +74,14 @@ public class GameOver : MonoBehaviour
         GameValue.TideChange = false;
         GameValue.TideChangeProgress = 0;
 }
+
+
+    public void EndingMenu()
+    {
+        Alive.SetActive(true);
+        Button.SetActive(true);
+        EndingTimeline.Stop();
+    }
 
 
     public void Restart_BT()

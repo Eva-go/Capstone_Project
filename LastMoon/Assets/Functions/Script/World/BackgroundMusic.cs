@@ -9,13 +9,24 @@ public class BackgroundMusic : MonoBehaviour
     public AudioClip sfx_Music_Loobbi, sfx_Music_Main, sfx_Music_Shop, sfx_Music_Ending
         , sfx_Music_Round_Start, sfx_Music_Round_End, sfx_Music_EndGame, sfx_Music_Victory;
 
+    public bool StopMusic = false;
+
     private bool PlayEM;
     private int CurruntSceneID = 0;
     private float BGMFadeout = 1;
 
+
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        var obj = FindObjectsOfType<BackgroundMusic>();
+        if (obj.Length == 1)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Start()
@@ -70,6 +81,13 @@ public class BackgroundMusic : MonoBehaviour
                 sfx_BGMusic.Play();
             }
         }
+        if (CurruntSceneID == -1)
+        {
+            if (sfx_BGMusic != null && sfx_BGMusic.isPlaying)
+            {
+                sfx_BGMusic.Stop();
+            }
+        }
     }
 
     void SceneIDUpdate(Scene scene, LoadSceneMode loadSceneMode)
@@ -105,6 +123,14 @@ public class BackgroundMusic : MonoBehaviour
             {
                 PlayEM = true;
                 CurruntSceneID = 3;
+            }
+        }
+        else
+        {
+            if (CurruntSceneID != -1)
+            {
+                PlayEM = false;
+                CurruntSceneID = -1;
             }
         }
     }

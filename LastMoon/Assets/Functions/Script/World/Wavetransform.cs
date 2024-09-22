@@ -31,7 +31,7 @@ public class Wavetransform : MonoBehaviour
     void Start()
     {
         //downwave = 17.5f / (GameValue.MaxRound - 1);
-        downwave = 10.0f;
+        downwave = 5.0f;
         waveY = -22.5f;
 
         propertyBlock = new MaterialPropertyBlock();
@@ -72,7 +72,6 @@ public class Wavetransform : MonoBehaviour
 
         if (GameValue.TideChange)
         {
-
             if (LowTide)
             {
                 SeaLevel = Mathf.Lerp(0.0f, -(float)GameValue.TideCycle - 2.0f, normalizedTidalChange);
@@ -90,7 +89,7 @@ public class Wavetransform : MonoBehaviour
         {
             if (LowTide)
             {
-                SeaLevel = Mathf.Lerp(-(float)GameValue.TideCycle - 1.0f, 0.0f, normalizedTime);
+                SeaLevel = Mathf.Lerp(-(float)GameValue.TideCycle - 2.0f, 0.0f, normalizedTime);
                 Tidelevel = Mathf.Lerp(-0.75f, 0.0f, normalizedTime);
             }
             else
@@ -98,13 +97,10 @@ public class Wavetransform : MonoBehaviour
                 SeaLevel = Mathf.Lerp((float)GameValue.TideCycle / 2.0f + 1.0f, 0.0f, normalizedTime);
                 Tidelevel = Mathf.Lerp(0.0f, 0.75f, normalizedTime);
             }
-
             waveStrength = Mathf.Lerp((float)GameValue.TideCycle - 1.0f, 1.0f + (float)GameValue.TideCycle, normalizedTime);
         }
 
-
-
-        waveY = (SeaLevel * downwave) - 2.5f;
+        waveY = (SeaLevel * downwave) - 10f;
 
         Vector3 currentPosition = gameObject.transform.position;
         currentPosition.y = waveY;
@@ -122,6 +118,8 @@ public class Wavetransform : MonoBehaviour
 
         if (RenderSettings.skybox.HasProperty("_Strength"))
             RenderSettings.skybox.SetFloat("_Strength", waveStrength);
+        if (RenderSettings.skybox.HasProperty("_Wave_Height"))
+            RenderSettings.skybox.SetFloat("_Wave_Height", waveY);
         if (RenderSettings.skybox.HasProperty("_Moon_Position_X"))
             RenderSettings.skybox.SetFloat("_Moon_Position_X", Tidelevel);
     }

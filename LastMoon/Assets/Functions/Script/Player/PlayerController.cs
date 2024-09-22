@@ -583,7 +583,7 @@ public class PlayerController : MonoBehaviour
             {
                 float movespeed = myRigid.velocity.magnitude;
                 animator.SetFloat("MoveAniModifire", movespeed / walkSpeed);
-                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                if (isGrounded && movespeed > 1 && !GhostRespawn) sfx_PlayerWalk.mute = false;
                 else sfx_PlayerWalk.mute = true;
 
                 animator.SetBool("isMove", true);
@@ -884,7 +884,7 @@ public class PlayerController : MonoBehaviour
                                 myRigid.position = PlayerAPT.playerPoint;
                                 HouseKey = aptInfo.BuildingType + 2;
                                 aptInfo.Use_player(this);
-                                if(aptInfo.BuildingType==2)
+                                if (aptInfo.BuildingType == 2)
                                 {
                                     GameValue.is_Winner = true;
                                 }
