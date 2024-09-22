@@ -66,6 +66,9 @@ public class GameValue : MonoBehaviourPunCallbacks
 
     //게임종료
     public static bool is_Winner;
+
+    public bool fpsView = false;
+
     private void Awake()
     {
         exit = false;
@@ -91,6 +94,10 @@ public class GameValue : MonoBehaviourPunCallbacks
         if(exit)
         {
             Destroy(gameObject);
+        }
+        if(Input.GetKeyDown(KeyCode.ScrollLock))
+        {
+            fpsView = !fpsView;
         }
     }
 

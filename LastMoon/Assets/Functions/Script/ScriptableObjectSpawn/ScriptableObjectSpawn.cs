@@ -12,9 +12,9 @@ public class ScriptableObjectSpawn : MonoBehaviour
     public bool stop;
 
     //Spawn
-    public GameObject item;
     public Transform OutputTransform;
-
+    public ScriptableObject_Item ItemType;
+    public GameObject item;
 
     // Start is called before the first frame update
     void Start()
@@ -27,15 +27,21 @@ public class ScriptableObjectSpawn : MonoBehaviour
     {
         tick_ck(500);
     }
+
+    public void GiveItem()
+    {
+        GameObject nodeItem = Instantiate(item, OutputTransform.position, Quaternion.identity);
+        NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
+        nodeDestroy.Inv_Input = new Item { ItemType = ItemType, Count = 1 };
+    }
+
     public void tick_ck(int ticksToConstruct)
     {
         tickMax = ticksToConstruct;
         TickTimer.OnTick += TimeTickSystem_OnTick;
         if(stop)
         {
-            Debug.Log("½Ã°£" + PhotonNetwork.Time);
-            GameObject nodeItem = Instantiate(item, OutputTransform);
-            NodeDestroy nodeDestroy = nodeItem.GetComponent<NodeDestroy>();
+            GiveItem();
             stop = false;
         }
     }
