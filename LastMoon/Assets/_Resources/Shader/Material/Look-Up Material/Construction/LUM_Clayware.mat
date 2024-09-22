@@ -13,6 +13,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -75,7 +76,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_up_Texture:
-        m_Texture: {fileID: 2800000, guid: 3955b29f92452dc4ab780a138fea77c2, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9c1b3bc668edb0847bb97e8cf93be4ab, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -172,6 +173,7 @@ Material:
     - _Height_Steps: 8
     - _Height_Strength: 0.02
     - _Look_Up_Mask_Value: 1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
     - _Normal_Map_Strength: 1
     - _Normal_Strength: 1

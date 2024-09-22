@@ -26,6 +26,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
+  - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
@@ -65,7 +66,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Look_Up_Texture:
-        m_Texture: {fileID: 2800000, guid: ba0ceede7d0e72a4493032bcf721ca77, type: 3}
+        m_Texture: {fileID: 2800000, guid: b9d2f4f2bd718be418a1728b304b646c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -107,6 +108,7 @@ Material:
     - _Ambient_Strength: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _Bubble_Thickness: 0.025
     - _BumpScale: 1
     - _CastShadows: 1
     - _ClearCoatMask: 0
@@ -124,6 +126,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -149,6 +152,8 @@ Material:
     - _SrcBlend: 5
     - _SrcBlendAlpha: 1
     - _Surface: 1
+    - _Wobble_X: 0
+    - _Wobble_Z: 0
     - _WorkflowMode: 1
     - _ZTest: 4
     - _ZWrite: 1
