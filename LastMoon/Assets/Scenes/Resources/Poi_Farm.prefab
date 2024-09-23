@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6854652802010193459}
   - component: {fileID: 8967602037494354336}
   - component: {fileID: 1074015944413110319}
-  - component: {fileID: 6369805564078711892}
   - component: {fileID: -1204528744865690132}
   m_Layer: 0
   m_Name: Poi_Farm
@@ -219,24 +218,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 1}
---- !u!114 &6369805564078711892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1478360869261646978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
 --- !u!82 &-1204528744865690132
 AudioSource:
   m_ObjectHideFlags: 0

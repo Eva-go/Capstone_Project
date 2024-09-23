@@ -15,7 +15,7 @@ public class PlayerBoundary : MonoBehaviour
             {
                 other.gameObject.GetComponent<Animator>().enabled = true;
                 //other.gameObject.transform.GetChild(0).gameObject.SetActive(true);
-                //other.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                other.gameObject.transform.GetChild(1).gameObject.SetActive(true);
                 break;
             }
         }
@@ -32,7 +32,7 @@ public class PlayerBoundary : MonoBehaviour
                 other.gameObject.GetComponent<Animator>().enabled = false;
                 //other.gameObject.GetComponent<NodeController>().enabled = false;
                 //other.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-                //other.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                other.gameObject.transform.GetChild(1).gameObject.SetActive(false);
                 break;
             }
         }

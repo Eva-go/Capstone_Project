@@ -104,6 +104,7 @@ MonoBehaviour:
   HitParticle: {fileID: 5013550668785404645}
   nodeCount: 0
   NodeItemType: {fileID: 11400000, guid: eba0a1bd10be48d4fa669a861ab2ca8e, type: 2}
+  nodeID: -1
 --- !u!82 &8371080845034157081
 AudioSource:
   m_ObjectHideFlags: 0
@@ -282,7 +283,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
