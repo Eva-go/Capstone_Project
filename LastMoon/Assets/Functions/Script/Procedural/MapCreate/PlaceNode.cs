@@ -53,9 +53,12 @@ public class PlaceNode : MonoBehaviourPunCallbacks
     public NoiseData noiseData;
     public GameObject[] nodes;
     public int currentNodeID = 0;
-    void PlaceDirtNodes(float[,] noiseMap)
+    public float[,] irregularNoiseMap;
+    System.Random prng;
+    private bool isSpawn;
+
+    public void PlaceDirtNodes(float[,] noiseMap , System.Random prng)
     {
-        System.Random prng = new System.Random(seed); // Initialize random number generator with the same seed
 
         bool IsSand = false;
 
@@ -163,14 +166,26 @@ public class PlaceNode : MonoBehaviourPunCallbacks
     }
 
 
+    public void nodespawns()
+    {
+        
+        if (!isSpawn)
+        {
+            Debug.LogError("노드 생성");
+            PlaceDirtNodes(irregularNoiseMap, prng);
+            isSpawn = true;
+        }
+       
+    }
 
     void Start()
     {
-        nodes= new GameObject[10000];
+        nodes = new GameObject[10000];
         if (nodePrefabs.Length > 0)
         {
-            float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
-            PlaceDirtNodes(irregularNoiseMap);
+            prng = new System.Random(seed); // Initialize random number generator with the same seed
+            irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
+            PlaceDirtNodes(irregularNoiseMap, prng);
         }
         else
         {
@@ -215,6 +230,26 @@ public class PlaceNode : MonoBehaviourPunCallbacks
         photonView.RPC("RPC_DestroyNode", RpcTarget.AllBuffered, id);
     }
 
+    public void All_node_Destory()
+    {
+        if(isSpawn)
+        {
+            Debug.LogError("노드 삭제중");
+            photonView.RPC("RPC_All_DestroyNode", RpcTarget.AllBuffered);
+            isSpawn = false;
+        }
+       
+    }
+
+
+    [PunRPC]
+    void RPC_All_DestroyNode()
+    {
+        for(int i=0; i<nodes.Length;i++)
+        {
+            Destroy(nodes[i]);
+        }
+    }
 
     [PunRPC]
     void SyncHealth(float health,int id)
