@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
     public Transform AptTransform;
 
     //아파트 진입변수
-    public int inside;
+    public bool inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
 
@@ -207,7 +207,7 @@ public class PlayerController : MonoBehaviour
             CanvasController.Instance.RegisterPlayerController(this);
             oldTransform = gameObject.transform;
             AptTransform = gameObject.transform;
-            inside = 0;
+            inside = false;
             keydowns = false;
             PoiPopUp = false;
             ShopActive = false;
@@ -841,6 +841,7 @@ public class PlayerController : MonoBehaviour
                             insideActive = false;
                             myRigid.position = PlayerAPT.playerPoint;
                             InsideFillHandler.fillValue = 0;
+                            inside = true;
                         }
                     }
                     break;
@@ -878,6 +879,7 @@ public class PlayerController : MonoBehaviour
                             EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
                             if (InsideFillHandler.fillValue >= 100)
                             {
+                                inside = true;
                                 aptInfo.APT_use = true;
                                 keydowns = false;
                                 insideActive = false;
@@ -918,6 +920,7 @@ public class PlayerController : MonoBehaviour
                         EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
                         if (InsideFillHandler.fillValue >= 100)
                         {
+                            inside = true;
                             aptInfo.APT_use = true;
                             
                             keydowns = false;
@@ -942,6 +945,7 @@ public class PlayerController : MonoBehaviour
                         myRigid.position=doorPositions[lastDoorEntered];
                         InsideFillHandler.fillValue = 0;
                         insideActive = false;
+                        inside = false;
                     }
                     else if (lastDoorEntered == null && InsideFillHandler.fillValue >= 100)
                     {

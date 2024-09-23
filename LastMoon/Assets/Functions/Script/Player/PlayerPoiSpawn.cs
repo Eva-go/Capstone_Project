@@ -384,7 +384,7 @@ public class PlayerPoiSpawn : MonoBehaviour
         isPreViewActivated = true; // Activate preview
         isColliding = false; // Reset collision status
         canvasController.SetPoi = false;
-        canvasController.Poi.SetActive(canvasController.SetPoi);
+        canvasController.Poilist.SetActive(canvasController.SetPoi);
         Cursor.lockState = CursorLockMode.Locked;
     }
 

@@ -12,7 +12,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
     public GameObject inventory;
     public GameObject money;
     public GameObject Tab;
-    public GameObject Poi;
+    public GameObject Poilist;
     public GameObject Shop;
     //public GameObject Respawn;
     public GameObject PoiPopup;
@@ -147,7 +147,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
         inside.SetActive(false);
         Tab.SetActive(false);
         money.SetActive(true);
-        Poi.SetActive(false);
+        Poilist.SetActive(false);
         inventory.SetActive(false);
         PoiPopup.SetActive(false);
         inventoryTransform = inventory.transform;
@@ -933,19 +933,19 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void PoiActive()
     {
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B)&&playerController.inside)
         {
             SetPoi = !SetPoi;
             if (SetPoi)
             {
                 ConMatUpdate();
-                Poi.SetActive(true);
+                Poilist.SetActive(true);
                 Cursor.lockState = CursorLockMode.Confined;
             }
             else
             {
                 ConMatUpdate();
-                Poi.SetActive(false);
+                Poilist.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
