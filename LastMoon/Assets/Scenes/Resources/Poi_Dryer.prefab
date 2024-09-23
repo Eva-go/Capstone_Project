@@ -4941,7 +4941,6 @@ GameObject:
   - component: {fileID: 2553512188279324361}
   - component: {fileID: 4611769558836440013}
   - component: {fileID: 3964411717454555605}
-  - component: {fileID: 226476466956237559}
   - component: {fileID: 5797448611091848331}
   - component: {fileID: -7486917683395205389}
   m_Layer: 0
@@ -5010,6 +5009,7 @@ MonoBehaviour:
   ConstructionProgress: 0
   Health: 30
   Heal_Cooldown: 0
+  Constructed: 0
   Obj_Bases:
   - {fileID: 4395175976066511117}
   - {fileID: 683094283329038795}
@@ -5149,29 +5149,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 1}
---- !u!114 &226476466956237559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6168536886686802060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 5797448611091848331}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &5797448611091848331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5186,13 +5163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 0
-    Name: isActvie
-  - Type: 9
-    SynchronizeType: 0
-    Name: isHit
+  m_SynchronizeParameters: []
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

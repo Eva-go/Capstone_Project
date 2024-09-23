@@ -160,7 +160,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                 );
 
                 // Instantiate the object using Photon Network for actual objects
-                GameObject station = PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, roundedPosition, previewObjectInstance.transform.rotation);
+                GameObject station =Instantiate(SpawnPoi[_slotNumber], roundedPosition, previewObjectInstance.transform.rotation);
 
                 StationMatController stationMatController = station.GetComponent<StationMatController>();
 

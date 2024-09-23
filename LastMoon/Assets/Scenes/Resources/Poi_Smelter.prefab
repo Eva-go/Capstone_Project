@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 5424701742869240606}
   - component: {fileID: -1632892658035341723}
   - component: {fileID: 4549338523262272553}
-  - component: {fileID: 527718943812757758}
   - component: {fileID: 6808606798516353917}
   - component: {fileID: -935872782112775922}
   - component: {fileID: 2306740109581733371}
@@ -201,6 +200,7 @@ MonoBehaviour:
   ConstructionProgress: 0
   Health: 30
   Heal_Cooldown: 0
+  Constructed: 0
   Obj_Bases:
   - {fileID: 2537302229213875025}
   - {fileID: 4574295374248501317}
@@ -236,29 +236,6 @@ MonoBehaviour:
   Obj_Slot_Coolent: []
   Obj_Slot_Temperture: []
   Obj_Additional: 
---- !u!114 &527718943812757758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573298627077628865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6808606798516353917}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &6808606798516353917
 MonoBehaviour:
   m_ObjectHideFlags: 0

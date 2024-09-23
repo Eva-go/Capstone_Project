@@ -4958,7 +4958,6 @@ GameObject:
   - component: {fileID: -1101958991553784801}
   - component: {fileID: 5094086931020389506}
   - component: {fileID: 7890420074923393394}
-  - component: {fileID: 5252177870879681112}
   - component: {fileID: 730214607202986395}
   - component: {fileID: -6060658159203649531}
   - component: {fileID: 1808737481051242986}
@@ -5103,6 +5102,7 @@ MonoBehaviour:
   ConstructionProgress: 0
   Health: 30
   Heal_Cooldown: 0
+  Constructed: 0
   Obj_Bases:
   - {fileID: 5083290219700720759}
   - {fileID: 7613548349364938941}
@@ -5206,29 +5206,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 1, z: 1}
   m_Center: {x: 1, y: 0.5, z: -2}
---- !u!114 &5252177870879681112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4553568369980560637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 730214607202986395}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &730214607202986395
 MonoBehaviour:
   m_ObjectHideFlags: 0

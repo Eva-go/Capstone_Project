@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6854652802010193459}
   - component: {fileID: 8967602037494354336}
   - component: {fileID: 1074015944413110319}
-  - component: {fileID: 2937159026886568493}
   - component: {fileID: 6369805564078711892}
   - component: {fileID: -1204528744865690132}
   m_Layer: 0
@@ -220,29 +219,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 1}
---- !u!114 &2937159026886568493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1478360869261646978}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6369805564078711892}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &6369805564078711892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10220,6 +10196,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2292299002258769464}
     m_Modifications:
+    - target: {fileID: -4184555109157435748, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -1175895916701686911, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: -1053814455068287314, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bd60c810fab46874b89e671e4021eca1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10271,18 +10259,6 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: bd60c810fab46874b89e671e4021eca1, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -4184555109157435748, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -1175895916701686911, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: -1053814455068287314, guid: bbfb419f677770f4391308796c2abeb2, type: 3}
-      propertyPath: m_Layer
-      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 5bfaeb80e13449a40816d36aa6c2a50b, type: 3}
