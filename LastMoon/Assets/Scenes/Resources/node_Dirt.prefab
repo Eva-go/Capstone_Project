@@ -51,7 +51,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4993,6 +4993,7 @@ MonoBehaviour:
   HitParticle: {fileID: 6931036222892414934}
   nodeCount: 0
   NodeItemType: {fileID: 11400000, guid: a0d36dbfef4b5f349bdf338b22246a34, type: 2}
+  nodeID: -1
 --- !u!82 &7192084452393869115
 AudioSource:
   m_ObjectHideFlags: 0

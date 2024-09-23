@@ -1029,21 +1029,22 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
-            if (targetPv != null)
+            PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
+            if (poiController != null)
             {
-                PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
-                if (poiController != null)
-                {
-                    PoiPopUp = true;
-                    //poiController.Ountput_stop = Extract;
-                    UISelectedPOIController = poiController;
-                    //stationinteration
-                    //targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
+                PoiPopUp = true;
+                //poiController.Ountput_stop = Extract;
+                UISelectedPOIController = poiController;
+                //stationinteration
+                //targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
 
-                    StationActive = true;
-                }
+                StationActive = true;
             }
+            //PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
+            //if (targetPv != null)
+            //{
+            //  
+            //}
         }
     }
 

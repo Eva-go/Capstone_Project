@@ -174,9 +174,10 @@ public class PoiController : MonoBehaviour
             {
                 if (Constructed)
                 {
-                    PipeRaycast();
+                    //PipeRaycast();
                     if (SelectedRecipe != null)
                     {
+                        PipeRaycast();
                         CheckRecipe();
                         HeatingManage();
 

@@ -128,11 +128,11 @@ public class ConveyorBeltTurn : MonoBehaviour
         // 오일러 각도에 따라 direction을 설정합니다.
         if (eulerAngles.y == 0f || eulerAngles.y == 360f)
         {
-            direction = new Vector3(1, 0, 0);
+            direction = new Vector3(-1, 0, 0);
         }
         else if (eulerAngles.y == 180f)
         {
-            direction = new Vector3(-1, 0, 0);
+            direction = new Vector3(1, 0, 0);
         }
         else if (eulerAngles.y == 90f)
         {
@@ -142,7 +142,7 @@ public class ConveyorBeltTurn : MonoBehaviour
         {
             direction = new Vector3(0, 0, -1);
         }
-      
+
     }
 
     private void UpdateDirectionForObject(GameObject obj)
