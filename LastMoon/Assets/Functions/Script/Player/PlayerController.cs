@@ -150,6 +150,9 @@ public class PlayerController : MonoBehaviour
     public bool Ghost = false;
     public bool GhostRespawn = false;
 
+    public GameObject PlaceRpoiObject;
+    public PlaceNode placeRpoi;
+
     private void Awake()
     {
         if (Instance == null)
@@ -966,15 +969,24 @@ public class PlayerController : MonoBehaviour
                         // Raycast로 충돌한 객체에서 InteractableObject를 가져옴
                         InteractableObject interactableObject = hit.collider.GetComponent<InteractableObject>();
                         RPOIInventory rpoiInventory = hit.collider.GetComponent<RPOIInventory>();
+                        PlaceRpoiObject = GameObject.Find("PlaceRPoi");
+                        if (PlaceRpoiObject == null)
+                        {
+                            Debug.LogError("PlaceNode 씬에서 찾을 수 없습니다.");
+                        }
+                        else
+                        {
+                            placeRpoi = PlaceRpoiObject.GetComponent<PlaceNode>();
+                        }
+
                         if (interactableObject != null)
                         {
                             // Drill_Body001 활성화/비활성화 처리
                             GameObject drillBody = interactableObject.gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject;
                             bool isActive = drillBody.activeSelf;
                             drillBody.SetActive(true);
-
                             // PhotonView 가져오기
-                            PhotonView pv = interactableObject.GetComponent<PhotonView>();
+                            //PhotonView pv = interactableObject.GetComponent<PhotonView>();
 
                             if (pv != null)
                             {
@@ -986,11 +998,6 @@ public class PlayerController : MonoBehaviour
                                     pv.TransferOwnership(playerId);
                                     interactableObject.SetInteractingPlayerId(playerId);
                                     pv.RPC("ResetOwnership", RpcTarget.AllBuffered, isActive);
-                                }
-                                else
-                                {
-                                    // 플레이어가 이미 소유 중일 경우, 모든 아이템을 플레이어 인벤토리에 추가
-                                    interactableObject.TransferItemsToPlayer(rpoiInventory.inventory);
                                 }
                             }
                         }

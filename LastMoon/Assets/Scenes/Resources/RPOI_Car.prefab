@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2871609621159087222}
   - component: {fileID: 2171475891185907227}
   - component: {fileID: 1166988488032865851}
-  - component: {fileID: 3595415533794972517}
   m_Layer: 0
   m_Name: RPOI_Car
   m_TagString: RPoi
@@ -52,6 +51,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a0d36dbfef4b5f349bdf338b22246a34, type: 2}
   - {fileID: 11400000, guid: 85f839ab0ba31ff4d9d3c031148573dc, type: 2}
   itemCounts: 020000000100000003000000
+  rpoiID: -1
 --- !u!65 &1166988488032865851
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -73,28 +73,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.2032056, y: 9.221029, z: 8.468801}
   m_Center: {x: -0.44331622, y: 0.81634617, z: 0.8679819}
---- !u!114 &3595415533794972517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8708602044620867591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1001 &5405787788377202110
 PrefabInstance:
   m_ObjectHideFlags: 0

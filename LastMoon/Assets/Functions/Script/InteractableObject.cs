@@ -9,6 +9,8 @@ public class InteractableObject : MonoBehaviour
     public int[] itemCounts; // 각 아이템 별로 개수를 설정하는 배열
     private int interactingPlayerId = -1;
 
+    public int rpoiID = -1;
+
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
@@ -38,6 +40,7 @@ public class InteractableObject : MonoBehaviour
             }
         }
     }
+
     private void SetInitialItems()
     {
         if (RPOI_PortalInventory.Length > 0)
@@ -45,7 +48,7 @@ public class InteractableObject : MonoBehaviour
             RPOI_PortalInventory[0] = new Item { ItemType = RPOI_Items[0], Count = 1 }; // 첫 번째 아이템
             RPOI_PortalInventory[1] = new Item { ItemType = RPOI_Items[1], Count = 2 }; // 두 번째 아이템
             RPOI_PortalInventory[2] = new Item { ItemType = RPOI_Items[2], Count = 3 }; // 세 번째 아이템
-            RPOI_PortalInventory[3] = new Item { ItemType = RPOI_Items[3], Count = 4 }; // 네 번째 아이템
+            //RPOI_PortalInventory[3] = new Item { ItemType = RPOI_Items[3], Count = 4 }; // 네 번째 아이템
         }
     }
 
@@ -63,7 +66,6 @@ public class InteractableObject : MonoBehaviour
         }
     }
 
-
     // RPOI 아이템을 플레이어 인벤토리로 옮기는 메서드
     public void TransferItemsToPlayer(Inventory playerInventory)
     {
@@ -79,6 +81,7 @@ public class InteractableObject : MonoBehaviour
             }
         }
     }
+
     public void AddItemToPlayerInventory(ScriptableObject_Item itemType, int addCount, int playerId)
     {
         RPOIInventory playerInventory = GetPlayerInventory(playerId);
@@ -111,7 +114,6 @@ public class InteractableObject : MonoBehaviour
             RPOI_PortalInventory[i].Count = 0;
         }
     }
-
 
     [PunRPC]
     private void UpdateCountAndInventory(string itemName, int addCount, int playerId)
@@ -155,7 +157,16 @@ public class InteractableObject : MonoBehaviour
 
     public void SetLinkObjectsActive(bool state)
     {
-        gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject.SetActive(state);
+        GameObject drillBody = gameObject.transform.GetChild(0).transform.Find("Drill_Body001").gameObject;
+        drillBody.SetActive(state);
+
+        // Drill_Body001이 활성화될 때 아이템을 추가하는 로직
+        if (state && drillBody.activeSelf)
+        {
+            AddItemToPortalInventory(new Item { ItemType = RPOI_Items[0], Count = 1 }, 0);
+            AddItemToPortalInventory(new Item { ItemType = RPOI_Items[1], Count = 2 }, 1);
+            Debug.Log("Items added to RPOI_PortalInventory when Drill_Body001 is active.");
+        }
     }
 
     public int GetInteractingPlayerId()
