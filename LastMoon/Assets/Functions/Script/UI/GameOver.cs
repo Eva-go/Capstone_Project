@@ -27,7 +27,7 @@ public class GameOver : MonoBehaviour
             EndingTimeline.Play();
             Die.SetActive(false);
             Alive.SetActive(false);
-            //Button.SetActive(false);
+            Button.SetActive(false);
         }
         else
         {
