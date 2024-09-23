@@ -55,7 +55,7 @@ public class PlaceNode : MonoBehaviourPunCallbacks
     public int currentNodeID = 0;
     public float[,] irregularNoiseMap;
     System.Random prng;
-    private bool isSpawn;
+    private bool isSpawn = true;
 
     public void PlaceDirtNodes(float[,] noiseMap , System.Random prng)
     {
@@ -141,25 +141,29 @@ public class PlaceNode : MonoBehaviourPunCallbacks
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    float heightY = hit.point.y;
-                    if (heightY > HeightMin && heightY <= HeightMax
-                        && noiseMap[noisex + x, noisey + y] > NoiseLimit
-                        )
+                    if(!hit.collider.tag.Equals("RPoi"))
                     {
-                        position = new Vector3(Clumpx + x, heightY, Clumpy + y);
-                        // 새로운 노드 생성
-                        GameObject newNode = Instantiate(prefabToPlace, this.transform);
-                        newNode.transform.position = position;
+                        float heightY = hit.point.y;
+                        if (heightY > HeightMin && heightY <= HeightMax
+                            && noiseMap[noisex + x, noisey + y] > NoiseLimit
+                            )
+                        {
+                            position = new Vector3(Clumpx + x, heightY, Clumpy + y);
+                            // 새로운 노드 생성
+                            GameObject newNode = Instantiate(prefabToPlace, this.transform);
+                            newNode.transform.position = position;
 
-                        // 고유한 nodeID 할당
-                        newNode.GetComponent<NodeController>().nodeID = currentNodeID;
-                        nodes[currentNodeID] = newNode;
-                        currentNodeID++; // nodeID 카운터 증가
+                            // 고유한 nodeID 할당
+                            newNode.GetComponent<NodeController>().nodeID = currentNodeID;
+                            nodes[currentNodeID] = newNode;
+                            currentNodeID++; // nodeID 카운터 증가
 
-                        newNode.GetComponent<Animator>().enabled = false;
-                        //newNode.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-                        //newNode.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                            newNode.GetComponent<Animator>().enabled = false;
+                            //newNode.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                            newNode.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                        }
                     }
+                  
                 }
             }
         }
@@ -171,7 +175,6 @@ public class PlaceNode : MonoBehaviourPunCallbacks
         
         if (!isSpawn)
         {
-            Debug.LogError("노드 생성");
             PlaceDirtNodes(irregularNoiseMap, prng);
             isSpawn = true;
         }
@@ -234,7 +237,6 @@ public class PlaceNode : MonoBehaviourPunCallbacks
     {
         if(isSpawn)
         {
-            Debug.LogError("노드 삭제중");
             photonView.RPC("RPC_All_DestroyNode", RpcTarget.AllBuffered);
             isSpawn = false;
         }
