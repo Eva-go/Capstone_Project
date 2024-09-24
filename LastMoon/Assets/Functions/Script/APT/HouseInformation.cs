@@ -10,7 +10,8 @@ public class HouseInformation : MonoBehaviourPun
     public Material GreenMaterial;
     public Material RedMaterial;
     public int index = -1;
-
+    public Animator ani;
+    public bool isAni;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,8 +47,13 @@ public class HouseInformation : MonoBehaviourPun
     {
         if (GameValue.TideCycle > 5)
         {
-            gameObject.transform.GetChild(1).gameObject.SetActive(false);
-            gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            //gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            //gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            if (!isAni)
+            {
+                ani.SetTrigger("Distory");
+                isAni = true;
+            }
         }
         if (index==PlayerID&&!HouseKey)
         {
@@ -85,5 +91,11 @@ public class HouseInformation : MonoBehaviourPun
                 }
             }
         }
+    }
+
+    public void Distory_House()
+    {
+       gameObject.transform.GetChild(1).gameObject.SetActive(false);
+       gameObject.transform.GetChild(2).gameObject.SetActive(true);
     }
 }
