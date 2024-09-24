@@ -53,9 +53,12 @@ public class PlaceNode : MonoBehaviourPunCallbacks
     public NoiseData noiseData;
     public GameObject[] nodes;
     public int currentNodeID = 0;
-    void PlaceDirtNodes(float[,] noiseMap)
+    public float[,] irregularNoiseMap;
+    System.Random prng;
+    private bool isSpawn = true;
+
+    public void PlaceDirtNodes(float[,] noiseMap , System.Random prng)
     {
-        System.Random prng = new System.Random(seed); // Initialize random number generator with the same seed
 
         bool IsSand = false;
 
@@ -138,39 +141,54 @@ public class PlaceNode : MonoBehaviourPunCallbacks
                 RaycastHit hit;
                 if (Physics.Raycast(position, Vector3.down, out hit, Mathf.Infinity))
                 {
-                    float heightY = hit.point.y;
-                    if (heightY > HeightMin && heightY <= HeightMax
-                        && noiseMap[noisex + x, noisey + y] > NoiseLimit
-                        )
+                    if(!hit.collider.tag.Equals("RPoi"))
                     {
-                        position = new Vector3(Clumpx + x, heightY, Clumpy + y);
-                        // 새로운 노드 생성
-                        GameObject newNode = Instantiate(prefabToPlace, this.transform);
-                        newNode.transform.position = position;
+                        float heightY = hit.point.y;
+                        if (heightY > HeightMin && heightY <= HeightMax
+                            && noiseMap[noisex + x, noisey + y] > NoiseLimit
+                            )
+                        {
+                            position = new Vector3(Clumpx + x, heightY, Clumpy + y);
+                            // 새로운 노드 생성
+                            GameObject newNode = Instantiate(prefabToPlace, this.transform);
+                            newNode.transform.position = position;
 
-                        // 고유한 nodeID 할당
-                        newNode.GetComponent<NodeController>().nodeID = currentNodeID;
-                        nodes[currentNodeID] = newNode;
-                        currentNodeID++; // nodeID 카운터 증가
+                            // 고유한 nodeID 할당
+                            newNode.GetComponent<NodeController>().nodeID = currentNodeID;
+                            nodes[currentNodeID] = newNode;
+                            currentNodeID++; // nodeID 카운터 증가
 
-                        newNode.GetComponent<Animator>().enabled = false;
-                        //newNode.gameObject.transform.GetChild(0).gameObject.SetActive(false);
-                        //newNode.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                            newNode.GetComponent<Animator>().enabled = false;
+                            //newNode.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                            newNode.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                        }
                     }
+                  
                 }
             }
         }
     }
 
 
+    public void nodespawns()
+    {
+        
+        if (!isSpawn)
+        {
+            PlaceDirtNodes(irregularNoiseMap, prng);
+            isSpawn = true;
+        }
+       
+    }
 
     void Start()
     {
-        nodes= new GameObject[10000];
+        nodes = new GameObject[10000];
         if (nodePrefabs.Length > 0)
         {
-            float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
-            PlaceDirtNodes(irregularNoiseMap);
+            prng = new System.Random(seed); // Initialize random number generator with the same seed
+            irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
+            PlaceDirtNodes(irregularNoiseMap, prng);
         }
         else
         {
@@ -215,6 +233,25 @@ public class PlaceNode : MonoBehaviourPunCallbacks
         photonView.RPC("RPC_DestroyNode", RpcTarget.AllBuffered, id);
     }
 
+    public void All_node_Destory()
+    {
+        if(isSpawn)
+        {
+            photonView.RPC("RPC_All_DestroyNode", RpcTarget.AllBuffered);
+            isSpawn = false;
+        }
+       
+    }
+
+
+    [PunRPC]
+    void RPC_All_DestroyNode()
+    {
+        for(int i=0; i<nodes.Length;i++)
+        {
+            Destroy(nodes[i]);
+        }
+    }
 
     [PunRPC]
     void SyncHealth(float health,int id)

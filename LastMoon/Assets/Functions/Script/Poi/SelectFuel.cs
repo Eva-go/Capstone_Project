@@ -22,7 +22,11 @@ public class SelectFuel : MonoBehaviour
 
         if (poiController.Inv_Fuel.ItemType != SelectableFuel)
         {
-            playerController.PlayerInventory.AddItem(poiController.Inv_Fuel);
+            playerController.PlayerInventory.AddItem(new Item
+            {
+                ItemType = poiController.Inv_Fuel.ItemType,
+                Count = poiController.Inv_Fuel.Count
+            });
             poiController.EmptyItem(0, 2);
         }
 

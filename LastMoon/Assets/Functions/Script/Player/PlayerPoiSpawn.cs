@@ -160,7 +160,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                 );
 
                 // Instantiate the object using Photon Network for actual objects
-                GameObject station = PhotonNetwork.Instantiate(SpawnPoi[_slotNumber].name, roundedPosition, previewObjectInstance.transform.rotation);
+                GameObject station =Instantiate(SpawnPoi[_slotNumber], roundedPosition, previewObjectInstance.transform.rotation);
 
                 StationMatController stationMatController = station.GetComponent<StationMatController>();
 
@@ -186,7 +186,11 @@ public class PlayerPoiSpawn : MonoBehaviour
 
                 foreach (Item item in playerController.ConstInventory.GetItems())
                 {
-                    if (stationMatController != null) stationMatController.StationConstInv.AddItem(item);
+                    if (stationMatController != null) 
+                        stationMatController.StationConstInv.AddItem(new Item {
+                            ItemType = item.ItemType,
+                            Count = item.Count,
+                        });
                     playerController.PlayerInventory.RemoveItem(item);
                 }
                 playerController.ConstInventory.ClearInventory();
@@ -380,7 +384,7 @@ public class PlayerPoiSpawn : MonoBehaviour
         isPreViewActivated = true; // Activate preview
         isColliding = false; // Reset collision status
         canvasController.SetPoi = false;
-        canvasController.Poi.SetActive(canvasController.SetPoi);
+        canvasController.Poilist.SetActive(canvasController.SetPoi);
         Cursor.lockState = CursorLockMode.Locked;
     }
 

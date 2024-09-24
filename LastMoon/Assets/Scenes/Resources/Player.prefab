@@ -823,7 +823,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 200
+  far clip plane: 1000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -1720,7 +1720,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   Poi_BT:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1752,6 +1754,7 @@ MonoBehaviour:
   - {fileID: 5371151852980298888, guid: 206d7b15c40d2db428c8d93ccdd92dd0, type: 3}
   - {fileID: 3079423493778808962, guid: afe729128ae93674398fec5c714e91f4, type: 3}
   - {fileID: 366367957362793796, guid: 945ebfa6b0be2fb44a5216aba940fbc3, type: 3}
+  - {fileID: 366367957362793796, guid: 14abb09cd35b63346893ee8832012d18, type: 3}
   PreviewPoi_red:
   - {fileID: 4602713722304676980, guid: 74b51c08a73e6a24b97342c33c567c42, type: 3}
   - {fileID: 6168536886686802060, guid: 339dda61583ba2041b28b977f0594784, type: 3}
@@ -1763,8 +1766,9 @@ MonoBehaviour:
   - {fileID: 5371151852980298888, guid: ff816bff0bc08874aac068a22d739325, type: 3}
   - {fileID: 5371151852980298888, guid: 7e240388458704e438c38a456ce41425, type: 3}
   - {fileID: 5371151852980298888, guid: f14f978f1f2381341beb438158230e25, type: 3}
-  - {fileID: 7058263592653485094, guid: 3eddab1b6a2a2d141b6acace7849a8d5, type: 3}
+  - {fileID: 7058263592653485094, guid: 149ab4d860507214692cd3cadaf3f042, type: 3}
   - {fileID: 366367957362793796, guid: b6e8001fc342d8a4a92ffb761c84528e, type: 3}
+  - {fileID: 366367957362793796, guid: 61c453d3577632447889d3ebde39449a, type: 3}
   SpawnPoi:
   - {fileID: 4602713722304676980, guid: a4e93a2ac38c7dd4b9a595842e46ba63, type: 3}
   - {fileID: 6168536886686802060, guid: e4d5ad35d50095844af75ebbe6e21d76, type: 3}
@@ -1778,6 +1782,7 @@ MonoBehaviour:
   - {fileID: 1478360869261646978, guid: d326b442e7a459040824b92ac5ff4e0c, type: 3}
   - {fileID: 3079423493778808962, guid: 2bb68449aa1a9cb41ad3217de786d5b9, type: 3}
   - {fileID: 366367957362793796, guid: a60e9eae64ede5d4585237ec19d1c350, type: 3}
+  - {fileID: 366367957362793796, guid: 9700907f272cb9247bf19a15d8bf4eb5, type: 3}
   MaxHealth: 10
   ProcessEfficiency: 1
   TempertureLimit: 100
@@ -1794,6 +1799,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a0de4ffabd74be04bbcc3acc0aeafe91, type: 2}
   - {fileID: 11400000, guid: 7c12142298ada6d44ac2721eab23851b, type: 2}
   - {fileID: 11400000, guid: 92577f3228f6e6141ad48a0d0e8b62cf, type: 2}
+  - {fileID: 11400000, guid: 25fe18761d9fb6442a0c10bd5cedb6dd, type: 2}
   SelectedStation: {fileID: 0}
   StationMaterial:
   - {fileID: 0}
@@ -2635,6 +2641,8 @@ MonoBehaviour:
   waveStrength: 0
   normalizedTime: 0
   normalizedTidalChange: 0
+  PlaceNodeObject: {fileID: 0}
+  placeNode: {fileID: 0}
 --- !u!82 &3467233979378440662
 AudioSource:
   m_ObjectHideFlags: 0

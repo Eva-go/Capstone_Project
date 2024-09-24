@@ -21,6 +21,7 @@ public class StationMatController : MonoBehaviour
     public int ConstructionProgress;
     public int Health = 30;
     public int Heal_Cooldown = 0;
+    public bool Constructed = false;
 
     //--- 건축 재질 메테리얼 오브젝트-------------------
 
@@ -87,7 +88,9 @@ public class StationMatController : MonoBehaviour
                 {
                     if (ConstructionProgress < 100)
                     {
-                        if (StationType == 0 && stationController.Constructed) stationController.Constructed = false;
+                        if (Constructed) Constructed = false;
+                        if (StationType == 0 && stationController.Constructed)
+                            stationController.Constructed = false;
                         if (StationConstructionMesh != null) ConstructionAnimation();
                     }
                     else
@@ -103,12 +106,16 @@ public class StationMatController : MonoBehaviour
                             StationConstructionParts.SetActive(true);
                             StationConstructionMesh.SetActive(false);
                         }
-                        if (StationType == 0 && !stationController.Constructed) stationController.Constructed = true;
+                        if (!Constructed) Constructed = true;
+                        if (StationType == 0 && !stationController.Constructed)
+                            stationController.Constructed = true;
                     }
                 }
                 else
                 {
-                    if (StationType == 0 && stationController.Constructed) stationController.Constructed = false;
+                    if (Constructed) Constructed = false;
+                    if (StationType == 0 && stationController.Constructed)
+                        stationController.Constructed = false;
                     DestroyAnimation();
                     if (ConstructionProgress < 0)
                     {

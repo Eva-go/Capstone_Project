@@ -4862,8 +4862,6 @@ GameObject:
   - component: {fileID: 1666849040754533448}
   - component: {fileID: -7799797810209526418}
   - component: {fileID: 4534618501873039657}
-  - component: {fileID: 6562338014563016698}
-  - component: {fileID: 8978934352491796153}
   - component: {fileID: 6955859011504677635}
   - component: {fileID: 916523140136961023}
   m_Layer: 0
@@ -5027,7 +5025,7 @@ MonoBehaviour:
   - {fileID: 5354470450301605954}
   - {fileID: 1691466887537658121}
   - {fileID: 7951411166848517712}
-  PipeRayRadius: 1
+  PipeRayRadius: 0.1
 --- !u!114 &4534618501873039657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5047,6 +5045,7 @@ MonoBehaviour:
   ConstructionProgress: 0
   Health: 30
   Heal_Cooldown: 0
+  Constructed: 0
   Obj_Bases:
   - {fileID: 6899375817951067344}
   - {fileID: 3202023502654612790}
@@ -5084,53 +5083,6 @@ MonoBehaviour:
   Obj_Slot_Coolent: []
   Obj_Slot_Temperture: []
   Obj_Additional: 
---- !u!114 &6562338014563016698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5371151852980298888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 8978934352491796153}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!114 &8978934352491796153
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5371151852980298888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 4
-    SynchronizeType: 0
-    Name: isActvie
-  - Type: 9
-    SynchronizeType: 0
-    Name: isHit
-  m_SynchronizeLayers:
-  - SynchronizeType: 1
-    LayerIndex: 0
 --- !u!82 &6955859011504677635
 AudioSource:
   m_ObjectHideFlags: 0

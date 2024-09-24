@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
+
+using UnityEngine.Playables;
+
 public class GameOver : MonoBehaviour
 {
     public GameObject Alive;
     public GameObject Die;
+    public GameObject Button;
     public bool Winner;
+    private bool Endmenu;
+
+    public PlayableDirector EndingTimeline;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,11 +23,17 @@ public class GameOver : MonoBehaviour
         Winner = GameValue.is_Winner;
         if(Winner)
         {
+            Endmenu = false;
+            EndingTimeline.Play();
             Die.SetActive(false);
-            Alive.SetActive(true);
+            Alive.SetActive(false);
+            Button.SetActive(false);
         }
         else
+        {
             Die.SetActive(true);
+            Button.SetActive(true);
+        }
         Cursor.lockState = CursorLockMode.Confined;
 
         GameValue.exit = false;
@@ -62,6 +76,22 @@ public class GameOver : MonoBehaviour
         GameValue.TideChange = false;
         GameValue.TideChangeProgress = 0;
 }
+
+    private void Update()
+    {
+        if (Winner && !Endmenu && Input.GetKeyDown(KeyCode.Escape))
+        {
+            EndingMenu();
+        }
+    }
+
+    public void EndingMenu()
+    {
+        Endmenu = true;
+        Alive.SetActive(true);
+        Button.SetActive(true);
+        EndingTimeline.Stop();
+    }
 
 
     public void Restart_BT()

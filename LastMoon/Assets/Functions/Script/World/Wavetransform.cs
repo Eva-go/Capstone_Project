@@ -27,11 +27,13 @@ public class Wavetransform : MonoBehaviour
     private float Lunascale = 12.5f;
     private float LunaYPos = 0.375f;
 
-
+    //노드 스폰관련 변수
+    public GameObject PlaceNodeObject;
+    public PlaceNode placeNode;
     void Start()
     {
         //downwave = 17.5f / (GameValue.MaxRound - 1);
-        downwave = 10.0f;
+        downwave = 5.0f;
         waveY = -22.5f;
 
         propertyBlock = new MaterialPropertyBlock();
@@ -42,11 +44,28 @@ public class Wavetransform : MonoBehaviour
             RenderSettings.skybox.SetFloat("_Moon_Scale", 12.5f);
         if (RenderSettings.skybox.HasProperty("_Moon_Position_Y"))
             RenderSettings.skybox.SetFloat("_Moon_Position_Y", 0.375f);
+
+        //노드 리스폰
+        PlaceNodeObject = GameObject.Find("PlaceNode");
+
+        // 만약 오브젝트를 찾지 못했다면 오류 메시지를 출력
+        if (PlaceNodeObject == null)
+        {
+            Debug.LogError("PlaceNode 씬에서 찾을 수 없습니다.");
+        }
+        else
+        {
+            // PlaceNodeObject 안에 있는 PlaceNode 컴포넌트 가져오기
+            placeNode = PlaceNodeObject.GetComponent<PlaceNode>();
+        }
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (LowTide != GameValue.LowTide)
         {
             //waveY = -22.5f + ((GameValue.TideCycle) * downwave);
@@ -72,39 +91,38 @@ public class Wavetransform : MonoBehaviour
 
         if (GameValue.TideChange)
         {
-
             if (LowTide)
             {
                 SeaLevel = Mathf.Lerp(0.0f, -(float)GameValue.TideCycle - 2.0f, normalizedTidalChange);
                 waveStrength = Mathf.Lerp((float)GameValue.TideCycle, (float)GameValue.TideCycle - 1.0f, normalizedTidalChange);
                 Tidelevel = -0.75f;
+                placeNode.nodespawns();
             }
             else
             {
                 SeaLevel = Mathf.Lerp(0.0f, (float)GameValue.TideCycle / 2.0f + 1.0f, normalizedTidalChange);
                 waveStrength = Mathf.Lerp(1.0f + (float)GameValue.TideCycle, (float)GameValue.TideCycle - 1.0f, normalizedTidalChange);
                 Tidelevel = 0.0f;
+               
             }
         }
         else
         {
             if (LowTide)
             {
-                SeaLevel = Mathf.Lerp(-(float)GameValue.TideCycle - 1.0f, 0.0f, normalizedTime);
+                SeaLevel = Mathf.Lerp(-(float)GameValue.TideCycle - 2.0f, 0.0f, normalizedTime);
                 Tidelevel = Mathf.Lerp(-0.75f, 0.0f, normalizedTime);
             }
             else
             {
                 SeaLevel = Mathf.Lerp((float)GameValue.TideCycle / 2.0f + 1.0f, 0.0f, normalizedTime);
                 Tidelevel = Mathf.Lerp(0.0f, 0.75f, normalizedTime);
+                 placeNode.All_node_Destory();
             }
-
             waveStrength = Mathf.Lerp((float)GameValue.TideCycle - 1.0f, 1.0f + (float)GameValue.TideCycle, normalizedTime);
         }
 
-
-
-        waveY = (SeaLevel * downwave) - 2.5f;
+        waveY = (SeaLevel * downwave) - 10f;
 
         Vector3 currentPosition = gameObject.transform.position;
         currentPosition.y = waveY;
@@ -122,6 +140,8 @@ public class Wavetransform : MonoBehaviour
 
         if (RenderSettings.skybox.HasProperty("_Strength"))
             RenderSettings.skybox.SetFloat("_Strength", waveStrength);
+        if (RenderSettings.skybox.HasProperty("_Wave_Height"))
+            RenderSettings.skybox.SetFloat("_Wave_Height", waveY);
         if (RenderSettings.skybox.HasProperty("_Moon_Position_X"))
             RenderSettings.skybox.SetFloat("_Moon_Position_X", Tidelevel);
     }

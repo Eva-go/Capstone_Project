@@ -125,7 +125,7 @@ public class PlayerController : MonoBehaviour
     public Transform AptTransform;
 
     //아파트 진입변수
-    public int inside;
+    public bool inside;
     public bool keydowns;
     public PlayerAPTPlaneSpawn PlayerAPT;
 
@@ -210,7 +210,7 @@ public class PlayerController : MonoBehaviour
             CanvasController.Instance.RegisterPlayerController(this);
             oldTransform = gameObject.transform;
             AptTransform = gameObject.transform;
-            inside = 0;
+            inside = false;
             keydowns = false;
             PoiPopUp = false;
             ShopActive = false;
@@ -586,7 +586,7 @@ public class PlayerController : MonoBehaviour
             {
                 float movespeed = myRigid.velocity.magnitude;
                 animator.SetFloat("MoveAniModifire", movespeed / walkSpeed);
-                if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
+                if (isGrounded && movespeed > 1 && !GhostRespawn) sfx_PlayerWalk.mute = false;
                 else sfx_PlayerWalk.mute = true;
 
                 animator.SetBool("isMove", true);
@@ -844,6 +844,7 @@ public class PlayerController : MonoBehaviour
                             insideActive = false;
                             myRigid.position = PlayerAPT.playerPoint;
                             InsideFillHandler.fillValue = 0;
+                            inside = true;
                         }
                     }
                     break;
@@ -881,13 +882,14 @@ public class PlayerController : MonoBehaviour
                             EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
                             if (InsideFillHandler.fillValue >= 100)
                             {
+                                inside = true;
                                 aptInfo.APT_use = true;
                                 keydowns = false;
                                 insideActive = false;
                                 myRigid.position = PlayerAPT.playerPoint;
                                 HouseKey = aptInfo.BuildingType + 2;
                                 aptInfo.Use_player(this);
-                                if(aptInfo.BuildingType==2)
+                                if (aptInfo.BuildingType == 2)
                                 {
                                     GameValue.is_Winner = true;
                                 }
@@ -921,6 +923,7 @@ public class PlayerController : MonoBehaviour
                         EnterDoor(hitInfo.collider.transform); // 문 위치를 저장
                         if (InsideFillHandler.fillValue >= 100)
                         {
+                            inside = true;
                             aptInfo.APT_use = true;
                             
                             keydowns = false;
@@ -945,6 +948,7 @@ public class PlayerController : MonoBehaviour
                         myRigid.position=doorPositions[lastDoorEntered];
                         InsideFillHandler.fillValue = 0;
                         insideActive = false;
+                        inside = false;
                     }
                     else if (lastDoorEntered == null && InsideFillHandler.fillValue >= 100)
                     {
@@ -1023,21 +1027,22 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && Physics.Raycast(ray, out hitInfo, 5) && hitInfo.collider.tag == "Poi")
         {
-            PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
-            if (targetPv != null)
+            PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
+            if (poiController != null)
             {
-                PoiController poiController = hitInfo.collider.GetComponent<PoiController>();
-                if (poiController != null)
-                {
-                    PoiPopUp = true;
-                    //poiController.Ountput_stop = Extract;
-                    UISelectedPOIController = poiController;
-                    //stationinteration
-                    //targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
+                PoiPopUp = true;
+                //poiController.Ountput_stop = Extract;
+                UISelectedPOIController = poiController;
+                //stationinteration
+                //targetPv.RPC("ReceiveData", RpcTarget.AllBuffered);
 
-                    StationActive = true;
-                }
+                StationActive = true;
             }
+            //PhotonView targetPv = hitInfo.collider.GetComponent<PhotonView>();
+            //if (targetPv != null)
+            //{
+            //  
+            //}
         }
     }
 
@@ -1123,7 +1128,7 @@ public class PlayerController : MonoBehaviour
                             if (poiController != null) ExtractStation(poiController, 0);
                             foreach (Item item in stationMatController.StationConstInv.GetItems())
                             {
-                                PlayerInventory.AddItem(item);
+                                PlayerInventory.AddItem(new Item { ItemType = item.ItemType, Count = item.Count });
                             }
                         }
                         stationMatController.Health -= 10;
@@ -1345,19 +1350,28 @@ public class PlayerController : MonoBehaviour
             case 0:
                 if (Station.Inv_Fuel != null)
                 {
-                    PlayerInventory.AddItem(Station.Inv_Fuel);
+                    PlayerInventory.AddItem(new Item { 
+                        ItemType = Station.Inv_Fuel.ItemType, 
+                        Count = Station.Inv_Fuel.Count 
+                    });
                     Station.EmptyItem(0, 2);
                 }
                 if (Station.Inv_Coolent != null)
                 {
-                    PlayerInventory.AddItem(Station.Inv_Coolent);
+                    PlayerInventory.AddItem(new Item { 
+                        ItemType = Station.Inv_Coolent.ItemType,
+                        Count = Station.Inv_Coolent.Count 
+                    });
                     Station.EmptyItem(0, 3);
                 }
                 for (int i = 0; i < Station.SelectedRecipe.InputCount; i++)
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(Station.Inv_Input[i]);
+                        PlayerInventory.AddItem(new Item { 
+                            ItemType = Station.Inv_Input[i].ItemType,
+                            Count = Station.Inv_Input[i].Count 
+                        });
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1365,7 +1379,10 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(Station.Inv_Output[i]);
+                        PlayerInventory.AddItem(new Item {
+                            ItemType = Station.Inv_Output[i].ItemType,
+                            Count = Station.Inv_Output[i].Count 
+                        });
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1375,7 +1392,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(Station.Inv_Input[i]);
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Input[i].ItemType,
+                            Count = Station.Inv_Input[i].Count
+                        });
                         Station.EmptyItem(i, 0);
                     }
                 }
@@ -1383,7 +1404,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(Station.Inv_Output[i]);
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Output[i].ItemType,
+                            Count = Station.Inv_Output[i].Count
+                        });
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1393,7 +1418,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Output[i] != null)
                     {
-                        PlayerInventory.AddItem(Station.Inv_Output[i]);
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Output[i].ItemType,
+                            Count = Station.Inv_Output[i].Count
+                        });
                         Station.EmptyItem(i, 1);
                     }
                 }
@@ -1403,7 +1432,11 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Station.Inv_Input[i] != null)
                     {
-                        PlayerInventory.AddItem(Station.Inv_Input[i]);
+                        PlayerInventory.AddItem(new Item
+                        {
+                            ItemType = Station.Inv_Input[i].ItemType,
+                            Count = Station.Inv_Input[i].Count
+                        });
                         Station.EmptyItem(i, 0);
                     }
                 }

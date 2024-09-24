@@ -4841,7 +4841,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9042797060746542641}
   - component: {fileID: 1746934998669767087}
-  - component: {fileID: 3839838288343453801}
   - component: {fileID: -39759107125045684}
   m_Layer: 0
   m_Name: Pipe_Tri
@@ -4888,28 +4887,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &3839838288343453801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6583875056677868264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &-39759107125045684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4929,6 +4906,7 @@ MonoBehaviour:
   ConstructionProgress: 0
   Health: 30
   Heal_Cooldown: 0
+  Constructed: 0
   Obj_Bases:
   - {fileID: 6880756741871751053}
   Obj_Auxes:
@@ -4939,6 +4917,8 @@ MonoBehaviour:
   Obj_Cons:
   - Count:
     - {fileID: 474892849088164710}
+  Obj_AuxFix: []
+  Obj_AuxLUT: []
   StationBaseMat: {fileID: 11400000, guid: a16138b70446d0042b4e9f9c1fb4d4a4, type: 2}
   StationAuxMat: {fileID: 11400000, guid: 4bb8dc633abd7b04997ec2979cb0b740, type: 2}
   StationFixMat: {fileID: 11400000, guid: 080f7d3f5f0997d419d447f4dfd36f19, type: 2}
@@ -4948,6 +4928,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
   - {fileID: 11400000, guid: 91de7b1a49b3e5447b875c293d19e1f5, type: 2}
+  Obj_Slot_Input: []
+  Obj_Slot_Output: []
+  Obj_SlotType: 
+  Obj_Slot_Fuel: []
+  Obj_Slot_FuelWick: []
+  Obj_Slot_Coolent: []
+  Obj_Slot_Temperture: []
+  Obj_Additional: 
 --- !u!1001 &4048331046109626270
 PrefabInstance:
   m_ObjectHideFlags: 0
