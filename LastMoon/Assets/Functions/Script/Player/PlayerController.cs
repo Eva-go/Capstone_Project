@@ -223,6 +223,7 @@ public class PlayerController : MonoBehaviour
             GameValue.Pickaxe = 0;
             GameValue.Shovel = 0;
 
+
             StationActive = false;
 
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
@@ -232,7 +233,16 @@ public class PlayerController : MonoBehaviour
             }
             PlayerInventory.AddItem(new Item { ItemType = MoonRock, Count = 1 });
 
-            Hp = 100;
+            if (GameValue.IsFirstGame) // 게임 처음 시작일 때
+            {
+                Hp = 102;
+                GameValue.IsFirstGame = false; // 다음부터는 처음 시작이 아님을 표시
+            }
+            else
+            {
+                Hp = 100; // 그 외에는 100
+            }
+
         }
 
         nickName = this.gameObject.name;

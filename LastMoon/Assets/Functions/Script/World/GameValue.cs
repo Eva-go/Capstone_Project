@@ -69,6 +69,8 @@ public class GameValue : MonoBehaviourPunCallbacks
 
     public bool fpsView = false;
 
+    public static bool IsFirstGame = true;
+
     private void Awake()
     {
         exit = false;
