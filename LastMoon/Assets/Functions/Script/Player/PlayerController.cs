@@ -581,6 +581,8 @@ public class PlayerController : MonoBehaviour
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
+                //myCollider.material.dynamicFriction = 0;
+
                 float movespeed = myRigid.velocity.magnitude;
                 animator.SetFloat("MoveAniModifire", movespeed / walkSpeed);
                 if (isGrounded && movespeed > 1 && !GhostRespawn) sfx_PlayerWalk.mute = false;
@@ -608,6 +610,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                //myCollider.material.dynamicFriction = 1;
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isMove", false);
                 Localanimator.SetBool("isMove", false);
@@ -625,7 +628,7 @@ public class PlayerController : MonoBehaviour
         {
             myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded))
         {
             if (!sfx_PlayerJump.isPlaying)
             {
@@ -670,6 +673,7 @@ public class PlayerController : MonoBehaviour
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
             {
+                //myCollider.material.dynamicFriction = 0;
                 float movespeed = myRigid.velocity.magnitude;
                 animator.SetFloat("MoveAniModifire", movespeed / runSpeed);
                 if (isGrounded && movespeed > 1) sfx_PlayerWalk.mute = false;
@@ -695,6 +699,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                //myCollider.material.dynamicFriction = 1;
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isRuns", false);
                 Localanimator.SetBool("isMove", false);
@@ -712,6 +717,7 @@ public class PlayerController : MonoBehaviour
 
         if (isCrouching && !isRunning)
         {
+            //myCollider.material.dynamicFriction = 0;
             float moveDirX = Input.GetAxisRaw("Horizontal");
             float moveDirZ = Input.GetAxisRaw("Vertical");
             if (moveDirX != 0 || moveDirZ != 0)
@@ -742,6 +748,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                //myCollider.material.dynamicFriction = 1;
                 sfx_PlayerWalk.mute = true;
                 animator.SetBool("isCrouchWalk", false);
                 Localanimator.SetBool("isMove", false);
@@ -764,34 +771,45 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        isGrounded = true;
+        myRigid.drag = 5;
+        animator.SetBool("isGrounded", true);
+        Jumpforgived = false;
+        isWallCliming = true;
+        if (collision.collider.name == myCollider.name)
+        {
+        }
+        /*
         if (collision.gameObject.tag == "PLANE")
         {
-            isGrounded = true;
-            myRigid.drag = 5;
-            animator.SetBool("isGrounded", true);
-            Jumpforgived = false;
-            isWallCliming = true;
         }
+        */
     }
 
     private void OnCollisionExit(Collision collision)
     {
+        if (Jumpforgived)
+        {
+            isGrounded = false;
+            myRigid.drag = 1;
+            animator.SetBool("isGrounded", false);
+            Jumpforgived = false;
+        }
+        else
+        {
+            Jumpforgived = true;
+            JumpforgivenessTime = Time.time;
+        }
+        isWallCliming = false;
+        if (collision.collider.name == myCollider.name)
+        {
+        }
+        /*
         if (collision.gameObject.tag == "PLANE")
         {
-            if (Jumpforgived)
-            {
-                isGrounded = false;
-                myRigid.drag = 1;
-                animator.SetBool("isGrounded", false);
-                Jumpforgived = false;
-            }
-            else
-            {
-                Jumpforgived = true;
-                JumpforgivenessTime = Time.time;
-            }
-            isWallCliming = false;
+            
         }
+         */
     }
 
     private void CameraRotation()
