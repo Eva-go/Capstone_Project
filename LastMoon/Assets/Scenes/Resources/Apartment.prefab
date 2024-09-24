@@ -607,8 +607,10 @@ GameObject:
   m_Component:
   - component: {fileID: 9179460519079654788}
   - component: {fileID: 3533611983358922189}
+  - component: {fileID: 9223084667292167704}
   - component: {fileID: 5684124324294289649}
   - component: {fileID: 1989653528262040205}
+  - component: {fileID: -7159038642463113045}
   m_Layer: 0
   m_Name: Apartment
   m_TagString: APT
@@ -657,6 +659,28 @@ MonoBehaviour:
   Key1: {fileID: 11400000, guid: 6193c19b58e94ba419a7aea3fd0a7855, type: 2}
   Key2: {fileID: 11400000, guid: 108ac1c0a5487ff4ea8903644788581e, type: 2}
   Key3: {fileID: 11400000, guid: c435b3679c1267e40855794536b8479c, type: 2}
+  ani: {fileID: 9223084667292167704}
+--- !u!95 &9223084667292167704
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9068786420175799258}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 8d354dcab338d3640bd1cf417367bb16, type: 3}
+  m_Controller: {fileID: 9100000, guid: 8147e58f20687f64c9abe9c854fe7d21, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &5684124324294289649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,6 +701,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 1989653528262040205}
+  - {fileID: -7159038642463113045}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -696,6 +721,27 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &-7159038642463113045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9068786420175799258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: Distory
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1001 &4401028181743278988
 PrefabInstance:
   m_ObjectHideFlags: 0

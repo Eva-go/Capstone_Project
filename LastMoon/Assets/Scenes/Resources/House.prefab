@@ -65,7 +65,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2828208952086390117}
   - component: {fileID: 6388047238977890894}
+  - component: {fileID: 827724598670420738}
   - component: {fileID: 8558619068953319941}
+  - component: {fileID: 2146124669325273017}
   m_Layer: 0
   m_Name: House
   m_TagString: PLANE
@@ -106,6 +108,28 @@ MonoBehaviour:
   GreenMaterial: {fileID: 2100000, guid: 7656a28155dde7a4ea4366f0fc921005, type: 2}
   RedMaterial: {fileID: 2100000, guid: 8210347902a34ef4b8334201d58ed9ee, type: 2}
   index: -1
+  ani: {fileID: 827724598670420738}
+--- !u!95 &827724598670420738
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875329524640882334}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 9f90ada51d01aa84385116fc12aadf0d, type: 3}
+  m_Controller: {fileID: 9100000, guid: 3de994fab2699df45822a7a43b7fe472, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8558619068953319941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,10 +148,32 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 2146124669325273017}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &2146124669325273017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875329524640882334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 0
+    Name: Distory
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &7893829690711527866
 GameObject:
   m_ObjectHideFlags: 0

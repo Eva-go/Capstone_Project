@@ -23,9 +23,13 @@ public class APTInformation : MonoBehaviourPun
     public ScriptableObject_Item Key2;
     public ScriptableObject_Item Key3;
 
+    public Animator ani;
+    public bool isAni;
+
     private bool isLoading = false;
     void Start()
     {
+        isAni = false;
         pv = GetComponent<PhotonView>();
         if (pv.IsMine)
         {
@@ -43,27 +47,37 @@ public class APTInformation : MonoBehaviourPun
     {
         if (GameValue.TideCycle > 11 && BuildingType == 0)
         {
-            gameObject.transform.GetChild(1).gameObject.SetActive(false);
-            gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            //gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            //gameObject.transform.GetChild(2).gameObject.SetActive(true);
             for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
             {
                 Icon = gameObject.transform.GetChild(0).GetChild(j).GetComponent<MeshRenderer>();
                 Icon.material = RedMaterial;
                 color = Color.Red;
             }
+            if(!isAni)
+            {
+                ani.SetTrigger("Distory");
+                isAni = true;
+            }
+           
         }
         else if (GameValue.TideCycle > 17 && BuildingType == 1)
         {
-            gameObject.transform.GetChild(1).gameObject.SetActive(false);
-            gameObject.transform.GetChild(2).gameObject.SetActive(true);
+            //gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            //gameObject.transform.GetChild(2).gameObject.SetActive(true);
             for (int j = 0; j < gameObject.transform.GetChild(0).childCount; j++)
             {
                 Icon = gameObject.transform.GetChild(0).GetChild(j).GetComponent<MeshRenderer>();
                 Icon.material = RedMaterial;
                 color = Color.Red;
             }
+            if (!isAni)
+            {
+                ani.SetTrigger("Distory");
+                isAni = true;
+            }
         }
-
     }
     public void Use_player(PlayerController player)
     {
@@ -176,5 +190,11 @@ public class APTInformation : MonoBehaviourPun
                 }
             }
         }
+    }
+
+    public void Distory_APT()
+    {
+        gameObject.transform.GetChild(1).gameObject.SetActive(false);
+        gameObject.transform.GetChild(2).gameObject.SetActive(true);
     }
 }

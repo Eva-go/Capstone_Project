@@ -117,7 +117,6 @@ public class Wavetransform : MonoBehaviour
             {
                 SeaLevel = Mathf.Lerp((float)GameValue.TideCycle / 2.0f + 1.0f, 0.0f, normalizedTime);
                 Tidelevel = Mathf.Lerp(0.0f, 0.75f, normalizedTime);
-                 placeNode.All_node_Destory();
             }
             waveStrength = Mathf.Lerp((float)GameValue.TideCycle - 1.0f, 1.0f + (float)GameValue.TideCycle, normalizedTime);
         }
