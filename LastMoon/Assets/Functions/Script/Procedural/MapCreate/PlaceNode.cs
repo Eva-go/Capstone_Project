@@ -172,13 +172,25 @@ public class PlaceNode : MonoBehaviourPunCallbacks
 
     public void nodespawns()
     {
-        
-        if (!isSpawn)
+        for(int i=0; i<nodes.Length;i++)
         {
-            PlaceDirtNodes(irregularNoiseMap, prng);
-            isSpawn = true;
+            if(nodes[i]!=null)
+            {
+                if (nodes[i].activeSelf == false)
+                {
+                    nodes[i].SetActive(true);
+                    nodes[i].GetComponent<NodeController>().nodeCount = 0;
+                    nodes[i].GetComponent<NodeController>().currentHealth = 30f;
+                    nodes[i].GetComponent<NodeController>().animator.SetTrigger("Hit");
+                    nodes[i].GetComponent<NodeController>().gameObject.GetComponent<BoxCollider>().enabled = true;
+                }
+                else
+                {
+
+                }
+            }
+           
         }
-       
     }
 
     void Start()
@@ -194,18 +206,6 @@ public class PlaceNode : MonoBehaviourPunCallbacks
         {
             Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
         }
-        //if (PhotonNetwork.IsMasterClient)
-        //{
-        //    if (nodePrefabs.Length > 0)
-        //    {
-        //        float[,] irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
-        //        PlaceDirtNodes(irregularNoiseMap);
-        //    }
-        //    else
-        //    {
-        //        Debug.LogWarning("Placement area collider or building prefabs not properly assigned!");
-        //    }
-        //}
     }
 
     public void Ani_Hit(int id)
@@ -233,26 +233,6 @@ public class PlaceNode : MonoBehaviourPunCallbacks
         photonView.RPC("RPC_DestroyNode", RpcTarget.AllBuffered, id);
     }
 
-    public void All_node_Destory()
-    {
-        if(isSpawn)
-        {
-            photonView.RPC("RPC_All_DestroyNode", RpcTarget.AllBuffered);
-            isSpawn = false;
-        }
-       
-    }
-
-
-    [PunRPC]
-    void RPC_All_DestroyNode()
-    {
-        for(int i=0; i<nodes.Length;i++)
-        {
-            Destroy(nodes[i]);
-        }
-    }
-
     [PunRPC]
     void SyncHealth(float health,int id)
     {
@@ -276,8 +256,7 @@ public class PlaceNode : MonoBehaviourPunCallbacks
     {
         if (id >= 0 && id < nodes.Length && nodes[id] != null)
         {
-            Destroy(nodes[id]);
-            nodes[id] = null; // 배열에서 참조를 제거
+            nodes[id].SetActive(false);
         }
     }
 
