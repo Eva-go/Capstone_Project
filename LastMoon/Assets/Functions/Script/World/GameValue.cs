@@ -97,10 +97,6 @@ public class GameValue : MonoBehaviourPunCallbacks
         {
             Destroy(gameObject);
         }
-        if(Input.GetKeyDown(KeyCode.ScrollLock))
-        {
-            fpsView = !fpsView;
-        }
     }
 
     public static void getPrice(int i,int nodeCount, int mixCount)

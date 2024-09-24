@@ -153,6 +153,10 @@ public class PlayerController : MonoBehaviour
     public GameObject PlaceRpoiObject;
     public PlaceNode placeRpoi;
 
+
+
+    //디버그 처리용
+    public bool DebugMode;
     private void Awake()
     {
         if (Instance == null)
@@ -223,7 +227,8 @@ public class PlayerController : MonoBehaviour
             GameValue.Pickaxe = 0;
             GameValue.Shovel = 0;
 
-
+            Godmode = true;
+            Invoke("ChangeVariable", 3.0f);
             StationActive = false;
 
             //PlayerInventory.ForceAddItems(new Item { ItemType = InitalItems[0], Count = 1 });
@@ -232,17 +237,6 @@ public class PlayerController : MonoBehaviour
                 PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
             }
             PlayerInventory.AddItem(new Item { ItemType = MoonRock, Count = 1 });
-
-            if (GameValue.IsFirstGame) // 게임 처음 시작일 때
-            {
-                Hp = 102;
-                GameValue.IsFirstGame = false; // 다음부터는 처음 시작이 아님을 표시
-            }
-            else
-            {
-                Hp = 100; // 그 외에는 100
-            }
-
         }
 
         nickName = this.gameObject.name;
@@ -258,7 +252,12 @@ public class PlayerController : MonoBehaviour
 
         Items();
         wavetransform = FindObjectOfType<Wavetransform>();
+        DebugMode = false;
+    }
 
+    void ChangeVariable()
+    {
+        Godmode = false;
     }
 
     void OnEnable()
@@ -342,46 +341,58 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.F2))
+            if(Input.GetKeyDown(KeyCode.Print))
             {
-                Hp = 100;
+                DebugMode = !DebugMode;
             }
-            if (Input.GetKeyDown(KeyCode.F3))
+
+            if(DebugMode)
             {
-                Godmode = !Godmode;
-            }
-            if (Input.GetKeyDown(KeyCode.F4))
-            {
-                Hp = -1;
-            }
-            if (Input.GetKeyDown(KeyCode.F5))
-            {
-                GameValue.GetMomey(1000);
-            }
-            if (Input.GetKeyDown(KeyCode.F6))
-            {
-                transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
-            }
-            if (Input.GetKeyDown(KeyCode.F7))
-            {
-                GameValue.Round = 0;
-            }
-            if (Input.GetKeyDown(KeyCode.F8))
-            {
-                IncreaseLocalPlayerItems();
-                for (int i = 0; i < InitalItems.Length; i++)
+                if (Input.GetKeyDown(KeyCode.F2))
                 {
-                    PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+                    Hp = 100;
                 }
-                for (int i = 0; i < DebugItems.Length; i++)
+                if (Input.GetKeyDown(KeyCode.F3))
                 {
-                    PlayerInventory.AddItem(new Item { ItemType = DebugItems[i], Count = 10 });
+                    Godmode = !Godmode;
                 }
-                PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
-            }
-            if (Input.GetKeyDown(KeyCode.F9))
-            {
-                Debug.Log("PlayerController" + PlayerInventory.GetItems());
+                if (Input.GetKeyDown(KeyCode.F4))
+                {
+                    Hp = -1;
+                }
+                if (Input.GetKeyDown(KeyCode.F5))
+                {
+                    GameValue.GetMomey(1000);
+                }
+                if (Input.GetKeyDown(KeyCode.F6))
+                {
+                    transform.position = new Vector3(transform.position.x, -5f, transform.position.z);
+                }
+                if (Input.GetKeyDown(KeyCode.F7))
+                {
+                    GameValue.Round = 0;
+                }
+                if (Input.GetKeyDown(KeyCode.F8))
+                {
+                    IncreaseLocalPlayerItems();
+                    for (int i = 0; i < InitalItems.Length; i++)
+                    {
+                        PlayerInventory.AddItem(new Item { ItemType = InitalItems[i], Count = 10 });
+                    }
+                    for (int i = 0; i < DebugItems.Length; i++)
+                    {
+                        PlayerInventory.AddItem(new Item { ItemType = DebugItems[i], Count = 10 });
+                    }
+                    PlayerInventory.AddItem(new Item { ItemType = Seawater, Count = 10 });
+                }
+                if (Input.GetKeyDown(KeyCode.F9))
+                {
+                    Debug.Log("PlayerController" + PlayerInventory.GetItems());
+                }
+                if (Input.GetKeyDown(KeyCode.F12))
+                {
+                    GameValue.TideCycle += 5;
+                }
             }
             if (Hp <= 0)
             {
@@ -395,10 +406,6 @@ public class PlayerController : MonoBehaviour
             if (GameValue.exit)
             {
                 Destroy(gameObject);
-            }
-            if(Input.GetKeyDown(KeyCode.F12))
-            {
-                GameValue.TideCycle += 5;
             }
         }
     }

@@ -5,11 +5,13 @@ using UnityEngine;
 public class FrameCounter : MonoBehaviour
 {
     private float deltaTime = 0f;
+    private bool view;
 
     [SerializeField] private int size = 25;
     [SerializeField] private Color color = Color.red;
 
-    public GameValue gameValue;
+
+
     private void Awake()
     {
         var obj = FindObjectsOfType<FrameCounter>();
@@ -21,16 +23,21 @@ public class FrameCounter : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        view = false;
     }
 
     void Update()
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
+        if (Input.GetKeyDown(KeyCode.ScrollLock))
+        {
+            view = !view;
+        }
     }
 
     private void OnGUI()
     {
-        if(gameValue.fpsView)
+        if (view)
         {
             GUIStyle style = new GUIStyle();
 
