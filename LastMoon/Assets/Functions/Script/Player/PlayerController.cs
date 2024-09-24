@@ -641,7 +641,7 @@ public class PlayerController : MonoBehaviour
         {
             myRigid.AddForce(Vector3.up * 5, ForceMode.Impulse);
         }
-        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded))
+        if (Input.GetKeyDown(KeyCode.Space) && (isGrounded || isWallCliming))
         {
             if (!sfx_PlayerJump.isPlaying)
             {
@@ -789,18 +789,12 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("isGrounded", true);
         Jumpforgived = false;
         isWallCliming = true;
-        if (collision.collider.name == myCollider.name)
-        {
-        }
-        /*
-        if (collision.gameObject.tag == "PLANE")
-        {
-        }
-        */
     }
 
     private void OnCollisionExit(Collision collision)
     {
+        if (collision.gameObject.tag == "PLANE")
+        {
         if (Jumpforgived)
         {
             isGrounded = false;
@@ -814,15 +808,7 @@ public class PlayerController : MonoBehaviour
             JumpforgivenessTime = Time.time;
         }
         isWallCliming = false;
-        if (collision.collider.name == myCollider.name)
-        {
         }
-        /*
-        if (collision.gameObject.tag == "PLANE")
-        {
-            
-        }
-         */
     }
 
     private void CameraRotation()

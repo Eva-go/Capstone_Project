@@ -791,6 +791,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             {
                 if (!StationUIOpened)
                 {
+                    PoiPopup.GetComponent<Transform>().GetChild(0).GetChild(2).GetChild(2).gameObject.SetActive(false);
                     RecipeSelect();
                     StationUIOpened = true;
                 }
