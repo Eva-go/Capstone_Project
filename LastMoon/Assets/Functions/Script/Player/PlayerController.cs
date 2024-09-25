@@ -341,7 +341,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if(Input.GetKeyDown(KeyCode.Print))
+            if(Input.GetKeyDown(KeyCode.ScrollLock))
             {
                 DebugMode = !DebugMode;
             }
@@ -483,8 +483,7 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        if (!pv.IsMine) return;
-        else if (!Ghost)
+        if (!Ghost)
         {
             if (!pv.IsMine) return;
             pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);

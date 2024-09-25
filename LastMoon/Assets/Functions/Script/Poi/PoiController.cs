@@ -454,7 +454,7 @@ public class PoiController : MonoBehaviour
             {
                 StationTemperture--;
             }
-            else
+            else if (HeatBuffer > 0 && Inv_Fuel.Count > 0)
             {
                 StationTemperture += Inv_Fuel.ItemType.Heating;
                 HeatBuffer--;
