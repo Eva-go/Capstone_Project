@@ -483,12 +483,15 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        if(!Ghost)
+        if (!pv.IsMine) return;
+        else if (!Ghost)
         {
             if (!pv.IsMine) return;
             pv.RPC("RPC_PlayerDied", RpcTarget.AllBuffered);
+
             if (pv.IsMine)
             {
+                
                 if (!Bagdrop)
                 {
                     Bagdrop = true;
@@ -528,14 +531,15 @@ public class PlayerController : MonoBehaviour
                     myRigid.position = PlayerAPT.playerPoint;
                     Bagdrop = false;
                 }
+                if (isRespawn && !live)
+                {
+                    if (!pv.IsMine) return;
+                    pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
+                    isRespawn = false;
+                    live = true;
+                }
             }
-            if (isRespawn && !live)
-            {
-                if (!pv.IsMine) return;
-                pv.RPC("RPC_Alive", RpcTarget.OthersBuffered);
-                isRespawn = false;
-                live = true;
-            }
+           
         }
        else if(Ghost)
        {
