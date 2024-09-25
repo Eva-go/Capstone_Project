@@ -341,7 +341,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if(Input.GetKeyDown(KeyCode.ScrollLock))
+            if(Input.GetKeyDown(KeyCode.ScrollLock) || Input.GetKeyDown(KeyCode.BackQuote))
             {
                 DebugMode = !DebugMode;
             }

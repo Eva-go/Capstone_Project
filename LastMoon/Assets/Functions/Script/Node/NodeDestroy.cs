@@ -37,6 +37,7 @@ public class NodeDestroy : MonoBehaviour
         {
             playerController = collision.gameObject.GetComponent<PlayerController>();
             playerController.PlayerInventory.AddItem(new Item { ItemType = Inv_Input.ItemType, Count = Inv_Input.Count });
+            playerController.InvokeInventoryChanged();
             Destroy(gameObject);
         }
         else if (collision.gameObject.tag == "Poi")

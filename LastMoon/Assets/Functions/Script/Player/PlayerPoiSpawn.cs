@@ -183,7 +183,6 @@ public class PlayerPoiSpawn : MonoBehaviour
                     stationController.ProcessEfficiency = ProcessEfficiency;
                     stationController.TempertureLimit = TempertureLimit;
                 }
-
                 foreach (Item item in playerController.ConstInventory.GetItems())
                 {
                     if (stationMatController != null) 
@@ -193,7 +192,7 @@ public class PlayerPoiSpawn : MonoBehaviour
                         });
                     playerController.PlayerInventory.RemoveItem(item);
                 }
-                playerController.ConstInventory.ClearInventory();
+                //playerController.ConstInventory.ClearInventory();
                 playerController.InvokeInventoryChanged();
 
 
@@ -416,6 +415,36 @@ public class PlayerPoiSpawn : MonoBehaviour
                     if (i < SelectedStation.StationMaterialCount && buttonItem.SelectedItem != null)
                     {
                         StationMaterial[i] = buttonItem.SelectedItem;
+                        playerController.ConstInventory.AddItem(new Item { ItemType = StationMaterial[i], Count = 1 });
+                    }
+                }
+                StationValueCaculate();
+            }
+        }
+        playerController.InvokeInventoryChanged();
+    }
+
+
+    public void ApplyConMatItem()
+    {
+        playerController.ConstInventory.ClearInventory();
+        if (SelectedStation != null)
+        {
+            if (StationList != null)
+            {
+                if (SelectedStation.StationAux)
+                {
+                    playerController.ConstInventory.AddItem(new Item { ItemType = AuxMat, Count = 1 });
+                }
+                if (SelectedStation.StationFix)
+                {
+                    playerController.ConstInventory.AddItem(new Item { ItemType = FixMat, Count = 1 });
+                }
+
+                for (int i = 0; i < 5; i++)
+                {
+                    if (i < SelectedStation.StationMaterialCount)
+                    {
                         playerController.ConstInventory.AddItem(new Item { ItemType = StationMaterial[i], Count = 1 });
                     }
                 }

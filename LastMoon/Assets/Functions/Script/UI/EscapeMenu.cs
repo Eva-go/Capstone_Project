@@ -29,16 +29,18 @@ public class EscapeMenu : MonoBehaviour
 
     void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (inEscapeMenu)
+            if (Cursor.lockState != CursorLockMode.Confined || inEscapeMenu)
             {
-                EscapeMenuClose();
-            }
-            else
-            {
-                EscapeMenuOpen();
+                if (inEscapeMenu)
+                {
+                    EscapeMenuClose();
+                }
+                else
+                {
+                    EscapeMenuOpen();
+                }
             }
         }
     }

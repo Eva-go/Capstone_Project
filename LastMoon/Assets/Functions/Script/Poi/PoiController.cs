@@ -144,16 +144,22 @@ public class PoiController : MonoBehaviour
 
     public void PipeRaycast()
     {
-        for (int i = 0; i < 3; i++)
+        if (SelectedRecipe != null)
         {
-            Vector3 pipeCenter = OutputTransform[i].position;
-            Collider[] collider = Physics.OverlapSphere(pipeCenter, PipeRayRadius);
-            foreach (var hitCollder in collider)
+            for (int i = 0; i < SelectedRecipe.OutputCount; i++)
             {
-                if (hitCollder.CompareTag("Pipe"))
+                if (Inv_Output[i] != null && Inv_Output[i].Count > 0) 
                 {
-                    bool Constructed = hitCollder.GetComponent<StationMatController>().Constructed;
-                    if (Constructed) GiveItem(i);
+                    Vector3 pipeCenter = OutputTransform[i].position;
+                    Collider[] collider = Physics.OverlapSphere(pipeCenter, PipeRayRadius);
+                    foreach (var hitCollder in collider)
+                    {
+                        if (hitCollder.CompareTag("Pipe"))
+                        {
+                            bool Constructed = hitCollder.GetComponent<StationMatController>().Constructed;
+                            if (Constructed) GiveItem(i);
+                        }
+                    }
                 }
             }
         }

@@ -168,15 +168,20 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         ToolIconSwitching();
         UpdateInsideActive();
-        UpdateInventoryActive();
-        UpdateInventoryTabActive();
         UpdateMoneyActive();
+
+        //PoiPopupActive();
+
         PoiActive();
-        PoiPopupActive();
+        UpdateInventoryActive();
+
+
+        UpdateInventoryTabActive();
+        Station_Manageing();
+
         // 노드 관련 함수
         Die();
         Shoping();
-        Station_Manageing();
         RespawnSet();
         Respawn_T();
         //유령시
@@ -439,6 +444,7 @@ public class CanvasController : MonoBehaviourPunCallbacks
             Recipebutton.SelectableRecipe = SelectableRecipes[i];
 
             button = RecipeRectTransform.GetComponent<Button>();
+            button.onClick.AddListener(() => Station_InputExtract());
             if (playerController.UISelectedPOIController.TempertureLimit < SelectableRecipes[i].Temperture)
             {
                 button.interactable = false;
@@ -760,6 +766,10 @@ public class CanvasController : MonoBehaviourPunCallbacks
     {
         playerController.ExtractStation(playerController.UISelectedPOIController, 2);
     }
+    public void Station_InputExtract()
+    {
+        playerController.ExtractStation(playerController.UISelectedPOIController, 3);
+    }
     /*
     public void Station_Input_Item(int SlotNum)
     {
@@ -934,20 +944,33 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     public void PoiActive()
     {
-        if (Input.GetKeyDown(KeyCode.B)&&playerController.inside)
+        /*
+        if (Input.GetKeyDown(KeyCode.Escape) && SetPoi)
         {
-            SetPoi = !SetPoi;
-            if (SetPoi)
+            SetPoi = false; 
+            ConMatUpdate();
+            Poilist.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        */
+        if (Cursor.lockState != CursorLockMode.Confined || SetPoi)
+        {
+            if (Input.GetKeyDown(KeyCode.B) && playerController.inside)
             {
-                ConMatUpdate();
-                Poilist.SetActive(true);
-                Cursor.lockState = CursorLockMode.Confined;
-            }
-            else
-            {
-                ConMatUpdate();
-                Poilist.SetActive(false);
-                Cursor.lockState = CursorLockMode.Locked;
+                SetPoi = !SetPoi;
+                if (SetPoi)
+                {
+                    ConMatUpdate();
+                    Poilist.SetActive(true);
+                    Cursor.lockState = CursorLockMode.Confined;
+                }
+                else
+                {
+                    ConMatUpdate();
+                    Poilist.SetActive(false);
+                    Cursor.lockState = CursorLockMode.Locked;
+                }
             }
         }
     }
@@ -1088,18 +1111,32 @@ public class CanvasController : MonoBehaviourPunCallbacks
 
     void UpdateInventoryActive()
     {
-        if (Input.GetKeyDown(KeyCode.I))
+        /*
+        if (Input.GetKeyDown(KeyCode.Escape) && inventory_ck)
         {
             RefreshInventory();
-            inventory_ck = !inventory_ck;
-            if(inventory_ck)
-            {
-                Cursor.lockState = CursorLockMode.Confined;
-            }
-            else
-                Cursor.lockState = CursorLockMode.Locked;
+            inventory_ck = false; 
+            Cursor.lockState = CursorLockMode.Locked;
             inventory.SetActive(inventory_ck);
             Tab.SetActive(inventory_ck);
+        }
+        else 
+         */
+        if (Cursor.lockState != CursorLockMode.Confined || inventory_ck)
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                RefreshInventory();
+                inventory_ck = !inventory_ck;
+                if (inventory_ck)
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+                }
+                else
+                    Cursor.lockState = CursorLockMode.Locked;
+                inventory.SetActive(inventory_ck);
+                Tab.SetActive(inventory_ck);
+            }
         }
     }
 
