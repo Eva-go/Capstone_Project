@@ -41,7 +41,7 @@ public class FrameCounter : MonoBehaviour
         {
             GUIStyle style = new GUIStyle();
 
-            Rect rect = new Rect(30, 30, Screen.width, Screen.height);
+            Rect rect = new Rect(1500, 30, Screen.width, Screen.height);
             style.alignment = TextAnchor.UpperLeft;
             style.fontSize = size;
             style.normal.textColor = color;
