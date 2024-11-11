@@ -109,6 +109,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             m_text_CurrentPlayerCount.text = $"{PhotonNetwork.CurrentRoom.PlayerCount} / {PhotonNetwork.CurrentRoom.MaxPlayers}";
         }
+        if(!PhotonNetwork.IsMasterClient)
+        {
+            mbutton_Start.GetComponent<Button>().interactable = false;
+        }
+        else
+            mbutton_Start.GetComponent<Button>().interactable = true;
     }
 
     #region 포톤 콜백 함수
