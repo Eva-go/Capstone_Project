@@ -43,7 +43,7 @@ public class PlaceNode : MonoBehaviourPunCallbacks
 
     public int width;
     public int height;
-    public int seed;
+
 
     //public GameObject selectedPrefab;
 
@@ -198,8 +198,8 @@ public class PlaceNode : MonoBehaviourPunCallbacks
         nodes = new GameObject[10000];
         if (nodePrefabs.Length > 0)
         {
-            prng = new System.Random(seed); // Initialize random number generator with the same seed
-            irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, seed, noiseData.noiseScale1, irregularity, irregularityoffset);
+            prng = new System.Random(GameValue.seed1); // Initialize random number generator with the same seed
+            irregularNoiseMap = Noise.GenerateIrregularNoiseMap(width, height, GameValue.seed1, noiseData.noiseScale1, irregularity, irregularityoffset);
             PlaceDirtNodes(irregularNoiseMap, prng);
         }
         else
