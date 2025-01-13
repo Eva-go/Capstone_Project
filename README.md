@@ -35,11 +35,11 @@
   
 - 포톤sdk의 동기화 최적화
 
-### 작품소개서
+## 작품소개서
 
 ![작품소개서](https://github.com/user-attachments/assets/81f71be7-0a07-49b4-b5cd-846e82d23d48)
 
-### 최종 보고서 및 작품 논문
+## 최종 보고서 및 작품 논문
 
 ![2024 게임공학과 최종 보고서_페이지_1](https://github.com/user-attachments/assets/95288ede-7cad-44f4-9ca0-76936d9fb5a2)
 ![2024 게임공학과 최종 보고서_페이지_2](https://github.com/user-attachments/assets/684b12d9-4d5d-4798-83c5-a474cc7dc06a)
