@@ -45,7 +45,7 @@
 ![2024 게임공학과 최종 보고서_페이지_2](https://github.com/user-attachments/assets/684b12d9-4d5d-4798-83c5-a474cc7dc06a)
 ![2024 게임공학과 최종 보고서_페이지_3](https://github.com/user-attachments/assets/27466b5c-9548-40bb-a3fe-4e6bdc9a48ed)
 ![2024 게임공학과 최종 보고서_페이지_4](https://github.com/user-attachments/assets/4b24fa44-8026-49f1-bccd-ab15297c772c)
-![2024 게임공학과 최종 보고서_페이지_5](<img width="3737" height="5119" alt="2024 게임공학과 최종 보고서_페이지_5" src="https://github.com/user-attachments/assets/10b69a2b-c571-4da6-aae6-0d59ff08d0a8" />)
+![2024 게임공학과 최종 보고서_페이지_5] <img width="3737" height="5119" alt="Image" src="https://github.com/user-attachments/assets/13257f3a-4c23-461a-abe4-abbca0ec3863" />
 ![2024 게임공학과 최종 보고서_페이지_6](https://github.com/user-attachments/assets/ce194193-77e6-48d3-a9bb-76643e72c04d)
 ![2024 게임공학과 최종 보고서_페이지_7](https://github.com/user-attachments/assets/e8bbcb15-1be3-43fa-a2b2-e07c79fc325d)
 ![2024 게임공학과 최종 보고서_페이지_8](https://github.com/user-attachments/assets/612d9784-4034-4a57-a5ea-74751a81df60)
